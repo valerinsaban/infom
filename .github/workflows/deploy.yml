@@ -1,0 +1,23 @@
+on: push
+name: 🚀 Deploy App
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v2
+
+    - name: Use Node.js 18
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+      
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: 45.79.218.175
+        username: root
+        password: Desa4407702023!!
+        port: 22
+        script: whoami
