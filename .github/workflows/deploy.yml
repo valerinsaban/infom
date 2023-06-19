@@ -25,10 +25,10 @@ jobs:
       - name: copy file via ssh key
         uses: appleboy/scp-action@master
         env:
-          HOST:  45.79.218.175
-          USERNAME: root
+          HOST: 45.79.218.175
+          USERNAME: "root"
           PORT: 22
-          PASSWORD: Desa4407702023!!
+          PASSWORD: "Desa4407702023!!"
         with:
           source: "./"
           target: "/var/www/html/"
