@@ -1,16 +1,26 @@
+on: push
 name: 🚀 Deploy App
-
-on: [push]
-
 jobs:
-  build:
+  web-deploy:
 
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v2
 
-    - name: Copy All Repository
+    - name: Use Node.js 18
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: 🔨 Build Angular CLI
+      run: |
+        npm install
+        npm run build
+
+    - name: 📂 Sync files
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -19,9 +29,3 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         source: "."
         target: "/var/www/html/"
-
-    - name: 🔨 Build Angular CLI
-      working-directory: './dist/'
-      run: |
-        npm install
-        npm run build
