@@ -19,3 +19,8 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         source: "."
         target: "/var/www/html/"
+
+    - name: 🔨 Build Angular CLI
+      run: |
+        npm install
+        npm run build
