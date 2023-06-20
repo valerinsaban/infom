@@ -21,6 +21,7 @@ jobs:
         target: "/var/www/html/"
 
     - name: 🔨 Build Angular CLI
+      working-directory: './dist/'
       run: |
         npm install
         npm run build
