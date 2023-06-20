@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Copy Repository
+    - name: Copy All Repository
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
