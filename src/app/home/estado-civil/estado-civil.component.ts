@@ -31,9 +31,9 @@ export class EstadoCivilComponent {
 
   // CRUD departamentos
   async getEstadosCiviles() {
-    let departamentos = await this.estadoCivilService.getEstadosCiviles();
-    if (departamentos) {
-      this.estadosCiviles = departamentos.data;
+    let estadoCivil = await this.estadoCivilService.getEstadosCiviles();
+    if (estadoCivil) {
+      this.estadosCiviles = estadoCivil.data;
     }
   }
 
@@ -47,10 +47,10 @@ export class EstadoCivilComponent {
   }
 
   async putEstadoCivil() {
-    let departamento = await this.estadoCivilService.putEstadoCivil(this.estadoCivil.id, this.estadoCivilForm.value);
-    if (departamento.resultado) {
+    let estadoCivil = await this.estadoCivilService.putEstadoCivil(this.estadoCivil.id, this.estadoCivilForm.value);
+    if (estadoCivil.resultado) {
       this.getEstadosCiviles();
-      this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
+      this.alert.alertMax('Transaccion Correcta', estadoCivil.mensaje, 'success');
       this.estadoCivilForm.reset();
       this.estadoCivil = null;
     }
@@ -83,7 +83,7 @@ export class EstadoCivilComponent {
     i.index = index;
     this.estadoCivil = i;
     this.estadoCivilForm.controls['codigo'].setValue(i.codigo);
-    this.estadoCivil.controls['descripcion'].setValue(i.descripcion);
+    this.estadoCivilForm.controls['descripcion'].setValue(i.descripcion);
   }
 
   cancelarEdicion() {

@@ -46,7 +46,7 @@ export class EscolaridadesComponent {
   }
 
   async putEscolaridades() {
-    let escolaridad = await this.escolaridadesService.putEscolaridades(this.escolaridad.id, this.escolaridad.value);
+    let escolaridad = await this.escolaridadesService.putEscolaridades(this.escolaridad.id, this.escolaridadForm.value);
     if (escolaridad.resultado) {
       this.getEscolaridades();
       this.alert.alertMax('Transaccion Correcta', escolaridad.mensaje, 'success');

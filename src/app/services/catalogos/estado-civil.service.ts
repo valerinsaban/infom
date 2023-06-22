@@ -8,7 +8,7 @@ export class EstadoCivilService {
 
   constructor(private rootService: RootService) { }
 
-  route = 'estados-civiles'
+  route = '/estados-civiles'
 
   getEstadosCiviles(): Promise<any> {
     return this.rootService.get(this.route);

@@ -14,8 +14,8 @@ const routes: Routes = [
     path: '', component: HomeComponent,
     children: [
       { path: 'departamentos', component: DepartamentosComponent },
-      { path: 'municipios', component: MunicipiosComponent },
-      { path: 'escolaridades', component: MunicipiosComponent },
+      /* { path: 'municipios', component: MunicipiosComponent }, */
+      { path: 'escolaridades', component: EscolaridadesComponent },
       { path: 'estados-civiles', component: EstadoCivilComponent },
       { path: 'oficinas-regionales', component: OficinaRegionalComponent}
     ]
