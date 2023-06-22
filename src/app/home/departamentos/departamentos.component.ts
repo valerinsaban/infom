@@ -4,6 +4,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-departamentos',
   templateUrl: './departamentos.component.html',
