@@ -8,6 +8,9 @@ import { MunicipiosComponent } from './municipios/municipios.component';
 import { EscolaridadesComponent } from './escolaridades/escolaridades.component';
 import { EstadoCivilComponent } from './estado-civil/estado-civil.component';
 import { OficinaRegionalComponent } from './oficina-regional/oficina-regional.component';
+import { PuestosComponent } from './puestos/puestos.component';
+import { TesorerosMunicipalesComponent } from './tesoreros-municipales/tesoreros-municipales.component';
+import { RegionesComponent } from './regiones/regiones.component';
 
 const routes: Routes = [
   {
@@ -17,7 +20,10 @@ const routes: Routes = [
       /* { path: 'municipios', component: MunicipiosComponent }, */
       { path: 'escolaridades', component: EscolaridadesComponent },
       { path: 'estados-civiles', component: EstadoCivilComponent },
-      { path: 'oficinas-regionales', component: OficinaRegionalComponent}
+      { path: 'oficinas-regionales', component: OficinaRegionalComponent},
+      { path: 'puestos', component: PuestosComponent},
+      { path: 'tesoreros-municipales', component: TesorerosMunicipalesComponent},
+      { path: 'regiones', component: RegionesComponent}
     ]
   }
 ];
@@ -29,7 +35,10 @@ const routes: Routes = [
     MunicipiosComponent,
     EscolaridadesComponent,
     EstadoCivilComponent,
-    OficinaRegionalComponent
+    OficinaRegionalComponent,
+    PuestosComponent,
+    TesorerosMunicipalesComponent,
+    RegionesComponent
   ],
   imports: [
     CommonModule,
