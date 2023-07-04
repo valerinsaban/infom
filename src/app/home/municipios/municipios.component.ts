@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
+import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import Swal from 'sweetalert2';
 
@@ -14,10 +15,12 @@ export class MunicipiosComponent {
   municipioForm: FormGroup;
   municipios: any = [];
   municipio: any;
+  departamentos: any = [];
 
   constructor(
       private alert: AlertService,
-      private municipiosService: MunicipiosService
+      private municipiosService: MunicipiosService,
+      private departamentoSercive: DepartamentosService
   ){
     this.municipioForm = new FormGroup({
       idDepartamento: new FormControl(null, [Validators.required]),
@@ -29,14 +32,25 @@ export class MunicipiosComponent {
 
   async ngOnInit() {
     await this.getMunicipios();
+    await this.getDepartamentos();
   }
 
   // CRUD municipios
   async getMunicipios() {
+    this.municipioForm.controls['idDepartamento'].setValue(1);
     let municipios = await this.municipiosService.getMunicipios();
     if (municipios) {
       this.municipios = municipios.data;
     }
+  }
+
+  // get Departamentos para dropdown
+  async getDepartamentos(){
+    let departamentos = await this.departamentoSercive.getDepartamentos();
+    if(departamentos){
+      this.departamentos = departamentos.data;
+    }
+
   }
 
 
@@ -86,12 +100,17 @@ export class MunicipiosComponent {
     i.index = index;
     this.municipio = i;
     this.municipioForm.controls['codigo'].setValue(i.codigo);
+    this.municipioForm.controls['idDepartamento'].setValue(i.idDepartamento);
     this.municipioForm.controls['descripcion'].setValue(i.descripcion);
   }
 
   cancelarEdicion() {
     this.municipioForm.reset();
     this.municipio = null;
+  }
+
+  changeDepto(e: any){
+    console.log(e.target.value)
   }
 
 
