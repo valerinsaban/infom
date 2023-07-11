@@ -39,6 +39,7 @@ export class MunicipiosComponent {
   async getMunicipios() {
     this.municipioForm.controls['idDepartamento'].setValue(1);
     let municipios = await this.municipiosService.getMunicipios();
+    console.log(municipios);
     if (municipios) {
       this.municipios = municipios.data;
     }

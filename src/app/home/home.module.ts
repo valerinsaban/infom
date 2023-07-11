@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DepartamentosComponent } from './departamentos/departamentos.component';
+import { DepartamentosComponent } from './catalogos/departamentos/departamentos.component';
 import { HomeComponent } from './home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MunicipiosComponent } from './municipios/municipios.component';
-import { EscolaridadesComponent } from './escolaridades/escolaridades.component';
-import { EstadoCivilComponent } from './estado-civil/estado-civil.component';
-import { OficinaRegionalComponent } from './oficina-regional/oficina-regional.component';
-import { PuestosComponent } from './puestos/puestos.component';
-import { TesorerosMunicipalesComponent } from './tesoreros-municipales/tesoreros-municipales.component';
-import { RegionesComponent } from './regiones/regiones.component';
+import { MunicipiosComponent } from './catalogos/municipios/municipios.component';
+import { EscolaridadesComponent } from './catalogos/escolaridades/escolaridades.component';
+import { EstadoCivilComponent } from './catalogos/estado-civil/estado-civil.component';
+import { OficinaRegionalComponent } from './catalogos/oficina-regional/oficina-regional.component';
+import { PuestosComponent } from './catalogos/puestos/puestos.component';
+import { TesorerosMunicipalesComponent } from './catalogos/tesoreros-municipales/tesoreros-municipales.component';
+import { RegionesComponent } from './catalogos/regiones/regiones.component';
 
 const routes: Routes = [
   {
