@@ -1,13 +1,13 @@
 <div class="page-titles">
   <ol class="breadcrumb">
     <li>
-      <h5 class="bc-title">Municipios</h5>
+      <h5 class="bc-title">Usuarios</h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
       <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Municipios</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Usuarios</a></li>
   </ol>
 </div>
 <div class="container-fluid">
@@ -15,39 +15,54 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!municipio" class="heading mb-0">Nuevo Municipio</h4>
-          <h4 *ngIf="municipio" class="heading mb-0">Editar Municipio</h4>
+          <h4 *ngIf="!usuario" class="heading mb-0">Nuevo Usuaio</h4>
+          <h4 *ngIf="usuario" class="heading mb-0">Editar Usuario</h4>
         </div>
         <div class="card-body">
-          <form [formGroup]="municipioForm" class="finance-hr">
-            <!-- ToDo agregar dropdow select para los departamentos y seleccionar uno para vincularlo con el municipio  -->
+          <form [formGroup]="usuarioForm" class="finance-hr">
             <div class="form-group mb-3">
               <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
               </label>
               <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
             </div>
             <div class="form-group mb-3">
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+              </label>
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+            </div>
+
+            <div class="form-group mb-3">
               <label class="text-secondary font-w500"> Departamento<span class="text-danger">*</span>
               </label>
-              <select formControlName="idDepartamento" class="form-control" (change)="changeDepto($event)">
-                <option selected="true">--- Seleccione un departamento ---</option>
-                <option *ngFor="let depto of departamentos" [value]="depto.id">{{depto.descripcion}}</option>
+              <select formControlName="idRegion" class="form-control" (change)="changeRegion($event)">
+                <option *ngFor="let region of regiones" [value]="region.id">{{region.descripcion}}</option>
               </select>
             </div>
 
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Login <span class="text-danger">*</span>
+              </label>
+              <input formControlName="login" type="text" class="form-control" placeholder="Login">
+            </div>
 
             <div class="form-group mb-3">
-              <label class="text-secondary"> Descripcion <span class="text-danger">*</span>
+              <label class="text-secondary"> Fotografía <span class="text-danger">*</span>
               </label>
-              <input formControlName="descripcion" type="text" class="form-control" placeholder="Descripcion">
+              <input formControlName="fotografia" type="text" class="form-control" placeholder="Fotografía">
             </div>
-            <div *ngIf="!municipio">
-              <button (click)="postMunicipio()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': municipioForm.invalid}">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Firma <span class="text-danger">*</span>
+              </label>
+              <input formControlName="firma" type="text" class="form-control" placeholder="Firma">
+            </div>
+
+            <div *ngIf="!usuario">
+              <button (click)="postUsuario()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': usuarioForm.invalid}">
                 Guardar
               </button>
             </div>
-            <div *ngIf="municipio">
-              <button (click)="putMunicipio()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': municipioForm.invalid}">
+            <div *ngIf="usuario">
+              <button (click)="putUsuario()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': usuarioForm.invalid}">
                 Guardar
               </button>
               <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
@@ -63,28 +78,30 @@
         <div class="card-body p-0">
           <div class="table-responsive active-projects manage-client">
             <div class="tbl-caption">
-              <h4 class="heading mb-0">Municipios</h4>
+              <h4 class="heading mb-0">Usuarios</h4>
             </div>
             <table id="empoloyees-tbl1" class="table">
               <thead>
                 <tr>
                   <th>Codigo</th>
-                  <th>Municipio</th>
+                  <th>Nombre</th>
+                  <th>Login</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let d of municipios; let dindex = index">
+                <tr *ngFor="let d of usuarios; let dindex = index">
                   <td><a class="text-primary">{{d.codigo}}</a></td>
-                  <td>{{d.descripcion}}</td>
+                  <td>{{d.nombre}}</td>
+                  <td>{{d.login}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                         <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setMunicipio(d, dindex)">Editar</a>
-                        <a class="dropdown-item" (click)="deleteMunicipio(d, dindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="setUsuario(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deleteUsuario(d, dindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>

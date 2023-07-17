@@ -11,6 +11,7 @@ import { OficinaRegionalComponent } from './catalogos/oficina-regional/oficina-r
 import { PuestosComponent } from './catalogos/puestos/puestos.component';
 import { TesorerosMunicipalesComponent } from './catalogos/tesoreros-municipales/tesoreros-municipales.component';
 import { RegionesComponent } from './catalogos/regiones/regiones.component';
+import { UsuariosComponent } from './seguridad/usuarios/usuarios.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,9 @@ const routes: Routes = [
       { path: 'oficinas-regionales', component: OficinaRegionalComponent},
       { path: 'puestos', component: PuestosComponent},
       { path: 'tesoreros-municipales', component: TesorerosMunicipalesComponent},
-      { path: 'regiones', component: RegionesComponent}
+      { path: 'regiones', component: RegionesComponent},
+      // Seguridad
+      { path: 'usuarios', component: UsuariosComponent}
     ]
   }
 ];
@@ -38,7 +41,8 @@ const routes: Routes = [
     OficinaRegionalComponent,
     PuestosComponent,
     TesorerosMunicipalesComponent,
-    RegionesComponent
+    RegionesComponent,
+    UsuariosComponent
   ],
   imports: [
     CommonModule,

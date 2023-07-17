@@ -47,7 +47,7 @@ export class UsuariosService {
     return this.rootService.delete(this.route + '/file/docs/' + id + '/' + name);
   }
 
-  postImage(folder: number, file: any): Promise<any> {
+  /* postImage(folder: number, file: any): Promise<any> {
     const formData = new FormData();
     formData.append('folder', folder.toString());
     formData.append('file', file);
@@ -60,6 +60,6 @@ export class UsuariosService {
     formData.append('file', file);
     formData.append('nombre', nombre);
     return this.rootService.postFile(this.route + '/file/docs', formData);
-  }
+  } */
 
 }
