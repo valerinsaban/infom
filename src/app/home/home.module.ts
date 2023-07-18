@@ -12,6 +12,11 @@ import { PuestosComponent } from './catalogos/puestos/puestos.component';
 import { TesorerosMunicipalesComponent } from './catalogos/tesoreros-municipales/tesoreros-municipales.component';
 import { RegionesComponent } from './catalogos/regiones/regiones.component';
 import { UsuariosComponent } from './seguridad/usuarios/usuarios.component';
+import { RolesComponent } from './seguridad/roles/roles.component';
+import { AlcaldiasComponent } from './mantenimientos/alcaldias/alcaldias.component';
+import { GenerosComponent } from './catalogos/generos/generos.component';
+import { GarantiasComponent } from './catalogos/garantias/garantias.component';
+import { InteresesPorMunicipalidadComponent } from './mantenimientos/intereses-por-municipalidad/intereses-por-municipalidad.component';
 
 const routes: Routes = [
   {
@@ -42,7 +47,12 @@ const routes: Routes = [
     PuestosComponent,
     TesorerosMunicipalesComponent,
     RegionesComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    RolesComponent,
+    AlcaldiasComponent,
+    GenerosComponent,
+    GarantiasComponent,
+    InteresesPorMunicipalidadComponent
   ],
   imports: [
     CommonModule,
