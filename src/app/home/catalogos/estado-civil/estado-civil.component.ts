@@ -29,7 +29,7 @@ export class EstadoCivilComponent {
     await this.getEstadosCiviles();
   }
 
-  // CRUD departamentos
+  // CRUD estado civil
   async getEstadosCiviles() {
     let estadoCivil = await this.estadoCivilService.getEstadosCiviles();
     if (estadoCivil) {

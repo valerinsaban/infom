@@ -4,29 +4,28 @@ import { RootService } from '../root.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RolesService {
+export class MenuService {
 
   constructor(private rootService: RootService) { }
+  route = '/menu';
 
-  route = '/roles'
-
-  getRoles(): Promise<any> {
+  getMenus(): Promise<any> {
     return this.rootService.get(this.route);
   }
 
-  getRol(id: number): Promise<any> {
+  getMenu(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postRol(data: any): Promise<any> {
+  postMenu(data: any): Promise<any> {
     return this.rootService.post(this.route, data);
   }
 
-  putRol(id: number, data: any): Promise<any> {
+  putMenu(id: number, data: any): Promise<any> {
     return this.rootService.put(this.route + '/' + id, data);
   }
 
-  deleteRol(id: number): Promise<any> {
+  deleteMenu(id: number): Promise<any> {
     return this.rootService.delete(this.route + '/' + id);
   }
 

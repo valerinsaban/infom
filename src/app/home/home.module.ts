@@ -17,6 +17,7 @@ import { AlcaldiasComponent } from './mantenimientos/alcaldias/alcaldias.compone
 import { GenerosComponent } from './catalogos/generos/generos.component';
 import { GarantiasComponent } from './catalogos/garantias/garantias.component';
 import { InteresesPorMunicipalidadComponent } from './mantenimientos/intereses-por-municipalidad/intereses-por-municipalidad.component';
+import { MenuComponent } from './seguridad/menu/menu.component';
 
 const routes: Routes = [
   {
@@ -31,7 +32,9 @@ const routes: Routes = [
       { path: 'tesoreros-municipales', component: TesorerosMunicipalesComponent},
       { path: 'regiones', component: RegionesComponent},
       // Seguridad
-      { path: 'usuarios', component: UsuariosComponent}
+      { path: 'usuarios', component: UsuariosComponent},
+      { path: 'roles', component: RolesComponent},
+      { path: 'menu', component: MenuComponent}
     ]
   }
 ];
@@ -52,7 +55,8 @@ const routes: Routes = [
     AlcaldiasComponent,
     GenerosComponent,
     GarantiasComponent,
-    InteresesPorMunicipalidadComponent
+    InteresesPorMunicipalidadComponent,
+    MenuComponent
   ],
   imports: [
     CommonModule,

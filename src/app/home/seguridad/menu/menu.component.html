@@ -1,13 +1,13 @@
 <div class="page-titles">
   <ol class="breadcrumb">
     <li>
-      <h5 class="bc-title">Roles</h5>
+      <h5 class="bc-title">Menus</h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
       <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Roles</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Menus</a></li>
   </ol>
 </div>
 <div class="container-fluid">
@@ -15,24 +15,24 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!rol" class="heading mb-0">Nuevo Rol</h4>
-          <h4 *ngIf="rol" class="heading mb-0">Editar Rol</h4>
+          <h4 *ngIf="!menu" class="heading mb-0">Nuevo Menu</h4>
+          <h4 *ngIf="menu" class="heading mb-0">Editar Menu</h4>
         </div>
         <div class="card-body">
-          <form [formGroup]="rolForm" class="finance-hr">
+          <form [formGroup]="menuForm" class="finance-hr">
             <div class="form-group mb-3">
-              <label class="text-secondary font-w500"> Rol<span class="text-danger">*</span>
+              <label class="text-secondary font-w500"> Menu <span class="text-danger">*</span>
               </label>
-              <input formControlName="nombreRol" type="text" class="form-control" placeholder="Rol">
+              <input formControlName="nombreMenu" type="text" class="form-control" placeholder="Menu">
             </div>
 
-            <div *ngIf="!rol">
-              <button (click)="postRol()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': rolForm.invalid}">
+            <div *ngIf="!menu">
+              <button (click)="postMenu()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': menuForm.invalid}">
                 Guardar
               </button>
             </div>
-            <div *ngIf="rol">
-              <button (click)="putRol()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': rolForm.invalid}">
+            <div *ngIf="menu">
+              <button (click)="putMenu()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': menuForm.invalid}">
                 Guardar
               </button>
               <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
@@ -48,26 +48,26 @@
         <div class="card-body p-0">
           <div class="table-responsive active-projects manage-client">
             <div class="tbl-caption">
-              <h4 class="heading mb-0">Roles</h4>
+              <h4 class="heading mb-0">Menú</h4>
             </div>
             <table id="empoloyees-tbl1" class="table">
               <thead>
                 <tr>
-                  <th>Roles</th>
+                  <th>Menus</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let d of roles; let dindex = index">
-                  <td><a class="text-primary">{{d.nombreRol}}</a></td>
+                <tr *ngFor="let d of menus; let dindex = index">
+                  <td><a class="text-primary">{{d.nombreMenu}}</a></td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                         <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setRol(d, dindex)">Editar</a>
-                        <a class="dropdown-item" (click)="deleteEstadoCivil(d, dindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="setMenu(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deleteMenu(d, dindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>
