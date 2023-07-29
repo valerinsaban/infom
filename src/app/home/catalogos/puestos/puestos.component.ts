@@ -35,7 +35,7 @@ export class PuestosComponent {
    async getPuestos() {
     let puestos = await this.puestosService.getPuestos();
     if (puestos) {
-      this.puestos = puestos.data;
+      this.puestos = puestos;
     }
   }
 

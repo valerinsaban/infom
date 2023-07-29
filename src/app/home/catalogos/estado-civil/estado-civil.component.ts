@@ -33,7 +33,7 @@ export class EstadoCivilComponent {
   async getEstadosCiviles() {
     let estadoCivil = await this.estadoCivilService.getEstadosCiviles();
     if (estadoCivil) {
-      this.estadosCiviles = estadoCivil.data;
+      this.estadosCiviles = estadoCivil;
     }
   }
 

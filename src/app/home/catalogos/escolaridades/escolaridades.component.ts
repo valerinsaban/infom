@@ -32,7 +32,7 @@ export class EscolaridadesComponent {
   async getEscolaridades(){
     let escoladidades = await this.escolaridadesService.getEscolaridades();
     if(escoladidades){
-      this.escolaridades = escoladidades.data
+      this.escolaridades = escoladidades
     }
   }
 

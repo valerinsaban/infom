@@ -34,7 +34,7 @@ export class TesorerosMunicipalesComponent {
     async getTesorerosMunicipales() {
       let tesorerosMunicipales = await this.tesorerosMunicipalesService.getTesorerosMunicipales();
       if (tesorerosMunicipales) {
-        this.tesorerosMunicipales = tesorerosMunicipales.data;
+        this.tesorerosMunicipales = tesorerosMunicipales;
       }
     }
 

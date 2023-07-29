@@ -41,7 +41,7 @@ export class MunicipiosComponent {
     let municipios = await this.municipiosService.getMunicipios();
     console.log(municipios);
     if (municipios) {
-      this.municipios = municipios.data;
+      this.municipios = municipios;
     }
   }
 
@@ -49,11 +49,9 @@ export class MunicipiosComponent {
   async getDepartamentos(){
     let departamentos = await this.departamentoSercive.getDepartamentos();
     if(departamentos){
-      this.departamentos = departamentos.data;
+      this.departamentos = departamentos;
     }
-
   }
-
 
   async postMunicipio() {
     let municipio = await this.municipiosService.postMunicipio(this.municipioForm.value);

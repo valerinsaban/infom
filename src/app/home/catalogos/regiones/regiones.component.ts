@@ -35,7 +35,7 @@ export class RegionesComponent {
    async getRegiones() {
     let regiones = await this.regionService.getRegiones();
     if (regiones) {
-      this.regiones = regiones.data;
+      this.regiones = regiones;
     }
   }
 

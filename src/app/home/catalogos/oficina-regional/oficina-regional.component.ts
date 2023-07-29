@@ -33,7 +33,7 @@ export class OficinaRegionalComponent {
   async getOficinasRegionales() {
     let oficinasRegionales = await this.oficinaRegionalService.getOficinasRegionales();
     if (oficinasRegionales) {
-      this.oficinasRegionales = oficinasRegionales.data;
+      this.oficinasRegionales = oficinasRegionales;
     }
   }
 
