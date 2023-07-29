@@ -25,7 +25,7 @@ export class RootService {
     let data: any = await this.httpClient.get(this.url + path, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': this.isToken(sessionStorage.getItem('token'))
+        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
       }
     }).toPromise();
     this.verify(data);
@@ -36,7 +36,7 @@ export class RootService {
     let data: any = await this.httpClient.post(this.url + path, body, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': this.isToken(sessionStorage.getItem('token'))
+        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
       }
     }).toPromise();
     this.verify(data);
@@ -47,7 +47,7 @@ export class RootService {
     let data: any = await this.httpClient.put(this.url + path, body, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': this.isToken(sessionStorage.getItem('token'))
+        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
       }
     }).toPromise();
     this.verify(data);
@@ -58,7 +58,7 @@ export class RootService {
     let data: any = await this.httpClient.delete(this.url + path, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': this.isToken(sessionStorage.getItem('token'))
+        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
       }
     }).toPromise();
     this.verify(data);
