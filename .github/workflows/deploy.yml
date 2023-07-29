@@ -15,11 +15,6 @@ jobs:
       with:
         node-version: '18'
 
-    - name: 🔨 Build Angular CLI
-      run: |
-        npm install
-        npm run build
-
     - name: 📂 Sync files
       uses: appleboy/scp-action@master
       with:
@@ -29,3 +24,8 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         source: "."
         target: "/var/www/html/"
+
+    - name: 🔨 Build Angular CLI
+      run: |
+        npm install
+        npm run build
