@@ -23,9 +23,9 @@ export class MunicipiosComponent {
       private departamentoSercive: DepartamentosService
   ){
     this.municipioForm = new FormGroup({
-      idDepartamento: new FormControl(null, [Validators.required]),
       codigo: new FormControl(null,[Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      descripcion: new FormControl(null, [Validators.required]),
+      id_departamento: new FormControl(null, [Validators.required]),
     });
 
   }
@@ -37,9 +37,7 @@ export class MunicipiosComponent {
 
   // CRUD municipios
   async getMunicipios() {
-    this.municipioForm.controls['idDepartamento'].setValue(1);
     let municipios = await this.municipiosService.getMunicipios();
-    console.log(municipios);
     if (municipios) {
       this.municipios = municipios;
     }
@@ -99,19 +97,13 @@ export class MunicipiosComponent {
     i.index = index;
     this.municipio = i;
     this.municipioForm.controls['codigo'].setValue(i.codigo);
-    this.municipioForm.controls['idDepartamento'].setValue(i.idDepartamento);
     this.municipioForm.controls['descripcion'].setValue(i.descripcion);
+    this.municipioForm.controls['id_departamento'].setValue(i.id_departamento);
   }
 
   cancelarEdicion() {
     this.municipioForm.reset();
     this.municipio = null;
   }
-
-  changeDepto(e: any){
-    console.log(e.target.value)
-  }
-
-
 
 }
