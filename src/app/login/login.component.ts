@@ -21,8 +21,8 @@ export class LoginComponent {
     private ngxService: NgxUiLoaderService
   ) {
     this.loginForm = new FormGroup({
-      login: new FormControl('carlos5', [Validators.required, Validators.email]),
-      password: new FormControl('123456', [Validators.required])
+      usuario: new FormControl('admin', [Validators.required, Validators.email]),
+      clave: new FormControl('1234', [Validators.required])
     });
   }
 
