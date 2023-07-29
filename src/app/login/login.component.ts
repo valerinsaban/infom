@@ -21,7 +21,7 @@ export class LoginComponent {
     private ngxService: NgxUiLoaderService
   ) {
     this.loginForm = new FormGroup({
-      usuario: new FormControl('admin', [Validators.required, Validators.email]),
+      usuario: new FormControl('admin', [Validators.required]),
       clave: new FormControl('1234', [Validators.required])
     });
   }
@@ -35,9 +35,9 @@ export class LoginComponent {
 
   async login() {
     this.ngxService.start();
-    let login = await this.authService.login(this.loginForm.value);
-    if (login.resultado) {
-      sessionStorage.setItem('token', login.data.token);
+    let login = await this.authService.login(this.loginForm.value);    
+    if (login.token) {
+      sessionStorage.setItem('token', login.token);
       this.alert.alertMax('Transaccion Exitosa', login.mensaje, 'success');
       this.router.navigate(['home']);
     } else {

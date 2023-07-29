@@ -34,7 +34,7 @@ export class DepartamentosComponent {
   async getDepartamentos() {
     let departamentos = await this.departamentosService.getDepartamentos();
     if (departamentos) {
-      this.departamentos = departamentos.data;
+      this.departamentos = departamentos;
     }
   }
 
