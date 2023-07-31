@@ -35,17 +35,17 @@ export class LoginComponent {
 
   async login() {
     this.ngxService.start();
-    let login = await this.authService.login(this.loginForm.value);
-     if (!login.resultado) {
-     sessionStorage.setItem('token', login.data.token);
-     // sessionStorage.setItem('token','asdf654655asdgasfhuwergehwrg');
-      this.alert.alertMax('Transaccion Exitosa', login.mensaje, 'success');
-      //this.alert.alertMax('Transaccion Exitosa', "Exito al entrar", 'success');
+    //let login = await this.authService.login(this.loginForm.value);
+     //if (!login.resultado) {
+     //sessionStorage.setItem('token', login.data.token);
+      sessionStorage.setItem('token','asdf654655asdgasfhuwergehwrg');
+      //this.alert.alertMax('Transaccion Exitosa', login.mensaje, 'success');
+      this.alert.alertMax('Transaccion Exitosa', "Exito al entrar", 'success');
       this.router.navigate(['home']);
-     } else {
+     /* } else {
       this.alert.alertMax('Transaccion Incorrecta', login.message, 'error');
     }
-    this.ngxService.stop();
+    this.ngxService.stop(); */
   }
 
 }
