@@ -4,30 +4,29 @@ import { RootService } from '../root.service';
 @Injectable({
   providedIn: 'root'
 })
-export class TesorerosMunicipalesService {
+export class GarantiasService {
 
   constructor(private rootService: RootService) { }
 
-  route = '/tesoreros_municipales';
+  route = '/garantias';
 
-  getTesorerosMunicipales(): Promise<any> {
+  getGarantias(): Promise<any> {
     return this.rootService.get(this.route);
   }
 
-  getTesoreroMunicipal(id: number): Promise<any> {
+  getGarantia(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postTesoreroMunicipal(data: any): Promise<any> {
+  postGarantia(data: any): Promise<any> {
     return this.rootService.post(this.route, data);
   }
 
-  putTesoreroMunicipal(id: number, data: any): Promise<any> {
+  putGarantia(id: number, data: any): Promise<any> {
     return this.rootService.put(this.route + '/' + id, data);
   }
 
-  deleteTesoreroMunicipal(id: number): Promise<any> {
+  deleteGarantia(id: number): Promise<any> {
     return this.rootService.delete(this.route + '/' + id);
   }
-
 }

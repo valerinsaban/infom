@@ -34,7 +34,7 @@ export class DepartamentosComponent {
   async getDepartamentos() {
     let departamentos = await this.departamentosService.getDepartamentos();
     if (departamentos) {
-      this.departamentos = departamentos.data;
+      this.departamentos = departamentos;
     }
   }
 
@@ -43,7 +43,7 @@ export class DepartamentosComponent {
     if (departamento.resultado) {
       this.getDepartamentos();
       this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
-      this.departamentoForm.reset();
+      this.cancelarEdicion();
     }
   }
 
@@ -52,8 +52,7 @@ export class DepartamentosComponent {
     if (departamento.resultado) {
       this.getDepartamentos();
       this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
-      this.departamentoForm.reset();
-      this.departamento = null;
+      this.cancelarEdicion();
     }
   }
 
@@ -73,7 +72,7 @@ export class DepartamentosComponent {
         if (departamento.resultado) {
           this.departamentos.splice(index, 1);
           this.alert.alertMax('Correcto', departamento.mensaje, 'success');
-          this.departamento = null;
+          this.cancelarEdicion();
         }
       }
     })

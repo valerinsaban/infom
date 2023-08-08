@@ -21,8 +21,8 @@ export class LoginComponent {
     private ngxService: NgxUiLoaderService
   ) {
     this.loginForm = new FormGroup({
-      login: new FormControl('carlos5', [Validators.required, Validators.email]),
-      password: new FormControl('123456', [Validators.required])
+      usuario: new FormControl('admin', [Validators.required]),
+      clave: new FormControl('1234', [Validators.required])
     });
   }
 
@@ -35,17 +35,15 @@ export class LoginComponent {
 
   async login() {
     this.ngxService.start();
-    //let login = await this.authService.login(this.loginForm.value);
-     //if (!login.resultado) {
-     //sessionStorage.setItem('token', login.data.token);
-      sessionStorage.setItem('token','asdf654655asdgasfhuwergehwrg');
-      //this.alert.alertMax('Transaccion Exitosa', login.mensaje, 'success');
-      this.alert.alertMax('Transaccion Exitosa', "Exito al entrar", 'success');
+    let login = await this.authService.login(this.loginForm.value);
+    if (login.token) {
+      sessionStorage.setItem('token', login.token);
+      this.alert.alertMax('Transaccion Exitosa', login.mensaje, 'success');
       this.router.navigate(['home']);
-     /* } else {
+     } else {
       this.alert.alertMax('Transaccion Incorrecta', login.message, 'error');
     }
-    this.ngxService.stop(); */
+    this.ngxService.stop();
   }
 
 }

@@ -19,6 +19,7 @@ import { GarantiasComponent } from './catalogos/garantias/garantias.component';
 import { InteresesPorMunicipalidadComponent } from './mantenimientos/intereses-por-municipalidad/intereses-por-municipalidad.component';
 import { MenuComponent } from './seguridad/menu/menu.component';
 import { OpcionesMenuComponent } from './seguridad/opciones-menu/opciones-menu.component';
+import { DestinoPrestamoComponent } from './catalogos/destino-prestamo/destino-prestamo.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
       { path: 'puestos', component: PuestosComponent},
       { path: 'tesoreros-municipales', component: TesorerosMunicipalesComponent},
       { path: 'regiones', component: RegionesComponent},
+      { path: 'generos', component: GenerosComponent},
+      { path: 'garantias', component: GarantiasComponent},
+      { path: 'destino-prestamos', component: DestinoPrestamoComponent},
+
       // Seguridad
       { path: 'usuarios', component: UsuariosComponent},
       { path: 'roles', component: RolesComponent},
@@ -59,7 +64,8 @@ const routes: Routes = [
     GarantiasComponent,
     InteresesPorMunicipalidadComponent,
     MenuComponent,
-    OpcionesMenuComponent
+    OpcionesMenuComponent,
+    DestinoPrestamoComponent
   ],
   imports: [
     CommonModule,
