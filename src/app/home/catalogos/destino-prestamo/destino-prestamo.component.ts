@@ -26,6 +26,10 @@ export class DestinoPrestamoComponent {
     });
   }
 
+  async ngOnInit() {
+    await this.getDestinoPrestamos();
+  }
+
 
   // CRUD Destino Prestamos
   async getDestinoPrestamos() {

@@ -8,7 +8,7 @@ export class OficinaRegionalService {
 
   constructor(private rootService: RootService) { }
 
-  route = '/oficinas-regionales';
+  route = '/oficinas_regionales';
 
   getOficinasRegionales(): Promise<any> {
     return this.rootService.get(this.route);
