@@ -5,43 +5,50 @@ import { HomeComponent } from './home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MunicipiosComponent } from './catalogos/municipios/municipios.component';
-import { EscolaridadesComponent } from './catalogos/escolaridades/escolaridades.component';
 import { EstadoCivilComponent } from './catalogos/estado-civil/estado-civil.component';
-import { OficinaRegionalComponent } from './catalogos/oficina-regional/oficina-regional.component';
 import { PuestosComponent } from './catalogos/puestos/puestos.component';
 import { TesorerosMunicipalesComponent } from './catalogos/tesoreros-municipales/tesoreros-municipales.component';
 import { RegionesComponent } from './catalogos/regiones/regiones.component';
 import { UsuariosComponent } from './seguridad/usuarios/usuarios.component';
 import { RolesComponent } from './seguridad/roles/roles.component';
-import { AlcaldiasComponent } from './mantenimientos/alcaldias/alcaldias.component';
 import { GenerosComponent } from './catalogos/generos/generos.component';
 import { GarantiasComponent } from './catalogos/garantias/garantias.component';
-import { InteresesPorMunicipalidadComponent } from './mantenimientos/intereses-por-municipalidad/intereses-por-municipalidad.component';
-import { MenuComponent } from './seguridad/menu/menu.component';
-import { OpcionesMenuComponent } from './seguridad/opciones-menu/opciones-menu.component';
 import { DestinoPrestamoComponent } from './catalogos/destino-prestamo/destino-prestamo.component';
+import { MunicipalidadesComponent } from './municipalidades/municipalidades.component';
+import { RegionalesComponent } from './seguridad/regionales/regionales.component';
+import { FuncionariosComponent } from './funcionarios/funcionarios.component';
+import { ProfesionesComponent } from './catalogos/profesiones/profesiones.component';
+import { BancosComponent } from './catalogos/bancos/bancos.component';
+import { BienvenidoComponent } from './bienvenido/bienvenido.component';
 
 const routes: Routes = [
   {
     path: '', component: HomeComponent,
     children: [
+      { path: 'bienvenido', component: BienvenidoComponent },
+
+      { path: 'municipalidades', component: MunicipalidadesComponent },
+      { path: 'funcionarios', component: FuncionariosComponent },
+
+      // Catalogos
       { path: 'departamentos', component: DepartamentosComponent },
       { path: 'municipios', component: MunicipiosComponent },
-      { path: 'escolaridades', component: EscolaridadesComponent },
       { path: 'estados-civiles', component: EstadoCivilComponent },
-      { path: 'oficinas-regionales', component: OficinaRegionalComponent},
       { path: 'puestos', component: PuestosComponent},
       { path: 'tesoreros-municipales', component: TesorerosMunicipalesComponent},
       { path: 'regiones', component: RegionesComponent},
       { path: 'generos', component: GenerosComponent},
       { path: 'garantias', component: GarantiasComponent},
+      { path: 'profesiones', component: ProfesionesComponent},
+      { path: 'bancos', component: BancosComponent},
       { path: 'destino-prestamos', component: DestinoPrestamoComponent},
 
       // Seguridad
+      { path: 'regionales', component: RegionalesComponent},
       { path: 'usuarios', component: UsuariosComponent},
       { path: 'roles', component: RolesComponent},
-      { path: 'menu', component: MenuComponent},
-      { path: 'opciones-menu', component: OpcionesMenuComponent}
+
+      { path: '**', pathMatch: 'full', redirectTo: 'bienvenido' }
     ]
   }
 ];
@@ -51,21 +58,21 @@ const routes: Routes = [
     HomeComponent,
     DepartamentosComponent,
     MunicipiosComponent,
-    EscolaridadesComponent,
     EstadoCivilComponent,
-    OficinaRegionalComponent,
     PuestosComponent,
     TesorerosMunicipalesComponent,
     RegionesComponent,
     UsuariosComponent,
     RolesComponent,
-    AlcaldiasComponent,
     GenerosComponent,
     GarantiasComponent,
-    InteresesPorMunicipalidadComponent,
-    MenuComponent,
-    OpcionesMenuComponent,
-    DestinoPrestamoComponent
+    DestinoPrestamoComponent,
+    MunicipalidadesComponent,
+    RegionalesComponent,
+    FuncionariosComponent,
+    ProfesionesComponent,
+    BancosComponent,
+    BienvenidoComponent
   ],
   imports: [
     CommonModule,

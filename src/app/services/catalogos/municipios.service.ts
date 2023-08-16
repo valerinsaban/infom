@@ -19,11 +19,9 @@ export class MunicipiosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-
   getMunicipioByDepartamento(id: number): Promise<any> {
-    return this.rootService.get(this.route + '/departamento/' + id + this.route);
+    return this.rootService.get(this.route + '/departamento/' + id);
   }
-
 
   postMunicipio(data: any): Promise<any> {
     return this.rootService.post(this.route, data);

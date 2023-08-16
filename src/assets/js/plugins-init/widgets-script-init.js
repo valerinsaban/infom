@@ -1307,8 +1307,8 @@
 	}
 	var donutChart1 = function(){
 		$("span.donut1").peity("donut", {
-			width: "100",
-			height: "100"
+			width: "80",
+			height: "80"
 		});
 	}
 	

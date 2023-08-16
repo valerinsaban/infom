@@ -18,21 +18,19 @@ export class PuestosComponent {
 
   constructor(
     private alert: AlertService,
-    private puestosService: PuestosService){
-        this.puestoForm = new FormGroup({
-        codigo: new FormControl(null, [Validators.required]),
-        descripcion: new FormControl(null, [Validators.required])
-      });
-
+    private puestosService: PuestosService) {
+    this.puestoForm = new FormGroup({
+      codigo: new FormControl(null, [Validators.required]),
+      nombre: new FormControl(null, [Validators.required])
+    });
   }
 
   async ngOnInit() {
     await this.getPuestos();
   }
 
-
-   // CRUD Puestos
-   async getPuestos() {
+  // CRUD Puestos
+  async getPuestos() {
     let puestos = await this.puestosService.getPuestos();
     if (puestos) {
       this.puestos = puestos;
@@ -42,7 +40,7 @@ export class PuestosComponent {
   async postPuesto() {
     let puesto = await this.puestosService.postPuesto(this.puestoForm.value);
     if (puesto.resultado) {
-      this.getPuestos();
+      await this.getPuestos();
       this.alert.alertMax('Transaccion Correcta', puesto.mensaje, 'success');
       this.puestoForm.reset();
     }
@@ -51,7 +49,7 @@ export class PuestosComponent {
   async putPuesto() {
     let puesto = await this.puestosService.putPuesto(this.puesto.id, this.puestoForm.value);
     if (puesto.resultado) {
-      this.getPuestos();
+      await this.getPuestos();
       this.alert.alertMax('Transaccion Correcta', puesto.mensaje, 'success');
       this.puestoForm.reset();
       this.puesto = null;
@@ -85,7 +83,7 @@ export class PuestosComponent {
     i.index = index;
     this.puesto = i;
     this.puestoForm.controls['codigo'].setValue(i.codigo);
-    this.puestoForm.controls['descripcion'].setValue(i.descripcion);
+    this.puestoForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

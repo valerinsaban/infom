@@ -4,8 +4,8 @@
       Nav header start
   ***********************************-->
   <div class="nav-header">
-    <a href="index.html" class="brand-logo">
-      <img src="assets/images/logo/logo.png" alt="" style="width: 100px;">
+    <a routerLink="/" class="brand-logo" style="padding: 10px">
+      <img src="assets/images/logo/logo.png" alt="" style="width:100%; text-align: center;">
     </a>
     <div class="nav-control">
       <div class="hamburger">
@@ -863,7 +863,7 @@
             </li>
             <li class="nav-item align-items-center header-border"><a (click)="logout()"
                 class="btn btn-primary btn-sm">Salir</a></li>
-            <li class="nav-item ps-3">
+            <li class="nav-item ps-3" *ngIf="usuario">
               <div class="dropdown header-profile2">
                 <a class="nav-link" href="javascript:void(0);" role="button" data-bs-toggle="dropdown"
                   aria-expanded="false">
@@ -872,8 +872,8 @@
                       <img src="assets/images/tab/1.jpg" alt="">
                     </div>
                     <div class="header-info">
-                      <h6>Carlos 5</h6>
-                      <p>carlos5to@gmail.com</p>
+                      <h6>{{usuario.nombre}} {{usuario.apellido}}</h6>
+                      <p>{{usuario.regional.nombre}}</p>
                     </div>
 
                   </div>
@@ -884,42 +884,36 @@
                       <div class="products">
                         <img src="assets/images/tab/1.jpg" class="avatar avatar-md" alt="">
                         <div>
-                          <h6>Carlos 5</h6>
-                          <span>Administrador</span>
+                          <h6>{{usuario.nombre}} {{usuario.apellido}}</h6>
+                          <span>{{usuario.regional.nombre}}</span>
                         </div>
                       </div>
                     </div>
                     <div class="card-body px-0 py-2">
-                      <a href="app-profile.html" class="dropdown-item ai-icon ">
-                        <i class="fa-regular fa-user fa-xl "></i>
-
-                        <span class="ms-2">Profile </span>
+                      <a routerLink="solicitudes" class="dropdown-item ai-icon ">
+                        <i class="fad fa-newspaper fa-xl"></i>                        
+                        <span class="ms-2">Solicitudes</span>
                       </a>
-                      <a href="app-profile.html" class="dropdown-item ai-icon ">
-                        <i class="fa-solid fa-chart-pie fa-xl"></i>
-
-                        <span class="ms-2">My Project</span><span
-                          class="badge badge-sm badge-secondary light rounded-circle text-white ms-2">4</span>
+                      <a routerLink="/" class="dropdown-item ai-icon ">
+                        <i class="fad fa-lock fa-xl"></i>
+                        <span class="ms-2">Cambio de Clave</span>
                       </a>
-                      <a href="javascript:void(0);" class="dropdown-item ai-icon ">
-                        <i class="fa-regular fa-envelope fa-xl"></i>
-
-                        <span class="ms-2">Message </span>
+                      <a routerLink="/" class="dropdown-item ai-icon ">
+                        <i class="fad fa-envelope fa-xl"></i>
+                        <span class="ms-2">Chat </span>
                       </a>
-                      <a href="email-inbox.html" class="dropdown-item ai-icon ">
-                        <i class="fa-regular fa-bell fa-xl"></i>
-
-                        <span class="ms-2">Notification </span>
+                      <a routerLink="/" class="dropdown-item ai-icon ">
+                        <i class="fad fa-bells fa-xl"></i>
+                        <span class="ms-2">Notificaciones </span>
                       </a>
                     </div>
                     <div class="card-footer px-0 py-2">
-                      <a href="javascript:void(0);" class="dropdown-item ai-icon ">
-                        <i class="fa-solid fa-gear fa-xl"></i>
-
-                        <span class="ms-2">Settings </span>
+                      <a routerLink="/" class="dropdown-item ai-icon ">
+                        <i class="fad fa-gear fa-xl"></i>
+                        <span class="ms-2">Ajustes </span>
                       </a>
                       <a (click)="logout()" class="dropdown-item ai-icon">
-                        <i class="fa-solid fa-arrow-right-from-bracket fa-xl"></i>
+                        <i class="fad fa-arrow-right-from-bracket fa-xl"></i>
                         <span class="ms-2">Salir </span>
                       </a>
                     </div>
@@ -944,125 +938,24 @@
     <div class="deznav-scroll">
       <ul class="metismenu mm-show" id="menu">
 
-        <li>
-          <a class="has-arrow" href="javascriot:void(0)" aria-expanded="false">
+        <li *ngFor="let m of menus" routerLinkActive="mm-active">
+          <a [routerLink]="m.url" [ngClass]="{'has-arrow': m.submenus.length}">
             <div class="menu-icon">
-              <i class="fa-solid fa-table-list mx-1 fa-sm"></i>
+              <i [class]="m.icono"></i>
             </div>
-            <span class="nav-text">Catálogos</span>
+            <span class="nav-text">{{m.nombre}}</span>
           </a>
 
-          <ul aria-expanded="false">
-            <li>
-              <a routerLink="departamentos" class="" aria-expanded="false">
-                Departamentos
+          <ul *ngIf="m.submenus.length" aria-expanded="false">
+            <li routerLinkActive="mm-active" *ngFor="let sm of m.submenus">
+              <a [routerLink]="sm.url" aria-expanded="false">
+                {{sm.nombre}}
               </a>
             </li>
-
-            <li>
-              <a routerLink="municipios"   class="" aria-expanded="false">
-                Municipios
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="escolaridades" class="" aria-expanded="false">
-               Escolaridad
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="estados-civiles" class="" aria-expanded="false">
-                Estado civil
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="puestos" class="" aria-expanded="false">
-
-               Puesto
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="oficinas-regionales" class="" aria-expanded="false">
-
-
-                <span class="nav-text">Oficina regional</span>
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="tesoreros-municipales" class="" aria-expanded="false">
-
-                Tesorero municipal
-              </a>
-            </li>
-
-            <li>
-              <a routerLink="regiones" class="" aria-expanded="false">
-
-
-                Región
-              </a>
-            </li>
-            <li>
-              <a routerLink="generos" class="" aria-expanded="false">
-
-
-                Género
-              </a>
-            </li>
-            <li>
-              <a routerLink="garantias" class="" aria-expanded="false">
-
-
-                Garantías
-              </a>
-            </li>
-            <li>
-              <a routerLink="destino-prestamos" class="" aria-expanded="false">
-
-
-                Destino préstamo
-              </a>
-            </li>
-
           </ul>
         </li>
-
-
-        <li>
-          <a class="has-arrow" href="javascriot:void(0)" aria-expanded="false">
-            <div class="menu-icon">
-              <i class="fa-solid fa-user-lock mx-1 fa-sm"></i>
-            </div>
-            <span class="nav-text">Seguridad</span>
-          </a>
-          <ul aria-expanded="false">
-            <li> <a routerLink="usuarios">Usuarios</a></li>
-            <li> <a routerLink="roles">Roles </a></li>
-            <li> <a routerLink="menu">Menú</a></li>
-            <li> <a routerLink="opciones-menu">Opciones de menú</a></li>
-            <li> <a href="javascriot:void(0)">Roles opción</a></li>
-            <li> <a href="javascriot:void(0)">Opciones adicionales</a></li>
-          </ul>
-
-        </li>
-
-
-
-
-
-
-
-
-
 
       </ul>
-
-
-
 
       <div class="help-desk">
         <a href="javascript:void(0)" class="btn btn-primary">Help Desk</a>
@@ -1258,14 +1151,6 @@
       </div>
     </div>
   </div>
-
-  <!--**********************************
-     Support ticket button start
-  ***********************************-->
-
-  <!--**********************************
-     Support ticket button end
-  ***********************************-->
 
 
 </div>

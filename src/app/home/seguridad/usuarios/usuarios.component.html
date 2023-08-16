@@ -15,16 +15,11 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!usuario" class="heading mb-0">Nuevo Usuaio</h4>
+          <h4 *ngIf="!usuario" class="heading mb-0">Agregar Usuaio</h4>
           <h4 *ngIf="usuario" class="heading mb-0">Editar Usuario</h4>
         </div>
         <div class="card-body">
           <form [formGroup]="usuarioForm" class="finance-hr">
-            <div class="form-group mb-3">
-              <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
-              </label>
-              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
-            </div>
             <div class="form-group mb-3">
               <label class="text-secondary"> Nombre <span class="text-danger">*</span>
               </label>
@@ -32,28 +27,35 @@
             </div>
 
             <div class="form-group mb-3">
-              <label class="text-secondary font-w500"> Departamento<span class="text-danger">*</span>
+              <label class="text-secondary"> Apellido <span class="text-danger">*</span>
               </label>
-              <select formControlName="idRegion" class="form-control" (change)="changeRegion($event)">
-                <option *ngFor="let region of regiones" [value]="region.id">{{region.descripcion}}</option>
+              <input formControlName="apellido" type="text" class="form-control" placeholder="Apellido">
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="text-secondary"> DPI <span class="text-danger">*</span>
+              </label>
+              <input formControlName="dpi" type="text" class="form-control" placeholder="DPI">
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Usuario <span class="text-danger">*</span>
+              </label>
+              <input formControlName="usuario" type="text" class="form-control" placeholder="Usuario">
+            </div>
+
+            <div *ngIf="!usuario" class="form-group mb-3">
+              <label class="text-secondary"> Clave <span class="text-danger">*</span>
+              </label>
+              <input formControlName="clave" type="text" class="form-control" placeholder="Clave">
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="text-secondary font-w500"> Regional <span class="text-danger">*</span>
+              </label>
+              <select formControlName="id_regional" class="form-control">
+                <option *ngFor="let r of regionales" [value]="r.id">{{r.nombre}}</option>
               </select>
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="text-secondary"> Login <span class="text-danger">*</span>
-              </label>
-              <input formControlName="login" type="text" class="form-control" placeholder="Login">
-            </div>
-
-            <div class="form-group mb-3">
-              <label class="text-secondary"> Fotografía <span class="text-danger">*</span>
-              </label>
-              <input formControlName="fotografia" type="text" class="form-control" placeholder="Fotografía">
-            </div>
-            <div class="form-group mb-3">
-              <label class="text-secondary"> Firma <span class="text-danger">*</span>
-              </label>
-              <input formControlName="firma" type="text" class="form-control" placeholder="Firma">
             </div>
 
             <div *ngIf="!usuario">
@@ -83,31 +85,32 @@
             <table id="empoloyees-tbl1" class="table">
               <thead>
                 <tr>
-                  <th>Codigo</th>
                   <th>Nombre</th>
-                  <th>Login</th>
+                  <th>Apellido</th>
+                  <th>DPI</th>
+                  <th>Usuario</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let d of usuarios; let dindex = index">
-                  <td><a class="text-primary">{{d.codigo}}</a></td>
-                  <td>{{d.nombre}}</td>
-                  <td>{{d.login}}</td>
+                <tr *ngFor="let u of usuarios; let uindex = index">
+                  <td><a class="text-primary">{{u.nombre}}</a></td>
+                  <td><a class="text-primary">{{u.apellido}}</a></td>
+                  <td>{{u.dpi}}</td>
+                  <td>{{u.usuario}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
-                        <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                        <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setUsuario(d, dindex)">Editar</a>
-                        <a class="dropdown-item" (click)="deleteUsuario(d, dindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="setUsuario(u, uindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deleteUsuario(u, uindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>
                 </tr>
               </tbody>
-
             </table>
           </div>
         </div>

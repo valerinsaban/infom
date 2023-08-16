@@ -15,7 +15,7 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!rol" class="heading mb-0">Nuevo Rol</h4>
+          <h4 *ngIf="!rol" class="heading mb-0">Agregar Rol</h4>
           <h4 *ngIf="rol" class="heading mb-0">Editar Rol</h4>
         </div>
         <div class="card-body">
@@ -23,7 +23,7 @@
             <div class="form-group mb-3">
               <label class="text-secondary font-w500"> Rol<span class="text-danger">*</span>
               </label>
-              <input formControlName="nombreRol" type="text" class="form-control" placeholder="Rol">
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Rol">
             </div>
 
             <div *ngIf="!rol">
@@ -58,16 +58,16 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let d of roles; let dindex = index">
-                  <td><a class="text-primary">{{d.nombreRol}}</a></td>
+                <tr *ngFor="let r of roles; let rindex = index">
+                  <td><a class="text-primary">{{r.nombre}}</a></td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
-                        <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                        <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setRol(d, dindex)">Editar</a>
-                        <a class="dropdown-item" (click)="deleteEstadoCivil(d, dindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="setRol(r, rindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deleteEstadoCivil(r, rindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>

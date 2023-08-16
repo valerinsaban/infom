@@ -38,16 +38,19 @@
 					
 					scales: {
 						yAxes: [{
-							//show: false,
+							show: false,
+							//display:0,
 							//labelFontColor: '#fff',
+								
 							ticks: {
 								beginAtZero: true,
-								//color: '#fff'
+								color: '#888',
 								
-								fontColor:'#fff',
+								fontColor:'#888'
 							},
 							gridLines:{
-								color:"rgba(255, 255, 255, 0.1)"
+								color:"rgba(255, 255, 255, 0.1)",
+								 offsetGridLines: true,
 							}
 							
 							
@@ -57,7 +60,7 @@
 							// Change here
 							barPercentage: 0.5,
 							ticks:{
-								fontColor:	'#ffffff',
+								fontColor:	'#888',
 							},
 							gridLines:{
 								color:"rgba(255, 255, 255, 0.1)"
@@ -101,9 +104,10 @@
 					legend: false, 
 					scales: {
 						yAxes: [{
+							//display:0,
 							ticks: {
 								beginAtZero: true,
-								fontColor:	'#ffffff',
+								fontColor:	'#888',
 								
 							},
 							gridLines:{
@@ -114,7 +118,7 @@
 							// Change here
 							barPercentage: 0.5,
 							ticks: {
-								fontColor:	'#ffffff',
+								fontColor:	'#888',
 							},
 							gridLines:{
 								color:"rgba(255, 255, 255, 0.1)"
@@ -208,18 +212,20 @@
 					responsive: true,
 					scales: {
 						xAxes: [{
+							//display:0,
 							stacked: true,
 							ticks: {
-								fontColor:	'#ffffff',
+								fontColor:	'#888',
 							},
 							gridLines:{
 								color:"rgba(255, 255, 255, 0.1)"
 							}
 						}],
 						yAxes: [{
+							//display:0,
 							stacked: true,
 							ticks: {
-								fontColor:	'#ffffff',
+								fontColor:	'#888',
 							},
 							gridLines:{
 								color:"rgba(255, 255, 255, 0.1)"

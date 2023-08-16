@@ -17,6 +17,19 @@ var W3Crm = function(){
 		},800);	
 		
 	}
+	// var handleImageSelect = function(){
+
+	// 	const $_SELECT_PICKER = $('.image-select');
+	// 	$_SELECT_PICKER.find('option').each((idx, elem) => {
+	// 		const $OPTION = $(elem);
+	// 		const IMAGE_URL = $OPTION.attr('data-thumbnail');
+	// 		if (IMAGE_URL) {
+	// 			$OPTION.attr('data-content', "<img src='%i'/> %s".replace(/%i/, IMAGE_URL).replace(/%s/, $OPTION.text()))
+	// 		}
+	// 	});
+	// 	$_SELECT_PICKER.selectpicker();
+	// }
+
 
     var handleMetisMenu = function() {
 		if(jQuery('#menu').length > 0 ){
@@ -30,15 +43,18 @@ var W3Crm = function(){
 		});
 	}
    
-    var handleAllChecked = function() {
+     var handleAllChecked = function() {
 		$("#checkAll").on('change',function() {
 			$("td input, .email-list .custom-checkbox input").prop('checked', $(this).prop("checked"));
 		});
-		
-		$(".checkAllInput").on('change',function() {
-			jQuery(this).parents('.ItemsCheckboxSec').find('input[type="checkbox"]').prop( "checked", $(this).prop("checked") );		
+		$(".checkAllInput").on('click',function() {
+			jQuery(this).closest('.ItemsCheckboxSec').find('input[type="checkbox"]').prop('checked', true);		
+		});
+		$(".unCheckAllInput").on('click',function() {
+			jQuery(this).closest('.ItemsCheckboxSec').find('input[type="checkbox"]').prop('checked', false);		
 		});
 	}
+
 
 	var handleNavigation = function() {
 		$(".nav-control").on('click', function() {
@@ -638,7 +654,7 @@ var W3Crm = function(){
 			handleLightgallery();
 			handleCustomFileInput();
 			vHeight();
-			handleDatetimepicker();
+			// handleDatetimepicker();
 			handleCkEditor();
 			headerFix();
 			handleChartSidebar();
@@ -648,6 +664,7 @@ var W3Crm = function(){
 			//handleImageSelect();
 			handleSelectPicker();
 			handlePageOnScroll();
+			// handleImageSelect();
 			tagify();
 			// masonryBox();
 		},

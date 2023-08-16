@@ -15,7 +15,7 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!tesoreroMunicipal" class="heading mb-0">Nuevo Tesorero municipal</h4>
+          <h4 *ngIf="!tesoreroMunicipal" class="heading mb-0">Agregar Tesorero municipal</h4>
           <h4 *ngIf="tesoreroMunicipal" class="heading mb-0">Editar Tesorero municipal</h4>
         </div>
         <div class="card-body">
@@ -26,9 +26,9 @@
               <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
             </div>
             <div class="form-group mb-3">
-              <label class="text-secondary"> Descripcion <span class="text-danger">*</span>
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
               </label>
-              <input formControlName="descripcion" type="text" class="form-control" placeholder="Descripcion">
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
             </div>
             <div *ngIf="!tesoreroMunicipal">
               <button (click)="postTesoreroMunicipal()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': tesorerosMunicipalForm.invalid}">
@@ -58,14 +58,14 @@
               <thead>
                 <tr>
                   <th>Codigo</th>
-                  <th>Descripcion</th>
+                  <th>Nombre</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let d of tesorerosMunicipales; let dindex = index">
                   <td><a class="text-primary">{{d.codigo}}</a></td>
-                  <td>{{d.descripcion}}</td>
+                  <td>{{d.nombre}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">

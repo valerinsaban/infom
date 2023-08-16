@@ -4,7 +4,6 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-departamentos',
   templateUrl: './departamentos.component.html',
@@ -22,7 +21,7 @@ export class DepartamentosComponent {
   ) {
     this.departamentoForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required])
     });
   }
 
@@ -41,7 +40,7 @@ export class DepartamentosComponent {
   async postDepartamento() {
     let departamento = await this.departamentosService.postDepartamento(this.departamentoForm.value);
     if (departamento.resultado) {
-      this.getDepartamentos();
+      await this.getDepartamentos();
       this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
       this.cancelarEdicion();
     }
@@ -50,7 +49,7 @@ export class DepartamentosComponent {
   async putDepartamento() {
     let departamento = await this.departamentosService.putDepartamento(this.departamento.id, this.departamentoForm.value);
     if (departamento.resultado) {
-      this.getDepartamentos();
+      await this.getDepartamentos();
       this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
       this.cancelarEdicion();
     }
@@ -83,7 +82,7 @@ export class DepartamentosComponent {
     i.index = index;
     this.departamento = i;
     this.departamentoForm.controls['codigo'].setValue(i.codigo);
-    this.departamentoForm.controls['descripcion'].setValue(i.descripcion);
+    this.departamentoForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

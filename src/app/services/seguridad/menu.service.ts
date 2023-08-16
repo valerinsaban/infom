@@ -4,10 +4,10 @@ import { RootService } from '../root.service';
 @Injectable({
   providedIn: 'root'
 })
-export class MenuService {
+export class MenusService {
 
   constructor(private rootService: RootService) { }
-  route = '/menu';
+  route = '/menus';
 
   getMenus(): Promise<any> {
     return this.rootService.get(this.route);

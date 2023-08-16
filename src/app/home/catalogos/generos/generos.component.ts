@@ -21,7 +21,7 @@ export class GenerosComponent {
   ) {
     this.generoForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required])
     });
   }
 
@@ -42,7 +42,7 @@ export class GenerosComponent {
   async postGenero() {
     let genero = await this.generoService.postGenero(this.generoForm.value);
     if (genero.resultado) {
-      this.getGeneros();
+      await this.getGeneros();
       this.alert.alertMax('Transaccion Correcta', genero.mensaje, 'success');
       this.generoForm.reset();
     }
@@ -51,7 +51,7 @@ export class GenerosComponent {
   async putGenero() {
     let genero = await this.generoService.putGenero(this.genero.id, this.generoForm.value);
     if (genero.resultado) {
-      this.getGeneros();
+      await this.getGeneros();
       this.alert.alertMax('Transaccion Correcta', genero.mensaje, 'success');
       this.generoForm.reset();
       this.genero = null;
@@ -85,7 +85,7 @@ export class GenerosComponent {
     i.index = index;
     this.genero = i;
     this.generoForm.controls['codigo'].setValue(i.codigo);
-    this.generoForm.controls['descripcion'].setValue(i.descripcion);
+    this.generoForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

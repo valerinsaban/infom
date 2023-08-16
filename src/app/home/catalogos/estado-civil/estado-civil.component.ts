@@ -21,7 +21,7 @@ export class EstadoCivilComponent {
   ) {
     this.estadoCivilForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required])
     });
   }
 
@@ -40,7 +40,7 @@ export class EstadoCivilComponent {
   async postEstadoCivil() {
     let estadoCivil = await this.estadoCivilService.postEstadoCivil(this.estadoCivilForm.value);
     if (estadoCivil.resultado) {
-      this.getEstadosCiviles();
+      await this.getEstadosCiviles();
       this.alert.alertMax('Transaccion Correcta', estadoCivil.mensaje, 'success');
       this.estadoCivilForm.reset();
     }
@@ -49,7 +49,7 @@ export class EstadoCivilComponent {
   async putEstadoCivil() {
     let estadoCivil = await this.estadoCivilService.putEstadoCivil(this.estadoCivil.id, this.estadoCivilForm.value);
     if (estadoCivil.resultado) {
-      this.getEstadosCiviles();
+      await this.getEstadosCiviles();
       this.alert.alertMax('Transaccion Correcta', estadoCivil.mensaje, 'success');
       this.estadoCivilForm.reset();
       this.estadoCivil = null;
@@ -83,7 +83,7 @@ export class EstadoCivilComponent {
     i.index = index;
     this.estadoCivil = i;
     this.estadoCivilForm.controls['codigo'].setValue(i.codigo);
-    this.estadoCivilForm.controls['descripcion'].setValue(i.descripcion);
+    this.estadoCivilForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

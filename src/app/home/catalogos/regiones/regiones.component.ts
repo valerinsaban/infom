@@ -22,7 +22,7 @@ export class RegionesComponent {
   ) {
     this.regionForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required])
     });
   }
 
@@ -42,7 +42,7 @@ export class RegionesComponent {
   async postRegion() {
     let region = await this.regionService.postRegion(this.regionForm.value);
     if (region.resultado) {
-      this.getRegiones();
+      await this.getRegiones();
       this.alert.alertMax('Transaccion Correcta', region.mensaje, 'success');
       this.regionForm.reset();
     }
@@ -51,7 +51,7 @@ export class RegionesComponent {
   async putRegion() {
     let region = await this.regionService.putRegion(this.region.id, this.regionForm.value);
     if (region.resultado) {
-      this.getRegiones();
+      await this.getRegiones();
       this.alert.alertMax('Transaccion Correcta', region.mensaje, 'success');
       this.regionForm.reset();
       this.region = null;
@@ -85,7 +85,7 @@ export class RegionesComponent {
     i.index = index;
     this.region = i;
     this.regionForm.controls['codigo'].setValue(i.codigo);
-    this.regionForm.controls['descripcion'].setValue(i.descripcion);
+    this.regionForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

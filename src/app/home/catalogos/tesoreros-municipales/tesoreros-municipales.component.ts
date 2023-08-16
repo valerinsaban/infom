@@ -22,7 +22,7 @@ export class TesorerosMunicipalesComponent {
   ) {
     this.tesorerosMunicipalForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required])
     });
   }
 
@@ -41,7 +41,7 @@ export class TesorerosMunicipalesComponent {
     async postTesoreroMunicipal() {
       let tesorerosMunicipal = await this.tesorerosMunicipalesService.postTesoreroMunicipal(this.tesorerosMunicipalForm.value);
       if (tesorerosMunicipal.resultado) {
-        this.getTesorerosMunicipales();
+        await this.getTesorerosMunicipales();
         this.alert.alertMax('Transaccion Correcta', tesorerosMunicipal.mensaje, 'success');
         this.tesorerosMunicipalForm.reset();
       }
@@ -50,7 +50,7 @@ export class TesorerosMunicipalesComponent {
     async putTesoreroMunicipal() {
       let tesoreroMunicipal = await this.tesorerosMunicipalesService.putTesoreroMunicipal(this.tesoreroMunicipal.id, this.tesorerosMunicipalForm.value);
       if (tesoreroMunicipal.resultado) {
-        this.getTesorerosMunicipales();
+        await this.getTesorerosMunicipales();
         this.alert.alertMax('Transaccion Correcta', tesoreroMunicipal.mensaje, 'success');
         this.tesorerosMunicipalForm.reset();
         this.tesoreroMunicipal = null;
@@ -84,7 +84,7 @@ export class TesorerosMunicipalesComponent {
       i.index = index;
       this.tesoreroMunicipal = i;
       this.tesorerosMunicipales.controls['codigo'].setValue(i.codigo);
-      this.tesorerosMunicipales.controls['descripcion'].setValue(i.descripcion);
+      this.tesorerosMunicipales.controls['nombre'].setValue(i.nombre);
     }
 
     cancelarEdicion() {

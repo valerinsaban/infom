@@ -20,11 +20,11 @@ export class MunicipiosComponent {
   constructor(
       private alert: AlertService,
       private municipiosService: MunicipiosService,
-      private departamentoSercive: DepartamentosService
+      private departamentosService: DepartamentosService
   ){
     this.municipioForm = new FormGroup({
       codigo: new FormControl(null,[Validators.required]),
-      descripcion: new FormControl(null, [Validators.required]),
+      nombre: new FormControl(null, [Validators.required]),
       id_departamento: new FormControl(null, [Validators.required]),
     });
 
@@ -45,7 +45,7 @@ export class MunicipiosComponent {
 
   // get Departamentos para dropdown
   async getDepartamentos(){
-    let departamentos = await this.departamentoSercive.getDepartamentos();
+    let departamentos = await this.departamentosService.getDepartamentos();
     if(departamentos){
       this.departamentos = departamentos;
     }
@@ -54,7 +54,7 @@ export class MunicipiosComponent {
   async postMunicipio() {
     let municipio = await this.municipiosService.postMunicipio(this.municipioForm.value);
     if (municipio.resultado) {
-      this.getMunicipios();
+      await this.getMunicipios();
       this.alert.alertMax('Transaccion Correcta', municipio.mensaje, 'success');
       this.municipioForm.reset();
     }
@@ -63,7 +63,7 @@ export class MunicipiosComponent {
   async putMunicipio() {
     let municipio = await this.municipiosService.putMunicipio(this.municipio.id, this.municipioForm.value);
     if (municipio.resultado) {
-      this.getMunicipios();
+      await this.getMunicipios();
       this.alert.alertMax('Transaccion Correcta', municipio.mensaje, 'success');
       this.municipioForm.reset();
       this.municipio = null;
@@ -97,7 +97,7 @@ export class MunicipiosComponent {
     i.index = index;
     this.municipio = i;
     this.municipioForm.controls['codigo'].setValue(i.codigo);
-    this.municipioForm.controls['descripcion'].setValue(i.descripcion);
+    this.municipioForm.controls['nombre'].setValue(i.nombre);
     this.municipioForm.controls['id_departamento'].setValue(i.id_departamento);
   }
 

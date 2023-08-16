@@ -21,7 +21,7 @@ export class GarantiasComponent {
   ) {
     this.garantiaForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required])
     });
   }
 
@@ -40,7 +40,7 @@ export class GarantiasComponent {
   async postGarantia() {
     let garantia = await this.garantiaService.postGarantia(this.garantiaForm.value);
     if (garantia.resultado) {
-      this.getGarantias();
+      await this.getGarantias();
       this.alert.alertMax('Transaccion Correcta', garantia.mensaje, 'success');
       this.garantiaForm.reset();
     }
@@ -49,7 +49,7 @@ export class GarantiasComponent {
   async putGarantia() {
     let garantia = await this.garantiaService.putGarantia(this.garantia.id, this.garantiaForm.value);
     if (garantia.resultado) {
-      this.getGarantias();
+      await this.getGarantias();
       this.alert.alertMax('Transaccion Correcta', garantia.mensaje, 'success');
       this.garantiaForm.reset();
       this.garantia = null;
@@ -83,7 +83,7 @@ export class GarantiasComponent {
     i.index = index;
     this.garantia = i;
     this.garantiaForm.controls['codigo'].setValue(i.codigo);
-    this.garantiaForm.controls['descripcion'].setValue(i.descripcion);
+    this.garantiaForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

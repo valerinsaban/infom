@@ -17,24 +17,23 @@ export class RolesComponent {
 
   constructor(
     private alert: AlertService,
-    private rolService: RolesService){
-        this.rolForm = new FormGroup({
-        nombreRol: new FormControl(null, [Validators.required])
-      });
-    }
+    private rolService: RolesService) {
+    this.rolForm = new FormGroup({
+      nombre: new FormControl(null, [Validators.required])
+    });
+  }
 
-    async ngOnInit() {
-      await this.getRoles();
-    }
+  async ngOnInit() {
+    await this.getRoles();
+  }
 
   // CRUD roles
   async getRoles() {
     let rol = await this.rolService.getRoles();
     if (rol) {
-      this.roles = rol.data;
+      this.roles = rol;
     }
   }
-
 
   async postRol() {
     let rol = await this.rolService.postRol(this.rolForm.value);
@@ -81,7 +80,7 @@ export class RolesComponent {
   setRol(i: any, index: number) {
     i.index = index;
     this.rol = i;
-    this.rolForm.controls['descripcion'].setValue(i.nombreRol);
+    this.rolForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

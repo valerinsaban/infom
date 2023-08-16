@@ -1,0 +1,149 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Municipalidades </h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Municipalidades</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects style-1">
+                <div class="tbl-caption">
+                  <h4 class="heading mb-0">Municipalidades</h4>
+                  <div>
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-municipalidad"
+                      role="button" (click)="limpiar()">
+                      + Agregar Municipalidad
+                    </a>
+                  </div>
+                </div>
+                <table id="empoloyees-tbl" class="table">
+                  <thead>
+                    <tr>
+                      <th>Departamento</th>
+                      <th>Municipio</th>
+                      <th>Direccion</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let m of municipalidades; let mindex = index">
+                      <td><span class="text-primary">{{m.departamento.nombre}}</span></td>
+                      <td><span class="text-primary">{{m.municipio.nombre}}</span></td>
+                      <td>{{m.direccion}}</td>
+                      <td>
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
+                              href="#editar-municipalidad">Editar</a>
+                            <a class="dropdown-item" (click)="deleteMunicipalidad(m, mindex)">Eliminar</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-municipalidad">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Agregar Municipalidad</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <!-- <div>
+        <label>Multimedia</label>
+        <div class="dz-default dlab-message upload-img mb-3">
+          <form action="#" class="dropzone">
+            <i class="fad fa-cloud-arrow-up fa-2x"></i>
+            <div class="fallback">
+              <input name="file" type="file" multiple>
+            </div>
+          </form>
+        </div>
+      </div> -->
+      <form [formGroup]="municipalidadForm">
+        <div class="row">
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Departamento<span class="text-danger">*</span></label>
+            <select formControlName="id_departamento" class="form-control" (change)="getMunicipios()">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let d of departamentos" [value]="d.id">{{d.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Municipio<span class="text-danger">*</span></label>
+            <select formControlName="id_municipio" class="form-control">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let m of municipios" [value]="m.id">{{m.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">Direccion
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="direccion" class="form-control">
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-primary me-1" (click)="postMunicipalidad()" data-bs-dismiss="offcanvas">
+            <i class="fa-duotone fa-floppy-disk"></i> Guardar
+          </button>
+          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="editar-municipalidad">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Editar Municipalidad</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <form [formGroup]="municipalidadForm">
+        <div class="row">
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">Direccion
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="direccion" class="form-control">
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-primary me-1" (click)="putMunicipalidad()" data-bs-dismiss="offcanvas">
+            <i class="fa-duotone fa-floppy-disk"></i> Guardar
+          </button>
+          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

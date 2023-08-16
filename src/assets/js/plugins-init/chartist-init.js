@@ -432,7 +432,7 @@
 	var overlappingBarsChart = function(){
 		//Overlapping bars on mobile
 		var data = {
-			labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+			labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 			series: [
 			  [5, 4, 3, 7, 5, 10, 3, 4, 8, 10, 6, 8],
 			  [3, 2, 9, 5, 4, 6, 4, 6, 7, 8, 7, 4]
@@ -472,7 +472,7 @@
 			  labelInterpolationFnc: function(value) {
 				return value + ' CHF'
 			  },
-			  scaleMinSpace: 15
+			  scaleMinSpace: 20
 			},
 			plugins: [
 			  Chartist.plugins.tooltip()
@@ -914,7 +914,7 @@
 			gaugeChart();
 			differentSeriesChart();
 			svgDotAnimationChart();
-						biPol();
+						//biPol();
 			
 		}
 	}

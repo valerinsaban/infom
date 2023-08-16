@@ -22,7 +22,7 @@ export class DestinoPrestamoComponent {
   ) {
     this.destinoPrestamoForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      descripcion: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required])
     });
   }
 
@@ -43,7 +43,7 @@ export class DestinoPrestamoComponent {
   async postDestinoPrestamo() {
     let destinoPrestamo = await this.destinoPrestamoService.postDestinoPrestamo(this.destinoPrestamoForm.value);
     if (destinoPrestamo.resultado) {
-      this.getDestinoPrestamos();
+      await this.getDestinoPrestamos();
       this.alert.alertMax('Transaccion Correcta', destinoPrestamo.mensaje, 'success');
       this.destinoPrestamoForm.reset();
     }
@@ -52,7 +52,7 @@ export class DestinoPrestamoComponent {
   async putDestinoPrestamo() {
     let destinoPrestamo = await this.destinoPrestamoService.putDestinoPrestamo(this.destinoPrestamo.id, this.destinoPrestamoForm.value);
     if (destinoPrestamo.resultado) {
-      this.getDestinoPrestamos();
+      await this.getDestinoPrestamos();
       this.alert.alertMax('Transaccion Correcta', destinoPrestamo.mensaje, 'success');
       this.destinoPrestamoForm.reset();
       this.destinoPrestamo = null;
@@ -86,7 +86,7 @@ export class DestinoPrestamoComponent {
     i.index = index;
     this.destinoPrestamo = i;
     this.destinoPrestamoForm.controls['codigo'].setValue(i.codigo);
-    this.destinoPrestamoForm.controls['descripcion'].setValue(i.descripcion);
+    this.destinoPrestamoForm.controls['nombre'].setValue(i.nombre);
   }
 
   cancelarEdicion() {

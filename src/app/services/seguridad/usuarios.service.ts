@@ -19,8 +19,8 @@ export class UsuariosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  getUsuariosByRole(role: string): Promise<any> {
-    return this.rootService.get(this.route + '/role/' + role);
+  getUsuariosByUsuario(usuario: string): Promise<any> {
+    return this.rootService.get(this.route + '/usuario/' + usuario);
   }
 
   getDocs(folder: number): Promise<any> {

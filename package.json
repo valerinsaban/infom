@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start" : "ng serve -o --host 0.0.0.0",
-    "build" : "ng build --configuration production",
-    "watch" : "ng build --watch --configuration development",
-    "test"  : "ng test"
+    "start": "ng serve -o --host 0.0.0.0",
+    "build": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
     "jwt-decode": "^3.1.2",
+    "moment": "^2.29.4",
     "ngx-ui-loader": "^13.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.7.12",

@@ -15,8 +15,8 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!region" class="heading mb-0">Nuevo Regiones</h4>
-          <h4 *ngIf="region" class="heading mb-0">Editar Regiones</h4>
+          <h4 *ngIf="!region" class="heading mb-0">Agregar Region</h4>
+          <h4 *ngIf="region" class="heading mb-0">Editar Region</h4>
         </div>
         <div class="card-body">
           <form [formGroup]="regionForm" class="finance-hr">
@@ -26,9 +26,9 @@
               <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
             </div>
             <div class="form-group mb-3">
-              <label class="text-secondary"> Descripcion <span class="text-danger">*</span>
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
               </label>
-              <input formControlName="descripcion" type="text" class="form-control" placeholder="Descripcion">
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
             </div>
             <div *ngIf="!region">
               <button (click)="postRegion()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': regionForm.invalid}">
@@ -58,18 +58,18 @@
               <thead>
                 <tr>
                   <th>Codigo</th>
-                  <th>Descripcion</th>
+                  <th>Nombre</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let d of regiones; let dindex = index">
                   <td><a class="text-primary">{{d.codigo}}</a></td>
-                  <td>{{d.descripcion}}</td>
+                  <td>{{d.nombre}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
-                        <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                        <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item" (click)="setRegion(d, dindex)">Editar</a>

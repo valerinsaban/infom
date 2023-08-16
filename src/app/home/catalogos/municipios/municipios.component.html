@@ -15,7 +15,7 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!municipio" class="heading mb-0">Nuevo Municipio</h4>
+          <h4 *ngIf="!municipio" class="heading mb-0">Agregar Municipio</h4>
           <h4 *ngIf="municipio" class="heading mb-0">Editar Municipio</h4>
         </div>
         <div class="card-body">
@@ -27,17 +27,17 @@
               <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
             </div>
             <div class="form-group mb-3">
-              <label class="text-secondary"> Descripcion <span class="text-danger">*</span>
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
               </label>
-              <input formControlName="descripcion" type="text" class="form-control" placeholder="Descripcion">
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
             </div>
             <div class="form-group mb-3">
               <label class="text-secondary font-w500">
                 Departamento<span class="text-danger">*</span>
               </label>
               <select formControlName="id_departamento" class="form-control">
-                <option selected="true" hidden>--- Seleccione un departamento ---</option>
-                <option *ngFor="let d of departamentos" [value]="d.id">{{d.descripcion}}</option>
+                <option selected="true">--- Seleccione un departamento ---</option>
+                <option *ngFor="let d of departamentos" [value]="d.id">{{d.nombre}}</option>
               </select>
             </div>
             <div *ngIf="!municipio">
@@ -68,7 +68,7 @@
               <thead>
                 <tr>
                   <th>Codigo</th>
-                  <th>Descripcion</th>
+                  <th>Nombre</th>
                   <th>Departamento</th>
                   <th>Acciones</th>
                 </tr>
@@ -76,12 +76,12 @@
               <tbody>
                 <tr *ngFor="let m of municipios; let mindex = index">
                   <td><a class="text-primary">{{m.codigo}}</a></td>
-                  <td>{{m.descripcion}}</td>
-                  <td>{{m.departamento.descripcion}}</td>
+                  <td>{{m.nombre}}</td>
+                  <td>{{m.departamento.nombre}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
-                        <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                        <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item" (click)="setMunicipio(m, mindex)">Editar</a>

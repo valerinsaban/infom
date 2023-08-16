@@ -22,47 +22,67 @@ export class RootService {
   url = environment.api;
 
   async get(path: string) {
-    let data: any = await this.httpClient.get(this.url + path, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
-      }
-    }).toPromise();
-    this.verify(data);
-    return data;
+    try {
+      let data: any = await this.httpClient.get(this.url + path, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
+        }
+      }).toPromise();
+      this.verify(data);
+      return data;
+    } catch (err: any) {
+      err = JSON.parse(JSON.stringify(err));
+      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+    }
   }
 
   async post(path: string, body: any = null) {
-    let data: any = await this.httpClient.post(this.url + path, body, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
-      }
-    }).toPromise();
-    this.verify(data);
-    return data;
+    try {
+      let data: any = await this.httpClient.post(this.url + path, body, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
+        }
+      }).toPromise();
+      this.verify(data);
+      return data;
+    } catch (err: any) {
+      err = JSON.parse(JSON.stringify(err));
+      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+    }
   }
 
   async put(path: string, body: any) {
-    let data: any = await this.httpClient.put(this.url + path, body, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
-      }
-    }).toPromise();
-    this.verify(data);
-    return data;
+    try {
+      let data: any = await this.httpClient.put(this.url + path, body, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
+        }
+      }).toPromise();
+      this.verify(data);
+      return data;
+    } catch (err: any) {
+      err = JSON.parse(JSON.stringify(err));
+      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+    }
   }
 
   async delete(path: string) {
-    let data: any = await this.httpClient.delete(this.url + path, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
-      }
-    }).toPromise();
-    this.verify(data);
-    return data;
+    try {
+      let data: any = await this.httpClient.delete(this.url + path, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.isToken(sessionStorage.getItem('token'))}`
+        }
+      }).toPromise();
+      this.verify(data);
+      return data;
+    } catch (err: any) {
+      err = JSON.parse(JSON.stringify(err));
+      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+    }
   }
 
   async authPost(path: string, body: any) {
@@ -74,7 +94,10 @@ export class RootService {
     return data;
   }
 
-  async verify(res: any) {    
+  async verify(res: any) {
+    if (res.status) {
+      this.alertService.alertMax('Transaccion Incorrecta', res.message, 'error');
+    }
     if (res.resultado == false) {
       this.alertService.alertMax('Transaccion Incorrecta', res.mensaje, 'error');
     }

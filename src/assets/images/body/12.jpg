@@ -19,9 +19,10 @@
 	<title>W3CRM Customer Relationship Management</title>
 	
 	<!-- FAVICONS ICON -->
-	<link rel="shortcut icon" type="image/png" href="images/favicon.png">
+	<link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
 	<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-    <link href="./css/style.css" rel="stylesheet">
+	<link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+   <link href="css/style.css" rel="stylesheet">
     
 </head>
 
@@ -49,8 +50,11 @@
 	Scripts
 ***********************************-->
 <!-- Required vendors -->
-<script src="./vendor/global/global.min.js"></script>
-<script src="./js/custom.js"></script>
-<script src="./js/deznav-init.js"></script>
+ <script src="vendor/global/global.min.js"></script>
+<script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+ <script src="js/custom.js"></script>
+<script src="js/deznav-init.js"></script>
+<script src="js/demo.js"></script>
+<script src="js/styleSwitcher.js"></script>
 </body>
 </html>
