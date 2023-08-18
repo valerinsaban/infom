@@ -1,13 +1,13 @@
 <div class="page-titles">
   <ol class="breadcrumb">
     <li>
-      <h5 class="bc-title">Roles</h5>
+      <h5 class="bc-title">Tipos Prestamos</h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
       <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Roles</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">TiposPrestamos</a></li>
   </ol>
 </div>
 <div class="container-fluid">
@@ -15,24 +15,28 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!rol" class="heading mb-0">Agregar Rol</h4>
-          <h4 *ngIf="rol" class="heading mb-0">Editar Rol</h4>
+          <h4 *ngIf="!tipo_prestamo" class="heading mb-0">Agregar Tipo Prestamo</h4>
+          <h4 *ngIf="tipo_prestamo" class="heading mb-0">Editar Tipo Prestamo</h4>
         </div>
         <div class="card-body">
-          <form [formGroup]="rolForm" class="finance-hr">
+          <form [formGroup]="tipo_prestamoForm" class="finance-hr">
             <div class="form-group mb-3">
-              <label class="text-secondary font-w500"> Rol<span class="text-danger">*</span>
+              <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
               </label>
-              <input formControlName="nombre" type="text" class="form-control" placeholder="Rol">
+              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
             </div>
-
-            <div *ngIf="!rol">
-              <button (click)="postRol()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': rolForm.invalid}">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+              </label>
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+            </div>
+            <div *ngIf="!tipo_prestamo">
+              <button (click)="postTipoPrestamo()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': tipo_prestamoForm.invalid}">
                 Guardar
               </button>
             </div>
-            <div *ngIf="rol">
-              <button (click)="putRol()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': rolForm.invalid}">
+            <div *ngIf="tipo_prestamo">
+              <button (click)="putTipoPrestamo()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': tipo_prestamoForm.invalid}">
                 Guardar
               </button>
               <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
@@ -48,29 +52,28 @@
         <div class="card-body p-0">
           <div class="table-responsive active-projects manage-client">
             <div class="tbl-caption">
-              <h4 class="heading mb-0">Roles</h4>
+              <h4 class="heading mb-0">Tipos Prestamos</h4>
             </div>
             <table id="empoloyees-tbl1" class="table">
               <thead>
                 <tr>
-                  <th>Roles</th>
+                  <th>Codigo</th>
+                  <th>Nombre</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let r of roles; let rindex = index">
-                  <td><a class="text-primary">{{r.nombre}}</a></td>
+                <tr *ngFor="let b of tipos_prestamos; let bindex = index">
+                  <td><a class="text-primary">{{b.codigo}}</a></td>
+                  <td>{{b.nombre}}</td>
                   <td>
                     <div class="dropdown">
-                      <a type="button" class="btn btn-primary light sharp" style="margin-right: 10px;" [routerLink]="['permisos', r.id]">
-                        <i class="fa-solid fa-key"></i>
-                      </a>
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setRol(r, rindex)">Editar</a>
-                        <a class="dropdown-item" (click)="deleteEstadoCivil(r, rindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="setTipoPrestamo(b, bindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deleteTipoPrestamo(b, bindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>

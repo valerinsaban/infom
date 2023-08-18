@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import decode from 'jwt-decode';
 import { MenusService } from '../services/seguridad/menu.service';
 import { UsuariosService } from '../services/seguridad/usuarios.service';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-home',
@@ -49,6 +50,11 @@ export class HomeComponent {
   
   get usuario() {    
     return HomeComponent.usuario;
+  }
+
+  closeMenu() {
+    $('.hamburger').removeClass('is-active');
+    $('#main-wrapper').removeClass('menu-toggle');
   }
 
   logout() {
