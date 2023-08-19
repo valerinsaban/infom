@@ -25,6 +25,11 @@
               </label>
               <input formControlName="nombre" type="text" class="form-control" placeholder="Rol">
             </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary font-w500"> Color<span class="text-danger">*</span>
+              </label>
+              <input formControlName="color" type="color" class="form-control">
+            </div>
 
             <div *ngIf="!rol">
               <button (click)="postRol()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': rolForm.invalid}">
@@ -54,12 +59,16 @@
               <thead>
                 <tr>
                   <th>Roles</th>
+                  <th>Color</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let r of roles; let rindex = index">
                   <td><a class="text-primary">{{r.nombre}}</a></td>
+                  <td>
+                    <i class="fas fa-palette fa-2x" [ngStyle]="{'color': r.color}"></i>
+                  </td>
                   <td>
                     <div class="dropdown">
                       <a type="button" class="btn btn-primary light sharp" style="margin-right: 10px;" [routerLink]="['permisos', r.id]">

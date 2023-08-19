@@ -28,7 +28,7 @@
 
 </head>
 
-<body>
+<body data-theme-version="dark">
   <div id="preloader">
     <div class="lds-ripple">
       <div></div>
@@ -38,13 +38,105 @@
 
   <app-root></app-root>
 
+  <div class="sidebar-right">
+    <div class="bg-overlay">
+  
+    </div>
+    <span>
+      <a class="sidebar-right-trigger wave-effect wave-effect-x" data-bs-toggle="tooltip" data-placement="right"
+        data-original-title="Change Layout" href="javascript:void(0);"><span><i
+            class="fa fa-cog fa-spin"></i></span></a><a class="sidebar-close-trigger" href="javascript:void(0);"><span><i
+            class="la-times las"></i></span></a>
+      <div class="sidebar-right-inner">
+        <h4>Pick your style <a href="javascript:void(0);" onclick="deleteAllCookie()"
+            class="btn btn-primary btn-sm pull-right">Delete All Cookie</a></h4>
+        <div class="card-tabs">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item"><a class="nav-link active" href="#tab1" data-bs-toggle="tab">Theme</a></li>
+            <li class="nav-item"><a class="nav-link" href="#tab2" data-bs-toggle="tab">Header</a></li>
+            <li class="nav-item"><a class="nav-link" href="#tab3" data-bs-toggle="tab">Content</a></li>
+          </ul>
+        </div>
+        <div class="tab-content tab-content-default tabcontent-border">
+          <div class="fade tab-pane active show" id="tab1">
+            <div class="admin-settings">
+              <div class="row">
+                <div class="col-sm-12">
+                  <p>Background</p><select class="default-select wide form-control" id="theme_version"
+                    name="theme_version">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fade tab-pane" id="tab2">
+            <div class="admin-settings">
+              <div class="row">
+                <div class="col-sm-6">
+                  <p>Layout</p><select class="default-select wide form-control" id="theme_layout" name="theme_layout">
+                    <option value="vertical">Vertical</option>
+                    <option value="horizontal">Horizontal</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <p>Header position</p><select class="default-select wide form-control" id="header_position"
+                    name="header_position">
+                    <option value="static">Static</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <p>Sidebar</p><select class="default-select wide form-control" id="sidebar_style" name="sidebar_style">
+                    <option value="full">Full</option>
+                    <option value="mini">Mini</option>
+                    <option value="compact">Compact</option>
+                    <option value="modern">Modern</option>
+                    <option value="overlay">Overlay</option>
+                    <option value="icon-hover">Icon-hover</option>
+                  </select>
+                </div>
+                <div class="col-sm-6">
+                  <p>Sidebar position</p><select class="default-select wide form-control" id="sidebar_position"
+                    name="sidebar_position">
+                    <option value="static">Static</option>
+                    <option value="fixed">Fixed</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="fade tab-pane" id="tab3">
+            <div class="admin-settings">
+              <div class="row">
+                <div class="col-sm-12">
+                  <p>Body Font</p><select class="default-select wide form-control" id="typography" name="typography">
+                    <option value="roboto">Roboto</option>
+                    <option value="poppins">Poppins</option>
+                    <option value="opensans">Open Sans</option>
+                    <option value="HelveticaNeue">HelveticaNeue</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="note-text"><span class="text-danger">*Note :</span> This theme switcher is not part of product. It is
+          only for demo. you will get all guideline in documentation. please check
+          <a href="https://w3crm.dexignzone.com/doc" target="_blank" class="text-primary">documentation.</a>
+        </div>
+      </div>
+    </span>
+  </div>
+
   <script src="assets/vendor/global/global.min.js"></script>
   <script src="assets/vendor/chart.js/Chart.bundle.min.js"></script>
   <script src="assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
   <script src="assets/vendor/apexchart/apexchart.js"></script>
 
   <script src="assets/js/custom.js"></script>
-  <script src="assets/js/deznav-init.js"></script>
+  <!-- <script src="assets/js/deznav-init.js"></script> -->
   <script src="assets/js/demo.js"></script>
   <script src="assets/js/styleSwitcher.js"></script>
 

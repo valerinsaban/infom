@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 import { RegionalesService } from 'src/app/services/seguridad/regionales.service';
+import { RolesService } from 'src/app/services/seguridad/roles.service';
 import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 import Swal from 'sweetalert2';
 
@@ -17,25 +18,29 @@ export class UsuariosComponent {
   usuarios: any = [];
   usuario: any;
   regionales: any = [];
+  roles: any = [];
 
   constructor(
     private alert: AlertService,
     private usuariosService: UsuariosService,
-    private regionalesService: RegionalesService
+    private regionalesService: RegionalesService,
+    private rolesService: RolesService
   ) {
     this.usuarioForm = new FormGroup({
       nombre: new FormControl(null, [Validators.required]),
       apellido: new FormControl(null, [Validators.required]),
       dpi: new FormControl(null, [Validators.required]),
       usuario: new FormControl(null, [Validators.required]),
-      clave: new FormControl(null, [Validators.required]),
-      id_regional: new FormControl(null, [Validators.required])
+      clave: new FormControl(null),
+      id_regional: new FormControl(null, [Validators.required]),
+      id_rol: new FormControl(null, [Validators.required])
     })
   }
 
   async ngOnInit() {
     await this.getUsuarios();
     await this.getRegionales();
+    await this.getRoles();
   }
 
   // CRUD Usuarios
@@ -50,6 +55,13 @@ export class UsuariosComponent {
     let regionales = await this.regionalesService.getRegionales();
     if (regionales) {
       this.regionales = regionales;
+    }
+  }
+
+  async getRoles() {
+    let roles = await this.rolesService.getRoles();
+    if (roles) {
+      this.roles = roles;
     }
   }
 
@@ -104,6 +116,7 @@ export class UsuariosComponent {
     this.usuarioForm.controls['usuario'].setValue(i.usuario);
     // this.usuarioForm.controls['clave'].setValue(i.clave);
     this.usuarioForm.controls['id_regional'].setValue(i.id_regional);
+    this.usuarioForm.controls['id_rol'].setValue(i.id_rol);
   }
 
   async cancelarEdicion() {

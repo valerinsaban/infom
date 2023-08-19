@@ -1,0 +1,188 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Permisos</h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Permisos</a></li>
+  </ol>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h4 class="heading mb-0">Control de permisos por Rol</h4>
+                <span>Parametrizacion de accesos (menu y submenu)</span>
+              </div>
+
+            </div>
+            <div class="card-body p-0">
+              <div class="all_user">
+                <h4 class="mb-0 d-flex align-items-center heading">Roles
+                  <span class="badge badge-primary badge-sm ms-3">{{roles.length}}</span>
+                </h4>
+                <h4 class="mb-0 text-primary heading">Permisos por Rol</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-12">
+          <div class="dd" id="nestable">
+            <ol class="dd-list">
+              <li *ngFor="let m of menus" class="dd-item menu-ac-item" data-id="1">
+                <!-- <div class="dd-handle"></div> -->
+
+                <div class="accordion accordion-primary" id="{{m.id}}-acc">
+                  <div class="accordion-item">
+                    <div class="accordion-header rounded-lg collapsed" id="{{m.id}}-hea" data-bs-toggle="collapse"
+                      [attr.data-bs-target]="'#' + m.id" aria-controls="collapseOne" aria-expanded="false"
+                      role="button">
+                      <span class="accordion-header-icon"></span>
+                      <span class="accordion-header-text">{{m.nombre}}</span>
+                      <span class="accordion-header-indicator"></span>
+                    </div>
+
+                    <div id="{{m.id}}" class="collapse" [attr.aria-labelledby]="m.id + 'hea'"
+                      [attr.data-bs-parent]="'#' + m.id + '-acc'">
+
+                      <div *ngIf="m.submenus.length" style="margin: 20px;">
+                        <div *ngFor="let s of m.submenus">
+                          <div class="accordion accordion-primary" id="sub-{{s.id}}-acc">
+                            <div class="accordion-item">
+                              <div class="accordion-header rounded-lg collapsed" id="sub-{{s.id}}-hea"
+                                data-bs-toggle="collapse" [attr.data-bs-target]="'#sub-' + s.id"
+                                aria-controls="collapseOne" aria-expanded="false" role="button">
+                                <span class="accordion-header-icon"></span>
+                                <span class="accordion-header-text">{{s.nombre}}</span>
+                                <span class="accordion-header-indicator"></span>
+                              </div>
+
+                              <div id="sub-{{s.id}}" class="collapse" [attr.aria-labelledby]="'sub-' + s.id + 'hea'"
+                                [attr.data-bs-parent]="'#sub-' + s.id + '-acc'">
+
+                                <div class="accordion-body-text">
+                                  <div class="table-responsive">
+                                    <table id="role" class="table role-tble">
+                                      <thead>
+                                        <tr>
+                                          <th></th>
+                                          <th class="text-end" *ngFor="let r of roles">{{r.nombre}}</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <td>Ver</td>
+                                          <td *ngFor="let r of roles">
+                                            <div class="form-check custom-checkbox checkbox-primary">
+                                              <input [checked]="getPermiso('Ver', r, m, s)" type="checkbox" class="form-check-input"
+                                                (change)="setPermiso('Ver', r, m, s)">
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Agregar</td>
+                                          <td *ngFor="let r of roles">
+                                            <div class="form-check custom-checkbox checkbox-primary">
+                                              <input [checked]="getPermiso('Agregar', r, m, s)" type="checkbox"
+                                                class="form-check-input" (change)="setPermiso('Agregar', r, m, s)">
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Editar</td>
+                                          <td *ngFor="let r of roles">
+                                            <div class="form-check custom-checkbox checkbox-primary">
+                                              <input [checked]="getPermiso('Editar', r, m, s)" type="checkbox"
+                                                class="form-check-input" (change)="setPermiso('Editar', r, m, s)">
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>Eliminar</td>
+                                          <td *ngFor="let r of roles">
+                                            <div class="form-check custom-checkbox checkbox-primary">
+                                              <input [checked]="getPermiso('Eliminar', r, m, s)" type="checkbox"
+                                                class="form-check-input" (change)="setPermiso('Eliminar', r, m, s)">
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div *ngIf="!m.submenus.length" class="accordion-body-text">
+                        <div class="table-responsive">
+                          <table id="role" class="table role-tble">
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th class="text-end" *ngFor="let r of roles">{{r.nombre}}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Ver</td>
+                                <td *ngFor="let r of roles">
+                                  <div class="form-check custom-checkbox checkbox-primary">
+                                    <input [checked]="getPermiso('Ver', r, m)" type="checkbox" class="form-check-input"
+                                      (change)="setPermiso('Ver', r, m)">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>Agregar</td>
+                                <td *ngFor="let r of roles">
+                                  <div class="form-check custom-checkbox checkbox-primary">
+                                    <input [checked]="getPermiso('Agregar', r, m)" type="checkbox"
+                                      class="form-check-input" (change)="setPermiso('Agregar', r, m)">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>Editar</td>
+                                <td *ngFor="let r of roles">
+                                  <div class="form-check custom-checkbox checkbox-primary">
+                                    <input [checked]="getPermiso('Editar', r, m)" type="checkbox"
+                                      class="form-check-input" (change)="setPermiso('Editar', r, m)">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>Eliminar</td>
+                                <td *ngFor="let r of roles">
+                                  <div class="form-check custom-checkbox checkbox-primary">
+                                    <input [checked]="getPermiso('Eliminar', r, m)" type="checkbox"
+                                      class="form-check-input" (change)="setPermiso('Eliminar', r, m)">
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

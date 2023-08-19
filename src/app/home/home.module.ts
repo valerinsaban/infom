@@ -20,7 +20,7 @@ import { FuncionariosComponent } from './funcionarios/funcionarios.component';
 import { ProfesionesComponent } from './catalogos/profesiones/profesiones.component';
 import { BancosComponent } from './catalogos/bancos/bancos.component';
 import { BienvenidoComponent } from './bienvenido/bienvenido.component';
-import { PermisosComponent } from './seguridad/roles/permisos/permisos.component';
+import { PermisosComponent } from './seguridad/permisos/permisos.component';
 import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
 import { PrestamosComponent } from './prestamos/prestamos.component';
 
@@ -52,7 +52,7 @@ const routes: Routes = [
       { path: 'regionales', component: RegionalesComponent},
       { path: 'usuarios', component: UsuariosComponent},
       { path: 'roles', component: RolesComponent},
-      { path: 'roles/permisos/:id', component: PermisosComponent},
+      { path: 'permisos', component: PermisosComponent},
 
       { path: '**', pathMatch: 'full', redirectTo: 'bienvenido' }
     ]

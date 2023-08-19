@@ -4,7 +4,10 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
+import { PermisosService } from 'src/app/services/seguridad/permisos.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../home.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-municipalidades',
@@ -60,6 +63,10 @@ export class MunicipalidadesComponent {
     if (municipios) {
       this.municipios = municipios;
     }
+  }
+
+  getPermiso(accion: string) {    
+    return HomeComponent.getPermiso(accion);
   }
 
   async changeDepartamento() {

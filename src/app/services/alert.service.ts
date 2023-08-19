@@ -11,7 +11,7 @@ export class AlertService {
   alertMin(title: any, icon: any) {
     const toast = swal.mixin({
       toast: true,
-      position: 'top-start',
+      position: 'top-end',
       showConfirmButton: false,
       timer: 3000,
       timerProgressBar: true

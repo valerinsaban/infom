@@ -58,6 +58,14 @@
               </select>
             </div>
 
+            <div class="form-group mb-3">
+              <label class="text-secondary font-w500"> Rol <span class="text-danger">*</span>
+              </label>
+              <select formControlName="id_rol" class="form-control">
+                <option *ngFor="let r of roles" [value]="r.id">{{r.nombre}}</option>
+              </select>
+            </div>
+
             <div *ngIf="!usuario">
               <button (click)="postUsuario()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': usuarioForm.invalid}">
                 Guardar
@@ -89,6 +97,7 @@
                   <th>Apellido</th>
                   <th>DPI</th>
                   <th>Usuario</th>
+                  <th>Rol</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -98,6 +107,7 @@
                   <td><a class="text-primary">{{u.apellido}}</a></td>
                   <td>{{u.dpi}}</td>
                   <td>{{u.usuario}}</td>
+                  <td>{{u.rol.nombre}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">

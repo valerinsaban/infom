@@ -1,0 +1,11 @@
+.active-projects thead tr th:last-child {
+  text-align: left;
+}
+
+.accordion-collapse {
+  background-color: var(--rgba-primary-1);
+}
+
+.active-projects thead tr th {
+  background-color: var(--rgba-primary-1) !important;
+}

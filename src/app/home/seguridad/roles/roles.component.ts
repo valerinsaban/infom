@@ -19,7 +19,8 @@ export class RolesComponent {
     private alert: AlertService,
     private rolService: RolesService) {
     this.rolForm = new FormGroup({
-      nombre: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required]),
+      color: new FormControl(null, [Validators.required])
     });
   }
 
@@ -81,6 +82,7 @@ export class RolesComponent {
     i.index = index;
     this.rol = i;
     this.rolForm.controls['nombre'].setValue(i.nombre);
+    this.rolForm.controls['color'].setValue(i.color);
   }
 
   cancelarEdicion() {

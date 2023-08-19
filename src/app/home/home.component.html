@@ -939,17 +939,17 @@
       <ul class="metismenu mm-show" id="menu">
 
         <li *ngFor="let m of menus" routerLinkActive="mm-active">
-          <a [routerLink]="m.url" [ngClass]="{'has-arrow': m.submenus.length}" (click)="m.submenus.length ? null : closeMenu()">
+          <a [routerLink]="m.url" [ngClass]="{'has-arrow': m.submenus.length}" (click)="m.submenus.length ? null : setMenu(m.id)">
             <div class="menu-icon">
-              <i [class]="m.icono"></i>
+              <i [class]="m.icono" style="color: var(--primary) !important"></i>
             </div>
             <span class="nav-text">{{m.nombre}}</span>
           </a>
 
           <ul *ngIf="m.submenus.length" aria-expanded="false">
-            <li routerLinkActive="mm-active" *ngFor="let sm of m.submenus">
-              <a [routerLink]="sm.url" aria-expanded="false" (click)="closeMenu()">
-                {{sm.nombre}}
+            <li routerLinkActive="mm-active" *ngFor="let s of m.submenus">
+              <a [routerLink]="s.url" aria-expanded="false" (click)="setMenu(m.id, s.id)">
+                {{s.nombre}}
               </a>
             </li>
           </ul>

@@ -3807,7 +3807,7 @@ textarea.form-control-lg {
       transition: none; } }
   .accordion-button:not(.collapsed) {
     color: var(--bs-accordion-active-color);
-    background-color: var(--bs-accordion-active-bg);
+    /* background-color: var(--bs-accordion-active-bg); */
     box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color); }
     .accordion-button:not(.collapsed)::after {
       background-image: var(--bs-accordion-btn-active-icon);
@@ -32336,7 +32336,7 @@ div#mCSB_1 {
   justify-content: space-between;
   padding: 9px 30px; }
   .all_user1 .member {
-    margin-right: 4rem; }
+    margin-right: 0rem; }
     .all_user1 .member .heading {
       padding: 0 10px; }
 
@@ -35125,10 +35125,10 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
   padding-right: 9.375rem; }
 
 :root {
-  --primary: #0D99FF;
+  --primary: #008fc7;
   --secondary: #2C2C2C;
   --secondary-dark: #131313;
-  --primary-hover: #007ed9;
+  --primary-hover: #1c7396;
   --primary-dark: #004373;
   --rgba-primary-1: rgba(13, 153, 255, 0.1);
   --rgba-primary-2: rgba(13, 153, 255, 0.2);
