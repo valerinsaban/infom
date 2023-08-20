@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
-import { RegionalesService } from 'src/app/services/seguridad/regionales.service';
+import { RegionalesService } from 'src/app/services/catalogos/regionales.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../../home.component';
 
 @Component({
   selector: 'app-regionales',
@@ -17,6 +19,7 @@ export class RegionalesComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private regionalesService: RegionalesService
   ) {
     this.regionalForm = new FormGroup({
@@ -30,7 +33,9 @@ export class RegionalesComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getRegionales();
+    this.ngxService.stop();
   }
 
   // CRUD regionales
@@ -42,24 +47,40 @@ export class RegionalesComponent {
   }
 
   async postRegional() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let regional = await this.regionalesService.postRegional(this.regionalForm.value);
     if (regional.resultado) {
       await this.getRegionales();
       this.alert.alertMax('Transaccion Correcta', regional.mensaje, 'success');
       this.cancelarEdicion();
     }
+    this.ngxService.stop();
   }
 
   async putRegional() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let regional = await this.regionalesService.putRegional(this.regional.id, this.regionalForm.value);
     if (regional.resultado) {
       await this.getRegionales();
       this.alert.alertMax('Transaccion Correcta', regional.mensaje, 'success');
       this.cancelarEdicion();
     }
+    this.ngxService.stop();
   }
 
   async deleteRegional(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -71,12 +92,14 @@ export class RegionalesComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let regional = await this.regionalesService.deleteRegional(i.id);
         if (regional.resultado) {
           this.regionales.splice(index, 1);
           this.alert.alertMax('Correcto', regional.mensaje, 'success');
           this.cancelarEdicion();
         }
+        this.ngxService.stop();
       }
     })
   }

@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AppComponent } from 'src/app/app.component';
 import { AlertService } from 'src/app/services/alert.service';
-import { EstadoCivilService } from 'src/app/services/catalogos/estado-civil.service';
+import { EstadosCivilesService } from 'src/app/services/catalogos/estados-civiles.service';
 import { ProfesionesService } from 'src/app/services/catalogos/profesiones.service';
 import { PuestosService } from 'src/app/services/catalogos/puestos.service';
 import { FuncionariosService } from 'src/app/services/funcionarios.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../home.component';
 
 @Component({
   selector: 'app-funcionarios',
@@ -34,11 +36,12 @@ export class FuncionariosComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private funcionariosService: FuncionariosService,
     private municipalidadesService: MunicipalidadesService,
     private puestosService: PuestosService,
     private profesionesService: ProfesionesService,
-    private estados_civilesService: EstadoCivilService
+    private estados_civilesService: EstadosCivilesService
   ) {
     this.funcionarioForm = new FormGroup({
       nombre: new FormControl(null, [Validators.required]),
@@ -62,11 +65,13 @@ export class FuncionariosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getFuncionarios();
     await this.getMunicipalidades();
     await this.getProfesiones();
     await this.getPuestos();
     await this.getEstadosCiviles();
+    this.ngxService.stop();
   }
 
   async getFuncionarios() {
@@ -105,24 +110,40 @@ export class FuncionariosComponent {
   }
 
   async postFuncionario() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let funcionario = await this.funcionariosService.postFuncionario(this.funcionarioForm.value);
     if (funcionario.resultado) {
       await this.getFuncionarios();
       this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
       this.limpiar();
     }
+    this.ngxService.stop();
   }
 
   async putFuncionario() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let funcionario = await this.funcionariosService.putFuncionario(this.funcionario.id, this.funcionarioForm.value);
     if (funcionario.resultado) {
       await this.getFuncionarios();
       this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
       this.limpiar();
     }
+    this.ngxService.stop();
   }
 
   async deleteFuncionario(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -134,12 +155,14 @@ export class FuncionariosComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let funcionario = await this.funcionariosService.deleteFuncionario(i.id);
         if (funcionario.resultado) {
           this.funcionarios.splice(index, 1);
           this.alert.alertMax('Correcto', funcionario.mensaje, 'success');
           this.limpiar();
         }
+        this.ngxService.stop();
       }
     })
   }

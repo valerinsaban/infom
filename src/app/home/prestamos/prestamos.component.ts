@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AlertService } from 'src/app/services/alert.service';
-import { RegionalesService } from 'src/app/services/seguridad/regionales.service';
+import { RegionalesService } from 'src/app/services/catalogos/regionales.service';
 import { FuncionariosService } from 'src/app/services/funcionarios.service';
 import { PrestamosService } from 'src/app/services/prestamos.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';

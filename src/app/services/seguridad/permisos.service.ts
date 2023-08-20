@@ -13,12 +13,12 @@ export class PermisosService {
     return this.rootService.get(this.route);
   }
 
-  getPermiso(id: number): Promise<any> {
-    return this.rootService.get(this.route + '/' + id);
+  getPermiso(accion: string, id_rol: number, id_menu: number, id_submenu: number): Promise<any> {
+    return this.rootService.get(this.route + '/' + accion + '/' + id_rol + '/' + id_menu + '/' + id_submenu);
   }
 
-  getPermisoRol(accion: string, id_rol: number, id_menu: number, id_submenu: number): Promise<any> {
-    return this.rootService.get(this.route + '/' + accion + '/' + id_rol + '/' + id_menu + '/' + id_submenu);
+  getPermisoRol(id_rol: number): Promise<any> {
+    return this.rootService.get(this.route + '/role/' + id_rol);
   }
 
   postPermiso(data: any): Promise<any> {

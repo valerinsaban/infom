@@ -20,7 +20,7 @@
               <div class="table-responsive active-projects style-1">
                 <div class="tbl-caption">
                   <h4 class="heading mb-0">Municipalidades</h4>
-                  <div *ngIf="getPermiso('Agregar')">
+                  <div>
                     <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-municipalidad"
                       role="button" (click)="limpiar()">
                       + Agregar Municipalidad
@@ -47,11 +47,11 @@
                             <i class="fa-solid fa-list"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
-                            <a *ngIf="getPermiso('Editar')" class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
+                            <a class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
                               href="#editar-municipalidad">
                               Editar
                             </a>
-                            <a *ngIf="getPermiso('Eliminar')" class="dropdown-item" (click)="deleteMunicipalidad(m, mindex)">
+                            <a class="dropdown-item" (click)="deleteMunicipalidad(m, mindex)">
                               Eliminar
                             </a>
                           </div>

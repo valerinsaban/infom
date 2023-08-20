@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
 import { BancosService } from 'src/app/services/catalogos/bancos.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../../home.component';
 
 @Component({
   selector: 'app-bancos',
@@ -17,6 +19,7 @@ export class BancosComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private bancoService: BancosService
   ) {
     this.bancoForm = new FormGroup({
@@ -27,7 +30,9 @@ export class BancosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getBancos();
+    this.ngxService.stop();
   }
 
   // CRUD bancos
@@ -39,15 +44,26 @@ export class BancosComponent {
   }
 
   async postBanco() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let banco = await this.bancoService.postBanco(this.bancoForm.value);
     if (banco.resultado) {
       await this.getBancos();
       this.alert.alertMax('Transaccion Correcta', banco.mensaje, 'success');
       this.bancoForm.reset();
     }
+    this.ngxService.stop();
   }
 
   async putBanco() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let banco = await this.bancoService.putBanco(this.banco.id, this.bancoForm.value);
     if (banco.resultado) {
       await this.getBancos();
@@ -55,9 +71,14 @@ export class BancosComponent {
       this.bancoForm.reset();
       this.banco = null;
     }
+    this.ngxService.stop();
   }
 
   async deleteBanco(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -69,12 +90,14 @@ export class BancosComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let banco = await this.bancoService.deleteBanco(i.id);
         if (banco.resultado) {
           this.banco.splice(index, 1);
           this.alert.alertMax('Correcto', banco.mensaje, 'success');
           this.banco = null;
         }
+        this.ngxService.stop();
       }
     })
   }
@@ -92,8 +115,5 @@ export class BancosComponent {
     this.bancoForm.reset();
     this.banco = null;
   }
-
-
-
-
+  
 }

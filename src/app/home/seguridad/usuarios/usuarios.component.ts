@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
-import { RegionalesService } from 'src/app/services/seguridad/regionales.service';
+import { RegionalesService } from 'src/app/services/catalogos/regionales.service';
 import { RolesService } from 'src/app/services/seguridad/roles.service';
 import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../../home.component';
 
 
 @Component({
@@ -22,6 +24,7 @@ export class UsuariosComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private usuariosService: UsuariosService,
     private regionalesService: RegionalesService,
     private rolesService: RolesService
@@ -38,9 +41,11 @@ export class UsuariosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getUsuarios();
     await this.getRegionales();
     await this.getRoles();
+    this.ngxService.stop();
   }
 
   // CRUD Usuarios
@@ -66,15 +71,26 @@ export class UsuariosComponent {
   }
 
   async postUsuario() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let usaurio = await this.usuariosService.postUsuario(this.usuarioForm.value);
     if (usaurio.resultado) {
       this.getUsuarios();
       this.alert.alertMax('Transaccion Correcta', usaurio.mensaje, 'success');
       this.usuarioForm.reset();
     }
+    this.ngxService.stop();
   }
 
   async putUsuario() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let usuario = await this.usuariosService.putUsuario(this.usuario.id, this.usuarioForm.value);
     if (usuario.resultado) {
       this.getUsuarios();
@@ -82,9 +98,14 @@ export class UsuariosComponent {
       this.usuarioForm.reset();
       this.usuario = null;
     }
+    this.ngxService.stop();
   }
 
   async deleteUsuario(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -96,12 +117,14 @@ export class UsuariosComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let usuario = await this.usuariosService.deleteUsuario(i.id);
         if (usuario.resultado) {
           this.usuarios.splice(index, 1);
           this.alert.alertMax('Correcto', usuario.mensaje, 'success');
           this.usuario = null;
         }
+        this.ngxService.stop();
       }
     })
   }

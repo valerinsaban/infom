@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../../home.component';
 
 @Component({
   selector: 'app-departamentos',
@@ -17,6 +19,7 @@ export class DepartamentosComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private departamentosService: DepartamentosService
   ) {
     this.departamentoForm = new FormGroup({
@@ -26,7 +29,9 @@ export class DepartamentosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getDepartamentos();
+    this.ngxService.stop();
   }
 
   // CRUD departamentos
@@ -38,24 +43,40 @@ export class DepartamentosComponent {
   }
 
   async postDepartamento() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let departamento = await this.departamentosService.postDepartamento(this.departamentoForm.value);
     if (departamento.resultado) {
       await this.getDepartamentos();
       this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
       this.cancelarEdicion();
     }
+    this.ngxService.stop();
   }
 
   async putDepartamento() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let departamento = await this.departamentosService.putDepartamento(this.departamento.id, this.departamentoForm.value);
     if (departamento.resultado) {
       await this.getDepartamentos();
       this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
       this.cancelarEdicion();
     }
+    this.ngxService.stop();
   }
 
   async deleteDepartamento(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -67,12 +88,14 @@ export class DepartamentosComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let departamento = await this.departamentosService.deleteDepartamento(i.id);
         if (departamento.resultado) {
           this.departamentos.splice(index, 1);
           this.alert.alertMax('Correcto', departamento.mensaje, 'success');
           this.cancelarEdicion();
         }
+        this.ngxService.stop();
       }
     })
   }

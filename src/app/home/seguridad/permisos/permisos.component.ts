@@ -3,6 +3,8 @@ import { AlertService } from 'src/app/services/alert.service';
 import { MenusService } from 'src/app/services/seguridad/menu.service';
 import { PermisosService } from 'src/app/services/seguridad/permisos.service';
 import { RolesService } from 'src/app/services/seguridad/roles.service';
+import { HomeComponent } from '../../home.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-permisos',
@@ -17,6 +19,7 @@ export class PermisosComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private rolesService: RolesService,
     private menusService: MenusService,
     private permisosService: PermisosService
@@ -25,15 +28,18 @@ export class PermisosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getRoles();
     await this.getMenus();
     await this.getPermisos();
+    this.ngxService.stop();
   }
 
   async getRoles() {
     let roles = await this.rolesService.getRoles();
     if (roles) {
       this.roles = roles;
+      this.roles.shift();
     }
   }
 
@@ -62,6 +68,11 @@ export class PermisosComponent {
   }
 
   async setPermiso(accion: string, rol: any, menu: any, submenu: any = null) {
+    if (!HomeComponent.getPermiso('Agregar')){
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let permiso = await this.permisosService.postPermiso({
       accion: accion,
       id_rol: rol ? rol.id : null,
@@ -71,7 +82,8 @@ export class PermisosComponent {
     if (permiso.resultado) {
       await this.getPermisos();
       this.alert.alertMin(permiso.mensaje, 'success');
-    }3
+    }
+    this.ngxService.stop();
   }
 
 }

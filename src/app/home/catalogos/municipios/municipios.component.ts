@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../../home.component';
 
 
 @Component({
@@ -20,6 +22,7 @@ export class MunicipiosComponent {
   constructor(
       private alert: AlertService,
       private municipiosService: MunicipiosService,
+      private ngxService: NgxUiLoaderService,
       private departamentosService: DepartamentosService
   ){
     this.municipioForm = new FormGroup({
@@ -31,8 +34,10 @@ export class MunicipiosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getMunicipios();
     await this.getDepartamentos();
+    this.ngxService.stop();
   }
 
   // CRUD municipios
@@ -52,15 +57,26 @@ export class MunicipiosComponent {
   }
 
   async postMunicipio() {
+    if (!HomeComponent.getPermiso('Agregar')){
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let municipio = await this.municipiosService.postMunicipio(this.municipioForm.value);
     if (municipio.resultado) {
       await this.getMunicipios();
       this.alert.alertMax('Transaccion Correcta', municipio.mensaje, 'success');
       this.municipioForm.reset();
     }
+    this.ngxService.stop();
   }
 
   async putMunicipio() {
+    if (!HomeComponent.getPermiso('Editar')){
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let municipio = await this.municipiosService.putMunicipio(this.municipio.id, this.municipioForm.value);
     if (municipio.resultado) {
       await this.getMunicipios();
@@ -68,9 +84,14 @@ export class MunicipiosComponent {
       this.municipioForm.reset();
       this.municipio = null;
     }
+    this.ngxService.stop();
   }
 
   async deleteMunicipio(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')){
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -82,12 +103,14 @@ export class MunicipiosComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let municipio = await this.municipiosService.deleteMunicipio(i.id);
         if (municipio.resultado) {
           this.municipios.splice(index, 1);
           this.alert.alertMax('Correcto', municipio.mensaje, 'success');
           this.municipio = null;
         }
+        this.ngxService.stop();
       }
     })
   }

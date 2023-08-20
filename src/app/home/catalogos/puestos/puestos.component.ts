@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
 import { PuestosService } from 'src/app/services/catalogos/puestos.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../../home.component';
 
 @Component({
   selector: 'app-puestos',
@@ -18,6 +20,7 @@ export class PuestosComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private puestosService: PuestosService) {
     this.puestoForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
@@ -26,7 +29,9 @@ export class PuestosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getPuestos();
+    this.ngxService.stop();
   }
 
   // CRUD Puestos
@@ -38,15 +43,26 @@ export class PuestosComponent {
   }
 
   async postPuesto() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let puesto = await this.puestosService.postPuesto(this.puestoForm.value);
     if (puesto.resultado) {
       await this.getPuestos();
       this.alert.alertMax('Transaccion Correcta', puesto.mensaje, 'success');
       this.puestoForm.reset();
     }
+    this.ngxService.stop();
   }
 
   async putPuesto() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let puesto = await this.puestosService.putPuesto(this.puesto.id, this.puestoForm.value);
     if (puesto.resultado) {
       await this.getPuestos();
@@ -54,9 +70,14 @@ export class PuestosComponent {
       this.puestoForm.reset();
       this.puesto = null;
     }
+    this.ngxService.stop();
   }
 
   async deletePuesto(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -68,12 +89,14 @@ export class PuestosComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let puesto = await this.puestosService.deletePuesto(i.id);
         if (puesto.resultado) {
           this.puestos.splice(index, 1);
           this.alert.alertMax('Correcto', puesto.mensaje, 'success');
           this.puesto = null;
         }
+        this.ngxService.stop();
       }
     })
   }

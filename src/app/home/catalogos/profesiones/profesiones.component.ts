@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
 import { ProfesionesService } from 'src/app/services/catalogos/profesiones.service';
 import Swal from 'sweetalert2';
+import { HomeComponent } from '../../home.component';
 
 @Component({
   selector: 'app-profesiones',
@@ -18,6 +20,7 @@ export class ProfesionesComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private profesionesService: ProfesionesService
   ) {
     this.profesionForm = new FormGroup({
@@ -27,7 +30,9 @@ export class ProfesionesComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getProfesiones();
+    this.ngxService.stop();
   }
 
   // CRUD Profesiones
@@ -39,15 +44,26 @@ export class ProfesionesComponent {
   }
 
   async postProfesion() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let profesion = await this.profesionesService.postProfesion(this.profesionForm.value);
     if (profesion.resultado) {
       await this.getProfesiones();
       this.alert.alertMax('Transaccion Correcta', profesion.mensaje, 'success');
       this.profesionForm.reset();
     }
+    this.ngxService.stop();
   }
 
   async putProfesion() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let profesion = await this.profesionesService.putProfesion(this.profesion.id, this.profesionForm.value);
     if (profesion.resultado) {
       await this.getProfesiones();
@@ -55,9 +71,14 @@ export class ProfesionesComponent {
       this.profesionForm.reset();
       this.profesion = null;
     }
+    this.ngxService.stop();
   }
 
   async deleteProfesion(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -69,12 +90,14 @@ export class ProfesionesComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let profesion = await this.profesionesService.deleteProfesion(i.id);
         if (profesion.resultado) {
           this.profesiones.splice(index, 1);
           this.alert.alertMax('Correcto', profesion.mensaje, 'success');
           this.profesion = null;
         }
+        this.ngxService.stop();
       }
     })
   }
@@ -91,7 +114,5 @@ export class ProfesionesComponent {
     this.profesionForm.reset();
     this.profesion = null;
   }
-
-
 
 }

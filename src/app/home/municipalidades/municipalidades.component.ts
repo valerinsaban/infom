@@ -8,6 +8,7 @@ import { PermisosService } from 'src/app/services/seguridad/permisos.service';
 import Swal from 'sweetalert2';
 import { HomeComponent } from '../home.component';
 import { Router } from '@angular/router';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-municipalidades',
@@ -28,6 +29,7 @@ export class MunicipalidadesComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private municipalidadesService: MunicipalidadesService,
     private departamentosService: DepartamentosService,
     private municipiosService: MunicipiosService,
@@ -40,8 +42,10 @@ export class MunicipalidadesComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getMunicipalidades();
     await this.getDepartamentos();
+    this.ngxService.stop();
   }
 
   async getMunicipalidades() {
@@ -65,33 +69,45 @@ export class MunicipalidadesComponent {
     }
   }
 
-  getPermiso(accion: string) {    
-    return HomeComponent.getPermiso(accion);
-  }
-
   async changeDepartamento() {
     await this.getMunicipios();
   }
 
   async postMunicipalidad() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let municipalidad = await this.municipalidadesService.postMunicipalidad(this.municipalidadForm.value);
     if (municipalidad.resultado) {
       await this.getMunicipalidades();
       this.alert.alertMax('Transaccion Correcta', municipalidad.mensaje, 'success');
       this.limpiar();
     }
+    this.ngxService.stop();
   }
 
   async putMunicipalidad() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
     let municipalidad = await this.municipalidadesService.putMunicipalidad(this.municipalidad.id, this.municipalidadForm.value);
     if (municipalidad.resultado) {
       await this.getMunicipalidades();
       this.alert.alertMax('Transaccion Correcta', municipalidad.mensaje, 'success');
       this.limpiar();
     }
+    this.ngxService.stop();
   }
 
   async deleteMunicipalidad(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -103,12 +119,14 @@ export class MunicipalidadesComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let municipalidad = await this.municipalidadesService.deleteMunicipalidad(i.id);
         if (municipalidad.resultado) {
           this.municipalidades.splice(index, 1);
           this.alert.alertMax('Correcto', municipalidad.mensaje, 'success');
           this.limpiar();
         }
+        this.ngxService.stop();
       }
     })
   }

@@ -4,32 +4,29 @@ import { RootService } from '../root.service';
 @Injectable({
   providedIn: 'root'
 })
-export class OpcionesMenuService {
+export class EstadosCivilesService {
 
   constructor(private rootService: RootService) { }
 
-  route = '/opciones-menu';
+  route = '/estados_civiles'
 
-  getOpcionesMenus(): Promise<any> {
+  getEstadosCiviles(): Promise<any> {
     return this.rootService.get(this.route);
   }
 
-  getOpcionesMenu(id: number): Promise<any> {
+  getEstadoCivil(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postOpcionesMenu(data: any): Promise<any> {
+  postEstadoCivil(data: any): Promise<any> {
     return this.rootService.post(this.route, data);
   }
 
-  putOpcionesMenu(id: number, data: any): Promise<any> {
+  putEstadoCivil(id: number, data: any): Promise<any> {
     return this.rootService.put(this.route + '/' + id, data);
   }
 
-  deleteOpcionesMenu(id: number): Promise<any> {
+  deleteEstadoCivil(id: number): Promise<any> {
     return this.rootService.delete(this.route + '/' + id);
   }
-
-
-
 }
