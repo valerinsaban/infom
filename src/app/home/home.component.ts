@@ -44,9 +44,9 @@ export class HomeComponent {
         await this.getMenus();   
         await this.getPermisos(); 
 
+        AppComponent.loadScript('assets/js/dashboard/cms.js');
         AppComponent.loadScript('assets/js/deznav-init.js');
         AppComponent.loadScript('assets/js/custom.js');
-        AppComponent.loadScript('assets/js/demo.js'); 
         
         // this.router.navigate(['home']);
 
