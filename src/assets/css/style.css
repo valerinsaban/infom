@@ -35795,9 +35795,9 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
     background-color: #fff !important; }
   [data-theme-version="dark"] .border-end {
     border-color: #444444 !important; }
-  [data-theme-version="dark"] .form-check-input {
+  /* [data-theme-version="dark"] .form-check-input {
     border-color: #444444;
-    background-color: #1E1E1E; }
+    background-color: #1E1E1E; } */
   [data-theme-version="dark"] .menu-toggle .logo-color {
     display: none !important; }
   @media only screen and (max-width: 47.9375rem) {
