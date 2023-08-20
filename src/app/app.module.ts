@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +15,7 @@ import {
   PB_DIRECTION,
   NgxUiLoaderBlurredDirective
 } from "ngx-ui-loader";
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   fgsColor: "#008fc7",
@@ -40,7 +41,13 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -26,6 +26,8 @@
 
   <link href="https://kit-pro.fontawesome.com/releases/v6.4.2/css/pro.min.css" rel="stylesheet">
 
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#008fc7">
 </head>
 
 <body>
@@ -37,13 +39,9 @@
   
     </div>
     <span>
-      <a class="sidebar-right-trigger wave-effect wave-effect-x" data-bs-toggle="tooltip" data-placement="right"
-        data-original-title="Change Layout" href="javascript:void(0);"><span><i
-            class="fa fa-cog fa-spin"></i></span></a><a class="sidebar-close-trigger" href="javascript:void(0);"><span><i
-            class="la-times las"></i></span></a>
+      <a class="sidebar-right-trigger wave-effect wave-effect-x" data-bs-toggle="tooltip" data-placement="right" data-original-title="Change Layout" href="javascript:void(0);"><span><i class="fa fa-cog fa-spin"></i></span></a><a class="sidebar-close-trigger" href="javascript:void(0);"><span><i class="la-times las"></i></span></a>
       <div class="sidebar-right-inner">
-        <h4>Pick your style <a href="javascript:void(0);" onclick="deleteAllCookie()"
-            class="btn btn-primary btn-sm pull-right">Delete All Cookie</a></h4>
+        <h4>Pick your style <a href="javascript:void(0);" onclick="deleteAllCookie()" class="btn btn-primary btn-sm pull-right">Delete All Cookie</a></h4>
         <div class="card-tabs">
           <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item"><a class="nav-link active" href="#tab1" data-bs-toggle="tab">Theme</a></li>
@@ -56,8 +54,7 @@
             <div class="admin-settings">
               <div class="row">
                 <div class="col-sm-12">
-                  <p>Background</p><select class="default-select wide form-control" id="theme_version"
-                    name="theme_version">
+                  <p>Background</p><select class="default-select wide form-control" id="theme_version" name="theme_version">
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
                   </select>
@@ -75,8 +72,7 @@
                   </select>
                 </div>
                 <div class="col-sm-6">
-                  <p>Header position</p><select class="default-select wide form-control" id="header_position"
-                    name="header_position">
+                  <p>Header position</p><select class="default-select wide form-control" id="header_position" name="header_position">
                     <option value="static">Static</option>
                     <option value="fixed">Fixed</option>
                   </select>
@@ -92,8 +88,7 @@
                   </select>
                 </div>
                 <div class="col-sm-6">
-                  <p>Sidebar position</p><select class="default-select wide form-control" id="sidebar_position"
-                    name="sidebar_position">
+                  <p>Sidebar position</p><select class="default-select wide form-control" id="sidebar_position" name="sidebar_position">
                     <option value="static">Static</option>
                     <option value="fixed">Fixed</option>
                   </select>
@@ -133,6 +128,7 @@
   <script src="assets/js/styleSwitcher.js"></script>
 
   <script src="assets/vendor/tagify/dist/tagify.js"></script>
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
 
 </html>
