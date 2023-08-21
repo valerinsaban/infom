@@ -7,6 +7,7 @@ import { UsuariosService } from '../services/seguridad/usuarios.service';
 import * as $ from 'jquery';
 import { PermisosService } from '../services/seguridad/permisos.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,8 @@ export class HomeComponent {
   static id_rol: any;
   static id_menu: any;
   static id_submenu: any;
+
+  static apiUrl = environment.api;
 
   menus: any = [];
 

@@ -45199,7 +45199,7 @@ table.dataTable thead .sorting_asc {
 .active-projects tbody tr td {
   font-size: 13px;
   font-weight: 400;
-  padding: 0.625rem 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .active-projects tbody tr td:last-child {

@@ -5,6 +5,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import Swal from 'sweetalert2';
 import { HomeComponent } from '../../home.component';
+import { ReportesService } from 'src/app/services/reportes.service';
 
 @Component({
   selector: 'app-departamentos',
@@ -20,6 +21,7 @@ export class DepartamentosComponent {
   constructor(
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,
+    private reportesService: ReportesService,
     private departamentosService: DepartamentosService
   ) {
     this.departamentoForm = new FormGroup({
@@ -106,6 +108,13 @@ export class DepartamentosComponent {
     this.departamento = i;
     this.departamentoForm.controls['codigo'].setValue(i.codigo);
     this.departamentoForm.controls['nombre'].setValue(i.nombre);
+  }
+
+  async reporte(format: string) {
+    this.ngxService.start();
+    // let departamento = await this.reportesService.getReporteDepartamentos('PDF');
+    window.open(HomeComponent.apiUrl + '/reportes/departamentos/' + format, "_blank");
+    this.ngxService.stop();
   }
 
   cancelarEdicion() {
