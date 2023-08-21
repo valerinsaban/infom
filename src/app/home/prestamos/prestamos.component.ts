@@ -9,6 +9,8 @@ import { MunicipalidadesService } from 'src/app/services/municipalidades.service
 import Swal from 'sweetalert2';
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos_prestamos.service';
 import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
+import { HomeComponent } from '../home.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-prestamos',
@@ -35,6 +37,7 @@ export class PrestamosComponent {
 
   constructor(
     private alert: AlertService,
+    private ngxService: NgxUiLoaderService,
     private prestamosService: PrestamosService,
     private tipos_prestamosService: TiposPrestamosService,
     private municipalidadesService: MunicipalidadesService,
@@ -67,17 +70,19 @@ export class PrestamosComponent {
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
       id_regional: new FormControl(null, [Validators.required]),
-      id_usuario: new FormControl(null, [Validators.required])
+      id_usuario: new FormControl(HomeComponent.id_usuario, [Validators.required])
     });
   }
 
   async ngOnInit() {
+    this.ngxService.start();
     await this.getPrestamos();
     await this.getTiposPrestamos();
     await this.getMunicipalidades();
     await this.getRegionales();
     await this.getFuncionarios();
     await this.getUsuarios();
+    this.ngxService.stop();
   }
 
   async getPrestamos() {
@@ -123,21 +128,25 @@ export class PrestamosComponent {
   }
 
   async postPrestamo() {
+    this.ngxService.start();
     let prestamo = await this.prestamosService.postPrestamo(this.prestamoForm.value);
     if (prestamo.resultado) {
       await this.getPrestamos();
       this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
+    this.ngxService.stop();
   }
 
   async putPrestamo() {
+    this.ngxService.start();
     let prestamo = await this.prestamosService.putPrestamo(this.prestamo.id, this.prestamoForm.value);
     if (prestamo.resultado) {
       await this.getPrestamos();
       this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
+    this.ngxService.stop();
   }
 
   async deletePrestamo(i: any, index: number) {
@@ -152,12 +161,14 @@ export class PrestamosComponent {
       cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
+        this.ngxService.start();
         let prestamo = await this.prestamosService.deletePrestamo(i.id);
         if (prestamo.resultado) {
           this.prestamos.splice(index, 1);
           this.alert.alertMax('Correcto', prestamo.mensaje, 'success');
           this.limpiar();
         }
+        this.ngxService.stop();
       }
     })
   }
@@ -206,6 +217,7 @@ export class PrestamosComponent {
 
   limpiar() {
     this.prestamoForm.reset();
+    this.prestamoForm.controls['id_usuario'].setValue(HomeComponent.id_usuario);
     this.prestamo = null;
   }
 

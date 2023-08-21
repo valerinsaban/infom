@@ -178,7 +178,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_carnet'].value ? funcionarioForm.controls['imagen_carnet'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_carnet'].value ? funcionarioForm.controls['imagen_carnet'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_carnet')" type='file' class="form-control"
@@ -194,7 +195,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_acta_toma_posecion'].value ? funcionarioForm.controls['imagen_acta_toma_posecion'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_acta_toma_posecion'].value ? funcionarioForm.controls['imagen_acta_toma_posecion'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_acta_toma_posecion')" type='file' class="form-control"
@@ -210,7 +212,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_fotografia'].value ? funcionarioForm.controls['imagen_fotografia'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_fotografia'].value ? funcionarioForm.controls['imagen_fotografia'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_fotografia')" type='file' class="form-control"
@@ -226,7 +229,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_firma'].value ? funcionarioForm.controls['imagen_firma'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_firma'].value ? funcionarioForm.controls['imagen_firma'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_firma')" type='file' class="form-control"
@@ -238,10 +242,11 @@
             </div>
           </div>
           <div>
-            <button class="btn btn-primary me-1" (click)="postFuncionario()" data-bs-dismiss="offcanvas">
+            <button [ngClass]="{'disabled': funcionarioForm.invalid}" class="btn btn-primary me-1"
+              (click)="postFuncionario()" data-bs-dismiss="offcanvas" type="button">
               <i class="fa-duotone fa-floppy-disk"></i> Guardar
             </button>
-            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas">Cancelar</button>
+            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
           </div>
         </div>
       </form>
@@ -358,7 +363,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_carnet'].value ? funcionarioForm.controls['imagen_carnet'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_carnet'].value ? funcionarioForm.controls['imagen_carnet'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_carnet')" type='file' class="form-control"
@@ -374,7 +380,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_acta_toma_posecion'].value ? funcionarioForm.controls['imagen_acta_toma_posecion'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_acta_toma_posecion'].value ? funcionarioForm.controls['imagen_acta_toma_posecion'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_acta_toma_posecion')" type='file' class="form-control"
@@ -390,7 +397,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_fotografia'].value ? funcionarioForm.controls['imagen_fotografia'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_fotografia'].value ? funcionarioForm.controls['imagen_fotografia'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_fotografia')" type='file' class="form-control"
@@ -406,7 +414,8 @@
                 <div class="avatar-upload d-flex align-items-center">
                   <div class=" position-relative ">
                     <div class="avatar-preview">
-                      <img [src]="funcionarioForm.controls['imagen_firma'].value ? funcionarioForm.controls['imagen_firma'].value : 'assets/images/no-img-avatar.png'">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_firma'].value ? funcionarioForm.controls['imagen_firma'].value : 'assets/images/no-img-avatar.png'">
                     </div>
                     <div class="change-btn d-flex align-items-center flex-wrap">
                       <input (change)="setImage($event, 'imagen_firma')" type='file' class="form-control"
@@ -418,10 +427,11 @@
             </div>
           </div>
           <div>
-            <button class="btn btn-primary me-1" (click)="putFuncionario()" data-bs-dismiss="offcanvas">
+            <button [ngClass]="{'disabled': funcionarioForm.invalid}" class="btn btn-primary" (click)="putFuncionario()"
+              data-bs-dismiss="offcanvas" type="button">
               <i class="fa-duotone fa-floppy-disk"></i> Guardar
             </button>
-            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas">Cancelar</button>
+            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
           </div>
         </div>
       </form>

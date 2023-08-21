@@ -113,10 +113,11 @@
           </div>
         </div>
         <div>
-          <button class="btn btn-primary me-1" (click)="postMunicipalidad()" data-bs-dismiss="offcanvas">
+          <button [ngClass]="{'disabled': municipalidadForm.invalid}" class="btn btn-primary me-1"
+            (click)="postMunicipalidad()" data-bs-dismiss="offcanvas" type="button">
             <i class="fa-duotone fa-floppy-disk"></i> Guardar
           </button>
-          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas">Cancelar</button>
+          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
         </div>
       </form>
     </div>
@@ -142,10 +143,11 @@
           </div>
         </div>
         <div>
-          <button class="btn btn-primary me-1" (click)="putMunicipalidad()" data-bs-dismiss="offcanvas">
+          <button [ngClass]="{'disabled': municipalidadForm.invalid}" class="btn btn-primary me-1"
+            (click)="putMunicipalidad()" data-bs-dismiss="offcanvas" type="button">
             <i class="fa-duotone fa-floppy-disk"></i> Guardar
           </button>
-          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas">Cancelar</button>
+          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
         </div>
       </form>
     </div>

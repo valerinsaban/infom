@@ -947,7 +947,7 @@
           </a>
 
           <ul *ngIf="m.submenus.length" aria-expanded="false">
-            <li routerLinkActive="mm-active" *ngFor="let s of m.submenus">
+            <li *ngFor="let s of m.submenus" routerLinkActive="mm-active">
               <a [routerLink]="s.url" aria-expanded="false" (click)="setMenu(m.id, s.id)">
                 {{s.nombre}}
               </a>

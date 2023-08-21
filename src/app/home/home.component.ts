@@ -18,6 +18,7 @@ export class HomeComponent {
 
   static usuario: any;
   static permisos: any = [];
+  static id_usuario: any;
   static id_rol: any;
   static id_menu: any;
   static id_submenu: any;
@@ -44,6 +45,7 @@ export class HomeComponent {
         this.ngxService.start();
         let u = await this.usuariosService.getUsuariosByUsuario(usuario.sub);       
         HomeComponent.usuario = u; 
+        HomeComponent.id_usuario = u.id;
         HomeComponent.id_rol = u.id_rol;
 
         this.elementRef.nativeElement.style.setProperty('--primary', u.rol.color);
