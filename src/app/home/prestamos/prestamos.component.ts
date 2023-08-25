@@ -11,6 +11,8 @@ import { TiposPrestamosService } from 'src/app/services/catalogos/tipos_prestamo
 import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { AppComponent } from 'src/app/app.component';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-prestamos',
@@ -33,7 +35,7 @@ export class PrestamosComponent {
 
   municipalidad: any;
 
-  imagen_carnet: any;
+  estado: string = 'Pendiente';
 
   constructor(
     private alert: AlertService,
@@ -66,6 +68,7 @@ export class PrestamosComponent {
       certficacion: new FormControl(null, [Validators.required]),
       oficioaj: new FormControl(null, [Validators.required]),
       oficioaj2: new FormControl(null, [Validators.required]),
+      estado: new FormControl(null, [Validators.required]),
       id_tipo_prestamo: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
@@ -75,6 +78,9 @@ export class PrestamosComponent {
   }
 
   async ngOnInit() {
+    AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
+    AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
+    AppComponent.loadScript('assets/js/range.js');
     this.ngxService.start();
     await this.getPrestamos();
     await this.getTiposPrestamos();
@@ -86,10 +92,12 @@ export class PrestamosComponent {
   }
 
   async getPrestamos() {
-    let prestamos = await this.prestamosService.getPrestamos();
+    this.ngxService.startBackground();
+    let prestamos = await this.prestamosService.getPrestamos(this.estado, this.fecha_inicio, this.fecha_fin);
     if (prestamos) {
       this.prestamos = prestamos;
     }
+    this.ngxService.stopBackground();
   }
 
   async getTiposPrestamos() {
@@ -125,6 +133,14 @@ export class PrestamosComponent {
     if (usuarios) {
       this.usuarios = usuarios;
     }
+  }
+
+  get fecha_inicio() {
+    return sessionStorage.getItem('fecha_inicio');
+  }
+
+  get fecha_fin() {
+    return sessionStorage.getItem('fecha_fin');
   }
 
   async postPrestamo() {
@@ -207,16 +223,37 @@ export class PrestamosComponent {
     this.prestamoForm.controls['certficacion'].setValue(i.certficacion);
     this.prestamoForm.controls['oficioaj'].setValue(i.oficioaj);
     this.prestamoForm.controls['oficioaj2'].setValue(i.oficioaj2);
+    this.prestamoForm.controls['estado'].setValue(i.estado);
     this.prestamoForm.controls['id_tipo_prestamo'].setValue(i.id_tipo_prestamo);
     this.prestamoForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
     this.prestamoForm.controls['id_funcionario'].setValue(i.id_funcionario);
     this.prestamoForm.controls['id_regional'].setValue(i.id_regional);
     this.prestamoForm.controls['id_usuario'].setValue(i.id_usuario);
+  }
 
+  colorClass(p: any) {
+    if (p.estado == 'Pendiente') {
+      return 'count pendiente'
+    }
+    if (p.estado == 'Aprobado') {
+      return 'count aprobado'
+    }
+    if (p.estado == 'Acreditado') {
+      return 'count acreditado'
+    }
+    if (p.estado == 'Finalizado') {
+      return 'count finalizado'
+    }
+    if (p.estado == 'Rechazado') {
+      return 'count rechazado'
+    }
+    return '';
   }
 
   limpiar() {
     this.prestamoForm.reset();
+    this.prestamoForm.controls['estado'].setValue('Pendiente');
+    this.prestamoForm.controls['cobro_intereses'].setValue(false);
     this.prestamoForm.controls['id_usuario'].setValue(HomeComponent.id_usuario);
     this.prestamo = null;
   }

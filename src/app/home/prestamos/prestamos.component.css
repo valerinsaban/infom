@@ -5,3 +5,37 @@
 #editar-prestamo {
   width: 100% !important;
 }
+
+.count {
+  background-color: transparent !important;
+}
+
+.pendiente {
+  background-color: #ffeccc;
+  color: #FF9F00 !important;
+  border-radius: 10px;
+}
+
+.aprobado {
+  background-color: #cce2ff;
+  color: #0D99FF !important;
+  border-radius: 10px;
+}
+
+.acreditado {
+  background-color: #f9e8ff;
+  color: #BB6BD9 !important;
+  border-radius: 10px;
+}
+
+.finalizado {
+  background-color: #daf5e6;
+  color: #3AC977 !important;
+  border-radius: 10px;
+}
+
+.rechazado {
+  background-color: #ffdede;
+  color: #FF5E5E !important;
+  border-radius: 10px;
+}

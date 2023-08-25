@@ -46256,7 +46256,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .task .task-summary {
-  border-right: 1px solid #E6E6E6;
+  /* border-right: 1px solid #E6E6E6; */
 }
 
 .task .task-summary h2,
@@ -46311,6 +46311,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-weight: 500;
   border: 0 !important;
   border-radius: 0.25rem;
+}
+
+.status-select [title="Complete"],
+.status-select [title="High"] {
+  background-color: #daf5e6 !important;
+  color: #3AC977 !important;
 }
 
 .status-select [title="Testing"] {

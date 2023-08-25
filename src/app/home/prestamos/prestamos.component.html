@@ -21,40 +21,144 @@
                 <div class="tbl-caption">
                   <h4 class="heading mb-0">Prestamos</h4>
                   <div>
-                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-prestamo" role="button"
-                      (click)="limpiar()">
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-prestamo"
+                      role="button" (click)="limpiar()">
                       + Agregar Prestamo
                     </a>
                   </div>
                 </div>
-                <table id="empoloyees-tbl" class="table">
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row task">
+                <a (click)="estado = 'Pendiente'" (click)="getPrestamos()" routerLink="./" class="col-xl pendiente"
+                  [ngClass]="{'pendiente': estado == 'Pendiente'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="pendiente count">1</h2>
+                      <span>Pendientes</span>
+                    </div>
+                    <p class="pendiente count">Prestamos pendientes</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Aprobado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'aprobado': estado == 'Aprobado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="aprobado count">8</h2>
+                      <span>Aprobados</span>
+                    </div>
+                    <p class="aprobado count">Prestamos aprobados</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Acreditado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'acreditado': estado == 'Acreditado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="acreditado count">7</h2>
+                      <span>Acreditados</span>
+                    </div>
+                    <p class="acreditado count">Prestamos acreditados</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Finalizado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'finalizado': estado == 'Finalizado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="finalizado count">11</h2>
+                      <span>Finalizados</span>
+                    </div>
+                    <p class="finalizado count">Prestamos finalizados</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Rechazado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'rechazado': estado == 'Rechazado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="rechazado count">16</h2>
+                      <span>Rechazados</span>
+                    </div>
+                    <p class="rechazado count">Prestamos rechazados</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-9">
+
+                </div>
+                <div class="col-3">
+                  <input name="daterange" class="form-control"/>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects task-table">
+                <table id="empoloyeestbl2" class="table" style="margin-bottom: 100px;">
                   <thead>
                     <tr>
+                      <th>Municipalidad</th>
                       <th>Funcionario</th>
-                      <th>Monto</th>
                       <th>Tipo Prestamos</th>
                       <th>Regional</th>
-                      <th>Municipalidad</th>
-                      <th>Acciones</th>
+                      <th class="text-end">Monto</th>
+                      <th class="text-end">Estado</th>
+                      <th class="text-end">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let f of prestamos; let mindex = index">
-                      <td><span class="text-primary">{{f.funcionario.nombre}} {{f.funcionario.apellido}}</span></td>
-                      <th>{{f.monto | number: '.2'}}</th>
-                      <td>{{f.tipo_prestamo.nombre}}</td>
-                      <td>{{f.regional.nombre}}</td>
-                      <td>{{f.municipalidad.departamento.nombre}} / {{f.municipalidad.municipio.nombre}}</td>
+                    <tr *ngFor="let p of prestamos; let mindex = index">
                       <td>
+                        <div class="products">
+                          <div>
+                            <h6>{{p.municipalidad.departamento.nombre}}</h6>
+                            <span [class]="colorClass(p)">{{p.municipalidad.municipio.nombre}}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span>{{p.funcionario.nombre}} {{p.funcionario.apellido}}</span>
+                      </td>
+                      <td>
+                        <span>{{p.tipo_prestamo.nombre}}</span>
+                        <!-- <div class="avatar-list avatar-list-stacked">
+                          <img src="assets/images/contacts/pic666.jpg" class="avatar rounded-circle" alt="">
+                          <img src="assets/images/contacts/pic555.jpg" class="avatar rounded-circle" alt="">
+                          <img src="assets/images/contacts/pic666.jpg" class="avatar rounded-circle" alt="">
+                        </div> -->
+                      </td>
+                      <td>
+                        <span>{{p.regional.nombre}}</span>
+                      </td>
+                      <td class="text-end">
+                        <span [class]="colorClass(p)">Q{{p.monto | number: '.2'}}</span>
+                      </td>
+                      <td class="text-end">
+                        <span class="badge light border-0 me-1"
+                          [class]="colorClass(p)">
+                          {{p.estado}}
+                        </span>
+                      </td>
+                      <td class="text-end">
                         <div class="dropdown">
                           <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                             <i class="fa-solid fa-list"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" (click)="setPrestamo(f, mindex)" data-bs-toggle="offcanvas"
+                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" data-bs-toggle="offcanvas"
                               href="#editar-prestamo">Editar</a>
-                            <a class="dropdown-item" (click)="deletePrestamo(f, mindex)">Eliminar</a>
+                            <a class="dropdown-item" (click)="deletePrestamo(p, mindex)">Eliminar</a>
                           </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr>
+                      <td colspan="7">
+                        <div *ngIf="!prestamos.length" style="text-align: center;">
+                          <h3>No se encontraron registros</h3>
                         </div>
                       </td>
                     </tr>
@@ -130,10 +234,10 @@
               placeholder="Deposito Intereses">
           </div>
           <div class="col-xl-3 mb-3">
-            <label class="form-label">Intereses
+            <label class="form-label">Intereses %
               <span class="text-danger">*</span>
             </label>
-            <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses">
+            <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses %">
           </div>
           <div class="col-xl-3 mb-3">
             <label class="form-label">Intereses Fecha Fin
@@ -163,7 +267,10 @@
             <label class="form-label">Cobro Intereses
               <span class="text-danger">*</span>
             </label>
-            <input formControlName="cobro_intereses" type="number" class="form-control" placeholder="Cobro Intereses">
+            <div class="form-check custom-checkbox mb-3">
+              <input formControlName="cobro_intereses" type="checkbox" class="form-check-input">
+              <label class="form-check-label">{{prestamoForm.controls['cobro_intereses'].value ? 'Si' : 'No'}}</label>
+            </div>
           </div>
           <div class="col-xl-3 mb-3">
             <label class="form-label">Acta
@@ -310,10 +417,10 @@
               placeholder="Deposito Intereses">
           </div>
           <div class="col-xl-3 mb-3">
-            <label class="form-label">Intereses
+            <label class="form-label">Intereses %
               <span class="text-danger">*</span>
             </label>
-            <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses">
+            <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses %">
           </div>
           <div class="col-xl-3 mb-3">
             <label class="form-label">Intereses Fecha Fin
@@ -343,7 +450,10 @@
             <label class="form-label">Cobro Intereses
               <span class="text-danger">*</span>
             </label>
-            <input formControlName="cobro_intereses" type="number" class="form-control" placeholder="Cobro Intereses">
+            <div class="form-check custom-checkbox mb-3">
+              <input formControlName="cobro_intereses" type="checkbox" class="form-check-input">
+              <label class="form-check-label">{{prestamoForm.controls['cobro_intereses'].value ? 'Si' : 'No'}}</label>
+            </div>
           </div>
           <div class="col-xl-3 mb-3">
             <label class="form-label">Acta
@@ -414,6 +524,17 @@
             <select formControlName="id_funcionario" class="form-control">
               <option value="null">--- Seleccione un registro ---</option>
               <option *ngFor="let i of funcionarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
+            </select>
+          </div>
+          <div class="col-xl-3 mb-3">
+            <label class="form-label">Estado<span class="text-danger">*</span></label>
+            <select formControlName="estado" class="form-control">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="Aprobado">Aprobado</option>
+              <option value="Acreditado">Acreditado</option>
+              <option value="Finalizado">Finalizado</option>
+              <option value="Rechazado">Rechazado</option>
             </select>
           </div>
         </div>

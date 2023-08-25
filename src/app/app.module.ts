@@ -20,10 +20,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   fgsColor: "#008fc7",
   pbColor: "#008fc7",
-  bgsColor: 'red',
+  bgsColor: '#008fc7',
   fgsPosition: POSITION.centerCenter,
+  bgsPosition: POSITION.centerCenter,
   fgsSize: 80,
   fgsType: SPINNER.foldingCube, // foreground spinner type
+  bgsType: SPINNER.foldingCube, // foreground spinner type
   pbDirection: PB_DIRECTION.leftToRight, // progress bar direction
   pbThickness: 5, // progress bar thickness
   blur: 5
