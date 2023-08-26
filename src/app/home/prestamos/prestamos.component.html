@@ -126,10 +126,10 @@
                       <td>
                         <span>{{p.tipo_prestamo.nombre}}</span>
                       </td>
-                      <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td>
                         <span>{{p.regional.nombre}}</span>
                       </td>
+                      <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td class="text-end">
                         <span class="count" [class]="colorClass(p)">Q{{p.monto | number: '.2'}}</span>
                       </td>
