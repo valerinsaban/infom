@@ -56,7 +56,6 @@ export class HomeComponent {
 
         AppComponent.loadScript('assets/js/deznav-init.js');
         AppComponent.loadScript('assets/js/custom.js');
-        AppComponent.loadScript('assets/js/demo.js'); 
 
         this.ngxService.stop();
         return;   

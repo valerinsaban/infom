@@ -12,6 +12,7 @@ import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AppComponent } from 'src/app/app.component';
+import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 
 @Component({
   selector: 'app-prestamos',
@@ -39,6 +40,14 @@ export class PrestamosComponent {
 
   estado: string = 'Pendiente';
 
+  counts: any = {
+    pendientes: null,
+    aprobados: null,
+    acreditados: null,
+    finalizados: null,
+    rechazados: null,
+  }
+
   constructor(
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,
@@ -47,7 +56,8 @@ export class PrestamosComponent {
     private municipalidadesService: MunicipalidadesService,
     private funcionariosService: FuncionariosService,
     private regionalesService: RegionalesService,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private amortizacionesService: AmortizacionesService,
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null, [Validators.required]),
@@ -78,7 +88,13 @@ export class PrestamosComponent {
       id_usuario: new FormControl(HomeComponent.id_usuario, [Validators.required])
     });
     this.amortizacionForm = new FormGroup({
-      monto: new FormControl(null, [Validators.required]),
+      fecha_inicio: new FormControl(null, [Validators.required]),
+      fecha_fin: new FormControl(null, [Validators.required]),
+      dias: new FormControl(null, [Validators.required]),
+      capital: new FormControl(null, [Validators.required]),
+      intereses: new FormControl(null, [Validators.required]),
+      cuota: new FormControl(null, [Validators.required]),
+      saldo: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
     });
   }
@@ -86,6 +102,7 @@ export class PrestamosComponent {
   async ngOnInit() {
     this.ngxService.start();
     await this.getPrestamos();
+    await this.getCountPrestamos();
     this.getTiposPrestamos();
     this.getMunicipalidades();
     this.getRegionales();
@@ -112,6 +129,17 @@ export class PrestamosComponent {
     if (prestamos) {
       this.prestamos = prestamos;
     }
+    this.ngxService.stopBackground();
+  }
+
+  async getCountPrestamos() {
+    this.ngxService.startBackground();
+    this.counts = {};
+    this.counts.pendientes = await this.prestamosService.getCountPrestamosEstado('Pendiente', this.fecha_inicio, this.fecha_fin);
+    this.counts.aprobados = await this.prestamosService.getCountPrestamosEstado('Aprobado', this.fecha_inicio, this.fecha_fin);
+    this.counts.acreditados = await this.prestamosService.getCountPrestamosEstado('Acreditado', this.fecha_inicio, this.fecha_fin);
+    this.counts.finalizados = await this.prestamosService.getCountPrestamosEstado('Finalizado', this.fecha_inicio, this.fecha_fin);
+    this.counts.rechazados = await this.prestamosService.getCountPrestamosEstado('Rechazado', this.fecha_inicio, this.fecha_fin);
     this.ngxService.stopBackground();
   }
 
@@ -150,6 +178,13 @@ export class PrestamosComponent {
     }
   }
 
+  async getAmortizaciones() {
+    let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(this.prestamo.id);
+    if (amortizaciones) {
+      this.amortizaciones = amortizaciones;
+    }
+  }
+
   get fecha_inicio() {
     return sessionStorage.getItem('fecha_inicio');
   }
@@ -163,6 +198,7 @@ export class PrestamosComponent {
     let prestamo = await this.prestamosService.postPrestamo(this.prestamoForm.value);
     if (prestamo.resultado) {
       await this.getPrestamos();
+      await this.getCountPrestamos();
       this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
@@ -170,10 +206,19 @@ export class PrestamosComponent {
   }
 
   async putPrestamo() {
+    let estado = this.prestamoForm.controls['estado'].value;
+    if (estado == 'Finalizado') {
+      let saldo = (this.amortizaciones.length ? parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo) : this.prestamo.monto).toFixed(2);
+      if (saldo != '0.00') {
+        this.alert.alertMax('Transaccion Incorrecta', `Prestamo con Q${saldo} de saldo pendiente`, 'error');
+        return;
+      }
+    }
     this.ngxService.start();
     let prestamo = await this.prestamosService.putPrestamo(this.prestamo.id, this.prestamoForm.value);
     if (prestamo.resultado) {
       await this.getPrestamos();
+      await this.getCountPrestamos();
       this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
@@ -196,6 +241,7 @@ export class PrestamosComponent {
         let prestamo = await this.prestamosService.deletePrestamo(i.id);
         if (prestamo.resultado) {
           this.prestamos.splice(index, 1);
+          await this.getCountPrestamos();
           this.alert.alertMax('Correcto', prestamo.mensaje, 'success');
           this.limpiar();
         }
@@ -204,28 +250,24 @@ export class PrestamosComponent {
     })
   }
 
-  setAmortizacion(i: any, index: number) {
-
-  }
-
   async postAmortizacion() {
     this.ngxService.start();
-    let prestamo = await this.prestamosService.postPrestamo(this.prestamoForm.value);
-    if (prestamo.resultado) {
-      await this.getPrestamos();
-      this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
-      this.limpiar();
+    let amortizacion = await this.amortizacionesService.postAmortizacion(this.amortizacionForm.value);
+    if (amortizacion.resultado) {
+      await this.getAmortizaciones();
+      this.alert.alertMax('Transaccion Correcta', amortizacion.mensaje, 'success');
+      this.limpiar2();
     }
     this.ngxService.stop();
   }
 
   async putAmortizacion() {
     this.ngxService.start();
-    let prestamo = await this.prestamosService.putPrestamo(this.prestamo.id, this.prestamoForm.value);
-    if (prestamo.resultado) {
-      await this.getPrestamos();
-      this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
-      this.limpiar();
+    let amortizacion = await this.amortizacionesService.putAmortizacion(this.amortizacion.id, this.amortizacionForm.value);
+    if (amortizacion.resultado) {
+      await this.getAmortizaciones();
+      this.alert.alertMax('Transaccion Correcta', amortizacion.mensaje, 'success');
+      this.limpiar2();
     }
     this.ngxService.stop();
   }
@@ -243,11 +285,11 @@ export class PrestamosComponent {
     }).then(async (result) => {
       if (result.isConfirmed) {
         this.ngxService.start();
-        let prestamo = await this.prestamosService.deletePrestamo(i.id);
-        if (prestamo.resultado) {
-          this.prestamos.splice(index, 1);
-          this.alert.alertMax('Correcto', prestamo.mensaje, 'success');
-          this.limpiar();
+        let amortizacion = await this.amortizacionesService.deleteAmortizacion(i.id);
+        if (amortizacion.resultado) {
+          this.amortizaciones.splice(index, 1);
+          this.alert.alertMax('Correcto', amortizacion.mensaje, 'success');
+          this.limpiar2();
         }
         this.ngxService.stop();
       }
@@ -265,7 +307,7 @@ export class PrestamosComponent {
 
 
   // Metodos para obtener data y id de registro seleccionado
-  setPrestamo(i: any, index: number) {
+  async setPrestamo(i: any, index: number) {
     i.index = index;
     this.prestamo = i;
     this.prestamoForm.controls['no_dictamen'].setValue(i.no_dictamen);
@@ -294,6 +336,92 @@ export class PrestamosComponent {
     this.prestamoForm.controls['id_funcionario'].setValue(i.id_funcionario);
     this.prestamoForm.controls['id_regional'].setValue(i.id_regional);
     this.prestamoForm.controls['id_usuario'].setValue(i.id_usuario);
+
+    this.amortizacionForm.controls['id_prestamo'].setValue(i.id);
+
+    await this.getAmortizaciones();
+  }
+
+  setAmortizacion(i: any, index: number) {
+    i.index = index;
+    this.amortizacion = i;
+    this.amortizacionForm.controls['fecha_inicio'].setValue(i.fecha_inicio);
+    this.amortizacionForm.controls['fecha_fin'].setValue(i.fecha_fin);
+    this.amortizacionForm.controls['id_prestamo'].setValue(this.prestamo.id);
+    this.calcAmortizacion(true);
+  }
+
+  calcAmortizacion(edit: boolean = false) {
+    let monto = this.prestamo.monto;
+    let plazo = parseFloat(this.prestamo.plazo_meses);
+    let intereses_porc = parseFloat(this.prestamo.intereses);
+
+    let fecha_inicio = this.amortizacionForm.controls['fecha_inicio'].value;
+    let fecha_fin = this.amortizacionForm.controls['fecha_fin'].value;
+
+    if (fecha_inicio && fecha_fin) {
+      let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
+      let capital = monto / plazo;
+      let saldo_actual = monto;
+
+      if (this.amortizaciones.length) {
+        capital = parseFloat(this.amortizaciones[this.amortizaciones.length - 1].capital);
+        saldo_actual = parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo);
+      }
+      if (edit) {
+        if (this.amortizacion.index == 0) {
+          capital = monto / plazo;
+          saldo_actual = monto;
+        } else {
+          capital = parseFloat(this.amortizaciones[this.amortizacion.index - 1].capital);
+          saldo_actual = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo);
+        }
+      }
+
+      let intereses = (saldo_actual * (intereses_porc / 100) / 365) * dias;
+      let cuota = capital + intereses;
+      let saldo = saldo_actual - capital;
+
+
+      this.amortizacionForm.controls['dias'].setValue(dias);
+      this.amortizacionForm.controls['capital'].setValue(capital.toFixed(8));
+      this.amortizacionForm.controls['saldo'].setValue(saldo.toFixed(8));
+      this.amortizacionForm.controls['intereses'].setValue(intereses.toFixed(8))
+      this.amortizacionForm.controls['cuota'].setValue(cuota.toFixed(8))
+
+    }
+  }
+
+  getTotalDias() {
+    let total = 0;
+    for (let a = 0; a < this.amortizaciones.length; a++) {
+      total += this.amortizaciones[a].dias;
+    }
+    return total;
+  }
+
+  getTotalCapital() {
+    let total = 0;
+    for (let a = 0; a < this.amortizaciones.length; a++) {
+      total += parseFloat(this.amortizaciones[a].capital);
+    }
+    return total;
+  }
+
+  getTotalIntereses() {
+    let total = 0;
+    for (let a = 0; a < this.amortizaciones.length; a++) {
+      total += parseFloat(this.amortizaciones[a].intereses);
+    }
+    return total;
+  }
+
+  getTotalCuota() {
+    let total = 0;
+    for (let a = 0; a < this.amortizaciones.length; a++) {
+      total += parseFloat(this.amortizaciones[a].cuota);
+    }
+    return total;
   }
 
   colorClass(p: any) {
@@ -321,6 +449,18 @@ export class PrestamosComponent {
     this.prestamoForm.controls['cobro_intereses'].setValue(false);
     this.prestamoForm.controls['id_usuario'].setValue(HomeComponent.id_usuario);
     this.prestamo = null;
+  }
+
+  limpiar2() {
+    this.amortizacionForm.reset();
+    if (this.amortizaciones.length) {
+      let amortizacion = this.amortizaciones[this.amortizaciones.length - 1];
+      this.amortizacionForm.controls['fecha_inicio'].setValue(moment(amortizacion.fecha_inicio).add(1, 'month').format('YYYY-MM-DD'));
+      this.amortizacionForm.controls['fecha_fin'].setValue(moment(amortizacion.fecha_fin).add(1, 'month').format('YYYY-MM-DD'));
+      this.calcAmortizacion();
+    }
+    this.amortizacionForm.controls['id_prestamo'].setValue(this.prestamo.id);
+    this.amortizacion = null;
   }
 
 }

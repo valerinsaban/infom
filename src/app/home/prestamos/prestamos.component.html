@@ -22,7 +22,7 @@
                   <div>
                     <div class="input-group input-group-sm mb-3">
                       <input name="daterange" class="form-control-sm" style="width: 180px;" />
-                      <button (click)="getPrestamos()" class="btn btn-primary" type="button">
+                      <button (click)="getPrestamos()" (click)="getCountPrestamos()" class="btn btn-primary" type="button">
                         <i class="fas fa-search"></i>
                       </button>
                     </div>
@@ -42,7 +42,8 @@
                   [ngClass]="{'pendiente': estado == 'Pendiente'}">
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
-                      <h2 class="pendiente count">1</h2>
+                      <h2 class="pendiente count">{{counts.pendientes}}</h2>
+                      <h2 *ngIf="!counts.pendientes  == null"><i class="fa-solid fa-spinner fa-spin pendiente"></i></h2>
                       <span>Pendientes</span>
                     </div>
                     <p class="pendiente count">Prestamos pendientes</p>
@@ -52,7 +53,8 @@
                   [ngClass]="{'aprobado': estado == 'Aprobado'}">
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
-                      <h2 class="aprobado count">8</h2>
+                      <h2 class="aprobado count">{{counts.aprobados}}</h2>
+                      <h2 *ngIf="!counts.aprobados  == null"><i class="fa-solid fa-spinner fa-spin aprobado"></i></h2>
                       <span>Aprobados</span>
                     </div>
                     <p class="aprobado count">Prestamos aprobados</p>
@@ -62,7 +64,8 @@
                   [ngClass]="{'acreditado': estado == 'Acreditado'}">
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
-                      <h2 class="acreditado count">7</h2>
+                      <h2 class="acreditado count">{{counts.acreditados}}</h2>
+                      <h2 *ngIf="counts.acreditados == null"><i class="fa-solid fa-spinner fa-spin acreditado"></i></h2>
                       <span>Acreditados</span>
                     </div>
                     <p class="acreditado count">Prestamos acreditados</p>
@@ -72,7 +75,8 @@
                   [ngClass]="{'finalizado': estado == 'Finalizado'}">
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
-                      <h2 class="finalizado count">11</h2>
+                      <h2 class="finalizado count">{{counts.finalizados}}</h2>
+                      <h2 *ngIf="!counts.finalizados  == null"><i class="fa-solid fa-spinner fa-spin finalizado"></i></h2>
                       <span>Finalizados</span>
                     </div>
                     <p class="finalizado count">Prestamos finalizados</p>
@@ -82,7 +86,8 @@
                   [ngClass]="{'rechazado': estado == 'Rechazado'}">
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
-                      <h2 class="rechazado count">16</h2>
+                      <h2 class="rechazado count">{{counts.rechazados}}</h2>
+                      <h2 *ngIf="!counts.rechazados  == null"><i class="fa-solid fa-spinner fa-spin rechazado"></i></h2>
                       <span>Rechazados</span>
                     </div>
                     <p class="rechazado count">Prestamos rechazados</p>
@@ -147,8 +152,8 @@
                               data-bs-target="#estado">
                               Cambiar Estado
                             </a>
-                            <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item" (click)="setPrestamo(p, mindex)" data-bs-toggle="offcanvas"
-                              data-bs-target="#amortizaciones">
+                            <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item" (click)="setPrestamo(p, mindex)"
+                              data-bs-toggle="offcanvas" data-bs-target="#amortizaciones">
                               Amortizaciones
                             </a>
                             <a class="dropdown-item" (click)="deletePrestamo(p, mindex)">
@@ -249,12 +254,6 @@
               <span class="text-danger">*</span>
             </label>
             <input formControlName="intereses_fecha_fin" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Fecha Acta Toma Posecion
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_acta_toma_posecion" type="date" class="form-control">
           </div>
           <div class="col-xl-3 mb-3">
             <label class="form-label">Tiempo Gracia
@@ -434,12 +433,6 @@
             <input formControlName="intereses_fecha_fin" type="date" class="form-control">
           </div>
           <div class="col-xl-3 mb-3">
-            <label class="form-label">Fecha Acta Toma Posecion
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_acta_toma_posecion" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
             <label class="form-label">Tiempo Gracia
               <span class="text-danger">*</span>
             </label>
@@ -590,83 +583,169 @@
         <div class="col-xl-3 col-xxl-4">
           <div class="card h-auto">
             <div class="card-header">
-              <h4 *ngIf="!amortizacion" class="heading mb-0">Agregar Amortizacion</h4>
-              <h4 *ngIf="amortizacion" class="heading mb-0">Editar Amortizacion</h4>
+              <h4 class="heading mb-0">Prestamo</h4>
             </div>
-            <div class="card-body">
-              <form [formGroup]="amortizacionForm" class="finance-hr">
-                <div class="form-group mb-3">
-                  <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
-                </div>
-                <div class="form-group mb-3">
-                  <label class="text-secondary"> Nombre <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
-                </div>
-                <div class="form-group mb-3">
-                  <label class="text-secondary"> Siglas <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="siglas" type="text" class="form-control" placeholder="Siglas">
-                </div>
-                <div *ngIf="!amortizacion">
-                  <button (click)="postAmortizacion()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': amortizacionForm.invalid}">
-                    Guardar
-                  </button>
-                </div>
-                <div *ngIf="amortizacion">
-                  <button (click)="putAmortizacion()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': amortizacionForm.invalid}">
-                    Guardar
-                  </button>
-                  <button style="margin-left: 10px;" (click)="limpiar()" type="button" class="btn btn-primary mb-3">
-                    Cancelar
-                  </button>
-                </div>
-              </form>
+            <div class="card-body" *ngIf="prestamo">
+              <div class="card-body pb-0">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item d-flex px-0 justify-content-between">
+                    <strong>Monto Prestamo</strong>
+                    <span class="mb-0 text-primary">Q{{prestamo.monto | number: '.2'}}</span>
+                  </li>
+                  <li class="list-group-item d-flex px-0 justify-content-between">
+                    <strong>Porcentaje de Interes</strong>
+                    <span class="mb-0 text-primary">{{prestamo.intereses}}%</span>
+                  </li>
+                  <li class="list-group-item d-flex px-0 justify-content-between">
+                    <strong>Plazo</strong>
+                    <span class="mb-0 text-primary">{{prestamo.plazo_meses}} meses</span>
+                  </li>
+                  <li class="list-group-item d-flex px-0 justify-content-between">
+                    <strong>Saldo Actual</strong>
+                    <span class="mb-0 text-primary">
+                      Q{{(amortizaciones.length ? amortizaciones[amortizaciones.length - 1].saldo : prestamo.monto) |
+                      number: '.2-2'}}
+                    </span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-xl-9 col-xxl-8">
           <div class="card">
             <div class="card-body p-0">
-              <div class="table-responsive active-projects manage-client">
+              <div class="table-responsive active-projects manage-client style-1">
                 <div class="tbl-caption">
-                  <h4 class="heading mb-0">Amortizaciones</h4>
+                  <h4 class="heading mb-0">Amortizaciones ({{amortizaciones.length}})</h4>
+                  <div *ngIf="prestamo">
+                    <a *ngIf="amortizaciones.length < prestamo.plazo_meses" (click)="limpiar2()"
+                      class="btn btn-primary btn-sm" data-bs-toggle="modal" href="#agregar-amortizacion" role="button">
+                      + Agregar Amortizacion
+                    </a>
+                  </div>
                 </div>
                 <table id="empoloyees-tbl1" class="table">
                   <thead>
                     <tr>
-                      <th>Codigo</th>
-                      <th>Nombre</th>
-                      <th>Siglas</th>
-                      <th>Acciones</th>
+                      <th>Fecha Inicio</th>
+                      <th>Fecha Fin</th>
+                      <th>Dias</th>
+                      <th style="text-align: right;">Capital</th>
+                      <th style="text-align: right;">Intereses</th>
+                      <th style="text-align: right;">Cuota</th>
+                      <th style="text-align: right;">Saldo</th>
+                      <th style="text-align: right;">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let a of amortizaciones; let aindex = index">
-                      <td><a class="text-primary">{{a.codigo}}</a></td>
-                      <td>{{a.nombre}}</td>
-                      <td>{{a.siglas}}</td>
+                      <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                      <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                      <td>{{a.dias}} dias</td>
+                      <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
+                      <th style="text-align: right;">{{a.intereses | number: '.2-2'}}</th>
+                      <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
+                      <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
                       <td>
                         <div class="dropdown">
                           <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                             <i class="fa-solid fa-list"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" (click)="setAmortizacion(a, aindex)">Editar</a>
+                            <a class="dropdown-item" (click)="setAmortizacion(a, aindex)" data-bs-toggle="modal"
+                              href="#editar-amortizacion">Editar</a>
                             <a class="dropdown-item" (click)="deleteAmortizacion(a, aindex)">Eliminar</a>
                           </div>
                         </div>
                       </td>
                     </tr>
                   </tbody>
-    
+                  <tfoot>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th>{{getTotalDias() | number: '.2-2'}} dias</th>
+                      <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
+                      <th style="text-align: right;">Q{{getTotalIntereses() | number: '.2-2'}}</th>
+                      <th style="text-align: right;">Q{{getTotalCuota() | number: '.2-2'}}</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="agregar-amortizacion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" [formGroup]="amortizacionForm">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Agregar Amortizacion</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
+            <label class="form-label">Fecha Inicio
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="fecha_inicio" type="date" class="form-control">
+          </div>
+          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
+            <label class="form-label">Fecha Fin
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="fecha_fin" type="date" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
+        <button [ngClass]="{'disabled': amortizacionForm.invalid}" class="btn btn-primary me-1"
+          (click)="postAmortizacion()" data-bs-dismiss="modal" type="button">
+          <i class="fa-duotone fa-floppy-disk"></i> Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editar-amortizacion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" [formGroup]="amortizacionForm">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Editar Amortizacion</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div (change)="calcAmortizacion(true)" class="col-xl-6 mb-3">
+            <label class="form-label">Fecha Inicio
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="fecha_inicio" type="date" class="form-control">
+          </div>
+          <div (change)="calcAmortizacion(true)" class="col-xl-6 mb-3">
+            <label class="form-label">Fecha Fin
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="fecha_fin" type="date" class="form-control">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
+        <button [ngClass]="{'disabled': amortizacionForm.invalid}" class="btn btn-primary me-1"
+          (click)="putAmortizacion()" data-bs-dismiss="modal" type="button">
+          <i class="fa-duotone fa-floppy-disk"></i> Guardar
+        </button>
       </div>
     </div>
   </div>
