@@ -11,7 +11,11 @@ export class PrestamosService {
 
   route = '/prestamos';
 
-  getPrestamos(estado: string, fecha_inicio: any, fecha_fin: any): Promise<any> {
+  getPrestamos(fecha_inicio: any, fecha_fin: any): Promise<any> {
+    return this.rootService.get(this.route + '/' + fecha_inicio + '/' + fecha_fin);
+  }
+
+  getPrestamosEstado(estado: string, fecha_inicio: any, fecha_fin: any): Promise<any> {
     return this.rootService.get(this.route + '/' + estado + '/' + fecha_inicio + '/' + fecha_fin);
   }
 

@@ -8,6 +8,7 @@ import * as $ from 'jquery';
 import { PermisosService } from '../services/seguridad/permisos.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { environment } from 'src/environments/environment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-home',
@@ -86,9 +87,7 @@ export class HomeComponent {
       return true;
     }
     for (let p = 0; p < HomeComponent.permisos.length; p++) {
-      let per = HomeComponent.permisos[p];
-      console.log(HomeComponent.id_submenu);
-      
+      let per = HomeComponent.permisos[p];      
       if (per.accion == accion && per.id_menu == HomeComponent.id_menu && per.id_submenu == HomeComponent.id_submenu) {
         return true;
       }
@@ -131,6 +130,8 @@ export class HomeComponent {
   selectedMenu() {
     let id_menu = sessionStorage.getItem('id_menu');
     let id_submenu = sessionStorage.getItem('id_submenu');
+    let fecha_inicio = sessionStorage.getItem('fecha_inicio');
+    let fecha_fin = sessionStorage.getItem('fecha_fin');
 
     if (id_menu) {
       if (id_menu == "null") {
@@ -146,6 +147,8 @@ export class HomeComponent {
         HomeComponent.id_submenu = parseInt(id_submenu);
       }
     }
+    sessionStorage.setItem('fecha_inicio', moment().format('YYYY-MM-01'));
+    sessionStorage.setItem('fecha_fin', moment().endOf('month').format('YYYY-MM-DD'));
   }
 
   get usuario() {    

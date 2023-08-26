@@ -19,7 +19,14 @@
             <div class="card-body p-0">
               <div class="table-responsive active-projects style-1">
                 <div class="tbl-caption">
-                  <h4 class="heading mb-0">Prestamos</h4>
+                  <div>
+                    <div class="input-group input-group-sm mb-3">
+                      <input name="daterange" class="form-control-sm" style="width: 180px;"/>
+                      <button (click)="getPrestamos()" class="btn btn-primary" type="button">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
                   <div>
                     <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-prestamo"
                       role="button" (click)="limpiar()">
@@ -83,16 +90,6 @@
                 </a>
               </div>
             </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-9">
-
-                </div>
-                <div class="col-3">
-                  <input name="daterange" class="form-control"/>
-                </div>
-              </div>
-            </div>
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
                 <table id="empoloyeestbl2" class="table" style="margin-bottom: 100px;">
@@ -100,8 +97,9 @@
                     <tr>
                       <th>Municipalidad</th>
                       <th>Funcionario</th>
-                      <th>Tipo Prestamos</th>
+                      <th>Tipo Prestamo</th>
                       <th>Regional</th>
+                      <th>Fecha</th>
                       <th class="text-end">Monto</th>
                       <th class="text-end">Estado</th>
                       <th class="text-end">Acciones</th>
@@ -113,7 +111,7 @@
                         <div class="products">
                           <div>
                             <h6>{{p.municipalidad.departamento.nombre}}</h6>
-                            <span [class]="colorClass(p)">{{p.municipalidad.municipio.nombre}}</span>
+                            <span class="count" [class]="colorClass(p)">{{p.municipalidad.municipio.nombre}}</span>
                           </div>
                         </div>
                       </td>
@@ -128,11 +126,12 @@
                           <img src="assets/images/contacts/pic666.jpg" class="avatar rounded-circle" alt="">
                         </div> -->
                       </td>
+                      <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td>
                         <span>{{p.regional.nombre}}</span>
                       </td>
                       <td class="text-end">
-                        <span [class]="colorClass(p)">Q{{p.monto | number: '.2'}}</span>
+                        <span class="count" [class]="colorClass(p)">Q{{p.monto | number: '.2'}}</span>
                       </td>
                       <td class="text-end">
                         <span class="badge light border-0 me-1"

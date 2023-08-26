@@ -12,7 +12,6 @@ import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AppComponent } from 'src/app/app.component';
-import * as $ from 'jquery';
 
 @Component({
   selector: 'app-prestamos',
@@ -78,22 +77,31 @@ export class PrestamosComponent {
   }
 
   async ngOnInit() {
+    this.ngxService.start();
+    await this.getPrestamos();
+    this.getTiposPrestamos();
+    this.getMunicipalidades();
+    this.getRegionales();
+    this.getFuncionarios();
+    this.getUsuarios();
+    this.ngxService.stop();
     AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
     AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
     AppComponent.loadScript('assets/js/range.js');
-    this.ngxService.start();
-    await this.getPrestamos();
-    await this.getTiposPrestamos();
-    await this.getMunicipalidades();
-    await this.getRegionales();
-    await this.getFuncionarios();
-    await this.getUsuarios();
-    this.ngxService.stop();
   }
 
   async getPrestamos() {
     this.ngxService.startBackground();
-    let prestamos = await this.prestamosService.getPrestamos(this.estado, this.fecha_inicio, this.fecha_fin);
+    let prestamos = await this.prestamosService.getPrestamos(this.fecha_inicio, this.fecha_fin);
+    if (prestamos) {
+      this.prestamos = prestamos;
+    }
+    this.ngxService.stopBackground();
+  }
+
+  async getPrestamosEstado() {
+    this.ngxService.startBackground();
+    let prestamos = await this.prestamosService.getPrestamosEstado(this.estado, this.fecha_inicio, this.fecha_fin);
     if (prestamos) {
       this.prestamos = prestamos;
     }
@@ -233,19 +241,19 @@ export class PrestamosComponent {
 
   colorClass(p: any) {
     if (p.estado == 'Pendiente') {
-      return 'count pendiente'
+      return 'pendiente'
     }
     if (p.estado == 'Aprobado') {
-      return 'count aprobado'
+      return 'aprobado'
     }
     if (p.estado == 'Acreditado') {
-      return 'count acreditado'
+      return 'acreditado'
     }
     if (p.estado == 'Finalizado') {
-      return 'count finalizado'
+      return 'finalizado'
     }
     if (p.estado == 'Rechazado') {
-      return 'count rechazado'
+      return 'rechazado'
     }
     return '';
   }
