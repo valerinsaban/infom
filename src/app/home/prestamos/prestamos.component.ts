@@ -209,7 +209,7 @@ export class PrestamosComponent {
     let estado = this.prestamoForm.controls['estado'].value;
     if (estado == 'Finalizado') {
       let saldo = (this.amortizaciones.length ? parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo) : this.prestamo.monto).toFixed(2);
-      if (saldo != '0.00') {
+      if (parseInt(saldo) != 0) {
         this.alert.alertMax('Transaccion Incorrecta', `Prestamo con Q${saldo} de saldo pendiente`, 'error');
         return;
       }
