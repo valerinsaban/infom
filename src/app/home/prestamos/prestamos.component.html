@@ -21,15 +21,15 @@
                 <div class="tbl-caption">
                   <div>
                     <div class="input-group input-group-sm mb-3">
-                      <input name="daterange" class="form-control-sm" style="width: 180px;"/>
+                      <input name="daterange" class="form-control-sm" style="width: 180px;" />
                       <button (click)="getPrestamos()" class="btn btn-primary" type="button">
                         <i class="fas fa-search"></i>
                       </button>
                     </div>
                   </div>
                   <div>
-                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-prestamo"
-                      role="button" (click)="limpiar()">
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-prestamo" role="button"
+                      (click)="limpiar()">
                       + Agregar Prestamo
                     </a>
                   </div>
@@ -92,7 +92,7 @@
             </div>
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
-                <table id="empoloyeestbl2" class="table" style="margin-bottom: 100px;">
+                <table id="empoloyeestbl2" class="table" style="margin-bottom: 150px;">
                   <thead>
                     <tr>
                       <th>Municipalidad</th>
@@ -120,11 +120,6 @@
                       </td>
                       <td>
                         <span>{{p.tipo_prestamo.nombre}}</span>
-                        <!-- <div class="avatar-list avatar-list-stacked">
-                          <img src="assets/images/contacts/pic666.jpg" class="avatar rounded-circle" alt="">
-                          <img src="assets/images/contacts/pic555.jpg" class="avatar rounded-circle" alt="">
-                          <img src="assets/images/contacts/pic666.jpg" class="avatar rounded-circle" alt="">
-                        </div> -->
                       </td>
                       <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td>
@@ -134,8 +129,7 @@
                         <span class="count" [class]="colorClass(p)">Q{{p.monto | number: '.2'}}</span>
                       </td>
                       <td class="text-end">
-                        <span class="badge light border-0 me-1"
-                          [class]="colorClass(p)">
+                        <span class="badge light border-0 me-1" [class]="colorClass(p)">
                           {{p.estado}}
                         </span>
                       </td>
@@ -146,8 +140,20 @@
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
                             <a class="dropdown-item" (click)="setPrestamo(p, mindex)" data-bs-toggle="offcanvas"
-                              href="#editar-prestamo">Editar</a>
-                            <a class="dropdown-item" (click)="deletePrestamo(p, mindex)">Eliminar</a>
+                              href="#editar-prestamo">
+                              Editar
+                            </a>
+                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" data-bs-toggle="modal"
+                              data-bs-target="#estado">
+                              Cambiar Estado
+                            </a>
+                            <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item" (click)="setPrestamo(p, mindex)" data-bs-toggle="offcanvas"
+                              data-bs-target="#amortizaciones">
+                              Amortizaciones
+                            </a>
+                            <a class="dropdown-item" (click)="deletePrestamo(p, mindex)">
+                              Eliminar
+                            </a>
                           </div>
                         </div>
                       </td>
@@ -155,7 +161,7 @@
                   </tbody>
                   <tbody>
                     <tr>
-                      <td colspan="7">
+                      <td colspan="8">
                         <div *ngIf="!prestamos.length" style="text-align: center;">
                           <h3>No se encontraron registros</h3>
                         </div>
@@ -174,7 +180,7 @@
 
 <div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-prestamo">
   <div class="offcanvas-header">
-    <h5 class="modal-title" id="#gridSystemModal">Agregar Prestamo</h5>
+    <h5 class="modal-title">Agregar Prestamo</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
       <i class="fa-solid fa-xmark"></i>
     </button>
@@ -357,7 +363,7 @@
 
 <div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="editar-prestamo">
   <div class="offcanvas-header">
-    <h5 class="modal-title" id="#gridSystemModal">Editar Prestamo</h5>
+    <h5 class="modal-title">Editar Prestamo</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
       <i class="fa-solid fa-xmark"></i>
     </button>
@@ -525,7 +531,29 @@
               <option *ngFor="let i of funcionarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
             </select>
           </div>
-          <div class="col-xl-3 mb-3">
+        </div>
+        <div>
+          <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1" (click)="putPrestamo()"
+            data-bs-dismiss="offcanvas" type="button">
+            <i class="fa-duotone fa-floppy-disk"></i> Guardar
+          </button>
+          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="estado" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" [formGroup]="prestamoForm">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Estado de Prestamo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12 mb-3">
             <label class="form-label">Estado<span class="text-danger">*</span></label>
             <select formControlName="estado" class="form-control">
               <option value="null">--- Seleccione un registro ---</option>
@@ -537,14 +565,109 @@
             </select>
           </div>
         </div>
-        <div>
-          <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1" (click)="putPrestamo()"
-            data-bs-dismiss="offcanvas" type="button">
-            <i class="fa-duotone fa-floppy-disk"></i> Guardar
-          </button>
-          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
+        <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1" (click)="putPrestamo()"
+          data-bs-dismiss="modal" type="button">
+          <i class="fa-duotone fa-floppy-disk"></i> Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="amortizaciones">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Amortizaciones</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-3 col-xxl-4">
+          <div class="card h-auto">
+            <div class="card-header">
+              <h4 *ngIf="!amortizacion" class="heading mb-0">Agregar Amortizacion</h4>
+              <h4 *ngIf="amortizacion" class="heading mb-0">Editar Amortizacion</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="amortizacionForm" class="finance-hr">
+                <div class="form-group mb-3">
+                  <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
+                </div>
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+                </div>
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Siglas <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="siglas" type="text" class="form-control" placeholder="Siglas">
+                </div>
+                <div *ngIf="!amortizacion">
+                  <button (click)="postAmortizacion()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': amortizacionForm.invalid}">
+                    Guardar
+                  </button>
+                </div>
+                <div *ngIf="amortizacion">
+                  <button (click)="putAmortizacion()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': amortizacionForm.invalid}">
+                    Guardar
+                  </button>
+                  <button style="margin-left: 10px;" (click)="limpiar()" type="button" class="btn btn-primary mb-3">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
+        <div class="col-xl-9 col-xxl-8">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects manage-client">
+                <div class="tbl-caption">
+                  <h4 class="heading mb-0">Amortizaciones</h4>
+                </div>
+                <table id="empoloyees-tbl1" class="table">
+                  <thead>
+                    <tr>
+                      <th>Codigo</th>
+                      <th>Nombre</th>
+                      <th>Siglas</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let a of amortizaciones; let aindex = index">
+                      <td><a class="text-primary">{{a.codigo}}</a></td>
+                      <td>{{a.nombre}}</td>
+                      <td>{{a.siglas}}</td>
+                      <td>
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setAmortizacion(a, aindex)">Editar</a>
+                            <a class="dropdown-item" (click)="deleteAmortizacion(a, aindex)">Eliminar</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+    
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

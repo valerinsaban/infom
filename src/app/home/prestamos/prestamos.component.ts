@@ -21,6 +21,8 @@ import { AppComponent } from 'src/app/app.component';
 export class PrestamosComponent {
 
   prestamoForm: FormGroup;
+  amortizacionForm: FormGroup;
+
   prestamos: any = [];
   prestamo: any;
 
@@ -32,7 +34,8 @@ export class PrestamosComponent {
   regionales: any = [];
   usuarios: any = [];
 
-  municipalidad: any;
+  amortizaciones: any = [];
+  amortizacion: any;
 
   estado: string = 'Pendiente';
 
@@ -74,6 +77,10 @@ export class PrestamosComponent {
       id_regional: new FormControl(null, [Validators.required]),
       id_usuario: new FormControl(HomeComponent.id_usuario, [Validators.required])
     });
+    this.amortizacionForm = new FormGroup({
+      monto: new FormControl(null, [Validators.required]),
+      id_prestamo: new FormControl(null, [Validators.required])
+    });
   }
 
   async ngOnInit() {
@@ -90,16 +97,16 @@ export class PrestamosComponent {
     AppComponent.loadScript('assets/js/range.js');
   }
 
-  async getPrestamos() {
-    this.ngxService.startBackground();
-    let prestamos = await this.prestamosService.getPrestamos(this.fecha_inicio, this.fecha_fin);
-    if (prestamos) {
-      this.prestamos = prestamos;
-    }
-    this.ngxService.stopBackground();
-  }
+  // async getPrestamos() {
+  //   this.ngxService.startBackground();
+  //   let prestamos = await this.prestamosService.getPrestamos(this.fecha_inicio, this.fecha_fin);
+  //   if (prestamos) {
+  //     this.prestamos = prestamos;
+  //   }
+  //   this.ngxService.stopBackground();
+  // }
 
-  async getPrestamosEstado() {
+  async getPrestamos() {
     this.ngxService.startBackground();
     let prestamos = await this.prestamosService.getPrestamosEstado(this.estado, this.fecha_inicio, this.fecha_fin);
     if (prestamos) {
@@ -174,6 +181,56 @@ export class PrestamosComponent {
   }
 
   async deletePrestamo(i: any, index: number) {
+    Swal.fire({
+      title: '¿Estas seguro?',
+      text: "Esta accion no se puede revertir!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Eliminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.ngxService.start();
+        let prestamo = await this.prestamosService.deletePrestamo(i.id);
+        if (prestamo.resultado) {
+          this.prestamos.splice(index, 1);
+          this.alert.alertMax('Correcto', prestamo.mensaje, 'success');
+          this.limpiar();
+        }
+        this.ngxService.stop();
+      }
+    })
+  }
+
+  setAmortizacion(i: any, index: number) {
+
+  }
+
+  async postAmortizacion() {
+    this.ngxService.start();
+    let prestamo = await this.prestamosService.postPrestamo(this.prestamoForm.value);
+    if (prestamo.resultado) {
+      await this.getPrestamos();
+      this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
+      this.limpiar();
+    }
+    this.ngxService.stop();
+  }
+
+  async putAmortizacion() {
+    this.ngxService.start();
+    let prestamo = await this.prestamosService.putPrestamo(this.prestamo.id, this.prestamoForm.value);
+    if (prestamo.resultado) {
+      await this.getPrestamos();
+      this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
+      this.limpiar();
+    }
+    this.ngxService.stop();
+  }
+
+  async deleteAmortizacion(i: any, index: number) {
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
