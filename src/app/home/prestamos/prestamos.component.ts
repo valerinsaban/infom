@@ -93,6 +93,7 @@ export class PrestamosComponent {
       dias: new FormControl(null, [Validators.required]),
       capital: new FormControl(null, [Validators.required]),
       intereses: new FormControl(null, [Validators.required]),
+      iva_intereses: new FormControl(null, [Validators.required]),
       cuota: new FormControl(null, [Validators.required]),
       saldo: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
@@ -365,7 +366,8 @@ export class PrestamosComponent {
       let saldo_actual = monto;
 
       if (this.amortizaciones.length) {
-        capital = parseFloat(this.amortizaciones[this.amortizaciones.length - 1].capital);
+        capital = monto / plazo;
+        // capital = parseFloat(this.amortizaciones[this.amortizaciones.length - 1].capital);
         saldo_actual = parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo);
       }
       if (edit) {
@@ -373,13 +375,15 @@ export class PrestamosComponent {
           capital = monto / plazo;
           saldo_actual = monto;
         } else {
-          capital = parseFloat(this.amortizaciones[this.amortizacion.index - 1].capital);
+          capital = monto / plazo;
+          // capital = parseFloat(this.amortizaciones[this.amortizacion.index - 1].capital);
           saldo_actual = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo);
         }
       }
 
       let intereses = (saldo_actual * (intereses_porc / 100) / 365) * dias;
-      let cuota = capital + intereses;
+      let iva_intereses = intereses * 0.12;
+      let cuota = capital + intereses + iva_intereses;
       let saldo = saldo_actual - capital;
 
 
@@ -387,6 +391,7 @@ export class PrestamosComponent {
       this.amortizacionForm.controls['capital'].setValue(capital.toFixed(8));
       this.amortizacionForm.controls['saldo'].setValue(saldo.toFixed(8));
       this.amortizacionForm.controls['intereses'].setValue(intereses.toFixed(8))
+      this.amortizacionForm.controls['iva_intereses'].setValue(iva_intereses.toFixed(8))
       this.amortizacionForm.controls['cuota'].setValue(cuota.toFixed(8))
 
     }
