@@ -22,7 +22,8 @@
                   <div>
                     <div class="input-group input-group-sm mb-3">
                       <input name="daterange" class="form-control-sm" style="width: 180px;" />
-                      <button (click)="getPrestamos()" (click)="getCountPrestamos()" class="btn btn-primary" type="button">
+                      <button (click)="getPrestamos()" (click)="getCountPrestamos()" class="btn btn-primary"
+                        type="button">
                         <i class="fas fa-search"></i>
                       </button>
                     </div>
@@ -76,7 +77,8 @@
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
                       <h2 class="finalizado count">{{counts.finalizados}}</h2>
-                      <h2 *ngIf="!counts.finalizados  == null"><i class="fa-solid fa-spinner fa-spin finalizado"></i></h2>
+                      <h2 *ngIf="!counts.finalizados  == null"><i class="fa-solid fa-spinner fa-spin finalizado"></i>
+                      </h2>
                       <span>Finalizados</span>
                     </div>
                     <p class="finalizado count">Prestamos finalizados</p>
@@ -139,6 +141,11 @@
                         </span>
                       </td>
                       <td class="text-end">
+                        <div>
+                          <a (click)="reporte('PDF', p.id)" class="btn btn-primary light sharp">
+                            <i class="fa-solid fa-print"></i>
+                          </a>
+                        </div>
                         <div class="dropdown">
                           <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                             <i class="fa-solid fa-list"></i>

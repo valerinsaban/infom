@@ -95,12 +95,12 @@ export class RootService {
   }
 
   async verify(res: any) {
-    if (res.status) {
-      this.alertService.alertMax('Transaccion Incorrecta', res.message, 'error');
-    }
-    if (res.resultado == false) {
-      this.alertService.alertMax('Transaccion Incorrecta', res.mensaje, 'error');
-    }
+    // if (res.status) {
+    //   this.alertService.alertMax('Transaccion Incorrecta', res.message, 'error');
+    // }
+    // if (res.resultado == false) {
+    //   this.alertService.alertMax('Transaccion Incorrecta', res.mensaje, 'error');
+    // }
   }
 
   isToken(token: any) {

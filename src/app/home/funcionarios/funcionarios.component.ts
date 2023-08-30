@@ -44,6 +44,7 @@ export class FuncionariosComponent {
     private estados_civilesService: EstadosCivilesService
   ) {
     this.funcionarioForm = new FormGroup({
+      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       apellido: new FormControl(null, [Validators.required]),
       fecha_nacimiento: new FormControl(null, [Validators.required]),
@@ -181,6 +182,7 @@ export class FuncionariosComponent {
   setFuncionario(i: any, index: number) {
     i.index = index;
     this.funcionario = i;
+    this.funcionarioForm.controls['codigo'].setValue(i.codigo);
     this.funcionarioForm.controls['nombre'].setValue(i.nombre);
     this.funcionarioForm.controls['apellido'].setValue(i.apellido);
     this.funcionarioForm.controls['fecha_nacimiento'].setValue(moment.utc(i.fecha_nacimiento).format('YYYY-MM-DD'));
@@ -198,9 +200,6 @@ export class FuncionariosComponent {
     this.funcionarioForm.controls['id_puesto'].setValue(i.id_puesto);
     this.funcionarioForm.controls['id_profesion'].setValue(i.id_profesion);
     this.funcionarioForm.controls['id_estado_civil'].setValue(i.id_estado_civil);
-
-    // AppComponent.loadScript('assets/js/file.js');
-
   }
 
   limpiar() {

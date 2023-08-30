@@ -1,0 +1,164 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Aportes </h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Aportes</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects style-1">
+                <div class="tbl-caption">
+                  <h4 class="heading mb-0">Aportes</h4>
+                  <div>
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#importar-aporte"
+                      role="button" (click)="limpiar()">
+                      + Nuevo Importe
+                    </a>
+                  </div>
+                </div>
+                <table id="empoloyees-tbl" class="table">
+                  <thead>
+                    <tr>
+                      <th>Año/Mes</th>
+                      <th>Constitucional</th>
+                      <th>IVA PAZ</th>
+                      <th>Vehiculos</th>
+                      <th>Petroleo</th>
+                      <th>Total</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let a of aportes; let aindex = index">
+                      <td><span class="text-primary">{{a.anio}}-{{a.mes}}</span></td>
+                      <td>{{a.constitucional | number: '.2-2'}}</td>
+                      <td>{{a.iva_paz | number: '.2-2'}}</td>
+                      <td>{{a.vehiculos | number: '.2-2'}}</td>
+                      <td>{{a.petroleo | number: '.2-2'}}</td>
+                      <td>{{a.total | number: '.2-2'}}</td>
+                      <td>
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setAporte(a, aindex)" data-bs-toggle="offcanvas"
+                              href="#editar-aporte">Editar</a>
+                            <a class="dropdown-item" (click)="deleteAporte(a, aindex)">Eliminar</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="importar-aporte">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Importacion de Aportes</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <form [formGroup]="aporteForm">
+        <div class="row">
+          <div class="col-xl-3 mb-3">
+            <div class="row">
+
+              <div class="col-xl-12 mb-3">
+                <label class="form-label">Archivo Excel (.xls) (.xlsx)
+                  <span class="text-danger">*</span>
+                </label>
+                <input id="importe" (input)="uploadExcel()" class="form-control" type="file">
+              </div>
+
+            </div>
+          </div>
+          <div class="col-xl-9 mb-3">
+            <div class="row">
+              <div class="card">
+                <div class="card-body p-0">
+                  <div class="table-responsive active-projects style-1">
+                    <div class="tbl-caption">
+                      <h4 class="heading mb-0">Aportes</h4>
+                      <div>
+                        <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-aporte"
+                          role="button" (click)="limpiar()">
+                          Importar
+                        </a>
+                      </div>
+                    </div>
+                    <table id="empoloyees-tbl" class="table">
+                      <thead>
+                        <tr>
+                          <th>Año/Mes</th>
+                          <th>Municipalidad</th>
+                          <th>Constitucional</th>
+                          <th>IVA PAZ</th>
+                          <th>Vehiculos</th>
+                          <th>Petroleo</th>
+                          <th>Total</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let a of aportes_temp; let aindex = index">
+                          <td><span class="text-primary">{{a.anio}}-{{a.mes}}</span></td>
+                          <td>{{a.municipalidad}}</td>
+                          <td>{{a.constitucional | number: '.2-2'}}</td>
+                          <td>{{a.iva_paz | number: '.2-2'}}</td>
+                          <td>{{a.vehiculos | number: '.2-2'}}</td>
+                          <td>{{a.petroleo | number: '.2-2'}}</td>
+                          <td>{{a.total | number: '.2-2'}}</td>
+                          <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-list"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" (click)="setAporte(a, aindex)" data-bs-toggle="offcanvas"
+                                  href="#editar-aporte">Editar</a>
+                                <a class="dropdown-item" (click)="deleteAporte(a, aindex)">Eliminar</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button [ngClass]="{'disabled': aporteForm.invalid}" class="btn btn-primary me-1"
+              (click)="postAporte()" data-bs-dismiss="offcanvas" type="button">
+              <i class="fa-duotone fa-floppy-disk"></i> Guardar
+            </button>
+            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

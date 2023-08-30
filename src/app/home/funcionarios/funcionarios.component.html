@@ -30,6 +30,7 @@
                 <table id="empoloyees-tbl" class="table">
                   <thead>
                     <tr>
+                      <th>Codigo</th>
                       <th>Nombre</th>
                       <th>Apellido</th>
                       <th>DPI</th>
@@ -40,8 +41,9 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let f of funcionarios; let mindex = index">
-                      <td><span class="text-primary">{{f.nombre}}</span></td>
-                      <td><span class="text-primary">{{f.apellido}}</span></td>
+                      <td><span class="text-primary">{{f.codigo}}</span></td>
+                      <td>{{f.nombre}}</td>
+                      <td>{{f.apellido}}</td>
                       <td>{{f.dpi}}</td>
                       <td>{{f.fecha_nacimiento | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td>{{f.municipalidad.departamento.nombre}} / {{f.municipalidad.municipio.nombre}}</td>
@@ -82,6 +84,12 @@
         <div class="row">
           <div class="col-xl-6 mb-3">
             <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Codigo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="codigo" class="form-control" placeholder="Codigo">
+              </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Nombre
                   <span class="text-danger">*</span>
@@ -267,6 +275,12 @@
         <div class="row">
           <div class="col-xl-6 mb-3">
             <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Codigo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="codigo" class="form-control" placeholder="Codigo">
+              </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Nombre
                   <span class="text-danger">*</span>

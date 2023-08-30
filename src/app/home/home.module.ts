@@ -22,6 +22,8 @@ import { PermisosComponent } from './seguridad/permisos/permisos.component';
 import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
 import { PrestamosComponent } from './prestamos/prestamos.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { AportesComponent } from './aportes/aportes.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -32,6 +34,8 @@ const routes: Routes = [
       { path: 'municipalidades', component: MunicipalidadesComponent },
       { path: 'funcionarios', component: FuncionariosComponent },
       { path: 'prestamos', component: PrestamosComponent},
+      { path: 'aportes', component: AportesComponent},
+      { path: 'dashboard', component: DashboardComponent},
 
       // Catalogos
       { path: 'departamentos', component: DepartamentosComponent },
@@ -76,7 +80,9 @@ const routes: Routes = [
     BienvenidoComponent,
     PermisosComponent,
     TiposPrestamosComponent,
-    PrestamosComponent
+    PrestamosComponent,
+    AportesComponent,
+    DashboardComponent
   ],
   imports: [
     CommonModule,

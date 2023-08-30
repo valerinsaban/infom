@@ -448,6 +448,13 @@ export class PrestamosComponent {
     return '';
   }
 
+  async reporte(format: string, id: number) {
+    this.ngxService.start();
+    // let departamento = await this.reportesService.getReporteDepartamentos('PDF');
+    window.open(HomeComponent.apiUrl + '/reportes/' + format + '/prestamo/resumen/' + id, "_blank");
+    this.ngxService.stop();
+  }
+
   limpiar() {
     this.prestamoForm.reset();
     this.prestamoForm.controls['estado'].setValue('Pendiente');
