@@ -19,18 +19,22 @@
             <div class="card-body p-0">
               <div class="table-responsive active-projects style-1">
                 <div class="tbl-caption">
-                  <h4 class="heading mb-0">Aportes</h4>
+                  <h4 class="heading mb-0">Historial de Importes</h4>
                   <div>
-                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#importar-aporte"
-                      role="button" (click)="limpiar()">
-                      + Nuevo Importe
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#importar-aporte" role="button"
+                      (click)="limpiar()">
+                      <i class="fad fa-plus"></i> Nuevo Importe
+                    </a>
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#aportes" role="button"
+                      style="margin-left: 10px;">
+                      <i class="fad fa-search"></i> Buscar Aportes
                     </a>
                   </div>
                 </div>
                 <table id="empoloyees-tbl" class="table">
                   <thead>
                     <tr>
-                      <th>Año/Mes</th>
+                      <th>Mes</th>
                       <th>Constitucional</th>
                       <th>IVA PAZ</th>
                       <th>Vehiculos</th>
@@ -40,8 +44,8 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let a of aportes; let aindex = index">
-                      <td><span class="text-primary">{{a.anio}}-{{a.mes}}</span></td>
+                    <tr *ngFor="let a of importes; let aindex = index">
+                      <td><span class="text-primary">{{a.mes}}</span></td>
                       <td>{{a.constitucional | number: '.2-2'}}</td>
                       <td>{{a.iva_paz | number: '.2-2'}}</td>
                       <td>{{a.vehiculos | number: '.2-2'}}</td>
@@ -53,9 +57,7 @@
                             <i class="fa-solid fa-list"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" (click)="setAporte(a, aindex)" data-bs-toggle="offcanvas"
-                              href="#editar-aporte">Editar</a>
-                            <a class="dropdown-item" (click)="deleteAporte(a, aindex)">Eliminar</a>
+                            <a class="dropdown-item" (click)="deleteImporte(a, aindex)">Eliminar</a>
                           </div>
                         </div>
                       </td>
@@ -80,18 +82,67 @@
   </div>
   <div class="offcanvas-body">
     <div class="container-fluid">
-      <form [formGroup]="aporteForm">
+      <form [formGroup]="importeForm">
         <div class="row">
           <div class="col-xl-3 mb-3">
             <div class="row">
-
+              <div class="col-xl-12 mb-3">
+                <label class="form-label">Mes
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="mes" class="form-control" type="month">
+              </div>
+              <div class="col-xl-12 mb-3">
+                <label class="form-label">Observaciones
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="observaciones" class="form-control">
+              </div>
               <div class="col-xl-12 mb-3">
                 <label class="form-label">Archivo Excel (.xls) (.xlsx)
                   <span class="text-danger">*</span>
                 </label>
                 <input id="importe" (input)="uploadExcel()" class="form-control" type="file">
               </div>
-
+              <div class="col-xl-12 mb-3">
+                <h4>TOTALES</h4>
+                <div class="row">
+                  <div class="col-6">
+                    <h5>Constitucional: </h5>
+                    <h5>IVA PAZ: </h5>
+                    <h5>Vehiculos: </h5>
+                    <h5>Petroleo: </h5>
+                    <h5>Total: </h5>
+                  </div>
+                  <div class="col-6" style="text-align: right;">
+                    <h5><b>Q{{constitucional | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{iva_paz | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{vehiculos | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{petroleo | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{total | number: '.2-2'}}</b></h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-12 mb-3" *ngIf="aportes_temp.length">
+                <div class="widget-stat card">
+                  <div class="card-body p-4">
+                    <h4 class="card-title">Aportes Importados</h4>
+                    <h3>{{importados}} / {{aportes_temp.length}}</h3>
+                    <div class="progress mb-2" style="height: 10px;">
+                      <div class="progress-bar bg-primary active progress-bar-striped progress-bar-animated"
+                        [ngStyle]="{'width': porcentaje + '%'}"></div>
+                    </div>
+                    <small>{{porcentaje | number: '.2-2'}}% completado</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button [ngClass]="{'disabled': importeForm.invalid}" class="btn btn-primary me-1" (click)="importar()"
+                type="button">
+                <i class="fa-duotone fa-plus"></i> Importar
+              </button>
+              <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
             </div>
           </div>
           <div class="col-xl-9 mb-3">
@@ -102,8 +153,8 @@
                     <div class="tbl-caption">
                       <h4 class="heading mb-0">Aportes</h4>
                       <div>
-                        <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-aporte"
-                          role="button" (click)="limpiar()">
+                        <a [ngClass]="{'disabled': importeForm.invalid}" (click)="importar()"
+                          class="btn btn-primary btn-sm" role="button">
                           Importar
                         </a>
                       </div>
@@ -111,7 +162,6 @@
                     <table id="empoloyees-tbl" class="table">
                       <thead>
                         <tr>
-                          <th>Año/Mes</th>
                           <th>Municipalidad</th>
                           <th>Constitucional</th>
                           <th>IVA PAZ</th>
@@ -123,8 +173,14 @@
                       </thead>
                       <tbody>
                         <tr *ngFor="let a of aportes_temp; let aindex = index">
-                          <td><span class="text-primary">{{a.anio}}-{{a.mes}}</span></td>
-                          <td>{{a.municipalidad}}</td>
+                          <td>
+                            <!-- <span *ngIf="a.departamento" class="text-primary">
+                              {{a.departamento.nombre}} {{a.municipio.nombre}}
+                            </span> -->
+                            <span class="text-primary">
+                              {{a.municipio}}
+                            </span>
+                          </td>
                           <td>{{a.constitucional | number: '.2-2'}}</td>
                           <td>{{a.iva_paz | number: '.2-2'}}</td>
                           <td>{{a.vehiculos | number: '.2-2'}}</td>
@@ -150,15 +206,173 @@
               </div>
             </div>
           </div>
-          <div>
-            <button [ngClass]="{'disabled': aporteForm.invalid}" class="btn btn-primary me-1"
-              (click)="postAporte()" data-bs-dismiss="offcanvas" type="button">
-              <i class="fa-duotone fa-floppy-disk"></i> Guardar
-            </button>
-            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="aportes">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Aportes</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <form>
+        <div class="row">
+          <div class="col-xl-3 mb-3">
+            <div class="row">
+              <div class="col-xl-12 mb-3">
+                <label class="form-label">Fecha Inicio
+                  <span class="text-danger">*</span>
+                </label>
+                <input [(ngModel)]="filtros.mes_inicio" [ngModelOptions]="{standalone: true}" class="form-control"
+                  type="month">
+              </div>
+              <div class="col-xl-12 mb-3">
+                <label class="form-label">Fecha Fin
+                  <span class="text-danger">*</span>
+                </label>
+                <input [(ngModel)]="filtros.mes_fin" [ngModelOptions]="{standalone: true}" class="form-control"
+                  type="month">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Departamento
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control">
+                </div>
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Municipio
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control">
+                  <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                    data-bs-target="#municipalidades">
+                    <i class="fad fa-search"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-xl-12 mb-3">
+                <h4>TOTALES</h4>
+                <div class="row">
+                  <div class="col-6">
+                    <h5>Constitucional: </h5>
+                    <h5>IVA PAZ: </h5>
+                    <h5>Vehiculos: </h5>
+                    <h5>Petroleo: </h5>
+                    <h5>Total: </h5>
+                  </div>
+                  <div class="col-6" style="text-align: right;">
+                    <h5><b>Q{{constitucional | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{iva_paz | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{vehiculos | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{petroleo | number: '.2-2'}}</b></h5>
+                    <h5><b>Q{{total | number: '.2-2'}}</b></h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <br>
+              <button class="btn btn-primary me-1" (click)="getAportes()" type="button">
+                <i class="fa-duotone fa-search"></i> Buscar
+              </button>
+              <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+            </div>
+          </div>
+          <div class="col-xl-9 mb-3">
+            <div class="row">
+              <div class="card">
+                <div class="card-body p-0">
+                  <div class="table-responsive active-projects style-1">
+                    <div class="tbl-caption">
+                      <h4 class="heading mb-0">Aportes</h4>
+                      <div>
+                        <a (click)="getAportes()" class="btn btn-primary btn-sm" role="button">
+                          Buscar
+                        </a>
+                      </div>
+                    </div>
+                    <table id="empoloyees-tbl" class="table">
+                      <thead>
+                        <tr>
+                          <th>Mes</th>
+                          <th>Constitucional</th>
+                          <th>IVA PAZ</th>
+                          <th>Vehiculos</th>
+                          <th>Petroleo</th>
+                          <th>Total</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let a of aportes; let aindex = index">
+                          <td>{{a.mes}}</td>
+                          <td>{{a.constitucional | number: '.2-2'}}</td>
+                          <td>{{a.iva_paz | number: '.2-2'}}</td>
+                          <td>{{a.vehiculos | number: '.2-2'}}</td>
+                          <td>{{a.petroleo | number: '.2-2'}}</td>
+                          <td>{{a.total | number: '.2-2'}}</td>
+                          <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-list"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" (click)="setAporte(a, aindex)" data-bs-toggle="offcanvas"
+                                  href="#editar-aporte">Editar</a>
+                                <a class="dropdown-item" (click)="deleteAporte(a, aindex)">Eliminar</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="municipalidades" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Busqueda de Municipalidades</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Departamento<span class="text-danger">*</span></label>
+            <select class="form-control" (change)="setDepartamento($event)">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let d of departamentos" [value]="d.id">{{d.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Municipio<span class="text-danger">*</span></label>
+            <select class="form-control" (change)="setMunicipio($event)">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let m of municipios" [value]="m.id">{{m.nombre}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

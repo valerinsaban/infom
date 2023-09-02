@@ -15,6 +15,10 @@ export class AportesService {
     return this.rootService.get(this.route);
   }
 
+  getAportesMesDepartamentoMunicipio(mes_inicio: string, mes_fin: string, codigo_departamento: string, codigo_municipio: string): Promise<any> {
+    return this.rootService.get(this.route + '/' + mes_inicio + '/'  + mes_fin + '/' + codigo_departamento + '/' + codigo_municipio);
+  }
+
   getAporte(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }
