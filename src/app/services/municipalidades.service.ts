@@ -19,6 +19,10 @@ export class MunicipalidadesService {
     return this.rootService.get(this.route + '/' + departamento + '/' + municipio);
   }
 
+  getMunicipalidadDepartamento(departamento: string): Promise<any> {
+    return this.rootService.get(this.route + '/' + departamento);
+  }
+
   getMunicipalidad(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }

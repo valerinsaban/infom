@@ -6,28 +6,42 @@ import { RootService } from '../root.service';
 })
 export class BancosService {
 
-  constructor(private rootService: RootService) {
-  }
+  constructor(
+    private rootService: RootService
+  ) {  }
 
   route = '/bancos';
 
-  getBancos(): Promise<any> {
+  async getBancos(): Promise<any> {
     return this.rootService.get(this.route);
   }
 
-  getBanco(id: number): Promise<any> {
+  async getBanco(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postBanco(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postBanco(data: any): Promise<any> {
+    let banco: any = await this.rootService.post(this.route, data);
+    if (banco.resultado) {
+      await this.rootService.bitacora('banco', `creó el banco "${banco.data.nombre}"`, banco.data);
+    }
+    return banco;
   }
 
-  putBanco(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putBanco(id: number, data: any): Promise<any> {
+    let banco: any = await this.rootService.put(this.route + '/' + id, data);
+    if (banco.resultado) {
+      await this.rootService.bitacora('banco', `editó el banco "${banco.data.nombre}"`, banco.data);
+
+    }
+    return banco;
   }
 
-  deleteBanco(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteBanco(id: number): Promise<any> {
+    let banco: any = await this.rootService.delete(this.route + '/' + id);
+    if (banco.resultado) {
+      await this.rootService.bitacora('banco', `eliminó el banco "${banco.data.nombre}"`, banco.data);
+    }
+    return banco;
   }
 }

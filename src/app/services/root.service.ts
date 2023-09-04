@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AlertService } from './alert.service';
-// import { HomeComponent } from '../home/home.component';
+import { HomeComponent } from '../home/home.component';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +93,23 @@ export class RootService {
       }
     }).toPromise();
     return data;
+  }
+
+
+  async bitacora(tipo: string, accion: string, data: any) {
+    await this.httpClient.post(this.url + '/bitacoras', {
+      fecha: moment().format('YYYY-MM-DD HH:mm'),
+      tipo: tipo,
+      accion: accion,
+      body: JSON.stringify(data),
+      id_usuario: HomeComponent.id_usuario,
+      id_menu: HomeComponent.id_menu,
+      id_submenu: HomeComponent.id_submenu
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).toPromise();
   }
 
   async verify(res: any) {

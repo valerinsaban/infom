@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { HomeComponent } from '../home.component';
 import { Router } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import * as moment from 'moment';
+import { BancosService } from 'src/app/services/catalogos/bancos.service';
 
 @Component({
   selector: 'app-municipalidades',
@@ -23,9 +25,17 @@ export class MunicipalidadesComponent {
 
   departamentos: any = [];
   municipios: any = [];
+  bancos: any = [];
 
   departamento: any;
   municipio: any;
+
+  filtros: any = {
+    mes_inicio: moment().startOf('year').format('YYYY-MM'),
+    mes_fin: moment().endOf('year').format('YYYY-MM'),
+    codigo_departamento: '',
+    codigo_municipio: ''
+  }
 
   constructor(
     private alert: AlertService,
@@ -33,26 +43,42 @@ export class MunicipalidadesComponent {
     private municipalidadesService: MunicipalidadesService,
     private departamentosService: DepartamentosService,
     private municipiosService: MunicipiosService,
+    private bancosService: BancosService,
   ) {
     this.municipalidadForm = new FormGroup({
-      direccion: new FormControl(null, [Validators.required]),
+      direccion: new FormControl(null),
+      correo: new FormControl(null),
+      telefono: new FormControl(null),
+      no_cuenta: new FormControl(null),
       id_departamento: new FormControl(null, [Validators.required]),
-      id_municipio: new FormControl(null, [Validators.required])
+      id_municipio: new FormControl(null, [Validators.required]),
+      id_banco: new FormControl(null, [Validators.required])
     });
   }
 
   async ngOnInit() {
     this.ngxService.start();
-    await this.getMunicipalidades();
     await this.getDepartamentos();
+    await this.getBancos();
     this.ngxService.stop();
   }
 
   async getMunicipalidades() {
-    let municipalidades = await this.municipalidadesService.getMunicipalidades();
-    if (municipalidades) {
-      this.municipalidades = municipalidades;
+    this.ngxService.start();
+    this.municipalidades = [];
+    if (this.filtros.codigo_departamento && this.filtros.codigo_municipio) {
+      let municipalidades = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+      if (municipalidades) {
+        this.municipalidades.push(municipalidades);
+      } 
     }
+    if (this.filtros.codigo_departamento && !this.filtros.codigo_municipio) {
+      let municipalidades = await this.municipalidadesService.getMunicipalidadDepartamento(this.filtros.codigo_departamento);
+      if (municipalidades) {
+        this.municipalidades = municipalidades;
+      } 
+    }
+    this.ngxService.stop();
   }
 
   async getDepartamentos() {
@@ -66,6 +92,13 @@ export class MunicipalidadesComponent {
     let municipios = await this.municipiosService.getMunicipioByDepartamento(this.municipalidadForm.controls['id_departamento'].value);
     if (municipios) {
       this.municipios = municipios;
+    }
+  }
+
+  async getBancos() {
+    let bancos = await this.bancosService.getBancos();
+    if (bancos) {
+      this.bancos = bancos;
     }
   }
 
@@ -136,9 +169,35 @@ export class MunicipalidadesComponent {
     i.index = index;
     this.municipalidad = i;
     this.municipalidadForm.controls['direccion'].setValue(i.direccion);
+    this.municipalidadForm.controls['correo'].setValue(i.correo);
+    this.municipalidadForm.controls['telefono'].setValue(i.telefono);
+    this.municipalidadForm.controls['no_cuenta'].setValue(i.no_cuenta);
     this.municipalidadForm.controls['id_departamento'].setValue(i.id_departamento);
     this.municipalidadForm.controls['id_municipio'].setValue(i.id_municipio);
+    this.municipalidadForm.controls['id_banco'].setValue(i.id_banco);
   }
+
+  async setDepartamento(event: any) {
+    for (let d = 0; d < this.departamentos.length; d++) {
+      if (event.target.value == this.departamentos[d].id) {
+        this.filtros.codigo_departamento = this.departamentos[d].codigo;
+        this.filtros.codigo_municipio = '';
+      }
+    }
+    let municipios = await this.municipiosService.getMunicipioByDepartamento(event.target.value);
+    if (municipios) {
+      this.municipios = municipios;
+    }
+  }
+
+  async setMunicipio(event: any) {
+    for (let m = 0; m < this.municipios.length; m++) {
+      if (event.target.value == this.municipios[m].id) {
+        this.filtros.codigo_municipio = this.municipios[m].codigo;
+      }
+    }
+  }
+
 
   limpiar() {
     this.municipalidadForm.reset();

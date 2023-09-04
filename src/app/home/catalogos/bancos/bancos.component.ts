@@ -93,7 +93,7 @@ export class BancosComponent {
         this.ngxService.start();
         let banco = await this.bancoService.deleteBanco(i.id);
         if (banco.resultado) {
-          this.banco.splice(index, 1);
+          this.bancos.splice(index, 1);
           this.alert.alertMax('Correcto', banco.mensaje, 'success');
           this.banco = null;
         }

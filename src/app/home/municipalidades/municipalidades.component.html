@@ -23,24 +23,46 @@
                   <div>
                     <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-municipalidad"
                       role="button" (click)="limpiar()">
-                      + Agregar Municipalidad
+                      <i class="fad fa-plus"></i> Agregar Municipalidad
+                    </a>
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#buscar-municipalidad"
+                      role="button" (click)="limpiar()" style="margin-left: 10px;">
+                      <i class="fad fa-search"></i> Buscar Municipalidad
                     </a>
                   </div>
                 </div>
                 <table id="empoloyees-tbl" class="table">
                   <thead>
                     <tr>
-                      <th>Departamento</th>
-                      <th>Municipio</th>
+                      <th>Departamento / Municipio</th>
                       <th>Direccion</th>
+                      <th>Telefono</th>
+                      <th>Correo</th>
+                      <th>No. Cuenta</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let m of municipalidades; let mindex = index">
-                      <td><span class="text-primary">{{m.departamento.nombre}}</span></td>
-                      <td><span class="text-primary">{{m.municipio.nombre}}</span></td>
+                      <td>
+                        <div class="products">
+                          <div>
+                            <h6>{{m.departamento.nombre}}</h6>
+                            <span class="count text-primary">{{m.municipio.nombre}}</span>
+                          </div>
+                        </div>
+                      </td>
                       <td>{{m.direccion}}</td>
+                      <td>{{m.telefono}}</td>
+                      <td>{{m.correo}}</td>
+                      <td>
+                        <div class="products">
+                          <div>
+                            <h6>{{m.no_cuenta}}</h6>
+                            <span class="count text-primary">{{m.banco.nombre}}</span>
+                          </div>
+                        </div>
+                      </td>
                       <td>
                         <div class="dropdown">
                           <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
@@ -139,7 +161,34 @@
             <label class="form-label">Direccion
               <span class="text-danger">*</span>
             </label>
-            <input formControlName="direccion" class="form-control">
+            <input formControlName="direccion" class="form-control" placeholder="Direccion">
+          </div>
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">Correo
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="correo" class="form-control" placeholder="Correo">
+          </div>
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">Telefono
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="telefono" class="form-control" placeholder="Telefono">
+          </div>
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">No. Cuenta
+              <span class="text-danger">*</span>
+            </label>
+            <input formControlName="no_cuenta" class="form-control" placeholder="No. Cuenta">
+          </div>
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">Banco
+              <span class="text-danger">*</span>
+            </label>
+            <select formControlName="id_banco" class="form-control">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let d of bancos" [value]="d.id">{{d.nombre}}</option>
+            </select>
           </div>
         </div>
         <div>
@@ -150,6 +199,79 @@
           <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="buscar-municipalidad">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Buscar Municipalidad</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <form [formGroup]="municipalidadForm">
+        <div class="row">
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Departamento
+              <span class="text-danger">*</span>
+            </label>
+            <div class="input-group mb-3">
+              <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
+                class="form-control">
+            </div>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Municipio
+              <span class="text-danger">*</span>
+            </label>
+            <div class="input-group mb-3">
+              <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
+                class="form-control">
+              <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#municipalidades">
+                <i class="fad fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-primary me-1" (click)="getMunicipalidades()" data-bs-dismiss="offcanvas" type="button">
+            <i class="fad fa-search"></i> Buscar
+          </button>
+          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="municipalidades" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Busqueda de Municipalidades</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Departamento<span class="text-danger">*</span></label>
+            <select class="form-control" (change)="setDepartamento($event)">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let d of departamentos" [value]="d.id">{{d.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Municipio<span class="text-danger">*</span></label>
+            <select class="form-control" (change)="setMunicipio($event)">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let m of municipios" [value]="m.id">{{m.nombre}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

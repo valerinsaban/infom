@@ -229,6 +229,7 @@ export class AportesComponent {
         this.total = 0;
         this.porcentaje = 0;
         this.importados = 0;
+        this.aportes_temp = [];
         this.alert.alertMax('Transaccion Correcta', 'Importe completado', 'success');
         this.ngxService.stopBackground();
       }

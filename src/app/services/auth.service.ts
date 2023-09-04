@@ -6,14 +6,16 @@ import { RootService } from './root.service';
 })
 export class AuthService {
 
-  constructor(private rootService: RootService) { }
+  constructor(
+    private rootService: RootService
+  ) { }
 
-  login(data: any): Promise<any> {
-    return this.rootService.authPost('/auth/login', data);
-  }
-
-  register(data: any): Promise<any> {
-    return this.rootService.authPost('/register', data);
+  async login(data: any): Promise<any> {
+    let auth = await this.rootService.authPost('/auth/login', data);
+    if (auth.token) {
+      await this.rootService.bitacora('auth', 'ha iniciado sesión', auth);
+    }
+    return auth;
   }
 
 }

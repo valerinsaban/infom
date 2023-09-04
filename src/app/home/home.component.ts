@@ -9,6 +9,7 @@ import { PermisosService } from '../services/seguridad/permisos.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
+import { BitacorasService } from '../services/bitacoras.service';
 
 @Component({
   selector: 'app-home',
@@ -27,6 +28,7 @@ export class HomeComponent {
   static apiUrl = environment.api;
 
   menus: any = [];
+  bitacoras: any = [];
 
   constructor(
     private router: Router,
@@ -34,6 +36,7 @@ export class HomeComponent {
     private permisosService: PermisosService,
     private menusService: MenusService,
     private usuariosService: UsuariosService,
+    private bitacorasService: BitacorasService,
     private elementRef: ElementRef
   ) { }
 
@@ -56,6 +59,8 @@ export class HomeComponent {
 
         AppComponent.loadScript('assets/js/deznav-init.js');
         AppComponent.loadScript('assets/js/custom.js');
+        AppComponent.loadScript('https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js');
+        AppComponent.loadScript('assets/js/mask.js');
 
         this.ngxService.stop();
         return;   
@@ -68,6 +73,15 @@ export class HomeComponent {
     let menus = await this.menusService.getMenus();
     if (menus) {
       this.menus = menus;
+    }
+  }
+
+  async getBitacoras() {
+    let fecha_inicio = moment().startOf('day').format('YYYY-MM-DD HH:mm')
+    let fecha_fin = moment().endOf('day').format('YYYY-MM-DD HH:mm')
+    let bitacoras = await this.bitacorasService.getBitacorasFecha(fecha_inicio, fecha_fin);
+    if (bitacoras) {
+      this.bitacoras = bitacoras;
     }
   }
 

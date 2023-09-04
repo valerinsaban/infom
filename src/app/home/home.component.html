@@ -629,7 +629,7 @@
             </div> -->
           </div>
           <ul class="navbar-nav header-right">
-            <li class="nav-item dropdown notification_dropdown">
+            <li class="nav-item dropdown notification_dropdown" (click)="getBitacoras()">
               <a class="nav-link " href="javascript:void(0);" data-bs-toggle="dropdown">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd"
@@ -643,55 +643,20 @@
               <div class="dropdown-menu dropdown-menu-end">
                 <div id="DZ_W_TimeLine02" class="widget-timeline dz-scroll style-1 p-3 height370">
                   <ul class="timeline">
-                    <li>
-                      <div class="timeline-badge primary"></div>
+                    <li *ngFor="let b of bitacoras">
+                      <div class="timeline-badge" [ngClass]="{'primary': b.accion == 'auth', 'success': b.accion == 'agregar', 'warning': b.accion == 'editar', 'danger': b.accion == 'eliminar', 'dark': b.accion == 'reporte'}"></div>
                       <a class="timeline-panel text-muted" href="javascript:void(0);">
-                        <span>10 minutes ago</span>
-                        <h6 class="mb-0">Youtube, a video-sharing website, goes live <strong
-                            class="text-primary">$500</strong>.</h6>
+                        <span>{{b.fecha}}</span>
+                        <h6 class="mb-0">
+                          <strong *ngIf="b.usuario" [ngClass]="{'text-primary': b.accion == 'auth', 'text-success': b.accion == 'agregar', 'text-warning': b.accion == 'editar', 'text-danger': b.accion == 'eliminar', 'text-dark': b.accion == 'reporte'}">
+                            {{b.usuario.nombre}}
+                          </strong> {{b.descripcion}}
+                        </h6>
                       </a>
                     </li>
-                    <li>
-                      <div class="timeline-badge info">
-                      </div>
-                      <a class="timeline-panel text-muted" href="javascript:void(0);">
-                        <span>20 minutes ago</span>
-                        <h6 class="mb-0">New order placed <strong class="text-info">#XF-2356.</strong></h6>
-                        <p class="mb-0">Quisque a consequat ante Sit amet magna at volutapt...</p>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="timeline-badge danger">
-                      </div>
-                      <a class="timeline-panel text-muted" href="javascript:void(0);">
-                        <span>30 minutes ago</span>
-                        <h6 class="mb-0">john just buy your product <strong class="text-warning">Sell $250</strong></h6>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="timeline-badge success">
-                      </div>
-                      <a class="timeline-panel text-muted" href="javascript:void(0);">
-                        <span>15 minutes ago</span>
-                        <h6 class="mb-0">StumbleUpon is acquired by eBay. </h6>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="timeline-badge warning">
-                      </div>
-                      <a class="timeline-panel text-muted" href="javascript:void(0);">
-                        <span>20 minutes ago</span>
-                        <h6 class="mb-0">Mashable, a news website and blog, goes live.</h6>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="timeline-badge dark">
-                      </div>
-                      <a class="timeline-panel text-muted" href="javascript:void(0);">
-                        <span>20 minutes ago</span>
-                        <h6 class="mb-0">Mashable, a news website and blog, goes live.</h6>
-                      </a>
-                    </li>
+                    <div style="text-align: center;">
+                      <h5>No se encontraron registros</h5>
+                    </div>
                   </ul>
                 </div>
               </div>
