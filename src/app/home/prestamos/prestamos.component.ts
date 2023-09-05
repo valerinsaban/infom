@@ -124,7 +124,7 @@ export class PrestamosComponent {
   //   this.ngxService.stopBackground();
   // }
 
-  async getPrestamos() {
+  async getPrestamos() {    
     this.ngxService.startBackground();
     let prestamos = await this.prestamosService.getPrestamosEstado(this.estado, this.fecha_inicio, this.fecha_fin);
     if (prestamos) {

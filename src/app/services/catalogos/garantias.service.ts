@@ -18,15 +18,27 @@ export class GarantiasService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postGarantia(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postGarantia(data: any): Promise<any> {
+    let garantia = await this.rootService.post(this.route, data);
+    if (garantia.resultado) {
+      await this.rootService.bitacora('garantia', 'agregar', `creó la garantia "${garantia.data.nombre}"`, garantia.data);
+    }
+    return garantia;
   }
 
-  putGarantia(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putGarantia(id: number, data: any): Promise<any> {
+    let garantia = await this.rootService.put(this.route + '/' + id, data);
+    if (garantia.resultado) {
+      await this.rootService.bitacora('garantia', 'editar', `editó la garantia "${garantia.data.nombre}"`, garantia.data);
+    }
+    return garantia;
   }
 
-  deleteGarantia(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteGarantia(id: number): Promise<any> {
+    let garantia = await this.rootService.delete(this.route + '/' + id);
+    if (garantia.resultado) {
+      await this.rootService.bitacora('garantia', 'eliminar', `eliminó la garantia "${garantia.data.nombre}"`, garantia.data);
+    }
+    return garantia;
   }
 }

@@ -96,11 +96,12 @@ export class RootService {
   }
 
 
-  async bitacora(tipo: string, accion: string, data: any) {
+  async bitacora(tipo: string, accion: string, descripcion: string, data: any) {
     await this.httpClient.post(this.url + '/bitacoras', {
       fecha: moment().format('YYYY-MM-DD HH:mm'),
       tipo: tipo,
       accion: accion,
+      descripcion: descripcion,
       body: JSON.stringify(data),
       id_usuario: HomeComponent.id_usuario,
       id_menu: HomeComponent.id_menu,

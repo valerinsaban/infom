@@ -4,7 +4,7 @@
       <h5 class="bc-title">Usuarios</h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
-      <i class="fa-solid fa-house-chimney"></i>
+        <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
     <li class="breadcrumb-item active"><a href="javascript:void(0)">Usuarios</a></li>
@@ -67,12 +67,14 @@
             </div>
 
             <div *ngIf="!usuario">
-              <button (click)="postUsuario()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': usuarioForm.invalid}">
+              <button (click)="postUsuario()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': usuarioForm.invalid}">
                 Guardar
               </button>
             </div>
             <div *ngIf="usuario">
-              <button (click)="putUsuario()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': usuarioForm.invalid}">
+              <button (click)="putUsuario()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': usuarioForm.invalid}">
                 Guardar
               </button>
               <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
@@ -110,11 +112,17 @@
                   <td>{{u.rol.nombre}}</td>
                   <td>
                     <div class="dropdown">
+                      <button (click)="setUsuario(u, uindex)" type="button" class="btn btn-primary light sharp" data-bs-toggle="modal"
+                        data-bs-target="#editar-clave" style="margin-right: 10px;">
+                        <i class="fa-solid fa-lock"></i>
+                      </button>
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item" (click)="setUsuario(u, uindex)">Editar</a>
+                        <!-- <a data-bs-toggle="modal" data-bs-target="#estado" class="dropdown-item"
+                          (click)="setUsuario(u, uindex)">Clave</a> -->
                         <a class="dropdown-item" (click)="deleteUsuario(u, uindex)">Eliminar</a>
                       </div>
                     </div>
@@ -124,6 +132,35 @@
             </table>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editar-clave" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" [formGroup]="usuarioForm">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Editar Clave</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12 mb-3">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Clave <span class="text-danger">*</span>
+              </label>
+              <input formControlName="clave" type="text" class="form-control" placeholder="Clave">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn light" data-bs-dismiss="modal" (click)="cancelarEdicion()">Cancelar</button>
+        <button [ngClass]="{'disabled': !usuarioForm.controls['clave'].value}" class="btn btn-primary me-1" (click)="putClave()"
+          data-bs-dismiss="modal" type="button">
+          <i class="fa-duotone fa-floppy-disk"></i> Guardar
+        </button>
       </div>
     </div>
   </div>

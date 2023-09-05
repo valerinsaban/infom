@@ -23,16 +23,28 @@ export class AportesService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postAporte(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postAporte(data: any): Promise<any> {
+    let aporte = await this.rootService.post(this.route, data);
+    if (aporte.resultado) {
+      await this.rootService.bitacora('aporte', 'agregar', `creó el aporte "${aporte.data.mes}"`, aporte.data);
+    }
+    return aporte;
   }
 
-  putAporte(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putAporte(id: number, data: any): Promise<any> {
+    let aporte = await this.rootService.put(this.route + '/' + id, data);
+    if (aporte.resultado) {
+      await this.rootService.bitacora('aporte', 'editar', `editó el aporte "${aporte.data.mes}"`, aporte.data);
+    }
+    return aporte;
   }
 
-  deleteAporte(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteAporte(id: number): Promise<any> {
+    let aporte = await this.rootService.delete(this.route + '/' + id);
+    if (aporte.resultado) {
+      await this.rootService.bitacora('aporte', 'eliminar', `eliminó el aporte "${aporte.data.mes}"`, aporte.data);
+    }
+    return aporte;
   }
 
 

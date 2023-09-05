@@ -18,16 +18,28 @@ export class RolesService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postRol(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postRol(data: any): Promise<any> {
+    let rol = await this.rootService.post(this.route, data);
+    if (rol.resultado) {
+      await this.rootService.bitacora('rol', 'agregar', `creó el rol "${rol.data.nombre}"`, rol.data);
+    }
+    return rol;
   }
 
-  putRol(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putRol(id: number, data: any): Promise<any> {
+    let rol = await this.rootService.put(this.route + '/' + id, data);
+    if (rol.resultado) {
+      await this.rootService.bitacora('rol', 'editar', `editó el rol "${rol.data.nombre}"`, rol.data);
+    }
+    return rol;
   }
 
-  deleteRol(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteRol(id: number): Promise<any> {
+    let rol = await this.rootService.delete(this.route + '/' + id);
+    if (rol.resultado) {
+      await this.rootService.bitacora('rol', 'eliminar', `eliminó el rol "${rol.data.nombre}"`, rol.data);
+    }
+    return rol;
   }
 
 }

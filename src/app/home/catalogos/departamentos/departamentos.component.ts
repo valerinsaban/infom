@@ -5,7 +5,6 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import Swal from 'sweetalert2';
 import { HomeComponent } from '../../home.component';
-import { ReportesService } from 'src/app/services/reportes.service';
 
 @Component({
   selector: 'app-departamentos',
@@ -21,7 +20,6 @@ export class DepartamentosComponent {
   constructor(
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,
-    private reportesService: ReportesService,
     private departamentosService: DepartamentosService
   ) {
     this.departamentoForm = new FormGroup({

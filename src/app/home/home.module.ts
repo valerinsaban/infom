@@ -24,6 +24,9 @@ import { PrestamosComponent } from './prestamos/prestamos.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { AportesComponent } from './aportes/aportes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProduccionComponent } from './produccion/produccion.component';
+import { BitacorasComponent } from './seguridad/bitacoras/bitacoras.component';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 const routes: Routes = [
   {
@@ -36,6 +39,8 @@ const routes: Routes = [
       { path: 'prestamos', component: PrestamosComponent},
       { path: 'aportes', component: AportesComponent},
       { path: 'dashboard', component: DashboardComponent},
+      { path: 'bitacoras', component: BitacorasComponent},
+      { path: 'produccion', component: ProduccionComponent},
 
       // Catalogos
       { path: 'departamentos', component: DepartamentosComponent },
@@ -82,14 +87,17 @@ const routes: Routes = [
     TiposPrestamosComponent,
     PrestamosComponent,
     AportesComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProduccionComponent,
+    BitacorasComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    NgxUiLoaderModule
+    NgxUiLoaderModule,
+    NgxJsonViewerModule
   ]
 })
 export class HomeModule { }

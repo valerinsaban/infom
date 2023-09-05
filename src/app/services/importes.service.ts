@@ -19,16 +19,28 @@ export class ImportesService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postImporte(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postImporte(data: any): Promise<any> {
+    let importe = await this.rootService.post(this.route, data);
+    if (importe.resultado) {
+      await this.rootService.bitacora('importe', 'agregar', `creó el importe "${importe.data.mes}"`, importe.data);
+    }
+    return importe;
   }
 
-  putImporte(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putImporte(id: number, data: any): Promise<any> {
+    let importe = await this.rootService.put(this.route + '/' + id, data);
+    if (importe.resultado) {
+      await this.rootService.bitacora('importe', 'editar', `editó el importe "${importe.data.mes}"`, importe.data);
+    }
+    return importe;
   }
 
-  deleteImporte(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteImporte(id: number): Promise<any> {
+    let importe = await this.rootService.delete(this.route + '/' + id);
+    if (importe.resultado) {
+      await this.rootService.bitacora('importe', 'eliminar', `eliminó el importe "${importe.data.mes}"`, importe.data);
+    }
+    return importe;
   }
 
 

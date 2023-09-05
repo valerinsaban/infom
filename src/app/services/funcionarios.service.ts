@@ -19,16 +19,28 @@ export class FuncionariosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postFuncionario(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postFuncionario(data: any): Promise<any> {
+    let funcionario = await this.rootService.post(this.route, data);
+    if (funcionario.resultado) {
+      await this.rootService.bitacora('funcionario', 'agregar', `creó el funcionario "${funcionario.data.nombre}"`, funcionario.data);
+    }
+    return funcionario;
   }
 
-  putFuncionario(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putFuncionario(id: number, data: any): Promise<any> {
+    let funcionario = await this.rootService.put(this.route + '/' + id, data);
+    if (funcionario.resultado) {
+      await this.rootService.bitacora('funcionario', 'editar', `editó el funcionario "${funcionario.data.nombre}"`, funcionario.data);
+    }
+    return funcionario;
   }
 
-  deleteFuncionario(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteFuncionario(id: number): Promise<any> {
+    let funcionario = await this.rootService.delete(this.route + '/' + id);
+    if (funcionario.resultado) {
+      await this.rootService.bitacora('funcionario', 'eliminar', `eliminó el funcionario "${funcionario.data.nombre}"`, funcionario.data);
+    }
+    return funcionario;
   }
 
 

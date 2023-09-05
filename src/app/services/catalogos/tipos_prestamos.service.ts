@@ -19,15 +19,27 @@ export class TiposPrestamosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postTipoPrestamo(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postTipoPrestamo(data: any): Promise<any> {
+    let tipo_prestamo = await this.rootService.post(this.route, data);
+    if (tipo_prestamo.resultado) {
+      await this.rootService.bitacora('tipo_prestamo', 'agregar', `creó el tipo prestamo "${tipo_prestamo.data.nombre}"`, tipo_prestamo.data);
+    }
+    return tipo_prestamo;
   }
 
-  putTipoPrestamo(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putTipoPrestamo(id: number, data: any): Promise<any> {
+    let tipo_prestamo = await this.rootService.put(this.route + '/' + id, data);
+    if (tipo_prestamo.resultado) {
+      await this.rootService.bitacora('tipo_prestamo', 'editar', `editó el tipo prestamo "${tipo_prestamo.data.nombre}"`, tipo_prestamo.data);
+    }
+    return tipo_prestamo;
   }
 
-  deleteTipoPrestamo(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteTipoPrestamo(id: number): Promise<any> {
+    let tipo_prestamo = await this.rootService.delete(this.route + '/' + id);
+    if (tipo_prestamo.resultado) {
+      await this.rootService.bitacora('tipo_prestamo', 'eliminar', `eliminó el tipo prestamo "${tipo_prestamo.data.nombre}"`, tipo_prestamo.data);
+    }
+    return tipo_prestamo;
   }
 }

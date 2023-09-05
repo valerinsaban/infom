@@ -12,10 +12,10 @@ $(function () {
       'Este Mes': [moment().startOf('month'), moment().endOf('month')],
       'Mes Pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     },
-    startDate: moment().startOf('month'),
-    endDate: moment().endOf('month'),
+    startDate: moment().startOf('day'),
+    endDate: moment().endOf('day'),
   }, function (start, end, label) {
-    sessionStorage.setItem('fecha_inicio', start.format('YYYY-MM-DD'));
-    sessionStorage.setItem('fecha_fin', end.format('YYYY-MM-DD'));
+    sessionStorage.setItem('fecha_inicio', start.format('YYYY-MM-DD HH:mm'));
+    sessionStorage.setItem('fecha_fin', end.format('YYYY-MM-DD HH:mm'));
   });
 });

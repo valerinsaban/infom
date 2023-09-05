@@ -1,0 +1,123 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Bitacora</h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Bitacora</a></li>
+  </ol>
+</div>
+
+<div class="container-fluid">
+
+  <!-- row -->
+  <div class="row">
+    <div class="col-xl-12 col-xxl-12">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects style-1">
+                <div class="tbl-caption">
+                  <div>
+                    <div class="input-group input-group-sm mb-3">
+                      <input name="daterange" class="form-control-sm" style="width: 180px;" />
+                      <button (click)="getBitacoras()" class="btn btn-primary" type="button">
+                        <i class="fas fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <a class="btn btn-primary btn-sm" role="button" (click)="getBitacoras()">
+                      Buscar
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-5">
+      <div class="card">
+        <div class="card-header border-0 pb-0">
+          <h4 class="card-title">registros: {{bitacoras.length}}</h4>
+        </div>
+        <div class="card-body p-0">
+          <div id="DZ_W_TimeLine11" class="widget-timeline style-1 my-4 px-4">
+            <ul class="timeline">
+              <li *ngFor="let b of bitacoras" (click)="setBitacora(b)">
+                <div class="timeline-badge"
+                  [ngClass]="{'primary': b.accion == 'auth', 'success': b.accion == 'agregar', 'warning': b.accion == 'editar', 'danger': b.accion == 'eliminar', 'dark': b.accion == 'reporte'}">
+                </div>
+                <a class="timeline-panel text-muted" href="javascript:void(0);">
+                  <span>{{formNow(b.fecha)}}</span>
+                  <h6 class="mb-0">
+                    <strong *ngIf="b.usuario"
+                      [ngClass]="{'text-primary': b.accion == 'auth', 'text-success': b.accion == 'agregar', 'text-warning': b.accion == 'editar', 'text-danger': b.accion == 'eliminar', 'text-dark': b.accion == 'reporte'}">
+                      {{b.usuario.nombre}}
+                    </strong> {{b.descripcion}}
+                  </h6>
+                </a>
+              </li>
+              <div *ngIf="!bitacoras.length" style="text-align: center;">
+                <h5>No se encontraron registros</h5>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-7" *ngIf="bitacora">
+      <div class="card">
+        <div class="card-header border-0 pb-0">
+          <h2 class="card-title">Registro No. {{bitacora.id}}</h2>
+        </div>
+        <div class="card-body pb-0">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex px-0 justify-content-between">
+              <strong>Fecha</strong>
+              <span class="mb-0">{{bitacora.fecha | date: 'dd/MM/YYYY HH:mm':'UTC'}}</span>
+            </li>
+            <li class="list-group-item d-flex px-0 justify-content-between">
+              <strong>Descripcion</strong>
+              <span class="mb-0">
+                <span [ngClass]="{'text-primary': bitacora.accion == 'auth', 'text-success': bitacora.accion == 'agregar', 'text-warning': bitacora.accion == 'editar', 'text-danger': bitacora.accion == 'eliminar', 'text-dark': bitacora.accion == 'reporte'}">{{bitacora.usuario.nombre}}</span>
+                {{bitacora.descripcion}}
+              </span>
+            </li>
+            <li class="list-group-item d-flex px-0 justify-content-between">
+              <strong>Tipo</strong>
+              <span class="mb-0">{{bitacora.tipo}}</span>
+            </li>
+            <li class="list-group-item d-flex px-0 justify-content-between">
+              <strong>Accion</strong>
+              <span class="mb-0">{{bitacora.accion}}</span>
+            </li>
+            <li class="list-group-item d-flex px-0 justify-content-between">
+              <strong>Body</strong>
+              <div class="card-body pt-0 p-0 code-area">
+                <!-- <ace-editor [(text)]="bitacora.body" mode="json" style="height:400px;"></ace-editor> -->
+
+                <ngx-json-viewer [json]="code"></ngx-json-viewer>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--**********************************
+Footer start
+***********************************-->
+
+  <!--**********************************
+Footer end
+***********************************-->
+</div>

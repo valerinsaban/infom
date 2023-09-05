@@ -27,16 +27,28 @@ export class MunicipalidadesService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postMunicipalidad(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postMunicipalidad(data: any): Promise<any> {
+    let municipalidad = await this.rootService.post(this.route, data);
+    if (municipalidad.resultado) {
+      await this.rootService.bitacora('municipalidad', 'agregar', `creó la municipalidad "${municipalidad.data.departamento.nombre} ${municipalidad.data.municipio.nombre}"`, municipalidad.data);
+    }
+    return municipalidad;
   }
 
-  putMunicipalidad(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putMunicipalidad(id: number, data: any): Promise<any> {
+    let municipalidad = await this.rootService.put(this.route + '/' + id, data);
+    if (municipalidad.resultado) {
+      await this.rootService.bitacora('municipalidad', 'editar', `editó la municipalidad "${municipalidad.data.departamento.nombre} ${municipalidad.data.municipio.nombre}"`, municipalidad.data);
+    }
+    return municipalidad;
   }
 
-  deleteMunicipalidad(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteMunicipalidad(id: number): Promise<any> {
+    let municipalidad = await this.rootService.delete(this.route + '/' + id);
+    if (municipalidad.resultado) {
+      await this.rootService.bitacora('municipalidad', 'eliminar', `eliminó la municipalidad "${municipalidad.data.departamento.nombre} ${municipalidad.data.municipio.nombre}"`, municipalidad.data);
+    }
+    return municipalidad;
   }
 
 

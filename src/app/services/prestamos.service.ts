@@ -27,16 +27,28 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postPrestamo(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postPrestamo(data: any): Promise<any> {
+    let prestamo = await this.rootService.post(this.route, data);
+    if (prestamo.resultado) {
+      await this.rootService.bitacora('prestamo', 'agregar', `creó el prestamo "${prestamo.data.id}"`, prestamo.data);
+    }
+    return prestamo;
   }
 
-  putPrestamo(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putPrestamo(id: number, data: any): Promise<any> {
+    let prestamo = await this.rootService.put(this.route + '/' + id, data);
+    if (prestamo.resultado) {
+      await this.rootService.bitacora('prestamo', 'editar', `editó el prestamo "${prestamo.data.id}"`, prestamo.data);
+    }
+    return prestamo;
   }
 
-  deletePrestamo(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deletePrestamo(id: number): Promise<any> {
+    let prestamo = await this.rootService.delete(this.route + '/' + id);
+    if (prestamo.resultado) {
+      await this.rootService.bitacora('prestamo', 'eliminar', `eliminó el prestamo "${prestamo.data.id}"`, prestamo.data);
+    }
+    return prestamo;
   }
 
 

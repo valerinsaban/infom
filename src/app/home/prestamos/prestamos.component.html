@@ -141,12 +141,10 @@
                         </span>
                       </td>
                       <td class="text-end">
-                        <div>
-                          <a (click)="reporte('PDF', p.id)" class="btn btn-primary light sharp">
+                        <div class="dropdown">
+                          <a (click)="reporte('PDF', p.id)" class="btn btn-primary light sharp" style="margin-right: 10px;">
                             <i class="fa-solid fa-print"></i>
                           </a>
-                        </div>
-                        <div class="dropdown">
                           <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                             <i class="fa-solid fa-list"></i>
                           </button>

@@ -41,6 +41,7 @@ export class HomeComponent {
   ) { }
 
   async ngOnInit() {
+    moment.locale('es');
     this.selectedMenu();
     let token: any = sessionStorage.getItem('token');
     if (token) {
@@ -81,7 +82,7 @@ export class HomeComponent {
     let fecha_fin = moment().endOf('day').format('YYYY-MM-DD HH:mm')
     let bitacoras = await this.bitacorasService.getBitacorasFecha(fecha_inicio, fecha_fin);
     if (bitacoras) {
-      this.bitacoras = bitacoras;
+      this.bitacoras = bitacoras.reverse();
     }
   }
 
@@ -160,8 +161,8 @@ export class HomeComponent {
         HomeComponent.id_submenu = parseInt(id_submenu);
       }
     }
-    sessionStorage.setItem('fecha_inicio', moment().format('YYYY-MM-01'));
-    sessionStorage.setItem('fecha_fin', moment().endOf('month').format('YYYY-MM-DD'));
+    sessionStorage.setItem('fecha_inicio', moment().format('YYYY-MM-DD 00:00'));
+    sessionStorage.setItem('fecha_fin', moment().format('YYYY-MM-DD 23:59'));
   }
 
   get usuario() {    
@@ -175,6 +176,10 @@ export class HomeComponent {
     sessionStorage.setItem('id_submenu', id_submenu);
     $('.hamburger').removeClass('is-active');
     $('#main-wrapper').removeClass('menu-toggle');
+  }
+
+  formNow(fecha: string) {
+    return moment(fecha).fromNow()
   }
 
   logout() {

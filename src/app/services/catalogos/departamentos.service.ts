@@ -19,16 +19,28 @@ export class DepartamentosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postDepartamento(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postDepartamento(data: any): Promise<any> {
+    let departamento = await this.rootService.post(this.route, data);
+    if (departamento.resultado) {
+      await this.rootService.bitacora('departamento', 'agregar', `creó el departamento "${departamento.data.nombre}"`, departamento.data);
+    }
+    return departamento;
   }
 
-  putDepartamento(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putDepartamento(id: number, data: any): Promise<any> {
+    let departamento = await this.rootService.put(this.route + '/' + id, data);
+    if (departamento.resultado) {
+      await this.rootService.bitacora('departamento', 'editar', `editó el departamento "${departamento.data.nombre}"`, departamento.data);
+    }
+    return departamento;
   }
 
-  deleteDepartamento(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteDepartamento(id: number): Promise<any> {
+    let departamento = await this.rootService.delete(this.route + '/' + id);
+    if (departamento.resultado) {
+      await this.rootService.bitacora('departamento', 'eliminar', `eliminó el departamento "${departamento.data.nombre}"`, departamento.data);
+    }
+    return departamento;
   }
 
 }

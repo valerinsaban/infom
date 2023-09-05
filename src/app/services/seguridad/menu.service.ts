@@ -17,16 +17,28 @@ export class MenusService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postMenu(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postMenu(data: any): Promise<any> {
+    let menu = await this.rootService.post(this.route, data);
+    if (menu.resultado) {
+      await this.rootService.bitacora('menu', 'agregar', `creó el menu "${menu.data.nombre}"`, menu.data);
+    }
+    return menu;
   }
 
-  putMenu(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putMenu(id: number, data: any): Promise<any> {
+    let menu = await this.rootService.put(this.route + '/' + id, data);
+    if (menu.resultado) {
+      await this.rootService.bitacora('menu', 'editar', `editó el menu "${menu.data.nombre}"`, menu.data);
+    }
+    return menu;
   }
 
-  deleteMenu(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteMenu(id: number): Promise<any> {
+    let menu = await this.rootService.delete(this.route + '/' + id);
+    if (menu.resultado) {
+      await this.rootService.bitacora('menu', 'eliminar', `eliminó el menu "${menu.data.nombre}"`, menu.data);
+    }
+    return menu;
   }
 
 }

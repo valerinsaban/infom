@@ -101,6 +101,22 @@ export class UsuariosComponent {
     this.ngxService.stop();
   }
 
+  async putClave() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
+    let usuario = await this.usuariosService.putClave(this.usuario.id, this.usuarioForm.value);
+    if (usuario.resultado) {
+      this.getUsuarios();
+      this.alert.alertMax('Transaccion Correcta', usuario.mensaje, 'success');
+      this.usuarioForm.reset();
+      this.usuario = null;
+    }
+    this.ngxService.stop();
+  }
+
   async deleteUsuario(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
       this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');

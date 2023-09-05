@@ -23,7 +23,7 @@ export class BancosService {
   async postBanco(data: any): Promise<any> {
     let banco: any = await this.rootService.post(this.route, data);
     if (banco.resultado) {
-      await this.rootService.bitacora('banco', `creó el banco "${banco.data.nombre}"`, banco.data);
+      await this.rootService.bitacora('banco', 'agregar', `creó el banco "${banco.data.nombre}"`, banco.data);
     }
     return banco;
   }
@@ -31,8 +31,7 @@ export class BancosService {
   async putBanco(id: number, data: any): Promise<any> {
     let banco: any = await this.rootService.put(this.route + '/' + id, data);
     if (banco.resultado) {
-      await this.rootService.bitacora('banco', `editó el banco "${banco.data.nombre}"`, banco.data);
-
+      await this.rootService.bitacora('banco', 'editar', `editó el banco "${banco.data.nombre}"`, banco.data);
     }
     return banco;
   }
@@ -40,8 +39,9 @@ export class BancosService {
   async deleteBanco(id: number): Promise<any> {
     let banco: any = await this.rootService.delete(this.route + '/' + id);
     if (banco.resultado) {
-      await this.rootService.bitacora('banco', `eliminó el banco "${banco.data.nombre}"`, banco.data);
+      await this.rootService.bitacora('banco', 'eliminar', `eliminó el banco "${banco.data.nombre}"`, banco.data);
     }
     return banco;
   }
+  
 }

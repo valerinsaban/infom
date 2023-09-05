@@ -18,16 +18,28 @@ export class GenerosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postGenero(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postGenero(data: any): Promise<any> {
+    let genero = await this.rootService.post(this.route, data);
+    if (genero.resultado) {
+      await this.rootService.bitacora('genero', 'agregar', `creó el genero "${genero.data.nombre}"`, genero.data);
+    }
+    return genero;
   }
 
-  putGenero(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putGenero(id: number, data: any): Promise<any> {
+    let genero = await this.rootService.put(this.route + '/' + id, data);
+    if (genero.resultado) {
+      await this.rootService.bitacora('genero', 'editar', `editó el genero "${genero.data.nombre}"`, genero.data);
+    }
+    return genero;
   }
 
-  deleteGenero(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteGenero(id: number): Promise<any> {
+    let genero = await this.rootService.delete(this.route + '/' + id);
+    if (genero.resultado) {
+      await this.rootService.bitacora('genero', 'eliminar', `eliminó el genero "${genero.data.nombre}"`, genero.data);
+    }
+    return genero;
   }
 
 }

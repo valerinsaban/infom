@@ -19,15 +19,27 @@ export class ProfesionesService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postProfesion(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postProfesion(data: any): Promise<any> {
+    let profesion = await this.rootService.post(this.route, data);
+    if (profesion.resultado) {
+      await this.rootService.bitacora('profesion', 'agregar', `creó la profesion "${profesion.data.nombre}"`, profesion.data);
+    }
+    return profesion;
   }
 
-  putProfesion(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putProfesion(id: number, data: any): Promise<any> {
+    let profesion = await this.rootService.put(this.route + '/' + id, data);
+    if (profesion.resultado) {
+      await this.rootService.bitacora('profesion', 'editar', `editó la profesion "${profesion.data.nombre}"`, profesion.data);
+    }
+    return profesion;
   }
 
-  deleteProfesion(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteProfesion(id: number): Promise<any> {
+    let profesion = await this.rootService.delete(this.route + '/' + id);
+    if (profesion.resultado) {
+      await this.rootService.bitacora('profesion', 'eliminar', `eliminó la profesion "${profesion.data.nombre}"`, profesion.data);
+    }
+    return profesion;
   }
 }

@@ -23,18 +23,29 @@ export class MunicipiosService {
     return this.rootService.get(this.route + '/departamento/' + id);
   }
 
-  postMunicipio(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postMunicipio(data: any): Promise<any> {
+    let municipio = await this.rootService.post(this.route, data);
+    if (municipio.resultado) {
+      await this.rootService.bitacora('municipio', 'agregar', `creó el municipio "${municipio.data.nombre}"`, municipio.data);
+    }
+    return municipio;
   }
 
-  putMunicipio(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putMunicipio(id: number, data: any): Promise<any> {
+    let municipio = await this.rootService.put(this.route + '/' + id, data);
+    if (municipio.resultado) {
+      await this.rootService.bitacora('municipio', 'editar', `editó el municipio "${municipio.data.nombre}"`, municipio.data);
+    }
+    return municipio;
   }
 
-  deleteMunicipio(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteMunicipio(id: number): Promise<any> {
+    let municipio = await this.rootService.delete(this.route + '/' + id);
+    if (municipio.resultado) {
+      await this.rootService.bitacora('municipio', 'eliminar', `eliminó el municipio "${municipio.data.nombre}"`, municipio.data);
+    }
+    return municipio;
   }
 
 
 }
-

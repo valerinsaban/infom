@@ -15,7 +15,7 @@ export class BitacorasService {
     return this.rootService.get(this.route);
   }
 
-  getBitacorasFecha(fecha_inicio: string, fecha_fin: string): Promise<any> {
+  getBitacorasFecha(fecha_inicio: any, fecha_fin: any): Promise<any> {
     return this.rootService.get(this.route + '/' + fecha_inicio + '/' + fecha_fin);
   }
 

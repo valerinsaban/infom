@@ -23,16 +23,28 @@ export class AmortizacionesService {
     return this.rootService.get(this.route + '/prestamo/' + id);
   }
 
-  postAmortizacion(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postAmortizacion(data: any): Promise<any> {
+    let amortizacion = await this.rootService.post(this.route, data);
+    if (amortizacion.resultado) {
+      await this.rootService.bitacora('amortizacion', 'agregar', `creó la amortizacion "${amortizacion.data.id}"`, amortizacion.data);
+    }
+    return amortizacion;
   }
 
-  putAmortizacion(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putAmortizacion(id: number, data: any): Promise<any> {
+    let amortizacion = await this.rootService.put(this.route + '/' + id, data);
+    if (amortizacion.resultado) {
+      await this.rootService.bitacora('amortizacion', 'editar', `editó la amortizacion "${amortizacion.data.id}"`, amortizacion.data);
+    }
+    return amortizacion;
   }
 
-  deleteAmortizacion(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteAmortizacion(id: number): Promise<any> {
+    let amortizacion = await this.rootService.delete(this.route + '/' + id);
+    if (amortizacion.resultado) {
+      await this.rootService.bitacora('amortizacion', 'eliminar', `eliminó la amortizacion "${amortizacion.data.id}"`, amortizacion.data);
+    }
+    return amortizacion;
   }
 
 

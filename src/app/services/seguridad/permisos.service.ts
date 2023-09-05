@@ -7,30 +7,43 @@ import { RootService } from '../root.service';
 export class PermisosService {
 
   constructor(private rootService: RootService) { }
+  
   route = '/permisos';
 
   getPermisos(): Promise<any> {
     return this.rootService.get(this.route);
   }
 
-  getPermiso(accion: string, id_rol: number, id_menu: number, id_submenu: number): Promise<any> {
-    return this.rootService.get(this.route + '/' + accion + '/' + id_rol + '/' + id_menu + '/' + id_submenu);
+  getPermiso(accion: string, id_permiso: number, id_menu: number, id_submenu: number): Promise<any> {
+    return this.rootService.get(this.route + '/' + accion + '/' + id_permiso + '/' + id_menu + '/' + id_submenu);
   }
 
-  getPermisoRol(id_rol: number): Promise<any> {
-    return this.rootService.get(this.route + '/role/' + id_rol);
+  getPermisoRol(id_permiso: number): Promise<any> {
+    return this.rootService.get(this.route + '/rol/' + id_permiso);
   }
 
-  postPermiso(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postPermiso(data: any): Promise<any> {
+    let permiso = await this.rootService.post(this.route, data);
+    if (permiso.resultado) {
+      await this.rootService.bitacora('permiso', 'agregar', `creó el permiso "${permiso.data.nombre}"`, permiso.data);
+    }
+    return permiso;
   }
 
-  putPermiso(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putPermiso(id: number, data: any): Promise<any> {
+    let permiso = await this.rootService.put(this.route + '/' + id, data);
+    if (permiso.resultado) {
+      await this.rootService.bitacora('permiso', 'editar', `editó el permiso "${permiso.data.nombre}"`, permiso.data);
+    }
+    return permiso;
   }
 
-  deletePermiso(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deletePermiso(id: number): Promise<any> {
+    let permiso = await this.rootService.delete(this.route + '/' + id);
+    if (permiso.resultado) {
+      await this.rootService.bitacora('permiso', 'eliminar', `eliminó el permiso "${permiso.data.nombre}"`, permiso.data);
+    }
+    return permiso;
   }
 
 }

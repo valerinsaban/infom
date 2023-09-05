@@ -27,39 +27,36 @@ export class UsuariosService {
     return this.rootService.get(this.route + '/file/docs/' + folder);
   }
 
-  postUsuario(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postUsuario(data: any): Promise<any> {
+    let usuario = await this.rootService.post(this.route, data);
+    if (usuario.resultado) {
+      await this.rootService.bitacora('usuario', 'agregar', `creó el usuario "${usuario.data.nombre}"`, usuario.data);
+    }
+    return usuario;
   }
 
-  putUsuario(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putUsuario(id: number, data: any): Promise<any> {
+    let usuario = await this.rootService.put(this.route + '/' + id, data);
+    if (usuario.resultado) {
+      await this.rootService.bitacora('usuario', 'editar', `editó el usuario "${usuario.data.nombre}"`, usuario.data);
+    }
+    return usuario;
   }
 
-  putClave(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/clave/' + id, data);
+  async putClave(id: number, data: any): Promise<any> {
+    let usuario = await this.rootService.put(this.route + '/clave/' + id, data);
+    if (usuario.resultado) {
+      await this.rootService.bitacora('usuario', 'editar', `editó la clave del usuario "${usuario.data.nombre}"`, usuario.data);
+    }
+    return usuario;
   }
 
-  deleteUsuario(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteUsuario(id: number): Promise<any> {
+    let usuario = await this.rootService.delete(this.route + '/' + id);
+    if (usuario.resultado) {
+      await this.rootService.bitacora('usuario', 'eliminar', `eliminó el usuario "${usuario.data.nombre}"`, usuario.data);
+    }
+    return usuario;
   }
-
-  deleteDocs(id: number, name: string): Promise<any> {
-    return this.rootService.delete(this.route + '/file/docs/' + id + '/' + name);
-  }
-
-  /* postImage(folder: number, file: any): Promise<any> {
-    const formData = new FormData();
-    formData.append('folder', folder.toString());
-    formData.append('file', file);
-    return this.rootService.postFile(this.route + '/file/image', formData);
-  }
-
-  postDocument(folder: number, file: any, nombre: string = ''): Promise<any> {
-    const formData = new FormData();
-    formData.append('folder', folder.toString());
-    formData.append('file', file);
-    formData.append('nombre', nombre);
-    return this.rootService.postFile(this.route + '/file/docs', formData);
-  } */
 
 }

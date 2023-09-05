@@ -19,15 +19,27 @@ export class PuestosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postPuesto(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postPuesto(data: any): Promise<any> {
+    let puesto = await this.rootService.post(this.route, data);
+    if (puesto.resultado) {
+      await this.rootService.bitacora('puesto', 'agregar', `creó el puesto "${puesto.data.nombre}"`, puesto.data);
+    }
+    return puesto;
   }
 
-  putPuesto(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putPuesto(id: number, data: any): Promise<any> {
+    let puesto = await this.rootService.put(this.route + '/' + id, data);
+    if (puesto.resultado) {
+      await this.rootService.bitacora('puesto', 'editar', `editó el puesto "${puesto.data.nombre}"`, puesto.data);
+    }
+    return puesto;
   }
 
-  deletePuesto(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deletePuesto(id: number): Promise<any> {
+    let puesto = await this.rootService.delete(this.route + '/' + id);
+    if (puesto.resultado) {
+      await this.rootService.bitacora('puesto', 'eliminar', `eliminó el puesto "${puesto.data.nombre}"`, puesto.data);
+    }
+    return puesto;
   }
 }

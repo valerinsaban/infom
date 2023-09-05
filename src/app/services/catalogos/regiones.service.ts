@@ -18,16 +18,28 @@ export class RegionesService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  postRegion(data: any): Promise<any> {
-    return this.rootService.post(this.route, data);
+  async postRegion(data: any): Promise<any> {
+    let region = await this.rootService.post(this.route, data);
+    if (region.resultado) {
+      await this.rootService.bitacora('region', 'agregar', `creó la region "${region.data.nombre}"`, region.data);
+    }
+    return region;
   }
 
-  putRegion(id: number, data: any): Promise<any> {
-    return this.rootService.put(this.route + '/' + id, data);
+  async putRegion(id: number, data: any): Promise<any> {
+    let region = await this.rootService.put(this.route + '/' + id, data);
+    if (region.resultado) {
+      await this.rootService.bitacora('region', 'editar', `editó la region "${region.data.nombre}"`, region.data);
+    }
+    return region;
   }
 
-  deleteRegion(id: number): Promise<any> {
-    return this.rootService.delete(this.route + '/' + id);
+  async deleteRegion(id: number): Promise<any> {
+    let region = await this.rootService.delete(this.route + '/' + id);
+    if (region.resultado) {
+      await this.rootService.bitacora('region', 'eliminar', `eliminó elal region "${region.data.nombre}"`, region.data);
+    }
+    return region;
   }
 
 }
