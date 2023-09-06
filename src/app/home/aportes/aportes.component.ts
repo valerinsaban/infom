@@ -93,6 +93,11 @@ export class AportesComponent {
     if (aportes) {
       this.aportes = aportes;
 
+      this.constitucional = 0;
+      this.iva_paz = 0;
+      this.vehiculos = 0;
+      this.petroleo = 0;
+      this.total = 0;
       for (let a = 0; a < this.aportes.length; a++) {
         this.constitucional += parseFloat(this.aportes[a].constitucional);
         this.iva_paz += parseFloat(this.aportes[a].iva_paz);

@@ -92,7 +92,7 @@ export class EstadosCivilesComponent {
         this.ngxService.start();
         let estadoCivil = await this.estadoCivilService.deleteEstadoCivil(i.id);
         if (estadoCivil.resultado) {
-          this.estadoCivil.splice(index, 1);
+          this.estadosCiviles.splice(index, 1);
           this.alert.alertMax('Correcto', estadoCivil.mensaje, 'success');
           this.estadoCivil = null;
         }

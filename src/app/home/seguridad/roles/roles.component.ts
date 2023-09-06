@@ -92,7 +92,7 @@ export class RolesComponent {
         this.ngxService.start();
         let rol = await this.rolService.deleteRol(i.id);
         if (rol.resultado) {
-          this.rol.splice(index, 1);
+          this.roles.splice(index, 1);
           this.alert.alertMax('Correcto', rol.mensaje, 'success');
           this.rol = null;
         }

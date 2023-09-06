@@ -7,7 +7,7 @@ import { FuncionariosService } from 'src/app/services/funcionarios.service';
 import { PrestamosService } from 'src/app/services/prestamos.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import Swal from 'sweetalert2';
-import { TiposPrestamosService } from 'src/app/services/catalogos/tipos_prestamos.service';
+import { GarantiasService } from 'src/app/services/catalogos/garantias.service';
 import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
@@ -29,7 +29,7 @@ export class PrestamosComponent {
 
   file: any;
 
-  tipos_prestamos: any = [];
+  garantias: any = [];
   municipalidades: any = [];
   funcionarios: any = [];
   regionales: any = [];
@@ -52,7 +52,7 @@ export class PrestamosComponent {
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,
     private prestamosService: PrestamosService,
-    private tipos_prestamosService: TiposPrestamosService,
+    private garantiasService: GarantiasService,
     private municipalidadesService: MunicipalidadesService,
     private funcionariosService: FuncionariosService,
     private regionalesService: RegionalesService,
@@ -81,7 +81,7 @@ export class PrestamosComponent {
       oficioaj: new FormControl(null, [Validators.required]),
       oficioaj2: new FormControl(null, [Validators.required]),
       estado: new FormControl(null, [Validators.required]),
-      id_tipo_prestamo: new FormControl(null, [Validators.required]),
+      id_garantia: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
       id_regional: new FormControl(null, [Validators.required]),
@@ -104,7 +104,7 @@ export class PrestamosComponent {
     this.ngxService.start();
     await this.getPrestamos();
     await this.getCountPrestamos();
-    this.getTiposPrestamos();
+    this.getGarantias();
     this.getMunicipalidades();
     this.getRegionales();
     this.getFuncionarios();
@@ -144,10 +144,10 @@ export class PrestamosComponent {
     this.ngxService.stopBackground();
   }
 
-  async getTiposPrestamos() {
-    let tipos_prestamos = await this.tipos_prestamosService.getTiposPrestamos();
-    if (tipos_prestamos) {
-      this.tipos_prestamos = tipos_prestamos;
+  async getGarantias() {
+    let garantias = await this.garantiasService.getGarantias();
+    if (garantias) {
+      this.garantias = garantias;
     }
   }
 
@@ -332,7 +332,7 @@ export class PrestamosComponent {
     this.prestamoForm.controls['oficioaj'].setValue(i.oficioaj);
     this.prestamoForm.controls['oficioaj2'].setValue(i.oficioaj2);
     this.prestamoForm.controls['estado'].setValue(i.estado);
-    this.prestamoForm.controls['id_tipo_prestamo'].setValue(i.id_tipo_prestamo);
+    this.prestamoForm.controls['id_garantia'].setValue(i.id_garantia);
     this.prestamoForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
     this.prestamoForm.controls['id_funcionario'].setValue(i.id_funcionario);
     this.prestamoForm.controls['id_regional'].setValue(i.id_regional);

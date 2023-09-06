@@ -104,7 +104,7 @@
                     <tr>
                       <th>Municipalidad</th>
                       <th>Funcionario</th>
-                      <th>Tipo Prestamo</th>
+                      <th>Garantia</th>
                       <th>Regional</th>
                       <th>Fecha</th>
                       <th class="text-end">Monto</th>
@@ -126,7 +126,7 @@
                         <span>{{p.funcionario.nombre}} {{p.funcionario.apellido}}</span>
                       </td>
                       <td>
-                        <span>{{p.tipo_prestamo.nombre}}</span>
+                        <span>{{p.garantia.nombre}}</span>
                       </td>
                       <td>
                         <span>{{p.regional.nombre}}</span>
@@ -324,10 +324,10 @@
             <input formControlName="oficioaj2" type="text" class="form-control" placeholder="Oficio A.J. #">
           </div>
           <div class="col-xl-3 mb-3">
-            <label class="form-label">Tipo Prestamos<span class="text-danger">*</span></label>
-            <select formControlName="id_tipo_prestamo" class="form-control">
+            <label class="form-label">Garantia<span class="text-danger">*</span></label>
+            <select formControlName="id_garantia" class="form-control">
               <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
+              <option *ngFor="let i of garantias" [value]="i.id">{{i.nombre}}</option>
             </select>
           </div>
           <div class="col-xl-3 mb-3">
@@ -501,10 +501,10 @@
             <input formControlName="oficioaj2" type="text" class="form-control" placeholder="Oficio A.J. #">
           </div>
           <div class="col-xl-3 mb-3">
-            <label class="form-label">Tipo Prestamos<span class="text-danger">*</span></label>
-            <select formControlName="id_tipo_prestamo" class="form-control">
+            <label class="form-label">Garantia<span class="text-danger">*</span></label>
+            <select formControlName="id_garantia" class="form-control">
               <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
+              <option *ngFor="let i of garantias" [value]="i.id">{{i.nombre}}</option>
             </select>
           </div>
           <div class="col-xl-3 mb-3">

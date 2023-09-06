@@ -19,7 +19,6 @@ import { ProfesionesComponent } from './catalogos/profesiones/profesiones.compon
 import { BancosComponent } from './catalogos/bancos/bancos.component';
 import { BienvenidoComponent } from './bienvenido/bienvenido.component';
 import { PermisosComponent } from './seguridad/permisos/permisos.component';
-import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
 import { PrestamosComponent } from './prestamos/prestamos.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { AportesComponent } from './aportes/aportes.component';
@@ -27,6 +26,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProduccionComponent } from './produccion/produccion.component';
 import { BitacorasComponent } from './seguridad/bitacoras/bitacoras.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { RepresentantesComponent } from './representantes/representantes.component';
 
 const routes: Routes = [
   {
@@ -36,6 +36,7 @@ const routes: Routes = [
 
       { path: 'municipalidades', component: MunicipalidadesComponent },
       { path: 'funcionarios', component: FuncionariosComponent },
+      { path: 'representantes', component: RepresentantesComponent },
       { path: 'prestamos', component: PrestamosComponent},
       { path: 'aportes', component: AportesComponent},
       { path: 'dashboard', component: DashboardComponent},
@@ -52,7 +53,6 @@ const routes: Routes = [
       { path: 'garantias', component: GarantiasComponent},
       { path: 'profesiones', component: ProfesionesComponent},
       { path: 'bancos', component: BancosComponent},
-      { path: 'tipos-prestamos', component: TiposPrestamosComponent},
 
       // Seguridad
       { path: 'regionales', component: RegionalesComponent},
@@ -84,12 +84,12 @@ const routes: Routes = [
     BancosComponent,
     BienvenidoComponent,
     PermisosComponent,
-    TiposPrestamosComponent,
     PrestamosComponent,
     AportesComponent,
     DashboardComponent,
     ProduccionComponent,
-    BitacorasComponent
+    BitacorasComponent,
+    RepresentantesComponent
   ],
   imports: [
     CommonModule,

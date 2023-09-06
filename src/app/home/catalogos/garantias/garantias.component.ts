@@ -24,7 +24,8 @@ export class GarantiasComponent {
   ) {
     this.garantiaForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
-      nombre: new FormControl(null, [Validators.required])
+      nombre: new FormControl(null, [Validators.required]),
+      porcentaje: new FormControl(null, [Validators.required])
     });
   }
 
@@ -92,7 +93,7 @@ export class GarantiasComponent {
         this.ngxService.start();
         let garantia = await this.garantiaService.deleteGarantia(i.id);
         if (garantia.resultado) {
-          this.garantia.splice(index, 1);
+          this.garantias.splice(index, 1);
           this.alert.alertMax('Correcto', garantia.mensaje, 'success');
           this.garantia = null;
         }
@@ -107,6 +108,7 @@ export class GarantiasComponent {
     this.garantia = i;
     this.garantiaForm.controls['codigo'].setValue(i.codigo);
     this.garantiaForm.controls['nombre'].setValue(i.nombre);
+    this.garantiaForm.controls['porcentaje'].setValue(i.porcentaje);
   }
 
   cancelarEdicion() {
