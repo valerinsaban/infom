@@ -27,6 +27,7 @@ import { ProduccionComponent } from './produccion/produccion.component';
 import { BitacorasComponent } from './seguridad/bitacoras/bitacoras.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { RepresentantesComponent } from './representantes/representantes.component';
+import { ReportesComponent } from './reportes/reportes.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent},
       { path: 'bitacoras', component: BitacorasComponent},
       { path: 'produccion', component: ProduccionComponent},
+      { path: 'reportes', component: ReportesComponent},
 
       // Catalogos
       { path: 'departamentos', component: DepartamentosComponent },
@@ -89,7 +91,8 @@ const routes: Routes = [
     DashboardComponent,
     ProduccionComponent,
     BitacorasComponent,
-    RepresentantesComponent
+    RepresentantesComponent,
+    ReportesComponent,
   ],
   imports: [
     CommonModule,

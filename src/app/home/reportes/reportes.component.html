@@ -1,0 +1,38 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-xl-6 mb-3">
+          <label class="form-label">Reporte
+            <span class="text-danger">*</span>
+          </label>
+          <select (change)="setReporte($event)" class="form-control">
+            <option value="null">--- Seleccione un registro ---</option>
+            <option *ngFor="let i of reportes" [value]="i.id">{{i.nombre}}</option>
+          </select>
+        </div>
+        <div class="col-xl-6 mb-3">
+          <label class="form-label">Formato
+            <span class="text-danger">*</span>
+          </label>
+          <select [(ngModel)]="formato" [ngModelOptions]="{standalone: true}" class="form-control">
+            <option value="null">--- Seleccione un registro ---</option>
+            <option value="PDF">PDF</option>
+            <option value="XLS">XLS</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button class="btn btn-primary me-1" (click)="generar()">
+            <i class="fa-duotone fa-print"></i> Generar Reporte
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <iframe [src]="url" onwheel="" width="100%"
+        style="background: transparent; border: 1px solid #ccc; height: 90vh;"></iframe>
+    </div>
+  </div>
+</div>

@@ -530,6 +530,74 @@
             </select>
           </div>
         </div>
+        <div class="row">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects manage-client style-1">
+                <div class="tbl-caption">
+                  <h4 class="heading mb-0">Amortizaciones ({{amortizaciones.length}})</h4>
+                  <div *ngIf="prestamo">
+                    <a *ngIf="amortizaciones.length < prestamo.plazo_meses" (click)="limpiar2()"
+                      class="btn btn-primary btn-sm" data-bs-toggle="modal" href="#agregar-amortizacion" role="button">
+                      + Agregar Amortizacion
+                    </a>
+                  </div>
+                </div>
+                <table id="empoloyees-tbl1" class="table">
+                  <thead>
+                    <tr>
+                      <th>Fecha Inicio</th>
+                      <th>Fecha Fin</th>
+                      <th>Dias</th>
+                      <th style="text-align: right;">Capital</th>
+                      <th style="text-align: right;">Intereses</th>
+                      <th style="text-align: right;">IVA</th>
+                      <th style="text-align: right;">Cuota</th>
+                      <th style="text-align: right;">Saldo</th>
+                      <th style="text-align: right;">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let a of amortizaciones; let aindex = index">
+                      <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                      <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                      <td>{{a.dias}} dias</td>
+                      <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
+                      <th style="text-align: right;">{{a.intereses | number: '.2-2'}}</th>
+                      <th style="text-align: right;">{{a.iva_intereses | number: '.2-2'}}</th>
+                      <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
+                      <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
+                      <td>
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setAmortizacion(a, aindex)" data-bs-toggle="modal"
+                              href="#editar-amortizacion">Editar</a>
+                            <a class="dropdown-item" (click)="deleteAmortizacion(a, aindex)">Eliminar</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th>{{getTotalDias()}} dias</th>
+                      <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
+                      <th style="text-align: right;">Q{{getTotalIntereses() | number: '.2-2'}}</th>
+                      <th style="text-align: right;">Q{{getTotalCuota() | number: '.2-2'}}</th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
         <div>
           <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1" (click)="putPrestamo()"
             data-bs-dismiss="offcanvas" type="button">

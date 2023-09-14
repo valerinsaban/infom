@@ -15,27 +15,52 @@
 
   <!-- row -->
   <div class="row">
-    <div class="col-xl-12 col-xxl-12">
-      <div class="row">
-        <div class="col-xl-12">
-          <div class="card">
-            <div class="card-body p-0">
-              <div class="table-responsive active-projects style-1">
-                <div class="tbl-caption">
-                  <div>
-                    <div class="input-group input-group-sm mb-3">
-                      <input name="daterange" class="form-control-sm" style="width: 180px;" />
-                      <button (click)="getBitacoras()" class="btn btn-primary" type="button">
-                        <i class="fas fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div>
-                    <a class="btn btn-primary btn-sm" role="button" (click)="getBitacoras()">
-                      Buscar
-                    </a>
-                  </div>
-                </div>
+
+    <div class="col-xl-3">
+      <div class="card">
+        <div class="card-header border-0 pb-0">
+          <h4 class="card-title">Filtros de busqueda</h4>
+        </div>
+        <div class="card-body p-0">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xl-12 mb-4">
+                <label class="form-label">Fecha
+                  <span class="text-danger">*</span>
+                </label>
+                <input name="daterange" class="form-control" style="width: 100%;" />
+              </div>
+              <div class="col-xl-12 mb-4">
+                <label class="form-label">Tipo
+                  <span class="text-danger">*</span>
+                </label>
+                <select [(ngModel)]="tipo" [ngModelOptions]="{standalone: true}" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of tipos" [value]="i">{{i}}</option>
+                </select>
+              </div>
+              <div class="col-xl-12 mb-4">
+                <label class="form-label">Accion
+                  <span class="text-danger">*</span>
+                </label>
+                <select [(ngModel)]="accion" [ngModelOptions]="{standalone: true}" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of acciones" [value]="i">{{i}}</option>
+                </select>
+              </div>
+              <div class="col-xl-12 mb-4">
+                <label class="form-label">Usuario
+                  <span class="text-danger">*</span>
+                </label>
+                <select [(ngModel)]="usuario" [ngModelOptions]="{standalone: true}" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of usuarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
+                </select>
+              </div>
+              <div class="col-xl-12">
+                <button class="btn btn-primary me-1" (click)="getBitacoras()" type="button">
+                  <i class="fa-duotone fa-search"></i> Buscar
+                </button>
               </div>
             </div>
           </div>
@@ -43,15 +68,15 @@
       </div>
     </div>
 
-    <div class="col-xl-5">
+    <div class="col-xl-9">
       <div class="card">
         <div class="card-header border-0 pb-0">
           <h4 class="card-title">registros: {{bitacoras.length}}</h4>
         </div>
         <div class="card-body p-0">
-          <div id="DZ_W_TimeLine11" class="widget-timeline style-1 my-4 px-4">
+          <div id="DZ_W_TimeLine11" class="widget-timeline dz-scroll style-1 my-4 px-4 height500">
             <ul class="timeline">
-              <li *ngFor="let b of bitacoras" (click)="setBitacora(b)">
+              <li *ngFor="let b of bitacoras" (click)="setBitacora(b)" data-bs-toggle="offcanvas" href="#bitacora">
                 <div class="timeline-badge"
                   [ngClass]="{'primary': b.accion == 'auth', 'success': b.accion == 'agregar', 'warning': b.accion == 'editar', 'danger': b.accion == 'eliminar', 'dark': b.accion == 'reporte'}">
                 </div>
@@ -74,50 +99,58 @@
       </div>
     </div>
 
-    <div class="col-xl-7" *ngIf="bitacora">
-      <div class="card">
-        <div class="card-header border-0 pb-0">
-          <h2 class="card-title">Registro No. {{bitacora.id}}</h2>
-        </div>
-        <div class="card-body pb-0">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item d-flex px-0 justify-content-between">
-              <strong>Fecha</strong>
-              <span class="mb-0">{{bitacora.fecha | date: 'dd/MM/YYYY HH:mm':'UTC'}}</span>
-            </li>
-            <li class="list-group-item d-flex px-0 justify-content-between">
-              <strong>Descripcion</strong>
-              <span class="mb-0">
-                <span [ngClass]="{'text-primary': bitacora.accion == 'auth', 'text-success': bitacora.accion == 'agregar', 'text-warning': bitacora.accion == 'editar', 'text-danger': bitacora.accion == 'eliminar', 'text-dark': bitacora.accion == 'reporte'}">{{bitacora.usuario.nombre}}</span>
-                {{bitacora.descripcion}}
-              </span>
-            </li>
-            <li class="list-group-item d-flex px-0 justify-content-between">
-              <strong>Tipo</strong>
-              <span class="mb-0">{{bitacora.tipo}}</span>
-            </li>
-            <li class="list-group-item d-flex px-0 justify-content-between">
-              <strong>Accion</strong>
-              <span class="mb-0">{{bitacora.accion}}</span>
-            </li>
-            <li class="list-group-item d-flex px-0 justify-content-between">
-              <strong>Body</strong>
-              <div class="card-body pt-0 p-0 code-area">
-                <!-- <ace-editor [(text)]="bitacora.body" mode="json" style="height:400px;"></ace-editor> -->
+  </div>
 
-                <ngx-json-viewer [json]="code"></ngx-json-viewer>
-              </div>
-            </li>
-          </ul>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="bitacora">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Agregar Representante</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body" *ngIf="bitacora">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-12 mb-3">
+          <div class="card">
+            <div class="card-header border-0 pb-0">
+              <h2 class="card-title">Registro No. {{bitacora.id}}</h2>
+            </div>
+            <div class="card-body pb-0">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex px-0 justify-content-between">
+                  <strong>Fecha</strong>
+                  <span class="mb-0">{{bitacora.fecha | date: 'dd/MM/YYYY HH:mm':'UTC'}}</span>
+                </li>
+                <li class="list-group-item d-flex px-0 justify-content-between">
+                  <strong>Descripcion</strong>
+                  <span class="mb-0">
+                    <span
+                      [ngClass]="{'text-primary': bitacora.accion == 'auth', 'text-success': bitacora.accion == 'agregar', 'text-warning': bitacora.accion == 'editar', 'text-danger': bitacora.accion == 'eliminar', 'text-dark': bitacora.accion == 'reporte'}">{{bitacora.usuario.nombre}}</span>
+                    {{bitacora.descripcion}}
+                  </span>
+                </li>
+                <li class="list-group-item d-flex px-0 justify-content-between">
+                  <strong>Accion</strong>
+                  <span class="mb-0">{{bitacora.accion}}</span>
+                </li>
+                <li class="list-group-item d-flex px-0 justify-content-between">
+                  <strong>Tipo</strong>
+                  <span class="mb-0">{{bitacora.tipo}}</span>
+                </li>
+                <li class="list-group-item d-flex px-0 justify-content-between">
+                  <strong>Data</strong>
+                  <div class="card-body pt-0 p-0 code-area">
+                    <ngx-json-viewer [json]="code"></ngx-json-viewer>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <!--**********************************
-Footer start
-***********************************-->
-
-  <!--**********************************
-Footer end
-***********************************-->
 </div>

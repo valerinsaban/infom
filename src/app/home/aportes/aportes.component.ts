@@ -40,6 +40,8 @@ export class AportesComponent {
   municipios: any = [];
   municipalidades: any = [];
 
+  municipalidad: any;
+
   filtros: any = {
     mes_inicio: moment().startOf('year').format('YYYY-MM'),
     mes_fin: moment().endOf('year').format('YYYY-MM'),
@@ -360,6 +362,7 @@ export class AportesComponent {
     for (let m = 0; m < this.municipios.length; m++) {
       if (event.target.value == this.municipios[m].id) {
         this.filtros.codigo_municipio = this.municipios[m].codigo;
+        this.municipalidad = `${this.municipios[m].nombre}`
       }
     }
   }

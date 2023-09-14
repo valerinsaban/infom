@@ -29,6 +29,7 @@ export class MunicipalidadesComponent {
 
   departamento: any;
   municipio: any;
+  plazo_meses: any = 0;
 
   filtros: any = {
     mes_inicio: moment().startOf('year').format('YYYY-MM'),
@@ -175,6 +176,13 @@ export class MunicipalidadesComponent {
     this.municipalidadForm.controls['id_departamento'].setValue(i.id_departamento);
     this.municipalidadForm.controls['id_municipio'].setValue(i.id_municipio);
     this.municipalidadForm.controls['id_banco'].setValue(i.id_banco);
+  }
+
+  getDisponibilidad(i: any, index: number) {
+    this.municipalidad = i;
+    console.log(i);
+    console.log(this.plazo_meses);
+    
   }
 
   async setDepartamento(event: any) {

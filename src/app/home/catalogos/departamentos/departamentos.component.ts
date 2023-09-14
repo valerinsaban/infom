@@ -110,8 +110,7 @@ export class DepartamentosComponent {
 
   async reporte(format: string) {
     this.ngxService.start();
-    // let departamento = await this.reportesService.getReporteDepartamentos('PDF');
-    window.open(HomeComponent.apiUrl + '/reportes/departamentos/' + format, "_blank");
+    window.open(`${HomeComponent.apiUrl}/reportes/${format}/departamentos`, "_blank");
     this.ngxService.stop();
   }
 

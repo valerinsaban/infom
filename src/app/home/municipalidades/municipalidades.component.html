@@ -31,7 +31,7 @@
                     </a>
                   </div>
                 </div>
-                <table id="empoloyees-tbl" class="table">
+                <table id="empoloyees-tbl" class="table" style="margin-bottom: 120px;">
                   <thead>
                     <tr>
                       <th>Departamento / Municipio</th>
@@ -72,6 +72,10 @@
                             <a class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
                               href="#editar-municipalidad">
                               Editar
+                            </a>
+                            <a class="dropdown-item" (click)="getDisponibilidad(m, mindex)" data-bs-toggle="offcanvas"
+                              href="#disponibilidad">
+                              Disponibilidad
                             </a>
                             <a class="dropdown-item" (click)="deleteMunicipalidad(m, mindex)">
                               Eliminar
@@ -271,6 +275,103 @@
             </select>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="disponibilidad">
+  <div class="offcanvas-header" *ngIf="municipalidad">
+    <h5 class="modal-title" id="#gridSystemModal">Disponibilidad Municipal</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body" *ngIf="municipalidad">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-12 mb-3">
+          
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects style-1">
+                <div class="tbl-caption">
+                  <h4 class="heading mb-0">{{municipalidad.departamento.nombre}} /
+                    {{municipalidad.municipio.nombre}}</h4>
+                  <div>
+                    <label class="form-label">Plazo Meses
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input [(ngModel)]="plazo_meses" [ngModelOptions]="{standalone: true}" class="form-control"
+                      placeholder="Plazo Meses">
+                  </div>
+                </div>
+                <table id="empoloyees-tbl" class="table" style="margin-bottom: 120px;">
+                  <thead>
+                    <tr>
+                      <th>Departamento / Municipio</th>
+                      <th>Direccion</th>
+                      <th>Telefono</th>
+                      <th>Correo</th>
+                      <th>No. Cuenta</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let m of municipalidades; let mindex = index">
+                      <td>
+                        <div class="products">
+                          <div>
+                            <h6>{{m.departamento.nombre}}</h6>
+                            <span class="count text-primary">{{m.municipio.nombre}}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>{{m.direccion}}</td>
+                      <td>{{m.telefono}}</td>
+                      <td>{{m.correo}}</td>
+                      <td>
+                        <div class="products">
+                          <div>
+                            <h6>{{m.no_cuenta}}</h6>
+                            <span class="count text-primary">{{m.banco.nombre}}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
+                              href="#editar-municipalidad">
+                              Editar
+                            </a>
+                            <a class="dropdown-item" (click)="getDisponibilidad(m, mindex)" data-bs-toggle="offcanvas"
+                              href="#disponibilidad">
+                              Disponibilidad
+                            </a>
+                            <a class="dropdown-item" (click)="deleteMunicipalidad(m, mindex)">
+                              Eliminar
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button [ngClass]="{'disabled': municipalidadForm.invalid}" class="btn btn-primary me-1"
+          (click)="putMunicipalidad()" data-bs-dismiss="offcanvas" type="button">
+          <i class="fa-duotone fa-floppy-disk"></i> Guardar
+        </button>
+        <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
       </div>
     </div>
   </div>
