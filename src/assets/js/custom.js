@@ -525,20 +525,20 @@ var W3Crm = function(){
 	}
 	
 	var handleConverterTheme = function(){
-		// if($('.btc-converts').length > 0){
-		// 	setTimeout(()=> {
-		// 		if($('body').attr('data-theme-version') === "dark"){
-		// 			$('.btc-converts').attr('dark-mode', true);
-		// 		} 
-		// 	},1000);
-		// 	$('#theme_version').on('change',function(){
-		// 		if($('body').attr('data-theme-version') === "dark"){
-		// 			$('.btc-converts').attr('dark-mode', true);
-		// 		} else{
-		// 			$('.btc-converts').attr('dark-mode', false);
-		// 		}
-		// 	});
-		// }
+		if($('.btc-converts').length > 0){
+			setTimeout(()=> {
+				if($('body').attr('data-theme-version') === "dark"){
+					$('.btc-converts').attr('dark-mode', true);
+				} 
+			},1000);
+			$('#theme_version').on('change',function(){
+				if($('body').attr('data-theme-version') === "dark"){
+					$('.btc-converts').attr('dark-mode', true);
+				} else{
+					$('.btc-converts').attr('dark-mode', false);
+				}
+			});
+		}
 	}
 	/* Handle Page On Scroll ============ */
 	/* Handle Page On Scroll ============ */

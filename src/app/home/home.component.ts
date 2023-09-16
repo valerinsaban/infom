@@ -81,7 +81,6 @@ export class HomeComponent {
     let fecha_inicio = moment().startOf('day').format('YYYY-MM-DD HH:mm')
     let fecha_fin = moment().endOf('day').format('YYYY-MM-DD HH:mm')
     let id_usuario = HomeComponent.id_rol == 1 ? null : HomeComponent.id_usuario;
-    console.log(id_usuario);
     
     let bitacoras = await this.bitacorasService.getBitacorasFecha(fecha_inicio, fecha_fin);
     if (bitacoras) {

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 import { NgxUiLoaderService } from "ngx-ui-loader";
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-login',

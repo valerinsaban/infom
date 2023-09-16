@@ -57,7 +57,7 @@ function addSwitcher() {
       setCookie('logo_src', './images/logo-white.png');
       setCookie('logo_src2', 'images/logo-text-white.png');
     } else {
-      localStorage.setItem('version', 'light');
+      // localStorage.setItem('version', 'dark');
       jQuery(".nav-header .logo-abbr").attr("src", "./images/logo.png");
       jQuery(".nav-header .logo-compact").attr("src", "assets/images/logo-text.png");
       jQuery(".nav-header .brand-title").attr("src", "assets/images/logo-text.png");

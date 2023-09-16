@@ -73,7 +73,7 @@
                               href="#editar-municipalidad">
                               Editar
                             </a>
-                            <a class="dropdown-item" (click)="getDisponibilidad(m, mindex)" data-bs-toggle="offcanvas"
+                            <a class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
                               href="#disponibilidad">
                               Disponibilidad
                             </a>
@@ -291,7 +291,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-xl-12 mb-3">
-          
+
           <div class="card">
             <div class="card-body p-0">
               <div class="table-responsive active-projects style-1">
@@ -299,11 +299,13 @@
                   <h4 class="heading mb-0">{{municipalidad.departamento.nombre}} /
                     {{municipalidad.municipio.nombre}}</h4>
                   <div>
-                    <label class="form-label">Plazo Meses
-                      <span class="text-danger">*</span>
-                    </label>
-                    <input [(ngModel)]="plazo_meses" [ngModelOptions]="{standalone: true}" class="form-control"
-                      placeholder="Plazo Meses">
+                    <a class="btn btn-sm">
+                      <input [(ngModel)]="plazo_meses" [ngModelOptions]="{standalone: true}" class="form-control"
+                        placeholder="Plazo Meses" type="number">
+                    </a>
+                    <a class="btn btn-primary btn-sm" (click)="getDisponibilidad()" style="margin-left: 10px;">
+                      <i class="fad fa-search"></i> Buscar
+                    </a>
                   </div>
                 </div>
                 <table id="empoloyees-tbl" class="table" style="margin-bottom: 120px;">
@@ -335,26 +337,6 @@
                           <div>
                             <h6>{{m.no_cuenta}}</h6>
                             <span class="count text-primary">{{m.banco.nombre}}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="dropdown">
-                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-list"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
-                              href="#editar-municipalidad">
-                              Editar
-                            </a>
-                            <a class="dropdown-item" (click)="getDisponibilidad(m, mindex)" data-bs-toggle="offcanvas"
-                              href="#disponibilidad">
-                              Disponibilidad
-                            </a>
-                            <a class="dropdown-item" (click)="deleteMunicipalidad(m, mindex)">
-                              Eliminar
-                            </a>
                           </div>
                         </div>
                       </td>

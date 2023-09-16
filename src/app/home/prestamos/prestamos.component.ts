@@ -13,6 +13,7 @@ import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AppComponent } from 'src/app/app.component';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
+import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
 
 @Component({
   selector: 'app-prestamos',
@@ -58,6 +59,7 @@ export class PrestamosComponent {
     private regionalesService: RegionalesService,
     private usuariosService: UsuariosService,
     private amortizacionesService: AmortizacionesService,
+    private prestamos_garantiasService: PrestamosGarantiasService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null, [Validators.required]),
@@ -81,7 +83,6 @@ export class PrestamosComponent {
       oficioaj: new FormControl(null, [Validators.required]),
       oficioaj2: new FormControl(null, [Validators.required]),
       estado: new FormControl(null, [Validators.required]),
-      id_garantia: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
       id_regional: new FormControl(null, [Validators.required]),
@@ -124,7 +125,7 @@ export class PrestamosComponent {
   //   this.ngxService.stopBackground();
   // }
 
-  async getPrestamos() {    
+  async getPrestamos() {
     this.ngxService.startBackground();
     let prestamos = await this.prestamosService.getPrestamosEstado(this.estado, this.fecha_inicio, this.fecha_fin);
     if (prestamos) {
@@ -194,10 +195,32 @@ export class PrestamosComponent {
     return sessionStorage.getItem('fecha_fin');
   }
 
+  setMontoTotal() {
+    let total = 0;
+    for (let g = 0; g < this.garantias.length; g++) {
+      if (this.garantias[g].monto && this.garantias[g].monto > 0) {
+        total += parseFloat(this.garantias[g].monto)
+      }
+    }
+    this.prestamoForm.controls['monto'].setValue(total);
+  }
+
   async postPrestamo() {
     this.ngxService.start();
     let prestamo = await this.prestamosService.postPrestamo(this.prestamoForm.value);
     if (prestamo.resultado) {
+
+      for (let g = 0; g < this.garantias.length; g++) {
+        if (this.garantias[g].monto && this.garantias[g].monto > 0) {
+          await this.prestamos_garantiasService.postPrestamoGarantia({
+            monto: parseFloat(this.garantias[g].monto),
+            id_garantia: this.garantias[g].id,
+            id_prestamo: prestamo.data.id
+          });
+
+        }
+      }
+
       await this.getPrestamos();
       await this.getCountPrestamos();
       this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
@@ -332,7 +355,6 @@ export class PrestamosComponent {
     this.prestamoForm.controls['oficioaj'].setValue(i.oficioaj);
     this.prestamoForm.controls['oficioaj2'].setValue(i.oficioaj2);
     this.prestamoForm.controls['estado'].setValue(i.estado);
-    this.prestamoForm.controls['id_garantia'].setValue(i.id_garantia);
     this.prestamoForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
     this.prestamoForm.controls['id_funcionario'].setValue(i.id_funcionario);
     this.prestamoForm.controls['id_regional'].setValue(i.id_regional);

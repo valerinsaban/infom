@@ -104,7 +104,6 @@
                     <tr>
                       <th>Municipalidad</th>
                       <th>Funcionario</th>
-                      <th>Garantia</th>
                       <th>Regional</th>
                       <th>Fecha</th>
                       <th class="text-end">Monto</th>
@@ -126,9 +125,6 @@
                         <span>{{p.funcionario.nombre}} {{p.funcionario.apellido}}</span>
                       </td>
                       <td>
-                        <span>{{p.garantia.nombre}}</span>
-                      </td>
-                      <td>
                         <span>{{p.regional.nombre}}</span>
                       </td>
                       <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
@@ -142,7 +138,8 @@
                       </td>
                       <td class="text-end">
                         <div class="dropdown">
-                          <a (click)="reporte('PDF', p.id)" class="btn btn-primary light sharp" style="margin-right: 10px;">
+                          <a (click)="reporte('PDF', p.id)" class="btn btn-primary light sharp"
+                            style="margin-right: 10px;">
                             <i class="fa-solid fa-print"></i>
                           </a>
                           <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
@@ -196,171 +193,209 @@
     </button>
   </div>
   <div class="offcanvas-body">
-    <div class="container-fluid">
-      <form [formGroup]="prestamoForm">
-        <div class="row">
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">No. Dictamen
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="no_dictamen" class="form-control" placeholder="No. Dictamen">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">No. Pagare
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="no_pagare" class="form-control" placeholder="No. Pagare">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Fecha
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Fecha Vencimiento
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_vencimiento" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Monto
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="monto" type="number" class="form-control" placeholder="Monto">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Plazo Meses
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="plazo_meses" type="number" class="form-control" placeholder="Plazo Meses">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Fecha Acta
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_acta" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Deposito Intereses
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="deposito_intereses" type="number" class="form-control"
-              placeholder="Deposito Intereses">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Intereses %
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses %">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Intereses Fecha Fin
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="intereses_fecha_fin" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Tiempo Gracia
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="tiempo_gracia" type="number" class="form-control" placeholder="Tiempo Gracia">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Destino Prestamo
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="destino_prestamo" type="text" class="form-control" placeholder="Destino Prestamo">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Cobro Intereses
-              <span class="text-danger">*</span>
-            </label>
-            <div class="form-check custom-checkbox mb-3">
-              <input formControlName="cobro_intereses" type="checkbox" class="form-check-input">
-              <label class="form-check-label">{{prestamoForm.controls['cobro_intereses'].value ? 'Si' : 'No'}}</label>
+    <div class="row">
+      <div class="col-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="container-fluid">
+              <form [formGroup]="prestamoForm">
+                <div class="row">
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">No. Dictamen
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="no_dictamen" class="form-control" placeholder="No. Dictamen">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">No. Pagare
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="no_pagare" class="form-control" placeholder="No. Pagare">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Fecha
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="fecha" type="date" class="form-control">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Fecha Vencimiento
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="fecha_vencimiento" type="date" class="form-control">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Plazo Meses
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="plazo_meses" type="number" class="form-control" placeholder="Plazo Meses">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Fecha Acta
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="fecha_acta" type="date" class="form-control">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Deposito Intereses
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="deposito_intereses" type="number" class="form-control"
+                      placeholder="Deposito Intereses">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Intereses %
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses %">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Intereses Fecha Fin
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="intereses_fecha_fin" type="date" class="form-control">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Tiempo Gracia
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="tiempo_gracia" type="number" class="form-control"
+                      placeholder="Tiempo Gracia">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Destino Prestamo
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="destino_prestamo" type="text" class="form-control"
+                      placeholder="Destino Prestamo">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Cobro Intereses
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="form-check custom-checkbox mb-3">
+                      <input formControlName="cobro_intereses" type="checkbox" class="form-check-input">
+                      <label class="form-check-label">{{prestamoForm.controls['cobro_intereses'].value ? 'Si' :
+                        'No'}}</label>
+                    </div>
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Acta
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="acta" type="text" class="form-control" placeholder="Acta">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Punto
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="punto" type="text" class="form-control" placeholder="Punto">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Fecha Memorial
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="fecha_memorial" type="date" class="form-control">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Autorizacion
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="autorizacion" type="text" class="form-control" placeholder="Autorizacion">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Certficacion
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="certficacion" type="text" class="form-control" placeholder="Certficacion">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Oficio A.J.
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="oficioaj" type="date" class="form-control">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Oficio A.J. #
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="oficioaj2" type="text" class="form-control" placeholder="Oficio A.J. #">
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Municipalidad<span class="text-danger">*</span></label>
+                    <select formControlName="id_municipalidad" class="form-control">
+                      <option value="null">--- Seleccione un registro ---</option>
+                      <option *ngFor="let i of municipalidades" [value]="i.id">{{i.departamento.nombre}} /
+                        {{i.municipio.nombre}}</option>
+                    </select>
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Regional<span class="text-danger">*</span></label>
+                    <select formControlName="id_regional" class="form-control">
+                      <option value="null">--- Seleccione un registro ---</option>
+                      <option *ngFor="let i of regionales" [value]="i.id">{{i.nombre}}</option>
+                    </select>
+                  </div>
+                  <div class="col-xl-3 mb-3">
+                    <label class="form-label">Funcionario<span class="text-danger">*</span></label>
+                    <select formControlName="id_funcionario" class="form-control">
+                      <option value="null">--- Seleccione un registro ---</option>
+                      <option *ngFor="let i of funcionarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1"
+                    (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
+                    <i class="fa-duotone fa-floppy-disk"></i> Guardar
+                  </button>
+                  <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+                </div>
+              </form>
             </div>
           </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Acta
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="acta" type="text" class="form-control" placeholder="Acta">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Punto
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="punto" type="text" class="form-control" placeholder="Punto">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Fecha Memorial
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_memorial" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Autorizacion
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="autorizacion" type="text" class="form-control" placeholder="Autorizacion">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Certficacion
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="certficacion" type="text" class="form-control" placeholder="Certficacion">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Oficio A.J.
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="oficioaj" type="date" class="form-control">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Oficio A.J. #
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="oficioaj2" type="text" class="form-control" placeholder="Oficio A.J. #">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Garantia<span class="text-danger">*</span></label>
-            <select formControlName="id_garantia" class="form-control">
-              <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of garantias" [value]="i.id">{{i.nombre}}</option>
-            </select>
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Municipalidad<span class="text-danger">*</span></label>
-            <select formControlName="id_municipalidad" class="form-control">
-              <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of municipalidades" [value]="i.id">{{i.departamento.nombre}} /
-                {{i.municipio.nombre}}</option>
-            </select>
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Regional<span class="text-danger">*</span></label>
-            <select formControlName="id_regional" class="form-control">
-              <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of regionales" [value]="i.id">{{i.nombre}}</option>
-            </select>
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Funcionario<span class="text-danger">*</span></label>
-            <select formControlName="id_funcionario" class="form-control">
-              <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of funcionarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
-            </select>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive active-projects manage-client">
+              <div class="tbl-caption">
+                <h4 class="heading mb-0">Garantías</h4>
+              </div>
+              <table id="empoloyees-tbl1" class="table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Monto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of garantias; let dindex = index">
+                    <td>{{d.nombre}} ({{d.porcentaje}}%)</td>
+                    <td>
+                      <input (input)="setMontoTotal()" [(ngModel)]="d.monto" [ngModelOptions]="{standalone: true}" type="number"
+                        class="form-control" placeholder="Monto">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <br>
+
+            <form [formGroup]="prestamoForm">
+              <div class="row">
+                <div class="col-xl-12 mb-3">
+                  <label class="form-label">Monto Total
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="monto" type="number" class="form-control" placeholder="Monto Total" readonly>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-        <div>
-          <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1" (click)="postPrestamo()"
-            data-bs-dismiss="offcanvas" type="button">
-            <i class="fa-duotone fa-floppy-disk"></i> Guardar
-          </button>
-          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
@@ -499,13 +534,6 @@
               <span class="text-danger">*</span>
             </label>
             <input formControlName="oficioaj2" type="text" class="form-control" placeholder="Oficio A.J. #">
-          </div>
-          <div class="col-xl-3 mb-3">
-            <label class="form-label">Garantia<span class="text-danger">*</span></label>
-            <select formControlName="id_garantia" class="form-control">
-              <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of garantias" [value]="i.id">{{i.nombre}}</option>
-            </select>
           </div>
           <div class="col-xl-3 mb-3">
             <label class="form-label">Municipalidad<span class="text-danger">*</span></label>

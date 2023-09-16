@@ -23,6 +23,10 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/count/' + estado + '/' + fecha_inicio + '/' + fecha_fin);
   }
 
+  getPrestamosEstadoMunicipalidad(estado: string, id_municipalidad: any): Promise<any> {
+    return this.rootService.get(this.route + '/municipalidad/' + estado + '/' + id_municipalidad);
+  }
+
   getPrestamo(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }

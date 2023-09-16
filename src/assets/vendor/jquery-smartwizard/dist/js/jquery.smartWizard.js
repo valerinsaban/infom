@@ -55,7 +55,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     // theme for the wizard, related css need to include for other than default theme
     justified: true,
     // Nav menu justification. true/false
-    darkMode: false,
+    darkMode: true,
     // Enable/disable Dark Mode if the theme supports. true/false
     autoAdjustHeight: true,
     // Automatically adjust content height

@@ -11,6 +11,10 @@ import { Router } from '@angular/router';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import * as moment from 'moment';
 import { BancosService } from 'src/app/services/catalogos/bancos.service';
+import { AportesService } from 'src/app/services/aportes.service';
+import { GarantiasService } from 'src/app/services/catalogos/garantias.service';
+import { PrestamosService } from 'src/app/services/prestamos.service';
+import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
 
 @Component({
   selector: 'app-municipalidades',
@@ -29,7 +33,7 @@ export class MunicipalidadesComponent {
 
   departamento: any;
   municipio: any;
-  plazo_meses: any = 0;
+  plazo_meses: any;
 
   filtros: any = {
     mes_inicio: moment().startOf('year').format('YYYY-MM'),
@@ -45,6 +49,10 @@ export class MunicipalidadesComponent {
     private departamentosService: DepartamentosService,
     private municipiosService: MunicipiosService,
     private bancosService: BancosService,
+    private aportesService: AportesService,
+    private garantiasService: GarantiasService,
+    private prestamosService: PrestamosService,
+    private prestamos_garantiasService: PrestamosGarantiasService
   ) {
     this.municipalidadForm = new FormGroup({
       direccion: new FormControl(null),
@@ -178,11 +186,34 @@ export class MunicipalidadesComponent {
     this.municipalidadForm.controls['id_banco'].setValue(i.id_banco);
   }
 
-  getDisponibilidad(i: any, index: number) {
-    this.municipalidad = i;
-    console.log(i);
-    console.log(this.plazo_meses);
+  async getDisponibilidad() {
+    let aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.municipalidad.departamento.codigo, this.municipalidad.municipio.codigo)
+
+    let garantias = await this.garantiasService.getGarantias();
+    let prestamos = await this.prestamosService.getPrestamosEstadoMunicipalidad('Acreditado', this.municipalidad.id);
     
+    
+    for (let i = 0; i < prestamos.length; i++) {
+      let prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(prestamos[i].id);
+      prestamos[i].prestamos_garantias = prestamos_garantias
+    }
+
+    console.log(aporte);
+    console.log(garantias);
+    console.log(prestamos);
+    
+    
+    
+    // for (let g = 0; g < this.garantias.length; g++) {
+    //   this.garantias[g].prestamos = [];
+
+    //   let prestamos = await this.prestamosService.getPrestamosEstadoMunicipalidad(this.municipalidad.id);
+    //   for (let p = 0; p < prestamos.length; p++) {
+    //     if (prestamos[p].estado != 'Completado' && prestamos[p].estado != 'Rechazado') {
+    //       this.garantias[g].prestamos.push(prestamos[p]);   
+    //     }
+    //   }      
+    // }
   }
 
   async setDepartamento(event: any) {
