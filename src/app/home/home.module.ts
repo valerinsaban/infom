@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { DepartamentosComponent } from './catalogos/departamentos/departamentos.component';
 import { HomeComponent } from './home.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -28,6 +28,9 @@ import { BitacorasComponent } from './seguridad/bitacoras/bitacoras.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { RepresentantesComponent } from './representantes/representantes.component';
 import { ReportesComponent } from './reportes/reportes.component';
+import * as moment from 'moment';
+
+moment.locale('es');
 
 const routes: Routes = [
   {
@@ -101,6 +104,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgxUiLoaderModule,
     NgxJsonViewerModule
+  ],
+  providers: [
+    DecimalPipe
   ]
 })
 export class HomeModule { }

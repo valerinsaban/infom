@@ -14,6 +14,10 @@
   background-color: transparent !important;
 }
 
+.real {
+  color: #BB6BD9 !important;
+}
+
 .pendiente {
   background-color: #ffeccc;
   color: #FF9F00 !important;

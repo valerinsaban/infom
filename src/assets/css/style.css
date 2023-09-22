@@ -51772,7 +51772,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 }
 
 [data-theme-version="dark"] .card {
-  background-color: #242424;
+  background-color: #333333;
   box-shadow: none;
   border-color: #444444;
 }

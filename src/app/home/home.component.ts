@@ -163,8 +163,8 @@ export class HomeComponent {
         HomeComponent.id_submenu = parseInt(id_submenu);
       }
     }
-    sessionStorage.setItem('fecha_inicio', moment().format('YYYY-MM-DD 00:00'));
-    sessionStorage.setItem('fecha_fin', moment().format('YYYY-MM-DD 23:59'));
+    sessionStorage.setItem('fecha_inicio', moment().startOf('month').format('YYYY-MM-DD 00:00'));
+    sessionStorage.setItem('fecha_fin', moment().endOf('month').format('YYYY-MM-DD 23:59'));
   }
 
   get usuario() {    

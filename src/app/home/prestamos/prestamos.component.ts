@@ -27,8 +27,10 @@ export class PrestamosComponent {
 
   prestamos: any = [];
   prestamo: any;
+  prestamos_garantias: any = [];
 
   file: any;
+  reales: number = 0;
 
   garantias: any = [];
   municipalidades: any = [];
@@ -68,20 +70,20 @@ export class PrestamosComponent {
       fecha_vencimiento: new FormControl(null, [Validators.required]),
       monto: new FormControl(null, [Validators.required]),
       plazo_meses: new FormControl(null, [Validators.required]),
-      fecha_acta: new FormControl(null, [Validators.required]),
-      deposito_intereses: new FormControl(null, [Validators.required]),
-      intereses: new FormControl(null, [Validators.required]),
-      intereses_fecha_fin: new FormControl(null, [Validators.required]),
-      tiempo_gracia: new FormControl(null, [Validators.required]),
-      destino_prestamo: new FormControl(null, [Validators.required]),
-      cobro_intereses: new FormControl(null, [Validators.required]),
-      acta: new FormControl(null, [Validators.required]),
-      punto: new FormControl(null, [Validators.required]),
-      fecha_memorial: new FormControl(null, [Validators.required]),
-      autorizacion: new FormControl(null, [Validators.required]),
-      certficacion: new FormControl(null, [Validators.required]),
-      oficioaj: new FormControl(null, [Validators.required]),
-      oficioaj2: new FormControl(null, [Validators.required]),
+      fecha_acta: new FormControl(null),
+      deposito_intereses: new FormControl(null),
+      intereses: new FormControl(null),
+      intereses_fecha_fin: new FormControl(null),
+      tiempo_gracia: new FormControl(null),
+      destino_prestamo: new FormControl(null),
+      cobro_intereses: new FormControl(null),
+      acta: new FormControl(null),
+      punto: new FormControl(null),
+      fecha_memorial: new FormControl(null),
+      autorizacion: new FormControl(null),
+      certficacion: new FormControl(null),
+      oficioaj: new FormControl(null),
+      oficioaj2: new FormControl(null),
       estado: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
@@ -93,8 +95,8 @@ export class PrestamosComponent {
       fecha_fin: new FormControl(null, [Validators.required]),
       dias: new FormControl(null, [Validators.required]),
       capital: new FormControl(null, [Validators.required]),
-      intereses: new FormControl(null, [Validators.required]),
-      iva_intereses: new FormControl(null, [Validators.required]),
+      interes: new FormControl(null, [Validators.required]),
+      iva: new FormControl(null, [Validators.required]),
       cuota: new FormControl(null, [Validators.required]),
       saldo: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
@@ -180,10 +182,22 @@ export class PrestamosComponent {
     }
   }
 
+  async getProyeccion() {
+    let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
+    let plazo_meses = parseFloat(this.prestamoForm.controls['plazo_meses'].value);
+    let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
+    let fecha = this.prestamoForm.controls['fecha'].value;
+
+    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, this.amortizaciones);
+  }
+
   async getAmortizaciones() {
+    this.amortizaciones = [];
     let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(this.prestamo.id);
     if (amortizaciones) {
       this.amortizaciones = amortizaciones;
+      this.reales = amortizaciones.length;
+      await this.getProyeccion();
     }
   }
 
@@ -210,16 +224,26 @@ export class PrestamosComponent {
     let prestamo = await this.prestamosService.postPrestamo(this.prestamoForm.value);
     if (prestamo.resultado) {
 
+      let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
+
       for (let g = 0; g < this.garantias.length; g++) {
         if (this.garantias[g].monto && this.garantias[g].monto > 0) {
-          await this.prestamos_garantiasService.postPrestamoGarantia({
-            monto: parseFloat(this.garantias[g].monto),
-            id_garantia: this.garantias[g].id,
-            id_prestamo: prestamo.data.id
-          });
+
+          let monto = parseFloat(this.garantias[g].monto);
+          
+          let porcentaje = monto / monto_total * 100;
+
+          if (this.garantias[g].monto) {
+            await this.prestamos_garantiasService.postPrestamoGarantia({
+              monto: parseFloat(this.garantias[g].monto),
+              porcentaje: porcentaje,
+              id_garantia: this.garantias[g].id,
+              id_prestamo: prestamo.data.id
+            }); 
+          }
 
         }
-      }
+      } 
 
       await this.getPrestamos();
       await this.getCountPrestamos();
@@ -311,7 +335,7 @@ export class PrestamosComponent {
         this.ngxService.start();
         let amortizacion = await this.amortizacionesService.deleteAmortizacion(i.id);
         if (amortizacion.resultado) {
-          this.amortizaciones.splice(index, 1);
+          this.getAmortizaciones();
           this.alert.alertMax('Correcto', amortizacion.mensaje, 'success');
           this.limpiar2();
         }
@@ -336,20 +360,20 @@ export class PrestamosComponent {
     this.prestamo = i;
     this.prestamoForm.controls['no_dictamen'].setValue(i.no_dictamen);
     this.prestamoForm.controls['no_pagare'].setValue(i.no_pagare);
-    this.prestamoForm.controls['fecha'].setValue(moment.utc(i.fecha).format('YYYY-MM-DD'));
-    this.prestamoForm.controls['fecha_vencimiento'].setValue(moment.utc(i.fecha_vencimiento).format('YYYY-MM-DD'));
+    this.prestamoForm.controls['fecha'].setValue(i.fecha ? moment.utc(i.fecha).format('YYYY-MM-DD') : i.fecha);
+    this.prestamoForm.controls['fecha_vencimiento'].setValue(i.fecha_vencimiento ? moment.utc(i.fecha_vencimiento).format('YYYY-MM-DD') : i.fecha_vencimiento);
     this.prestamoForm.controls['monto'].setValue(i.monto);
     this.prestamoForm.controls['plazo_meses'].setValue(i.plazo_meses);
-    this.prestamoForm.controls['fecha_acta'].setValue(moment.utc(i.fecha_acta).format('YYYY-MM-DD'));
+    this.prestamoForm.controls['fecha_acta'].setValue(i.fecha_acta ? moment.utc(i.fecha_acta).format('YYYY-MM-DD') : i.fecha_acta);
     this.prestamoForm.controls['deposito_intereses'].setValue(i.deposito_intereses);
     this.prestamoForm.controls['intereses'].setValue(i.intereses);
-    this.prestamoForm.controls['intereses_fecha_fin'].setValue(moment.utc(i.intereses_fecha_fin).format('YYYY-MM-DD'));
+    this.prestamoForm.controls['intereses_fecha_fin'].setValue(i.intereses_fecha_fin ? moment.utc(i.intereses_fecha_fin).format('YYYY-MM-DD') : i.intereses_fecha_fin);
     this.prestamoForm.controls['tiempo_gracia'].setValue(i.tiempo_gracia);
     this.prestamoForm.controls['destino_prestamo'].setValue(i.destino_prestamo);
     this.prestamoForm.controls['cobro_intereses'].setValue(i.cobro_intereses);
     this.prestamoForm.controls['acta'].setValue(i.acta);
     this.prestamoForm.controls['punto'].setValue(i.punto);
-    this.prestamoForm.controls['fecha_memorial'].setValue(moment.utc(i.fecha_memorial).format('YYYY-MM-DD'));
+    this.prestamoForm.controls['fecha_memorial'].setValue(i.fecha_memorial ? moment.utc(i.fecha_memorial).format('YYYY-MM-DD') : i.fecha_memorial);
     this.prestamoForm.controls['autorizacion'].setValue(i.autorizacion);
     this.prestamoForm.controls['certficacion'].setValue(i.certficacion);
     this.prestamoForm.controls['oficioaj'].setValue(i.oficioaj);
@@ -362,6 +386,8 @@ export class PrestamosComponent {
 
     this.amortizacionForm.controls['id_prestamo'].setValue(i.id);
 
+    this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
+    
     await this.getAmortizaciones();
   }
 
@@ -375,45 +401,37 @@ export class PrestamosComponent {
   }
 
   calcAmortizacion(edit: boolean = false) {
-    let monto = this.prestamo.monto;
-    let plazo = parseFloat(this.prestamo.plazo_meses);
-    let intereses_porc = parseFloat(this.prestamo.intereses);
+    let monto_total = this.prestamo.monto;
+    let plazo_meses = parseFloat(this.prestamo.plazo_meses);
+    let intereses = parseFloat(this.prestamo.intereses);
 
     let fecha_inicio = this.amortizacionForm.controls['fecha_inicio'].value;
     let fecha_fin = this.amortizacionForm.controls['fecha_fin'].value;
 
     if (fecha_inicio && fecha_fin) {
       let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
-      let capital = monto / plazo;
-      let saldo_actual = monto;
+      let capital = monto_total / plazo_meses;
+      let saldo_actual = monto_total;
 
-      if (this.amortizaciones.length) {
-        capital = monto / plazo;
-        // capital = parseFloat(this.amortizaciones[this.amortizaciones.length - 1].capital);
-        saldo_actual = parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo);
+      if (this.amortizacion.index == 0) {
+        capital = monto_total / plazo_meses;
+        saldo_actual = monto_total;
+      } else {          
+        capital = monto_total / plazo_meses;
+        // capital = parseFloat(this.amortizaciones[this.amortizacion.index - 1].capital);
+        saldo_actual = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo);
       }
-      if (edit) {
-        if (this.amortizacion.index == 0) {
-          capital = monto / plazo;
-          saldo_actual = monto;
-        } else {
-          capital = monto / plazo;
-          // capital = parseFloat(this.amortizaciones[this.amortizacion.index - 1].capital);
-          saldo_actual = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo);
-        }
-      }
-
-      let intereses = (saldo_actual * (intereses_porc / 100) / 365) * dias;
-      let iva_intereses = intereses * 0.12;
-      let cuota = capital + intereses + iva_intereses;
+      
+      let interes = (saldo_actual * (intereses / 100) / 365) * dias;
+      let iva = interes * 0.12;
+      let cuota = capital + interes + iva;
       let saldo = saldo_actual - capital;
-
 
       this.amortizacionForm.controls['dias'].setValue(dias);
       this.amortizacionForm.controls['capital'].setValue(capital.toFixed(8));
       this.amortizacionForm.controls['saldo'].setValue(saldo.toFixed(8));
-      this.amortizacionForm.controls['intereses'].setValue(intereses.toFixed(8))
-      this.amortizacionForm.controls['iva_intereses'].setValue(iva_intereses.toFixed(8))
+      this.amortizacionForm.controls['interes'].setValue(interes.toFixed(8))
+      this.amortizacionForm.controls['iva'].setValue(iva.toFixed(8))
       this.amortizacionForm.controls['cuota'].setValue(cuota.toFixed(8))
 
     }
@@ -435,10 +453,18 @@ export class PrestamosComponent {
     return total;
   }
 
-  getTotalIntereses() {
+  getTotalInteres() {
     let total = 0;
     for (let a = 0; a < this.amortizaciones.length; a++) {
-      total += parseFloat(this.amortizaciones[a].intereses);
+      total += parseFloat(this.amortizaciones[a].interes);
+    }
+    return total;
+  }
+
+  getTotalIva() {
+    let total = 0;
+    for (let a = 0; a < this.amortizaciones.length; a++) {
+      total += parseFloat(this.amortizaciones[a].iva);
     }
     return total;
   }
@@ -483,6 +509,9 @@ export class PrestamosComponent {
     this.prestamoForm.controls['cobro_intereses'].setValue(false);
     this.prestamoForm.controls['id_usuario'].setValue(HomeComponent.id_usuario);
     this.prestamo = null;
+    for (let g = 0; g < this.garantias.length; g++) {
+      delete this.garantias[g].total;
+    }
   }
 
   limpiar2() {
@@ -491,7 +520,6 @@ export class PrestamosComponent {
       let amortizacion = this.amortizaciones[this.amortizaciones.length - 1];
       this.amortizacionForm.controls['fecha_inicio'].setValue(moment(amortizacion.fecha_inicio).add(1, 'month').format('YYYY-MM-DD'));
       this.amortizacionForm.controls['fecha_fin'].setValue(moment(amortizacion.fecha_fin).add(1, 'month').format('YYYY-MM-DD'));
-      this.calcAmortizacion();
     }
     this.amortizacionForm.controls['id_prestamo'].setValue(this.prestamo.id);
     this.amortizacion = null;

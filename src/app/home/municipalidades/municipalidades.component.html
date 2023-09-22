@@ -308,40 +308,54 @@
                     </a>
                   </div>
                 </div>
-                <table id="empoloyees-tbl" class="table" style="margin-bottom: 120px;">
+                <table id="empoloyees-tbl" class="table table-bordered" style="border-collapse: inherit">
                   <thead>
+                    <tr style="text-transform: uppercase !important;">
+                      <th rowspan="2" style="text-align: center;">Mes</th>
+                      <th *ngFor="let g of garantias" [attr.colspan]="g.prestamos.length + 2" style="text-align: center;">
+                        {{g.nombre}}
+                      </th>
+                      <th rowspan="2" style="text-align: center;">Total Aportes</th>
+                      <th rowspan="2" style="text-align: center;">Total Disponible</th>
+                    </tr>
                     <tr>
-                      <th>Departamento / Municipio</th>
-                      <th>Direccion</th>
-                      <th>Telefono</th>
-                      <th>Correo</th>
-                      <th>No. Cuenta</th>
-                      <th>Acciones</th>
+                      <ng-container *ngFor="let g of garantias">
+                        <th style="text-align: center;">APORTE {{g.porcentaje}}%</th>
+                        <ng-container *ngFor="let p of g.prestamos">
+                          <th style="text-align: center;">Prestamo {{p.no_dictamen}}</th>
+                        </ng-container>
+                        <th style="text-align: center;">TOTAL</th>
+                      </ng-container>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let m of municipalidades; let mindex = index">
-                      <td>
-                        <div class="products">
-                          <div>
-                            <h6>{{m.departamento.nombre}}</h6>
-                            <span class="count text-primary">{{m.municipio.nombre}}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td>{{m.direccion}}</td>
-                      <td>{{m.telefono}}</td>
-                      <td>{{m.correo}}</td>
-                      <td>
-                        <div class="products">
-                          <div>
-                            <h6>{{m.no_cuenta}}</h6>
-                            <span class="count text-primary">{{m.banco.nombre}}</span>
-                          </div>
-                        </div>
-                      </td>
+                    <tr *ngFor="let d of disponibilidad">
+                      <td>{{d.mes | date: 'MMMM YYYY':'UTC'}}</td>
+                      <ng-container *ngFor="let g of garantias">
+                        <td style="text-align: right;">{{g.aporte | number: '.2-2'}}</td>
+                        <ng-container *ngFor="let p of g.prestamos">
+                          <td style="text-align: right;">- {{getMontoDisp(d.mes, p.amortizaciones) | number: '.2-2'}}</td>
+                        </ng-container>
+                        <td style="text-align: right;" class="total">{{getMontoDispTotal(d.mes, g.prestamos, g.aporte) | number: '.2-2'}}</td>
+                      </ng-container>
+                      <td style="text-align: right;">{{getMontoDispTotalAporte() | number: '.2-2'}}</td>
+                      <td style="text-align: right;">{{getMontoDispTotalDisponible(d.mes) | number: '.2-2'}}</td>
                     </tr>
                   </tbody>
+                  <thead>
+                    <tr>
+                      <th>TOTALES</th>
+                      <ng-container *ngFor="let g of garantias">
+                        <th style="text-align: right;">{{getTotalAportes(g.aporte) | number: '.2-2'}}</th>
+                        <ng-container *ngFor="let p of g.prestamos">
+                          <th style="text-align: right;">{{getTotalMontoDisp(p.amortizaciones) | number: '.2-2'}}</th>
+                        </ng-container>
+                        <th style="text-align: right;">{{getTotalMontoDispTotal(g.prestamos, g.aporte) | number: '.2-2'}}</th>
+                      </ng-container>
+                      <th style="text-align: right;">{{getTotalMontoDispTotalAporte() | number: '.2-2'}}</th>
+                      <th style="text-align: right;">{{getTotalMontoDispTotalDisponible() | number: '.2-2'}}</th>
+                    </tr>
+                  </thead>
                 </table>
               </div>
             </div>
