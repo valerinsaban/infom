@@ -10,6 +10,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 import { BitacorasService } from '../services/bitacoras.service';
+import { ConfiguracionesService } from '../services/configuraciones.service';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +30,7 @@ export class HomeComponent {
 
   menus: any = [];
   bitacoras: any = [];
+  configuracion: any;
 
   constructor(
     private router: Router,
@@ -37,7 +39,8 @@ export class HomeComponent {
     private menusService: MenusService,
     private usuariosService: UsuariosService,
     private bitacorasService: BitacorasService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private configuracionesService: ConfiguracionesService
   ) { }
 
   async ngOnInit() {
@@ -48,6 +51,8 @@ export class HomeComponent {
       let usuario: any = decode(token);
       if (usuario) {        
         this.ngxService.start();
+        this.getConfiguraciones();
+        
         let u = await this.usuariosService.getUsuariosByUsuario(usuario.sub);       
         HomeComponent.usuario = u; 
         HomeComponent.id_usuario = u.id;
@@ -68,6 +73,13 @@ export class HomeComponent {
       }
     }
     this.router.navigate(['login']);
+  }
+
+  async getConfiguraciones() {
+    let configuraciones = await this.configuracionesService.getConfiguraciones();
+    if (configuraciones) {
+      this.configuracion = configuraciones[0];
+    }
   }
 
   async getMenus() {

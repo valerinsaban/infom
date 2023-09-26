@@ -5,7 +5,7 @@
   ***********************************-->
   <div class="nav-header">
     <a routerLink="/" class="brand-logo" style="padding: 10px">
-      <img src="assets/images/logo/logo.png" alt="" style="width:100%; text-align: center;">
+      <img [src]="configuracion.logo" alt="" style="width:100%; text-align: center;">
     </a>
     <div class="nav-control">
       <div class="hamburger">
@@ -669,7 +669,9 @@
               <a routerLink="produccion" class="btn btn-primary btn-sm">Produccion</a>
             </li>
             <li class="nav-item align-items-center header-border">
-              <a (click)="logout()" class="btn btn-primary btn-sm">Salir</a>
+              <a (click)="logout()" class="btn btn-primary btn-sm">
+                <i class="fas fa-power-off"></i> Salir
+              </a>
             </li>
             <li class="nav-item ps-3" *ngIf="usuario">
               <div class="dropdown header-profile2">
@@ -698,9 +700,9 @@
                       </div>
                     </div>
                     <div class="card-body px-0 py-2">
-                      <a routerLink="solicitudes" class="dropdown-item ai-icon ">
-                        <i class="fad fa-newspaper fa-xl"></i>
-                        <span class="ms-2">Solicitudes</span>
+                      <a routerLink="prestamos" class="dropdown-item ai-icon ">
+                        <i class="fad fa-money-check-dollar-pen fa-xl"></i>
+                        <span class="ms-2">Prestamos</span>
                       </a>
                       <a routerLink="/" class="dropdown-item ai-icon ">
                         <i class="fad fa-lock fa-xl"></i>
@@ -716,12 +718,12 @@
                       </a>
                     </div>
                     <div class="card-footer px-0 py-2">
-                      <a routerLink="/" class="dropdown-item ai-icon ">
-                        <i class="fad fa-gear fa-xl"></i>
-                        <span class="ms-2">Ajustes </span>
+                      <a routerLink="configuraciones" class="dropdown-item ai-icon ">
+                        <i class="fad fa-sliders fa-xl"></i>
+                        <span class="ms-2">Configuraciones </span>
                       </a>
                       <a (click)="logout()" class="dropdown-item ai-icon">
-                        <i class="fad fa-arrow-right-from-bracket fa-xl"></i>
+                        <i class="fad fa-power-off fa-xl"></i>
                         <span class="ms-2">Salir </span>
                       </a>
                     </div>

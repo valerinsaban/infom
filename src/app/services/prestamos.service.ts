@@ -28,6 +28,10 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/municipalidad/' + estado + '/' + id_municipalidad);
   }
 
+  getPrestamosFiltros(data: any): Promise<any> {
+    return this.rootService.post(this.route + '/filtros', data);
+  }
+
   getPrestamo(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }
@@ -36,7 +40,7 @@ export class PrestamosService {
     let cant_amor = amortizaciones.length;
     let saldo_actual = monto_total;
 
-    let fecha_i = moment(fecha).startOf('month').format('YYYY-MM-DD');
+    let fecha_i = moment(fecha).format('YYYY-MM-DD');
     let fecha_f = moment(fecha).endOf('month').format('YYYY-MM-DD');
     
     if (cant_amor) {
@@ -50,9 +54,9 @@ export class PrestamosService {
     
     for (let p = 0; p < (plazo_meses - cant_amor); p++) {
       let fecha_inicio = moment(fecha_i).add(p + 1, 'month').format('YYYY-MM-DD');
-      let fecha_fin = moment(fecha_f).add(p + 1, 'month').format('YYYY-MM-DD');
-      if (moment(fecha_inicio).format('DD') == '01' && moment(fecha_fin).format('DD') > '28') {
-        fecha_fin = moment(fecha_f).add(p + 1, 'month').endOf('month').format('YYYY-MM-DD');
+      let fecha_fin = moment(fecha_f).add(p + 1, 'month').endOf('month').format('YYYY-MM-DD');
+      if (p > 0) {
+        fecha_inicio = moment(fecha_i).add(p + 1, 'month').startOf('month').format('YYYY-MM-DD');
       }
       let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days', true) + 1;
       let capital = monto_total / plazo_meses;

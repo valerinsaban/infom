@@ -32,12 +32,37 @@ thead tr th {
   text-transform: uppercase !important;
 }
 
+thead tr th.total {
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  text-align: center !important;;
+}
+
+tbody tr td.total {
+  text-transform: uppercase !important;
+  text-align: right !important;;
+}
+
+.active-projects thead tr th.total {
+  background-color: #F0F4F9;
+  font-weight: 900;
+  text-align: center !important;
+}
+
+[data-theme-version="dark"] .active-projects thead tr th.total {
+  background-color: #1E1E1E;
+  font-weight: 900;
+  text-align: center !important;
+}
+
 .active-projects tbody tr td.total {
   background-color: #F0F4F9;
   font-weight: 900;
+  text-align: right !important;
 }
 
 [data-theme-version="dark"] .active-projects tbody tr td.total {
   background-color: #1E1E1E;
   font-weight: 900;
+  text-align: right !important;
 }

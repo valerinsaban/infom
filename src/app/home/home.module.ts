@@ -29,6 +29,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { RepresentantesComponent } from './representantes/representantes.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import * as moment from 'moment';
+import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
+import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
 
 moment.locale('es');
 
@@ -47,6 +49,7 @@ const routes: Routes = [
       { path: 'bitacoras', component: BitacorasComponent},
       { path: 'produccion', component: ProduccionComponent},
       { path: 'reportes', component: ReportesComponent},
+      { path: 'configuraciones', component: ConfiguracionesComponent},
 
       // Catalogos
       { path: 'departamentos', component: DepartamentosComponent },
@@ -56,6 +59,7 @@ const routes: Routes = [
       { path: 'regiones', component: RegionesComponent},
       { path: 'generos', component: GenerosComponent},
       { path: 'garantias', component: GarantiasComponent},
+      { path: 'tipos-prestamos', component: TiposPrestamosComponent},
       { path: 'profesiones', component: ProfesionesComponent},
       { path: 'bancos', component: BancosComponent},
 
@@ -96,6 +100,8 @@ const routes: Routes = [
     BitacorasComponent,
     RepresentantesComponent,
     ReportesComponent,
+    TiposPrestamosComponent,
+    ConfiguracionesComponent,
   ],
   imports: [
     CommonModule,

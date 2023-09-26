@@ -1,0 +1,158 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Garantías</h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Garantías</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-3 col-xxl-4">
+      <div class="card h-auto">
+        <div class="card-header">
+          <h4 *ngIf="!tipo_prestamo" class="heading mb-0">Agregar Garantía</h4>
+          <h4 *ngIf="tipo_prestamo" class="heading mb-0">Editar Garantía</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="tipo_prestamoForm" class="finance-hr">
+            <div class="form-group mb-3">
+              <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
+              </label>
+              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+              </label>
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+            </div>
+            <div *ngIf="!tipo_prestamo">
+              <button (click)="postTipoPrestamo()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': tipo_prestamoForm.invalid}">
+                Guardar
+              </button>
+            </div>
+            <div *ngIf="tipo_prestamo">
+              <button (click)="putTipoPrestamo()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': tipo_prestamoForm.invalid}">
+                Guardar
+              </button>
+              <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-9 col-xxl-8">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="table-responsive active-projects manage-client">
+            <div class="tbl-caption">
+              <h4 class="heading mb-0">Garantías</h4>
+            </div>
+            <table id="empoloyees-tbl1" class="table">
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Nombre</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let d of tipos_prestamos; let dindex = index">
+                  <td><a class="text-primary">{{d.codigo}}</a></td>
+                  <td>{{d.nombre}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-list"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" (click)="setTipoPrestamo(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="setTipoPrestamo(d, dindex)" data-bs-toggle="offcanvas"
+                          href="#garantias">Garantias</a>
+                        <a class="dropdown-item" (click)="deleteTipoPrestamo(d, dindex)">Eliminar</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="garantias">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Amortizaciones</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-6 col-xxl-3">
+          <div class="card h-auto">
+            <div class="card-header">
+              <h4 class="heading mb-0">Agregar Tipo Prestamo Garantía</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="tipo_prestamo_garantiaForm" class="finance-hr">
+                <div class="form-group mb-3">
+                  <label class="form-label">Garantia<span class="text-danger">*</span></label>
+                  <select formControlName="id_garantia" class="form-control">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let g of garantias" [value]="g.id">{{g.nombre}}</option>
+                  </select>
+                </div>
+                <div>
+                  <button (click)="postTipoPrestamoGarantia()" type="button" class="btn btn-primary mb-3"
+                    [ngClass]="{'disabled': tipo_prestamo_garantiaForm.invalid}">
+                    Guardar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6 col-xxl-9">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects manage-client style-1">
+                <table id="empoloyees-tbl1" class="table">
+                  <thead>
+                    <tr>
+                      <th>Garantia</th>
+                      <th style="text-align: right;">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let t of tipos_prestamos_garantias; let aindex = index">
+                      <td>{{t.garantia.nombre}}</td>
+                      <td>
+                        <button (click)="deleteTipoPrestamoGarantia(t, aindex)" type="button" class="btn btn-primary light sharp">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

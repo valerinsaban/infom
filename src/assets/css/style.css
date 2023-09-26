@@ -35424,7 +35424,7 @@ input#checkAll.form-check-input:checked {
 
 textarea.form-control {
   min-height: auto;
-  height: auto !important;
+  height: 100px !important;
 }
 
 .form-control[type="file"] {
@@ -45193,7 +45193,7 @@ table.dataTable thead .sorting_asc {
 }
 
 .active-projects thead tr th:first-child {
-  padding-right: 0;
+  padding-right: 15px;
 }
 
 .active-projects tbody tr td {
@@ -45207,7 +45207,7 @@ table.dataTable thead .sorting_asc {
 }
 
 .active-projects tbody tr td:first-child {
-  padding-right: 0;
+  padding-right: 15px;
 }
 
 .active-projects .tbl-caption {
@@ -51893,7 +51893,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 }
 
 [data-theme-version="dark"] hr {
-  border-color: #444444;
+  border-color: #fff;
 }
 
 [data-theme-version="dark"] .grid-col {
@@ -53008,7 +53008,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
 
 [data-theme-version="dark"] .active-projects thead tr th,
 [data-theme-version="dark"] .schedules-cal .datepicker-days .dow {
-  background-color: #1E1E1E;
+  background-color: #494949;
 }
 
 [data-theme-version="dark"] .bootstrap-select .btn {

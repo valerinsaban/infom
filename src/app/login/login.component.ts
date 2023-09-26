@@ -5,6 +5,7 @@ import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 import { NgxUiLoaderService } from "ngx-ui-loader";
 import { AppComponent } from '../app.component';
+import { ConfiguracionesService } from '../services/configuraciones.service';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +15,14 @@ import { AppComponent } from '../app.component';
 export class LoginComponent {
 
   loginForm: FormGroup;
+  configuracion: any;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private alert: AlertService,
-    private ngxService: NgxUiLoaderService
+    private ngxService: NgxUiLoaderService,
+    private configuracionesService: ConfiguracionesService
   ) {
     this.loginForm = new FormGroup({
       usuario: new FormControl('', [Validators.required]),
@@ -32,6 +35,7 @@ export class LoginComponent {
     if (token) {
       this.router.navigateByUrl('/home');
     }
+    this.getConfiguraciones();
   }
 
   async login() {
@@ -45,6 +49,13 @@ export class LoginComponent {
       this.alert.alertMax('Transaccion Incorrecta', login.message, 'error');
     }
     this.ngxService.stop();
+  }
+
+  async getConfiguraciones() {
+    let configuraciones = await this.configuracionesService.getConfiguraciones();
+    if (configuraciones) {
+      this.configuracion = configuraciones[0];
+    }
   }
 
 }

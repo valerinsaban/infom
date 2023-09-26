@@ -1,0 +1,112 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Configuraciones </h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Configuraciones</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <!-- row -->
+  <div class="row">
+    <div class="col-xl-4 col-lg-4">
+      <div class="clearfix">
+        <div class="card card-bx profile-card author-profile m-b30">
+          <div class="card-body">
+            <div class="p-5">
+              <div class="author-profile">
+                <div class="author-media">
+                  <img [src]="configuracionForm.controls['portada'].value ? configuracionForm.controls['portada'].value : 'assets/images/no-img-avatar.png'" style="border-radius: 0; width: 100%;">
+                  <div class="upload-link" title="" data-toggle="tooltip" data-placement="right"
+                    data-original-title="update">
+                    <input type="file" class="update-flie" (change)="setImage($event, 'portada')">
+                    <i class="fa fa-camera"></i>
+                  </div>
+                </div>
+                <br>
+                <div class="author-media">
+                  <img [src]="configuracionForm.controls['logo'].value ? configuracionForm.controls['logo'].value : 'assets/images/no-img-avatar.png'" style="border-radius: 0;">
+                  <div class="upload-link" title="" data-toggle="tooltip" data-placement="right"
+                    data-original-title="update">
+                    <input type="file" class="update-flie" (change)="setImage($event, 'logo')">
+                    <i class="fa fa-camera"></i>
+                  </div>
+                </div>
+                <div class="author-info">
+                  <h6 class="title">{{configuracion.nombre}}</h6>
+                  <span>{{configuracion.correo}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="info-list">
+              <ul>
+                <li><a>Porcentaje Interes</a><span>{{configuracion.porcentaje_interes}}%</span></li>
+                <li><a>Porcentaje IVA</a><span>{{configuracion.porcentaje_iva}}%</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="input-group">
+              <a [href]="configuracion.sitio_web" target="_blank"
+                class="form-control text-primary rounded text-center bg-white">{{configuracion.sitio_web}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8 col-lg-8">
+      <div class="card profile-card card-bx m-b30">
+        <form [formGroup]="configuracionForm" class="profile-form">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <h6>General</h6>
+              </div>
+              <hr>
+              <div class="col-sm-6 m-b30">
+                <label class="form-label">Nombre</label>
+                <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+              </div>
+              <div class="col-sm-6 m-b30">
+                <label class="form-label">Correo</label>
+                <input formControlName="correo" type="text" class="form-control" placeholder="Correo">
+              </div>
+              <div class="col-sm-3 m-b30">
+                <label class="form-label">Telefono</label>
+                <input formControlName="telefono" type="text" class="form-control" placeholder="Telefono">
+              </div>
+              <div class="col-sm-3 m-b30">
+                <label class="form-label">Sitio Web</label>
+                <input formControlName="sitio_web" type="url" class="form-control" placeholder="Sitio Web">
+              </div>
+              <div class="col-sm-6 m-b30">
+                <label class="form-label">Direccion</label>
+                <input formControlName="direccion" type="text" class="form-control" placeholder="Direccion">
+              </div>
+              <div class="col-sm-12">
+                <h6>Calculos</h6>
+              </div>
+              <hr>
+              <div class="col-sm-3 m-b30">
+                <label class="form-label">Porcentaje Interes</label>
+                <input formControlName="porcentaje_interes" type="url" class="form-control" placeholder="Porcentaje Interes">
+              </div>
+              <div class="col-sm-3 m-b30">
+                <label class="form-label">Porcentaje IVA</label>
+                <input formControlName="porcentaje_iva" type="url" class="form-control" placeholder="Porcentaje IVA">
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button (click)="putCongifuracion()" class="btn btn-primary">Actualizar</button>
+            <!-- <a href="page-register.html" class="btn-link">Forgot your password?</a> -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

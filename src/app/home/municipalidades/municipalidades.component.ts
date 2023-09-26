@@ -37,13 +37,13 @@ export class MunicipalidadesComponent {
 
   departamento: any;
   municipio: any;
-  plazo_meses: any;
+  plazo_meses: any = 12;
 
   filtros: any = {
     mes_inicio: moment().startOf('year').format('YYYY-MM'),
     mes_fin: moment().endOf('year').format('YYYY-MM'),
-    codigo_departamento: '',
-    codigo_municipio: ''
+    codigo_departamento: '05',
+    codigo_municipio: '07'
   }
 
   constructor(
@@ -75,6 +75,8 @@ export class MunicipalidadesComponent {
     await this.getDepartamentos();
     await this.getBancos();
     this.ngxService.stop();
+
+    await this.getMunicipalidades();
   }
 
   async getMunicipalidades() {
