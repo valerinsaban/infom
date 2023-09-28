@@ -11,6 +11,8 @@ import { FuncionariosService } from 'src/app/services/funcionarios.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import Swal from 'sweetalert2';
 import { HomeComponent } from '../home.component';
+import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
+import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 
 @Component({
   selector: 'app-funcionarios',
@@ -25,14 +27,18 @@ export class FuncionariosComponent {
 
   file: any;
 
-  municipalidades: any = [];
+  departamentos: any = [];
+  municipios: any = [];
   puestos: any = [];
   profesiones: any = [];
   estados_civiles: any = [];
 
   municipalidad: any;
 
-  imagen_carnet: any;
+  filtros: any = {
+    codigo_departamento: null,
+    codigo_municipio: null
+  }
 
   constructor(
     private alert: AlertService,
@@ -41,7 +47,9 @@ export class FuncionariosComponent {
     private municipalidadesService: MunicipalidadesService,
     private puestosService: PuestosService,
     private profesionesService: ProfesionesService,
-    private estados_civilesService: EstadosCivilesService
+    private estados_civilesService: EstadosCivilesService,
+    private departamentosService: DepartamentosService,
+    private municipiosService: MunicipiosService
   ) {
     this.funcionarioForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
@@ -68,24 +76,60 @@ export class FuncionariosComponent {
   async ngOnInit() {
     this.ngxService.start();
     await this.getFuncionarios();
-    await this.getMunicipalidades();
     await this.getProfesiones();
     await this.getPuestos();
     await this.getEstadosCiviles();
+    await this.getDepartamentos();
     this.ngxService.stop();
+  }
+
+  async getDepartamentos() {
+    let departamentos = await this.departamentosService.getDepartamentos();
+    if (departamentos) {
+      this.departamentos = departamentos;
+    }
+  }
+
+  async setDepartamento(event: any) {
+    for (let d = 0; d < this.departamentos.length; d++) {
+      if (event.target.value == this.departamentos[d].id) {
+        this.filtros.codigo_departamento = this.departamentos[d].codigo;
+        this.filtros.codigo_municipio = '';
+      }
+    }
+    let municipios = await this.municipiosService.getMunicipioByDepartamento(event.target.value);
+    if (municipios) {
+      this.municipios = municipios;
+    }
+  }
+
+  async setMunicipio(event: any = null) {
+    if (event) {
+      for (let m = 0; m < this.municipios.length; m++) {
+        if (event.target.value == this.municipios[m].id) {
+          this.filtros.codigo_municipio = this.municipios[m].codigo;
+          let municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+          if (municipalidad) {
+            this.funcionarioForm.controls['id_municipalidad'].setValue(municipalidad.id);
+            this.municipalidad = municipalidad;
+            this.filtros.id_municipalidad = municipalidad.id;
+          }
+        }
+      }
+    } else {
+      let municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+      if (municipalidad) {
+        this.funcionarioForm.controls['id_municipalidad'].setValue(municipalidad.id);
+        this.municipalidad = municipalidad;
+        this.filtros.id_municipalidad = municipalidad.id;
+      }
+    }
   }
 
   async getFuncionarios() {
     let funcionarios = await this.funcionariosService.getFuncionarios();
     if (funcionarios) {
       this.funcionarios = funcionarios;
-    }
-  }
-
-  async getMunicipalidades() {
-    let municipalidades = await this.municipalidadesService.getMunicipalidades();
-    if (municipalidades) {
-      this.municipalidades = municipalidades;
     }
   }
 
@@ -200,6 +244,10 @@ export class FuncionariosComponent {
     this.funcionarioForm.controls['id_puesto'].setValue(i.id_puesto);
     this.funcionarioForm.controls['id_profesion'].setValue(i.id_profesion);
     this.funcionarioForm.controls['id_estado_civil'].setValue(i.id_estado_civil);
+
+    this.municipalidad = i.municipalidad;
+    this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
+    this.filtros.codigo_municipio = i.municipalidad.municipio.codigo;
   }
 
   limpiar() {

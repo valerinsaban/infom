@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { RootService } from './root.service';
 import * as moment from 'moment';
+import { ConfiguracionesService } from './configuraciones.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrestamosService {
 
-  constructor(private rootService: RootService) {
+  configuracion: any = sessionStorage.getItem('configuracion');
+
+  constructor(
+    private rootService: RootService,
+    private configuracionesService: ConfiguracionesService
+    ) {
   }
 
   route = '/prestamos';
@@ -36,7 +42,7 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  getProyeccion(monto_total: number, plazo_meses: number, intereses: number, fecha: string, amortizaciones: any): Promise<any> {
+  getProyeccion(monto_total: number, plazo_meses: number, intereses: number, fecha: string, porcentaje_iva: number, amortizaciones: any): Promise<any> {
     let cant_amor = amortizaciones.length;
     let saldo_actual = monto_total;
 
@@ -53,15 +59,15 @@ export class PrestamosService {
     }
     
     for (let p = 0; p < (plazo_meses - cant_amor); p++) {
-      let fecha_inicio = moment(fecha_i).add(p + 1, 'month').format('YYYY-MM-DD');
-      let fecha_fin = moment(fecha_f).add(p + 1, 'month').endOf('month').format('YYYY-MM-DD');
+      let fecha_inicio = moment(fecha_i).add(p, 'month').format('YYYY-MM-DD');
+      let fecha_fin = moment(fecha_f).add(p, 'month').endOf('month').format('YYYY-MM-DD');
       if (p > 0) {
-        fecha_inicio = moment(fecha_i).add(p + 1, 'month').startOf('month').format('YYYY-MM-DD');
+        fecha_inicio = moment(fecha_i).add(p, 'month').startOf('month').format('YYYY-MM-DD');
       }
       let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days', true) + 1;
       let capital = monto_total / plazo_meses;
       let interes = (saldo_actual * (intereses / 100) / 365) * dias;
-      let iva = interes * 0.12;
+      let iva = interes * porcentaje_iva / 100;
       let cuota = capital + interes + iva;
       let saldo = saldo_actual - capital;
       saldo_actual = saldo;

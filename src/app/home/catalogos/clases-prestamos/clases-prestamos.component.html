@@ -1,0 +1,107 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Clases Prestamos</h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Clases Prestamos</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-3 col-xxl-4">
+      <div class="card h-auto">
+        <div class="card-header">
+          <h4 *ngIf="!clase_prestamo" class="heading mb-0">Agregar Clase Prestamo</h4>
+          <h4 *ngIf="clase_prestamo" class="heading mb-0">Editar Clase Prestamo</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="clase_prestamoForm" class="finance-hr">
+            <div class="form-group mb-3">
+              <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
+              </label>
+              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+              </label>
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Monto Min <span class="text-danger">*</span>
+              </label>
+              <input formControlName="monto_min" type="number" class="form-control" placeholder="Monto Min">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Monto Max <span class="text-danger">*</span>
+              </label>
+              <input formControlName="monto_max" type="number" class="form-control" placeholder="Monto Max">
+            </div>
+            <div *ngIf="!clase_prestamo">
+              <button (click)="postClasePrestamo()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': clase_prestamoForm.invalid}">
+                Guardar
+              </button>
+            </div>
+            <div *ngIf="clase_prestamo">
+              <button (click)="putClasePrestamo()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': clase_prestamoForm.invalid}">
+                Guardar
+              </button>
+              <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-9 col-xxl-8">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="table-responsive active-projects manage-client">
+            <div class="tbl-caption">
+              <h4 class="heading mb-0">Clases Prestamos</h4>
+            </div>
+            <table id="empoloyees-tbl1" class="table">
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Nombre</th>
+                  <th>Monto Min</th>
+                  <th>Monto Max</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let d of clases_prestamos; let dindex = index">
+                  <td><a class="text-primary">{{d.codigo}}</a></td>
+                  <td>{{d.nombre}}</td>
+                  <td>{{d.monto_min | number: '.2-2'}}</td>
+                  <td>{{d.monto_max | number: '.2-2'}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-list"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" (click)="setClasePrestamo(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="setClasePrestamo(d, dindex)" data-bs-toggle="offcanvas"
+                          href="#garantias">Garantias</a>
+                        <a class="dropdown-item" (click)="deleteClasePrestamo(d, dindex)">Eliminar</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

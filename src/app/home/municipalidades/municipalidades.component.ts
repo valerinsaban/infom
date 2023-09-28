@@ -17,6 +17,11 @@ import { PrestamosService } from 'src/app/services/prestamos.service';
 import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
 import { DecimalPipe } from '@angular/common';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
+import { FuncionariosService } from 'src/app/services/funcionarios.service';
+import { PuestosService } from 'src/app/services/catalogos/puestos.service';
+import { ProfesionesService } from 'src/app/services/catalogos/profesiones.service';
+import { EstadosCivilesService } from 'src/app/services/catalogos/estados-civiles.service';
+import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 
 @Component({
   selector: 'app-municipalidades',
@@ -26,17 +31,24 @@ import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 export class MunicipalidadesComponent {
 
   municipalidadForm: FormGroup;
+  funcionarioForm: FormGroup;
   municipalidades: any = [];
   municipalidad: any;
+  configuracion: any;
 
   departamentos: any = [];
   municipios: any = [];
+  funcionarios: any = [];
+  puestos: any = [];
+  profesiones: any = [];
+  estados_civiles: any = [];
   bancos: any = [];
   garantias: any = [];
   disponibilidad: any = [];
 
   departamento: any;
   municipio: any;
+  funcionario: any;
   plazo_meses: any = 12;
 
   filtros: any = {
@@ -57,7 +69,12 @@ export class MunicipalidadesComponent {
     private garantiasService: GarantiasService,
     private prestamosService: PrestamosService,
     private prestamos_garantiasService: PrestamosGarantiasService,
-    private amortizacionesService: AmortizacionesService
+    private amortizacionesService: AmortizacionesService,
+    private funcionariosService: FuncionariosService,
+    private puestosService: PuestosService,
+    private profesionesService: ProfesionesService,
+    private estados_civilesService: EstadosCivilesService,
+    private configuracionesService: ConfiguracionesService
   ) {
     this.municipalidadForm = new FormGroup({
       direccion: new FormControl(null),
@@ -68,15 +85,43 @@ export class MunicipalidadesComponent {
       id_municipio: new FormControl(null, [Validators.required]),
       id_banco: new FormControl(null, [Validators.required])
     });
+    this.funcionarioForm = new FormGroup({
+      codigo: new FormControl(null, [Validators.required]),
+      nombre: new FormControl(null, [Validators.required]),
+      apellido: new FormControl(null, [Validators.required]),
+      fecha_nacimiento: new FormControl(null, [Validators.required]),
+      dpi: new FormControl(null, [Validators.required]),
+      carnet: new FormControl(null, [Validators.required]),
+      fecha_carnet: new FormControl(null, [Validators.required]),
+      acta_toma_posecion: new FormControl(null, [Validators.required]),
+      fecha_acta_toma_posecion: new FormControl(null, [Validators.required]),
+      estado: new FormControl(null, [Validators.required]),
+      imagen_carnet: new FormControl(null),
+      imagen_acta_toma_posecion: new FormControl(null),
+      imagen_fotografia: new FormControl(null),
+      imagen_firma: new FormControl(null),
+      id_municipalidad: new FormControl(null, [Validators.required]),
+      id_puesto: new FormControl(null, [Validators.required]),
+      id_profesion: new FormControl(null, [Validators.required]),
+      id_estado_civil: new FormControl(null, [Validators.required])
+    });
   }
 
   async ngOnInit() {
     this.ngxService.start();
     await this.getDepartamentos();
     await this.getBancos();
+    await this.getConfiguraciones();
     this.ngxService.stop();
 
     await this.getMunicipalidades();
+  }
+
+  async getConfiguraciones() {
+    let configuraciones = await this.configuracionesService.getConfiguraciones();
+    if (configuraciones) {
+      this.configuracion = configuraciones[0];
+    }
   }
 
   async getMunicipalidades() {
@@ -115,6 +160,34 @@ export class MunicipalidadesComponent {
     let bancos = await this.bancosService.getBancos();
     if (bancos) {
       this.bancos = bancos;
+    }
+  }
+
+  async getFuncionarios() {
+    let funcionarios = await this.funcionariosService.getFuncionarios();
+    if (funcionarios) {
+      this.funcionarios = funcionarios;
+    }
+  }
+
+  async getPuestos() {
+    let puestos = await this.puestosService.getPuestos();
+    if (puestos) {
+      this.puestos = puestos;
+    }
+  }
+
+  async getProfesiones() {
+    let profesiones = await this.profesionesService.getProfesiones();
+    if (profesiones) {
+      this.profesiones = profesiones;
+    }
+  }
+
+  async getEstadosCiviles() {
+    let estados_civiles = await this.estados_civilesService.getEstadosCiviles();
+    if (estados_civiles) {
+      this.estados_civiles = estados_civiles;
     }
   }
 
@@ -191,6 +264,102 @@ export class MunicipalidadesComponent {
     this.municipalidadForm.controls['id_departamento'].setValue(i.id_departamento);
     this.municipalidadForm.controls['id_municipio'].setValue(i.id_municipio);
     this.municipalidadForm.controls['id_banco'].setValue(i.id_banco);
+
+    this.getFuncionarios();
+  }
+
+  async postFuncionario() {
+    if (!HomeComponent.getPermiso('Agregar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
+    let funcionario = await this.funcionariosService.postFuncionario(this.funcionarioForm.value);
+    if (funcionario.resultado) {
+      await this.getFuncionarios();
+      this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
+      this.limpiar();
+    }
+    this.ngxService.stop();
+  }
+
+  async putFuncionario() {
+    if (!HomeComponent.getPermiso('Editar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    this.ngxService.start();
+    let funcionario = await this.funcionariosService.putFuncionario(this.funcionario.id, this.funcionarioForm.value);
+    if (funcionario.resultado) {
+      await this.getFuncionarios();
+      this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
+      this.limpiar();
+    }
+    this.ngxService.stop();
+  }
+
+  async deleteFuncionario(i: any, index: number) {
+    if (!HomeComponent.getPermiso('Eliminar')) {
+      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      return;
+    }
+    Swal.fire({
+      title: '¿Estas seguro?',
+      text: "Esta accion no se puede revertir!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Eliminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.ngxService.start();
+        let funcionario = await this.funcionariosService.deleteFuncionario(i.id);
+        if (funcionario.resultado) {
+          this.funcionarios.splice(index, 1);
+          this.alert.alertMax('Correcto', funcionario.mensaje, 'success');
+          this.limpiar();
+        }
+        this.ngxService.stop();
+      }
+    })
+  }
+
+  setFuncionario(i: any, index: number) {
+    i.index = index;
+    this.funcionario = i;
+    this.funcionarioForm.controls['codigo'].setValue(i.codigo);
+    this.funcionarioForm.controls['nombre'].setValue(i.nombre);
+    this.funcionarioForm.controls['apellido'].setValue(i.apellido);
+    this.funcionarioForm.controls['fecha_nacimiento'].setValue(moment.utc(i.fecha_nacimiento).format('YYYY-MM-DD'));
+    this.funcionarioForm.controls['dpi'].setValue(i.dpi);
+    this.funcionarioForm.controls['carnet'].setValue(i.carnet);
+    this.funcionarioForm.controls['fecha_carnet'].setValue(moment.utc(i.fecha_carnet).format('YYYY-MM-DD'));
+    this.funcionarioForm.controls['acta_toma_posecion'].setValue(i.acta_toma_posecion);
+    this.funcionarioForm.controls['fecha_acta_toma_posecion'].setValue(moment.utc(i.fecha_acta_toma_posecion).format('YYYY-MM-DD'));
+    this.funcionarioForm.controls['estado'].setValue(i.estado);
+    this.funcionarioForm.controls['imagen_carnet'].setValue(i.imagen_carnet);
+    this.funcionarioForm.controls['imagen_acta_toma_posecion'].setValue(i.imagen_acta_toma_posecion);
+    this.funcionarioForm.controls['imagen_fotografia'].setValue(i.imagen_fotografia);
+    this.funcionarioForm.controls['imagen_firma'].setValue(i.imagen_firma);
+    this.funcionarioForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
+    this.funcionarioForm.controls['id_puesto'].setValue(i.id_puesto);
+    this.funcionarioForm.controls['id_profesion'].setValue(i.id_profesion);
+    this.funcionarioForm.controls['id_estado_civil'].setValue(i.id_estado_civil);
+
+    this.municipalidad = i.municipalidad;
+    this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
+    this.filtros.codigo_municipio = i.municipalidad.municipio.codigo;
+  }
+
+  setImage(event: any, imagen: any) {
+    const file = event.target.files[0];
+    const reader: any = new FileReader();
+    reader.onload = () => {
+      this.funcionarioForm.controls[`${imagen}`].setValue(reader.result);
+    };
+    reader.readAsDataURL(file);
   }
 
   async getDisponibilidad() {
@@ -236,12 +405,13 @@ export class MunicipalidadesComponent {
               amortizaciones[a].saldo = amortizaciones[a].saldo * prestamos[p].prestamos_garantias[pg].porcentaje / 100;
             }
 
+            let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
             let monto_total = parseFloat(prestamos[p].prestamos_garantias[pg].monto);
             let plazo_meses = parseFloat(prestamos[p].plazo_meses);
             let intereses = parseFloat(prestamos[p].intereses);
             let fecha = prestamos[p].fecha;
 
-            amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, amortizaciones)
+            amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva, amortizaciones)
 
             this.garantias[g].prestamos.push({
               no_dictamen: prestamos[p].no_dictamen,

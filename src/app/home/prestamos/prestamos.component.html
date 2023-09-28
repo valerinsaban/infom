@@ -195,7 +195,7 @@
 
 <div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-prestamo">
   <div class="offcanvas-header">
-    <h5 class="modal-title">Agregar Prestamo</h5>
+    <h5 class="modal-title">Creacion de Prestamo</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
       <i class="fa-solid fa-xmark"></i>
     </button>
@@ -229,35 +229,22 @@
                     </button>
                   </div>
                 </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Regional<span class="text-danger">*</span></label>
-                  <select formControlName="id_regional" class="form-control">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of regionales" [value]="i.id">{{i.nombre}}</option>
-                  </select>
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Funcionario<span class="text-danger">*</span></label>
-                  <select formControlName="id_funcionario" class="form-control">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of funcionarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
-                  </select>
+                <div class="col-xl-6 mb-3">
+                  <div class="row">
+                    <div class="col-4 pt-3 pb-3 border-end">
+                      <h3 class="mb-1">{{prestamoForm.controls['no_dictamen'].value}}</h3><span>No. Dictamen</span>
+                    </div>
+                    <div class="col-4 pt-3 pb-3 border-end">
+                      <h3 class="mb-1">{{prestamoForm.controls['no_convenio'].value}}</h3><span>No. Convenio</span>
+                    </div>
+                    <div class="col-4 pt-3 pb-3">
+                      <h3 class="mb-1">{{prestamoForm.controls['no_prestamo'].value}}</h3><span>No. Prestamo</span>
+                    </div>
+                  </div>
                 </div>
                 <hr>
               </div>
               <div class="row">
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Dictamen
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_dictamen" class="form-control" placeholder="No. Dictamen">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Pagare
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_pagare" class="form-control" placeholder="No. Pagare">
-                </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Acta
                     <span class="text-danger">*</span>
@@ -271,22 +258,16 @@
                   <input formControlName="punto" type="text" class="form-control" placeholder="Punto">
                 </div>
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Vencimiento
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_vencimiento" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3">
                   <label class="form-label">Fecha Acta
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha_acta" type="date" class="form-control">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Certficacion
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="certficacion" type="date" class="form-control">
                 </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Fecha Memorial
@@ -299,25 +280,36 @@
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="periodo_gracia" type="number" class="form-control"
-                    placeholder="Periodo Gracia">
+                    placeholder="Periodo Gracia" (input)="getProyeccion2()">
                 </div>
+              </div>
+              <hr>
+              <div class="row">
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Certficacion
+                  <label class="form-label">No. Oficio A.J.
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="certficacion" type="text" class="form-control" placeholder="Certficacion">
+                  <input formControlName="no_oficio_aj" type="number" class="form-control"
+                    placeholder="NO. Oficio A.J.">
                 </div>
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Oficio A.J.
+                  <label class="form-label">Fecha Oficio A.J.
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="oficioaj" type="date" class="form-control">
+                  <input formControlName="fecha_oficio_aj" type="date" class="form-control">
                 </div>
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Oficio A.J. #
+                  <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="oficioaj2" type="text" class="form-control" placeholder="Oficio A.J. #">
+                  <input formControlName="no_oficio_ger" type="number" class="form-control"
+                    placeholder="NO. Oficio A.J.">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Oficio GER
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_oficio_ger" type="date" class="form-control">
                 </div>
                 <div class="col-xl-12 mb-3">
                   <label class="form-label">Destino Prestamo
@@ -327,7 +319,7 @@
                 </div>
               </div>
               <div>
-                <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1"
+                <button  class="btn btn-primary me-1"
                   (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Guardar
                 </button>
@@ -346,7 +338,13 @@
               </div>
               <br>
               <div class="row">
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Fecha
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
+                </div>
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
                   <select (change)="getTiposPrestamosGarantias($event)" formControlName="id_tipo_prestamo"
                     class="form-control">
@@ -354,26 +352,33 @@
                     <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
                   </select>
                 </div>
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
+                  <select formControlName="id_clase_prestamo" class="form-control disabled">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
+                  </select>
+                </div>
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Fecha Amortizacion
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha_amortizacion" type="date" class="form-control"
                     (input)="getProyeccion2()">
                 </div>
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Plazo Meses
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="plazo_meses" type="number" class="form-control" placeholder="Plazo Meses"
                     (input)="getProyeccion2()">
                 </div>
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Intereses %
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses %"
-                    (input)="getProyeccion2()">
+                  <input formControlName="intereses" type="number" class="form-control disabled"
+                    placeholder="Intereses %">
                 </div>
                 <div class="col-xl-12 mb-3">
                   <div class="table-responsive active-projects manage-client">
@@ -499,35 +504,22 @@
                     </button>
                   </div>
                 </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Regional<span class="text-danger">*</span></label>
-                  <select formControlName="id_regional" class="form-control">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of regionales" [value]="i.id">{{i.nombre}}</option>
-                  </select>
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Funcionario<span class="text-danger">*</span></label>
-                  <select formControlName="id_funcionario" class="form-control">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of funcionarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
-                  </select>
+                <div class="col-xl-6 mb-3">
+                  <div class="row">
+                    <div class="col-4 pt-3 pb-3 border-end">
+                      <h3 class="mb-1">{{prestamoForm.controls['no_dictamen'].value}}</h3><span>No. Dictamen</span>
+                    </div>
+                    <div class="col-4 pt-3 pb-3 border-end">
+                      <h3 class="mb-1">{{prestamoForm.controls['no_convenio'].value}}</h3><span>No. Convenio</span>
+                    </div>
+                    <div class="col-4 pt-3 pb-3">
+                      <h3 class="mb-1">{{prestamoForm.controls['no_prestamo'].value}}</h3><span>No. Prestamo</span>
+                    </div>
+                  </div>
                 </div>
                 <hr>
               </div>
               <div class="row">
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Dictamen
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_dictamen" class="form-control" placeholder="No. Dictamen">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Pagare
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_pagare" class="form-control" placeholder="No. Pagare">
-                </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Acta
                     <span class="text-danger">*</span>
@@ -541,22 +533,16 @@
                   <input formControlName="punto" type="text" class="form-control" placeholder="Punto">
                 </div>
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Vencimiento
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_vencimiento" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3">
                   <label class="form-label">Fecha Acta
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha_acta" type="date" class="form-control">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Certficacion
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="certficacion" type="date" class="form-control">
                 </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Fecha Memorial
@@ -569,25 +555,36 @@
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="periodo_gracia" type="number" class="form-control"
-                    placeholder="Periodo Gracia">
+                    placeholder="Periodo Gracia"  (input)="getProyeccion2()">
                 </div>
+              </div>
+              <hr>
+              <div class="row">
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Certficacion
+                  <label class="form-label">No. Oficio A.J.
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="certficacion" type="text" class="form-control" placeholder="Certficacion">
+                  <input formControlName="no_oficio_aj" type="number" class="form-control"
+                    placeholder="NO. Oficio A.J.">
                 </div>
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Oficio A.J.
+                  <label class="form-label">Fecha Oficio A.J.
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="oficioaj" type="date" class="form-control">
+                  <input formControlName="fecha_oficio_aj" type="date" class="form-control">
                 </div>
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Oficio A.J. #
+                  <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="oficioaj2" type="text" class="form-control" placeholder="Oficio A.J. #">
+                  <input formControlName="no_oficio_ger" type="number" class="form-control"
+                    placeholder="NO. Oficio A.J.">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Oficio GER
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_oficio_ger" type="date" class="form-control">
                 </div>
                 <div class="col-xl-12 mb-3">
                   <label class="form-label">Destino Prestamo
@@ -597,7 +594,7 @@
                 </div>
               </div>
               <div>
-                <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1"
+                <button  class="btn btn-primary me-1"
                   (click)="putPrestamo()" data-bs-dismiss="offcanvas" type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Guardar
                 </button>
@@ -616,33 +613,47 @@
               </div>
               <br>
               <div class="row">
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Fecha
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
+                </div>
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
-                  <select formControlName="id_tipo_prestamo" class="form-control">
+                  <select (change)="getTiposPrestamosGarantias($event)" formControlName="id_tipo_prestamo"
+                    class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
                     <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
                   </select>
                 </div>
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
+                  <select formControlName="id_clase_prestamo" class="form-control disabled">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
+                  </select>
+                </div>
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Fecha Amortizacion
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha_amortizacion" type="date" class="form-control"
                     (input)="getProyeccion2()">
                 </div>
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Plazo Meses
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="plazo_meses" type="number" class="form-control" placeholder="Plazo Meses"
                     (input)="getProyeccion2()">
                 </div>
-                <div class="col-xl-6 mb-3">
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Intereses %
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="intereses" type="number" class="form-control" placeholder="Intereses %"
-                    (input)="getProyeccion2()">
+                  <input formControlName="intereses" type="number" class="form-control disabled"
+                    placeholder="Intereses %">
                 </div>
                 <div class="col-xl-12 mb-3">
                   <div class="table-responsive active-projects manage-client">
@@ -753,7 +764,6 @@
           <div class="col-xl-12 mb-3">
             <label class="form-label">Estado<span class="text-danger">*</span></label>
             <select formControlName="estado" class="form-control">
-              <option value="null">--- Seleccione un registro ---</option>
               <option value="Pendiente">Pendiente</option>
               <option value="Aprobado">Aprobado</option>
               <option value="Acreditado">Acreditado</option>
@@ -765,7 +775,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
-        <button [ngClass]="{'disabled': prestamoForm.invalid}" class="btn btn-primary me-1" (click)="putPrestamo()"
+        <button class="btn btn-primary me-1" (click)="putPrestamo()"
           data-bs-dismiss="modal" type="button">
           <i class="fa-duotone fa-floppy-disk"></i> Guardar
         </button>

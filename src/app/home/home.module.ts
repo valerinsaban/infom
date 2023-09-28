@@ -31,6 +31,7 @@ import { ReportesComponent } from './reportes/reportes.component';
 import * as moment from 'moment';
 import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
 import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
+import { ClasesPrestamosComponent } from './catalogos/clases-prestamos/clases-prestamos.component';
 
 moment.locale('es');
 
@@ -60,6 +61,7 @@ const routes: Routes = [
       { path: 'generos', component: GenerosComponent},
       { path: 'garantias', component: GarantiasComponent},
       { path: 'tipos-prestamos', component: TiposPrestamosComponent},
+      { path: 'clases-prestamos', component: ClasesPrestamosComponent},
       { path: 'profesiones', component: ProfesionesComponent},
       { path: 'bancos', component: BancosComponent},
 
@@ -102,6 +104,7 @@ const routes: Routes = [
     ReportesComponent,
     TiposPrestamosComponent,
     ConfiguracionesComponent,
+    ClasesPrestamosComponent,
   ],
   imports: [
     CommonModule,

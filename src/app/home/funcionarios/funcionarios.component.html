@@ -153,13 +153,27 @@
                   <option value="Inactivo">Inactivo</option>
                 </select>
               </div>
-              <div class="col-xl-6 mb-3">
-                <label class="form-label">Municipalidad<span class="text-danger">*</span></label>
-                <select formControlName="id_municipalidad" class="form-control">
-                  <option value="null">--- Seleccione un registro ---</option>
-                  <option *ngFor="let i of municipalidades" [value]="i.id">{{i.departamento.nombre}} /
-                    {{i.municipio.nombre}}</option>
-                </select>
+              <div class="col-xl-3 mb-3">
+                <label class="form-label">Departamento
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control">
+                </div>
+              </div>
+              <div class="col-xl-3 mb-3">
+                <label class="form-label">Municipio
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control" (input)="setMunicipio()">
+                  <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                    data-bs-target="#municipalidades">
+                    <i class="fad fa-search"></i>
+                  </button>
+                </div>
               </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Puesto<span class="text-danger">*</span></label>
@@ -185,6 +199,9 @@
             </div>
           </div>
           <div class="col-xl-6 mb-3">
+            <div class="row" *ngIf="municipalidad">
+              <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
+            </div>
             <div class="row">
               <div class="col-xl-4 mb-3">
                 <label class="form-label">Imagen Carnet
@@ -344,13 +361,27 @@
                   <option value="Inactivo">Inactivo</option>
                 </select>
               </div>
-              <div class="col-xl-6 mb-3">
-                <label class="form-label">Municipalidad<span class="text-danger">*</span></label>
-                <select formControlName="id_municipalidad" class="form-control">
-                  <option value="null">--- Seleccione un registro ---</option>
-                  <option *ngFor="let i of municipalidades" [value]="i.id">{{i.departamento.nombre}} /
-                    {{i.municipio.nombre}}</option>
-                </select>
+              <div class="col-xl-3 mb-3">
+                <label class="form-label">Departamento
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control">
+                </div>
+              </div>
+              <div class="col-xl-3 mb-3">
+                <label class="form-label">Municipio
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control" (input)="setMunicipio()">
+                  <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                    data-bs-target="#municipalidades">
+                    <i class="fad fa-search"></i>
+                  </button>
+                </div>
               </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Puesto<span class="text-danger">*</span></label>
@@ -376,6 +407,9 @@
             </div>
           </div>
           <div class="col-xl-6 mb-3">
+            <div class="row" *ngIf="municipalidad">
+              <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
+            </div>
             <div class="row">
               <div class="col-xl-4 mb-3">
                 <label class="form-label">Imagen Carnet
@@ -456,6 +490,35 @@
           </div>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="municipalidades" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Busqueda de Municipalidades</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Departamento<span class="text-danger">*</span></label>
+            <select class="form-control" (change)="setDepartamento($event)">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let d of departamentos" [value]="d.id">{{d.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Municipio<span class="text-danger">*</span></label>
+            <select class="form-control" (change)="setMunicipio($event)">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let m of municipios" [value]="m.id">{{m.nombre}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

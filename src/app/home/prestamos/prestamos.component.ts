@@ -18,6 +18,8 @@ import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamo
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { TiposPrestamosGarantiasService } from 'src/app/services/catalogos/tipos-prestamos-garantias.service';
+import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
+import { ClasesPrestamosService } from 'src/app/services/catalogos/clases-prestamos.service';
 
 @Component({
   selector: 'app-prestamos',
@@ -33,10 +35,12 @@ export class PrestamosComponent {
   prestamo: any;
   municipalidad: any;
   prestamos_garantias: any = [];
+  configuracion: any;
 
   file: any;
   reales: number = 0;
 
+  clases_prestamos: any = [];
   tipos_prestamos: any = [];
   tipos_prestamos_garantias: any = [];
   garantias: any = [];
@@ -75,6 +79,7 @@ export class PrestamosComponent {
     private departamentosService: DepartamentosService,
     private municipiosService: MunicipiosService,
     private prestamosService: PrestamosService,
+    private clases_prestamosService: ClasesPrestamosService,
     private tipos_prestamosService: TiposPrestamosService,
     private tipos_prestamos_garantiasService: TiposPrestamosGarantiasService,
     private garantiasService: GarantiasService,
@@ -83,28 +88,32 @@ export class PrestamosComponent {
     private regionalesService: RegionalesService,
     private usuariosService: UsuariosService,
     private amortizacionesService: AmortizacionesService,
-    private prestamos_garantiasService: PrestamosGarantiasService
+    private prestamos_garantiasService: PrestamosGarantiasService,
+    private configuracionesService: ConfiguracionesService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null, [Validators.required]),
-      no_pagare: new FormControl(null, [Validators.required]),
+      no_convenio: new FormControl(null, [Validators.required]),
+      no_prestamo: new FormControl(null, [Validators.required]),
       fecha: new FormControl(moment.utc().format('YYYY-MM-DD'), [Validators.required]),
-      fecha_vencimiento: new FormControl(null, [Validators.required]),
       fecha_amortizacion: new FormControl(null, [Validators.required]),
       monto: new FormControl(0, [Validators.required]),
       plazo_meses: new FormControl(null, [Validators.required]),
       fecha_acta: new FormControl(null),
       intereses: new FormControl(null),
-      periodo_gracia: new FormControl(null),
+      periodo_gracia: new FormControl(0),
       destino_prestamo: new FormControl(null),
       acta: new FormControl(null),
       punto: new FormControl(null),
       fecha_memorial: new FormControl(null),
       certficacion: new FormControl(null),
-      oficioaj: new FormControl(null),
-      oficioaj2: new FormControl(null),
+      no_oficio_aj: new FormControl(null),
+      fecha_oficio_aj: new FormControl(null),
+      no_oficio_ger: new FormControl(null),
+      fecha_oficio_ger: new FormControl(null),
       estado: new FormControl(null, [Validators.required]),
       id_tipo_prestamo: new FormControl(null, [Validators.required]),
+      id_clase_prestamo: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
       id_regional: new FormControl(null, [Validators.required]),
@@ -125,28 +134,28 @@ export class PrestamosComponent {
 
   async ngOnInit() {
     this.ngxService.start();
+    await this.getConfiguraciones();
     await this.getPrestamos();
     await this.getCountPrestamos();
-    this.getDepartamentos();
-    this.getTiposPrestamos();
-    this.getGarantias();
-    this.getRegionales();
-    this.getFuncionarios();
-    this.getUsuarios();
+    await this.getFuncionarios();
+    await this.getRegionales();
+    await this.getDepartamentos();
+    await this.getTiposPrestamos();
+    await this.getClasesPrestamos();
+    await this.getGarantias();
+    await this.getUsuarios();
     this.ngxService.stop();
     AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
     AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
     AppComponent.loadScript('assets/js/range.js');
   }
 
-  // async getPrestamos() {
-  //   this.ngxService.startBackground();
-  //   let prestamos = await this.prestamosService.getPrestamos(this.fecha_inicio, this.fecha_fin);
-  //   if (prestamos) {
-  //     this.prestamos = prestamos;
-  //   }
-  //   this.ngxService.stopBackground();
-  // }
+  async getConfiguraciones() {
+    let configuraciones = await this.configuracionesService.getConfiguraciones();
+    if (configuraciones) {
+      this.configuracion = configuraciones[0];
+    }
+  }
 
   async getDepartamentos() {
     let departamentos = await this.departamentosService.getDepartamentos();
@@ -180,7 +189,7 @@ export class PrestamosComponent {
             this.filtros.id_municipalidad = municipalidad.id;
           }
         }
-      } 
+      }
     } else {
       let municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
       if (municipalidad) {
@@ -234,6 +243,13 @@ export class PrestamosComponent {
     }
   }
 
+  async getClasesPrestamos() {
+    let clases_prestamos = await this.clases_prestamosService.getClasesPrestamos();
+    if (clases_prestamos) {
+      this.clases_prestamos = clases_prestamos;
+    }
+  }
+
   async getTiposPrestamosGarantias(event: any) {
     let tipos_prestamos_garantias = await this.tipos_prestamos_garantiasService.getTiposPrestamosGarantias(event.target.value);
     if (tipos_prestamos_garantias) {
@@ -263,23 +279,27 @@ export class PrestamosComponent {
     }
   }
 
-  async getProyeccion() {    
+  async getProyeccion() {
+    let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
     let plazo_meses = parseFloat(this.prestamoForm.controls['plazo_meses'].value);
     let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
-    let fecha = this.prestamoForm.controls['fecha_amortizacion'].value;
+    let periodo_gracia = parseFloat(this.prestamoForm.controls['periodo_gracia'].value);
+    let fecha = moment(this.prestamoForm.controls['fecha_amortizacion'].value).add(periodo_gracia, 'month').format('YYYY-MM-DD');
 
-    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, this.amortizaciones);
+    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva, this.amortizaciones);
   }
 
   async getProyeccion2() {
+    let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
     let plazo_meses = parseFloat(this.prestamoForm.controls['plazo_meses'].value);
     let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
-    let fecha = this.prestamoForm.controls['fecha_amortizacion'].value;
+    let periodo_gracia = parseFloat(this.prestamoForm.controls['periodo_gracia'].value);
+    let fecha = moment(this.prestamoForm.controls['fecha_amortizacion'].value).add(periodo_gracia, 'month').format('YYYY-MM-DD');
 
     this.amortizaciones = [];
-    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, []);
+    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva, []);
   }
 
   async getAmortizaciones() {
@@ -309,6 +329,20 @@ export class PrestamosComponent {
     }
     this.prestamoForm.controls['monto'].setValue(total);
 
+    for (let c = 0; c < this.clases_prestamos.length; c++) {
+      let monto_min = parseFloat(this.clases_prestamos[c].monto_min);
+      let monto_max = parseFloat(this.clases_prestamos[c].monto_max);
+      if (monto_max) {
+        if (total >= monto_min && total <= monto_max) {
+          this.prestamoForm.controls['id_clase_prestamo'].setValue(this.clases_prestamos[c].id);
+        }
+      } else {
+        if (total >= monto_min) {
+          this.prestamoForm.controls['id_clase_prestamo'].setValue(this.clases_prestamos[c].id);
+        }
+      }
+    }
+
     await this.getProyeccion2();
   }
 
@@ -323,7 +357,7 @@ export class PrestamosComponent {
         if (this.tipos_prestamos_garantias[g].monto && this.tipos_prestamos_garantias[g].monto > 0) {
 
           let monto = parseFloat(this.tipos_prestamos_garantias[g].monto);
-          
+
           let porcentaje = monto / monto_total * 100;
 
           if (this.tipos_prestamos_garantias[g].monto) {
@@ -332,11 +366,11 @@ export class PrestamosComponent {
               porcentaje: porcentaje,
               id_garantia: this.tipos_prestamos_garantias[g].garantia.id,
               id_prestamo: prestamo.data.id
-            }); 
+            });
           }
 
         }
-      } 
+      }
 
       await this.getPrestamos();
       await this.getCountPrestamos();
@@ -452,9 +486,9 @@ export class PrestamosComponent {
     i.index = index;
     this.prestamo = i;
     this.prestamoForm.controls['no_dictamen'].setValue(i.no_dictamen);
-    this.prestamoForm.controls['no_pagare'].setValue(i.no_pagare);
+    this.prestamoForm.controls['no_convenio'].setValue(i.no_convenio);
+    this.prestamoForm.controls['no_prestamo'].setValue(i.no_prestamo);
     this.prestamoForm.controls['fecha'].setValue(i.fecha ? moment.utc(i.fecha).format('YYYY-MM-DD') : i.fecha);
-    this.prestamoForm.controls['fecha_vencimiento'].setValue(i.fecha_vencimiento ? moment.utc(i.fecha_vencimiento).format('YYYY-MM-DD') : i.fecha_vencimiento);
     this.prestamoForm.controls['fecha_amortizacion'].setValue(i.fecha_amortizacion ? moment.utc(i.fecha_amortizacion).format('YYYY-MM-DD') : i.fecha_amortizacion);
     this.prestamoForm.controls['monto'].setValue(i.monto);
     this.prestamoForm.controls['plazo_meses'].setValue(i.plazo_meses);
@@ -466,8 +500,10 @@ export class PrestamosComponent {
     this.prestamoForm.controls['punto'].setValue(i.punto);
     this.prestamoForm.controls['fecha_memorial'].setValue(i.fecha_memorial ? moment.utc(i.fecha_memorial).format('YYYY-MM-DD') : i.fecha_memorial);
     this.prestamoForm.controls['certficacion'].setValue(i.certficacion);
-    this.prestamoForm.controls['oficioaj'].setValue(i.oficioaj);
-    this.prestamoForm.controls['oficioaj2'].setValue(i.oficioaj2);
+    this.prestamoForm.controls['no_oficio_aj'].setValue(i.no_oficio_aj);
+    this.prestamoForm.controls['fecha_oficio_aj'].setValue(i.fecha_oficio_aj);
+    this.prestamoForm.controls['no_oficio_ger'].setValue(i.no_oficio_ger);
+    this.prestamoForm.controls['fecha_oficio_ger'].setValue(i.fecha_oficio_ger);
     this.prestamoForm.controls['estado'].setValue(i.estado);
     this.prestamoForm.controls['id_tipo_prestamo'].setValue(i.id_tipo_prestamo);
     this.prestamoForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
@@ -479,10 +515,10 @@ export class PrestamosComponent {
 
     this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
 
+    this.municipalidad = i.municipalidad;
     this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
     this.filtros.codigo_municipio = i.municipalidad.municipio.codigo;
-    
-    
+
     await this.getAmortizaciones();
   }
 
@@ -511,14 +547,14 @@ export class PrestamosComponent {
       if (this.amortizacion.index == 0) {
         capital = monto_total / plazo_meses;
         saldo_actual = monto_total;
-      } else {          
+      } else {
         capital = monto_total / plazo_meses;
         // capital = parseFloat(this.amortizaciones[this.amortizacion.index - 1].capital);
         saldo_actual = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo);
       }
-      
+
       let interes = (saldo_actual * (intereses / 100) / 365) * dias;
-      let iva = interes * 0.12;
+      let iva = interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
       let cuota = capital + interes + iva;
       let saldo = saldo_actual - capital;
 
@@ -599,11 +635,21 @@ export class PrestamosComponent {
 
   limpiar() {
     this.prestamoForm.reset();
+    this.prestamoForm.controls['no_dictamen'].setValue(1);
+    this.prestamoForm.controls['no_convenio'].setValue(1);
+    this.prestamoForm.controls['no_prestamo'].setValue(1);
+
     this.prestamoForm.controls['fecha'].setValue(moment.utc().format('YYYY-MM-DD'));
     this.prestamoForm.controls['monto'].setValue(0);
+    this.prestamoForm.controls['intereses'].setValue(this.configuracion.porcentaje_interes);
+    this.prestamoForm.controls['periodo_gracia'].setValue(0);
     this.prestamoForm.controls['estado'].setValue('Pendiente');
-    this.prestamoForm.controls['id_usuario'].setValue(HomeComponent.id_usuario);
-    this.prestamoForm.controls['id_regional'].setValue(this.regionales[0].id);
+    this.prestamoForm.controls['id_usuario'].setValue(HomeComponent.id_usuario);    
+    console.log(this.regionales);
+    
+    this.prestamoForm.controls['id_regional'].setValue(this.regionales[0].id);    
+    this.prestamoForm.controls['id_funcionario'].setValue(this.funcionarios[0].id);    
+
     this.prestamo = null;
     this.filtros.codigo_departamento = null;
     this.filtros.codigo_municipio = null;

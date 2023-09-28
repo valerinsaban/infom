@@ -159,48 +159,531 @@
   </div>
   <div class="offcanvas-body">
     <div class="container-fluid">
-      <form [formGroup]="municipalidadForm">
-        <div class="row">
-          <div class="col-xl-12 mb-3">
-            <label class="form-label">Direccion
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="direccion" class="form-control" placeholder="Direccion">
-          </div>
-          <div class="col-xl-12 mb-3">
-            <label class="form-label">Correo
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="correo" class="form-control" placeholder="Correo">
-          </div>
-          <div class="col-xl-12 mb-3">
-            <label class="form-label">Telefono
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="telefono" class="form-control" placeholder="Telefono">
-          </div>
-          <div class="col-xl-12 mb-3">
-            <label class="form-label">No. Cuenta
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="no_cuenta" class="form-control" placeholder="No. Cuenta">
-          </div>
-          <div class="col-xl-12 mb-3">
-            <label class="form-label">Banco
-              <span class="text-danger">*</span>
-            </label>
-            <select formControlName="id_banco" class="form-control">
-              <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let d of bancos" [value]="d.id">{{d.nombre}}</option>
-            </select>
+      <div class="row">
+        <div class="col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <form [formGroup]="municipalidadForm">
+                <div class="row">
+                  <div class="col-xl-12 mb-3">
+                    <label class="form-label">Direccion
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="direccion" class="form-control" placeholder="Direccion">
+                  </div>
+                  <div class="col-xl-12 mb-3">
+                    <label class="form-label">Correo
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="correo" class="form-control" placeholder="Correo">
+                  </div>
+                  <div class="col-xl-12 mb-3">
+                    <label class="form-label">Telefono
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="telefono" class="form-control" placeholder="Telefono">
+                  </div>
+                  <div class="col-xl-12 mb-3">
+                    <label class="form-label">No. Cuenta
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input formControlName="no_cuenta" class="form-control" placeholder="No. Cuenta">
+                  </div>
+                  <div class="col-xl-12 mb-3">
+                    <label class="form-label">Banco
+                      <span class="text-danger">*</span>
+                    </label>
+                    <select formControlName="id_banco" class="form-control">
+                      <option value="null">--- Seleccione un registro ---</option>
+                      <option *ngFor="let d of bancos" [value]="d.id">{{d.nombre}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <button [ngClass]="{'disabled': municipalidadForm.invalid}" class="btn btn-primary me-1"
+                    (click)="putMunicipalidad()" data-bs-dismiss="offcanvas" type="button">
+                    <i class="fa-duotone fa-floppy-disk"></i> Guardar
+                  </button>
+                  <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-        <div>
-          <button [ngClass]="{'disabled': municipalidadForm.invalid}" class="btn btn-primary me-1"
-            (click)="putMunicipalidad()" data-bs-dismiss="offcanvas" type="button">
-            <i class="fa-duotone fa-floppy-disk"></i> Guardar
-          </button>
-          <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+        <div class="col-xl-9">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects style-1">
+                <div class="tbl-caption">
+                  <h4 class="heading mb-0">Funcionarios</h4>
+                  <div>
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-funcionario"
+                      role="button" (click)="limpiar()">
+                      + Agregar Funcionario
+                    </a>
+                  </div>
+                </div>
+                <table id="empoloyees-tbl" class="table">
+                  <thead>
+                    <tr>
+                      <th>Codigo</th>
+                      <th>Nombre</th>
+                      <th>Apellido</th>
+                      <th>DPI</th>
+                      <th>Fecha Nacimiento</th>
+                      <th>Municipalidad</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let f of funcionarios; let mindex = index">
+                      <td><span class="text-primary">{{f.codigo}}</span></td>
+                      <td>{{f.nombre}}</td>
+                      <td>{{f.apellido}}</td>
+                      <td>{{f.dpi}}</td>
+                      <td>{{f.fecha_nacimiento | date: 'dd/MM/YYYY':'UTC'}}</td>
+                      <td>
+                        <div class="products">
+                          <div>
+                            <h6>{{f.municipalidad.departamento.nombre}}</h6>
+                            <span class="count text-primary">{{f.municipalidad.municipio.nombre}}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setFuncionario(f, mindex)" data-bs-toggle="offcanvas"
+                              href="#editar-funcionario">Editar</a>
+                            <a class="dropdown-item" (click)="deleteFuncionario(f, mindex)">Eliminar</a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-funcionario">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Agregar Funcionario</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <form [formGroup]="funcionarioForm">
+        <div class="row">
+          <div class="col-xl-6 mb-3">
+            <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Codigo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="codigo" class="form-control" placeholder="Codigo">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Nombre
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="nombre" class="form-control" placeholder="Nombre">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Apellido
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="apellido" class="form-control" placeholder="Apellido">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Nacimiento
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_nacimiento" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">DPI
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="dpi" class="form-control" placeholder="DPI" name="dpi" >
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Carnet
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="carnet" class="form-control" placeholder="Carnet">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Carnet
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_carnet" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Acta Toma Posecion
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="acta_toma_posecion" class="form-control" placeholder="Acta Toma Posecion">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Acta Toma Posecion
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_acta_toma_posecion" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Estado<span class="text-danger">*</span></label>
+                <select formControlName="estado" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
+                </select>
+              </div>
+              <!-- <div class="col-xl-3 mb-3">
+                <label class="form-label">Departamento
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control">
+                </div>
+              </div>
+              <div class="col-xl-3 mb-3">
+                <label class="form-label">Municipio
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control" (input)="setMunicipio()">
+                  <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                    data-bs-target="#municipalidades">
+                    <i class="fad fa-search"></i>
+                  </button>
+                </div>
+              </div> -->
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Puesto<span class="text-danger">*</span></label>
+                <select formControlName="id_puesto" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of puestos" [value]="i.id">{{i.nombre}}</option>
+                </select>
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Profesion<span class="text-danger">*</span></label>
+                <select formControlName="id_profesion" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of profesiones" [value]="i.id">{{i.nombre}}</option>
+                </select>
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Estado Civil<span class="text-danger">*</span></label>
+                <select formControlName="id_estado_civil" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of estados_civiles" [value]="i.id">{{i.nombre}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <div class="row" *ngIf="municipalidad">
+              <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
+            </div>
+            <div class="row">
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Carnet
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_carnet'].value ? funcionarioForm.controls['imagen_carnet'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_carnet')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Acta Toma Posecion
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_acta_toma_posecion'].value ? funcionarioForm.controls['imagen_acta_toma_posecion'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_acta_toma_posecion')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Fotografia
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_fotografia'].value ? funcionarioForm.controls['imagen_fotografia'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_fotografia')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Firma
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_firma'].value ? funcionarioForm.controls['imagen_firma'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_firma')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button [ngClass]="{'disabled': funcionarioForm.invalid}" class="btn btn-primary me-1"
+              (click)="postFuncionario()" data-bs-dismiss="offcanvas" type="button">
+              <i class="fa-duotone fa-floppy-disk"></i> Guardar
+            </button>
+            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="editar-funcionario">
+  <div class="offcanvas-header">
+    <h5 class="modal-title" id="#gridSystemModal">Editar Funcionario</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <form [formGroup]="funcionarioForm">
+        <div class="row">
+          <div class="col-xl-6 mb-3">
+            <div class="row">
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Codigo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="codigo" class="form-control" placeholder="Codigo">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Nombre
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="nombre" class="form-control" placeholder="Nombre">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Apellido
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="apellido" class="form-control" placeholder="Apellido">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Nacimiento
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_nacimiento" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">DPI
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="dpi" class="form-control" placeholder="DPI" name="dpi" >
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Carnet
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="carnet" class="form-control" placeholder="Carnet">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Carnet
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_carnet" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Acta Toma Posecion
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="acta_toma_posecion" class="form-control" placeholder="Acta Toma Posecion">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Acta Toma Posecion
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_acta_toma_posecion" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Estado<span class="text-danger">*</span></label>
+                <select formControlName="estado" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option value="Activo">Activo</option>
+                  <option value="Inactivo">Inactivo</option>
+                </select>
+              </div>
+              <!-- <div class="col-xl-3 mb-3">
+                <label class="form-label">Departamento
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control">
+                </div>
+              </div>
+              <div class="col-xl-3 mb-3">
+                <label class="form-label">Municipio
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
+                    class="form-control" (input)="setMunicipio()">
+                  <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                    data-bs-target="#municipalidades">
+                    <i class="fad fa-search"></i>
+                  </button>
+                </div>
+              </div> -->
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Puesto<span class="text-danger">*</span></label>
+                <select formControlName="id_puesto" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of puestos" [value]="i.id">{{i.nombre}}</option>
+                </select>
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Profesion<span class="text-danger">*</span></label>
+                <select formControlName="id_profesion" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of profesiones" [value]="i.id">{{i.nombre}}</option>
+                </select>
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Estado Civil<span class="text-danger">*</span></label>
+                <select formControlName="id_estado_civil" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let i of estados_civiles" [value]="i.id">{{i.nombre}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <div class="row" *ngIf="municipalidad">
+              <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
+            </div>
+            <div class="row">
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Carnet
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_carnet'].value ? funcionarioForm.controls['imagen_carnet'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_carnet')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Acta Toma Posecion
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_acta_toma_posecion'].value ? funcionarioForm.controls['imagen_acta_toma_posecion'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_acta_toma_posecion')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Fotografia
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_fotografia'].value ? funcionarioForm.controls['imagen_fotografia'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_fotografia')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 mb-3">
+                <label class="form-label">Imagen Firma
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="avatar-upload d-flex align-items-center">
+                  <div class=" position-relative ">
+                    <div class="avatar-preview">
+                      <img
+                        [src]="funcionarioForm.controls['imagen_firma'].value ? funcionarioForm.controls['imagen_firma'].value : 'assets/images/no-img-avatar.png'">
+                    </div>
+                    <div class="change-btn d-flex align-items-center flex-wrap">
+                      <input (change)="setImage($event, 'imagen_firma')" type='file' class="form-control"
+                        accept=".png, .jpg, .jpeg">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button [ngClass]="{'disabled': funcionarioForm.invalid}" class="btn btn-primary" (click)="putFuncionario()"
+              data-bs-dismiss="offcanvas" type="button">
+              <i class="fa-duotone fa-floppy-disk"></i> Guardar
+            </button>
+            <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+          </div>
         </div>
       </form>
     </div>
