@@ -1,0 +1,96 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Cobros</h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+      <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Cobros</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-3 col-xxl-4">
+      <div class="card h-auto">
+        <div class="card-header">
+          <h4 *ngIf="!cobro" class="heading mb-0">Agregar Cobro</h4>
+          <h4 *ngIf="cobro" class="heading mb-0">Editar Cobro</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="cobroForm" class="finance-hr">
+            <div class="form-group mb-3">
+              <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
+              </label>
+              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Fecha <span class="text-danger">*</span>
+              </label>
+              <input formControlName="fecha" type="date" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Mes <span class="text-danger">*</span>
+              </label>
+              <input formControlName="mes" type="month" class="form-control">
+            </div>
+            <div *ngIf="!cobro">
+              <button (click)="postCobro()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': cobroForm.invalid}">
+                Guardar
+              </button>
+            </div>
+            <div *ngIf="cobro">
+              <button (click)="putCobro()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': cobroForm.invalid}">
+                Guardar
+              </button>
+              <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-9 col-xxl-8">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="table-responsive active-projects manage-client">
+            <div class="tbl-caption">
+              <h4 class="heading mb-0">Cobros</h4>
+            </div>
+            <table id="empoloyees-tbl1" class="table">
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Fecha</th>
+                  <th>Mes</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let d of cobros; let dindex = index">
+                  <td><a class="text-primary">{{d.codigo}}</a></td>
+                  <td>{{d.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
+                  <td>{{d.mes}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-list"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" (click)="setCobro(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deleteCobro(d, dindex)">Eliminar</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,14 +15,18 @@ export class AuthService {
   ) { }
 
   async login(data: any): Promise<any> {
-    let auth = await this.rootService.authPost('/auth/login', data);
-    if (auth.token) {
-      let u: any = decode(auth.token);
-      let usuario: any = await this.usuariosService.getUsuariosByUsuario(u.sub);
-      HomeComponent.id_usuario = usuario.id;
-      await this.rootService.bitacora('auth', 'auth', 'ha iniciado sesión', auth);
+    try {
+      let auth = await this.rootService.authPost('/auth/login', data);
+      if (auth.token) {
+        let u: any = decode(auth.token);
+        let usuario: any = await this.usuariosService.getUsuariosByUsuario(u.sub);
+        HomeComponent.id_usuario = usuario.id;
+        await this.rootService.bitacora('auth', 'auth', 'ha iniciado sesión', auth);
+      }
+      return auth;
+    } catch (error) {
+      return { resultado: false, message: 'Credenciales Inválidas' }
     }
-    return auth;
   }
 
 }

@@ -73,10 +73,6 @@
                               href="#editar-municipalidad">
                               Editar
                             </a>
-                            <a class="dropdown-item" (click)="setMunicipalidad(m, mindex)" data-bs-toggle="offcanvas"
-                              href="#disponibilidad">
-                              Disponibilidad
-                            </a>
                             <a class="dropdown-item" (click)="deleteMunicipalidad(m, mindex)">
                               Eliminar
                             </a>
@@ -315,7 +311,7 @@
                 <label class="form-label">DPI
                   <span class="text-danger">*</span>
                 </label>
-                <input formControlName="dpi" class="form-control" placeholder="DPI" name="dpi" >
+                <input formControlName="dpi" class="form-control" placeholder="DPI" name="dpi">
               </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Carnet
@@ -523,7 +519,7 @@
                 <label class="form-label">DPI
                   <span class="text-danger">*</span>
                 </label>
-                <input formControlName="dpi" class="form-control" placeholder="DPI" name="dpi" >
+                <input formControlName="dpi" class="form-control" placeholder="DPI" name="dpi">
               </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Carnet
@@ -756,151 +752,6 @@
               <option value="null">--- Seleccione un registro ---</option>
               <option *ngFor="let m of municipios" [value]="m.id">{{m.nombre}}</option>
             </select>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="disponibilidad">
-  <div class="offcanvas-header" *ngIf="municipalidad">
-    <h5 class="modal-title" id="#gridSystemModal">Disponibilidad Municipal</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <div class="offcanvas-body" *ngIf="municipalidad">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-xl-12 mb-3">
-
-          <div class="card">
-            <div class="card-body p-0">
-              <div class="table-responsive active-projects style-1">
-                <div class="tbl-caption">
-                  <h4 class="heading mb-0">{{municipalidad.departamento.nombre}} /
-                    {{municipalidad.municipio.nombre}}</h4>
-                  <div>
-                    <a class="btn btn-sm">
-                      <input [(ngModel)]="plazo_meses" [ngModelOptions]="{standalone: true}" class="form-control"
-                        placeholder="Plazo Meses" type="number">
-                    </a>
-                    <a class="btn btn-primary btn-sm" (click)="getDisponibilidad()" style="margin-left: 10px;">
-                      <i class="fad fa-search"></i> Buscar
-                    </a>
-                  </div>
-                </div>
-
-
-                <table id="empoloyees-tbl" class="table table-bordered" style="border-collapse: inherit">
-                  <ng-container *ngFor="let g of garantias">
-                    <thead>
-                      <tr>
-                        <th [attr.colspan]="disponibilidad.length + 2" class="total">
-                          <h4>{{g.nombre}} ({{g.porcentaje}}%)</h4>
-                        </th>
-                      </tr>
-                      <tr>
-                        <th class="total"></th>
-                        <th *ngFor="let d of disponibilidad" class="total">
-                          {{d.mes | date: 'MMM YYYY':'UTC'}}
-                        </th>
-                        <th class="total">Disponible <br> {{plazo_meses}} meses</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td class="total" style="text-align: center !important;">A</td>
-                        <td *ngFor="let d of disponibilidad">
-                          {{g.aporte | number: '.2-2'}}
-                        </td>
-                        <td class="total">{{getTotalAportes(g.aporte) | number: '.2-2'}}</td>
-                      </tr>
-                      <tr *ngFor="let p of g.prestamos">
-                        <td class="total" style="text-align: center !important;">{{p.no_dictamen}}</td>
-                        <td *ngFor="let d of disponibilidad">
-                          - {{getMontoDisp(d.mes, p.amortizaciones) | number: '.2-2'}}
-                        </td>
-                        <td class="total">
-                          - {{getTotalMontoDisp(p.amortizaciones) | number: '.2-2'}}
-                        </td>
-                      </tr>
-                    </tbody>
-                    <thead>
-                      <tr>
-                        <th class="total" style="text-align: center !important;">Disponible</th>
-                        <th class="total" *ngFor="let d of disponibilidad">
-                          {{getMontoDispTotal(d.mes, g.prestamos, g.aporte) | number: '.2-2'}}
-                        </th>
-                        <th class="total">
-                          {{getTotalMontoDispTotal(g.prestamos, g.aporte) | number: '.2-2'}}
-                        </th>
-                      </tr>
-                    </thead>
-                    <br><br><br><br>
-                  </ng-container>
-                </table>
-
-
-                <br><br><br><br><br><br><br><br>
-
-
-                <table id="empoloyees-tbl" class="table table-bordered" style="border-collapse: inherit">
-                  <thead>
-                    <tr style="text-transform: uppercase !important;">
-                      <th rowspan="2" style="text-align: center;">Mes</th>
-                      <th *ngFor="let g of garantias" [attr.colspan]="g.prestamos.length + 2"
-                        style="text-align: center;">
-                        {{g.nombre}}
-                      </th>
-                      <th rowspan="2" style="text-align: center;">Total Aportes</th>
-                      <th rowspan="2" style="text-align: center;">Total Disponible</th>
-                    </tr>
-                    <tr>
-                      <ng-container *ngFor="let g of garantias">
-                        <th style="text-align: center;">APORTE {{g.porcentaje}}%</th>
-                        <ng-container *ngFor="let p of g.prestamos">
-                          <th style="text-align: center;">Prestamo {{p.no_dictamen}}</th>
-                        </ng-container>
-                        <th style="text-align: center;">TOTAL</th>
-                      </ng-container>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let d of disponibilidad">
-                      <td>{{d.mes | date: 'MMMM YYYY':'UTC'}}</td>
-                      <ng-container *ngFor="let g of garantias">
-                        <td style="text-align: right;">{{g.aporte | number: '.2-2'}}</td>
-                        <ng-container *ngFor="let p of g.prestamos">
-                          <td style="text-align: right;">- {{getMontoDisp(d.mes, p.amortizaciones) | number: '.2-2'}}
-                          </td>
-                        </ng-container>
-                        <td style="text-align: right;" class="total">{{getMontoDispTotal(d.mes, g.prestamos, g.aporte) |
-                          number: '.2-2'}}</td>
-                      </ng-container>
-                      <td style="text-align: right;">{{getMontoDispTotalAporte() | number: '.2-2'}}</td>
-                      <td style="text-align: right;">{{getMontoDispTotalDisponible(d.mes) | number: '.2-2'}}</td>
-                    </tr>
-                  </tbody>
-                  <thead>
-                    <tr>
-                      <th>TOTALES</th>
-                      <ng-container *ngFor="let g of garantias">
-                        <th style="text-align: right;">{{getTotalAportes(g.aporte) | number: '.2-2'}}</th>
-                        <ng-container *ngFor="let p of g.prestamos">
-                          <th style="text-align: right;">{{getTotalMontoDisp(p.amortizaciones) | number: '.2-2'}}</th>
-                        </ng-container>
-                        <th style="text-align: right;">{{getTotalMontoDispTotal(g.prestamos, g.aporte) | number:
-                          '.2-2'}}</th>
-                      </ng-container>
-                      <th style="text-align: right;">{{getTotalMontoDispTotalAporte() | number: '.2-2'}}</th>
-                      <th style="text-align: right;">{{getTotalMontoDispTotalDisponible() | number: '.2-2'}}</th>
-                    </tr>
-                  </thead>
-                </table>
-              </div>
-            </div>
           </div>
         </div>
       </div>

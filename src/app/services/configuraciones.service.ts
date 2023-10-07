@@ -22,7 +22,7 @@ export class ConfiguracionesService {
   async postConfiguracion(data: any): Promise<any> {
     let configuracion = await this.rootService.post(this.route, data);
     if (configuracion.resultado) {
-      await this.rootService.bitacora('configuracion', 'agregar', `creó la configuracion "${configuracion.data.mes}"`, configuracion.data);
+      await this.rootService.bitacora('configuracion', 'agregar', `creó la configuracion "${configuracion.data.nombre}"`, configuracion.data);
     }
     return configuracion;
   }
@@ -30,7 +30,7 @@ export class ConfiguracionesService {
   async putConfiguracion(id: number, data: any): Promise<any> {
     let configuracion = await this.rootService.put(this.route + '/' + id, data);
     if (configuracion.resultado) {
-      await this.rootService.bitacora('configuracion', 'editar', `editó la configuracion "${configuracion.data.mes}"`, configuracion.data);
+      await this.rootService.bitacora('configuracion', 'editar', `editó la configuracion "${configuracion.data.nombre}"`, configuracion.data);
     }
     return configuracion;
   }
@@ -38,7 +38,7 @@ export class ConfiguracionesService {
   async deleteConfiguracion(id: number): Promise<any> {
     let configuracion = await this.rootService.delete(this.route + '/' + id);
     if (configuracion.resultado) {
-      await this.rootService.bitacora('configuracion', 'eliminar', `eliminó la configuracion "${configuracion.data.mes}"`, configuracion.data);
+      await this.rootService.bitacora('configuracion', 'eliminar', `eliminó la configuracion "${configuracion.data.nombre}"`, configuracion.data);
     }
     return configuracion;
   }

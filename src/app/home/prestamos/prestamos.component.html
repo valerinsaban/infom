@@ -107,9 +107,9 @@
                   <thead>
                     <tr>
                       <th>Municipalidad</th>
-                      <th>Funcionario</th>
-                      <th>Regional</th>
+                      <th>No. Prestamo</th>
                       <th>Tipo Prestamo</th>
+                      <th>Clase Prestamo</th>
                       <th>Fecha</th>
                       <th class="text-end">Monto</th>
                       <th class="text-end">Estado</th>
@@ -127,13 +127,13 @@
                         </div>
                       </td>
                       <td>
-                        <span>{{p.funcionario.nombre}} {{p.funcionario.apellido}}</span>
+                        <span>{{p.no_prestamo}}</span>
                       </td>
                       <td>
-                        <span>{{p.regional.nombre}}</span>
+                        <span>{{p.tipoPrestamo.nombre}}</span>
                       </td>
                       <td>
-                        <span>{{p.tipo_prestamo.nombre}}</span>
+                        <span>{{p.clasePrestamo.nombre}}</span>
                       </td>
                       <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td class="text-end">
@@ -207,13 +207,308 @@
           <div class="card-body">
             <form [formGroup]="prestamoForm">
               <div class="row">
+                <div class="col-xl-2 mb-3">
+                  <label class="form-label">Departamento
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group mb-3">
+                    <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
+                      class="form-control" (input)="setDepartamento()">
+                  </div>
+                </div>
+                <div class="col-xl-2 mb-3">
+                  <label class="form-label">Municipio
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group mb-3">
+                    <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
+                      class="form-control" (input)="setMunicipio()">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                      data-bs-target="#municipalidades">
+                      <i class="fad fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-xl-8 mb-3">
+                  <div class="row">
+                    <div class="col-4 pt-3 pb-3 border-end">
+                      <h6 class="mb-1">{{prestamoForm.controls['no_dictamen'].value}}</h6><span>No. Dictamen</span>
+                    </div>
+                    <div class="col-4 pt-3 pb-3 border-end">
+                      <h6 class="mb-1">{{prestamoForm.controls['no_convenio'].value}}</h6><span>No. Convenio</span>
+                    </div>
+                    <div class="col-4 pt-3 pb-3">
+                      <h6 class="mb-1">{{prestamoForm.controls['no_prestamo'].value}}</h6><span>No. Prestamo</span>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+              </div>
+              <div class="row">
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Acta
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="acta" type="text" class="form-control" placeholder="Acta">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Punto
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="punto" type="text" class="form-control" placeholder="Punto">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Acta
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_acta" type="date" class="form-control">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Certficacion
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="certficacion" type="date" class="form-control">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Memorial
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_memorial" type="date" class="form-control">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Periodo Gracia
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="periodo_gracia" type="number" class="form-control"
+                    placeholder="Periodo Gracia" (input)="getProyeccion2()">
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">No. Oficio A.J.
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="no_oficio_aj" type="number" class="form-control"
+                    placeholder="NO. Oficio A.J.">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Oficio A.J.
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_oficio_aj" type="date" class="form-control">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">No. Oficio GER
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="no_oficio_ger" type="number" class="form-control"
+                    placeholder="NO. Oficio A.J.">
+                </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Fecha Oficio GER
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_oficio_ger" type="date" class="form-control">
+                </div>
+                <div class="col-xl-12 mb-3">
+                  <label class="form-label">Destino Prestamo
+                    <span class="text-danger">*</span>
+                  </label>
+                  <textarea formControlName="destino_prestamo" class="form-control" rows="5"></textarea>
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-primary me-1" (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
+                  <i class="fa-duotone fa-floppy-disk"></i> Guardar
+                </button>
+                <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-5">
+        <div class="card">
+          <div class="card-body">
+            <form [formGroup]="prestamoForm">
+              <div class="row" *ngIf="municipalidad">
+                <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Fecha
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
+                  <select (change)="getClasesPrestamosGarantias($event)" formControlName="id_clase_prestamo"
+                    class="form-control">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
+                  </select>
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
+                  <select formControlName="id_tipo_prestamo" class="form-control disabled">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
+                  </select>
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Fecha Amortizacion
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_amortizacion" type="date" class="form-control"
+                    (input)="getProyeccion2()">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Plazo Meses
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="plazo_meses" type="number" class="form-control" placeholder="Plazo Meses"
+                    (input)="getProyeccion2()">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Intereses %
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="intereses" type="number" class="form-control disabled"
+                    placeholder="Intereses %">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Monto Total
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input (input)="setMontoTotal()" formControlName="monto" type="number" class="form-control"
+                    placeholder="Monto Total">
+                </div>
+                <div class="col-xl-8 mb-3">
+                  <label class="form-label"></label>
+                  <h2>{{prestamoForm.value.monto | number: '.2-2'}}</h2>
+                </div>
+                <div class="col-xl-12 mb-3">
+                  <div class="table-responsive active-projects manage-client">
+                    <table id="empoloyees-tbl1" class="table">
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Porcentaje</th>
+                          <th>Monto</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let t of clases_prestamos_garantias; let dindex = index">
+                          <td>{{t.garantia.nombre}} ({{t.garantia.porcentaje}}%)</td>
+                          <td>
+                            <input (input)="setMonto()" [(ngModel)]="t.porcentaje" [ngModelOptions]="{standalone: true}"
+                              type="number" class="form-control-sm" placeholder="%">
+                          </td>
+                          <td style="text-align: right;">
+                            {{t.monto | number: '.2-2'}}
+                          </td>
+                        </tr>
+                        <tr style="border-top: solid; border-bottom: solid;">
+                          <td>TOTALES</td>
+                          <td style="text-align: right;">
+                            <b>{{getPorcentaje() | number: '.2-2'}}%</b>
+                          </td>
+                          <td style="text-align: right;"
+                            [ngClass]="{'cuadrado': getTotal() == prestamoForm.value.monto && getPorcentaje() == 100}">
+                            <b>{{getTotal() | number: '.2-2'}}</b>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body p-0">
+            <div class="table-responsive active-projects manage-client style-1">
+              <div class="tbl-caption">
+                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{amortizaciones.length}})</h4>
+              </div>
+              <table id="empoloyees-tbl1" class="table">
+                <thead>
+                  <tr>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Dias</th>
+                    <th style="text-align: right;">Capital</th>
+                    <th style="text-align: right;">Intereses</th>
+                    <th style="text-align: right;">IVA</th>
+                    <th style="text-align: right;">Cuota</th>
+                    <th style="text-align: right;">Saldo</th>
+                    <th style="text-align: right;">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let a of amortizaciones; let aindex = index">
+                    <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{a.dias}} dias</td>
+                    <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
+                    <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
+                    <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
+                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
+                    <td><i class="fas fa-check"></i></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th>{{getTotalDias()}} dias</th>
+                    <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getTotalInteres() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getTotalIva() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getTotalCuota() | number: '.2-2'}}</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="editar-prestamo">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Editar Prestamo</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="row">
+      <div class="col-xl-7">
+        <div class="card">
+          <div class="card-body">
+            <form [formGroup]="prestamoForm">
+              <div class="row">
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Departamento
                     <span class="text-danger">*</span>
                   </label>
                   <div class="input-group mb-3">
                     <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
-                      class="form-control">
+                      class="form-control" (input)="setDepartamento()">
                   </div>
                 </div>
                 <div class="col-xl-3 mb-3">
@@ -319,8 +614,7 @@
                 </div>
               </div>
               <div>
-                <button  class="btn btn-primary me-1"
-                  (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
+                <button class="btn btn-primary me-1" (click)="putPrestamo()" data-bs-dismiss="offcanvas" type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Guardar
                 </button>
                 <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
@@ -345,18 +639,18 @@
                   <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-4 mb-3">
-                  <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
-                  <select (change)="getTiposPrestamosGarantias($event)" formControlName="id_tipo_prestamo"
+                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
+                  <select (change)="getClasesPrestamosGarantias($event)" formControlName="id_clase_prestamo"
                     class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
+                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">
-                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
-                  <select formControlName="id_clase_prestamo" class="form-control disabled">
+                  <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
+                  <select formControlName="id_tipo_prestamo" class="form-control disabled">
                     <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
+                    <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">
@@ -380,280 +674,16 @@
                   <input formControlName="intereses" type="number" class="form-control disabled"
                     placeholder="Intereses %">
                 </div>
-                <div class="col-xl-12 mb-3">
-                  <div class="table-responsive active-projects manage-client">
-                    <table id="empoloyees-tbl1" class="table">
-                      <thead>
-                        <tr>
-                          <th>Nombre</th>
-                          <th>Monto</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let t of tipos_prestamos_garantias; let dindex = index">
-                          <td>{{t.garantia.nombre}} ({{t.garantia.porcentaje}}%)</td>
-                          <td>
-                            <input (input)="setMontoTotal()" [(ngModel)]="t.monto" [ngModelOptions]="{standalone: true}"
-                              type="number" class="form-control" placeholder="Monto">
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Monto Total
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input (input)="setMonto(true)" formControlName="monto" type="number" class="form-control"
+                    placeholder="Monto Total">
                 </div>
-                <div class="col-xl-12 mb-3">
-                  <label class="form-label">Monto Total</label>
+                <div class="col-xl-8 mb-3">
+                  <label class="form-label"></label>
                   <h2>{{prestamoForm.value.monto | number: '.2-2'}}</h2>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body p-0">
-            <div class="table-responsive active-projects manage-client style-1">
-              <div class="tbl-caption">
-                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{amortizaciones.length}})</h4>
-              </div>
-              <table id="empoloyees-tbl1" class="table">
-                <thead>
-                  <tr>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Dias</th>
-                    <th style="text-align: right;">Capital</th>
-                    <th style="text-align: right;">Intereses</th>
-                    <th style="text-align: right;">IVA</th>
-                    <th style="text-align: right;">Cuota</th>
-                    <th style="text-align: right;">Saldo</th>
-                    <th style="text-align: right;">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let a of amortizaciones; let aindex = index">
-                    <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{a.dias}} dias</td>
-                    <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
-                    <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
-                    <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
-                    <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
-                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
-                    <td><i class="fas fa-check"></i></td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th></th>
-                    <th></th>
-                    <th>{{getTotalDias()}} dias</th>
-                    <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalInteres() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalIva() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalCuota() | number: '.2-2'}}</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="editar-prestamo">
-  <div class="offcanvas-header">
-    <h5 class="modal-title">Editar Prestamo</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="row">
-      <div class="col-xl-7">
-        <div class="card">
-          <div class="card-body">
-            <form [formGroup]="prestamoForm">
-              <div class="row">
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Departamento
-                    <span class="text-danger">*</span>
-                  </label>
-                  <div class="input-group mb-3">
-                    <input [(ngModel)]="filtros.codigo_departamento" [ngModelOptions]="{standalone: true}" type="text"
-                      class="form-control">
-                  </div>
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Municipio
-                    <span class="text-danger">*</span>
-                  </label>
-                  <div class="input-group mb-3">
-                    <input [(ngModel)]="filtros.codigo_municipio" [ngModelOptions]="{standalone: true}" type="text"
-                      class="form-control" (input)="setMunicipio()">
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                      data-bs-target="#municipalidades">
-                      <i class="fad fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="col-xl-6 mb-3">
-                  <div class="row">
-                    <div class="col-4 pt-3 pb-3 border-end">
-                      <h3 class="mb-1">{{prestamoForm.controls['no_dictamen'].value}}</h3><span>No. Dictamen</span>
-                    </div>
-                    <div class="col-4 pt-3 pb-3 border-end">
-                      <h3 class="mb-1">{{prestamoForm.controls['no_convenio'].value}}</h3><span>No. Convenio</span>
-                    </div>
-                    <div class="col-4 pt-3 pb-3">
-                      <h3 class="mb-1">{{prestamoForm.controls['no_prestamo'].value}}</h3><span>No. Prestamo</span>
-                    </div>
-                  </div>
-                </div>
-                <hr>
-              </div>
-              <div class="row">
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Acta
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="acta" type="text" class="form-control" placeholder="Acta">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Punto
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="punto" type="text" class="form-control" placeholder="Punto">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Acta
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_acta" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Certficacion
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="certficacion" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Memorial
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_memorial" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Periodo Gracia
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="periodo_gracia" type="number" class="form-control"
-                    placeholder="Periodo Gracia"  (input)="getProyeccion2()">
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Oficio A.J.
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_oficio_aj" type="number" class="form-control"
-                    placeholder="NO. Oficio A.J.">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Oficio A.J.
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_oficio_aj" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Oficio GER
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_oficio_ger" type="number" class="form-control"
-                    placeholder="NO. Oficio A.J.">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Oficio GER
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_oficio_ger" type="date" class="form-control">
-                </div>
-                <div class="col-xl-12 mb-3">
-                  <label class="form-label">Destino Prestamo
-                    <span class="text-danger">*</span>
-                  </label>
-                  <textarea formControlName="destino_prestamo" class="form-control" rows="5"></textarea>
-                </div>
-              </div>
-              <div>
-                <button  class="btn btn-primary me-1"
-                  (click)="putPrestamo()" data-bs-dismiss="offcanvas" type="button">
-                  <i class="fa-duotone fa-floppy-disk"></i> Guardar
-                </button>
-                <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-5">
-        <div class="card">
-          <div class="card-body">
-            <form [formGroup]="prestamoForm">
-              <div class="row" *ngIf="municipalidad">
-                <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
-              </div>
-              <br>
-              <div class="row">
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Fecha
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
-                  <select (change)="getTiposPrestamosGarantias($event)" formControlName="id_tipo_prestamo"
-                    class="form-control">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
-                  </select>
-                </div>
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
-                  <select formControlName="id_clase_prestamo" class="form-control disabled">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
-                  </select>
-                </div>
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Fecha Amortizacion
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_amortizacion" type="date" class="form-control"
-                    (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Plazo Meses
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="plazo_meses" type="number" class="form-control" placeholder="Plazo Meses"
-                    (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Intereses %
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="intereses" type="number" class="form-control disabled"
-                    placeholder="Intereses %">
                 </div>
                 <div class="col-xl-12 mb-3">
                   <div class="table-responsive active-projects manage-client">
@@ -676,10 +706,21 @@
                             </div>
                           </td>
                           <td>
-                            <input (input)="setMontoTotal()" [(ngModel)]="d.monto" [ngModelOptions]="{standalone: true}"
-                              type="number" class="form-control" placeholder="Monto">
+                            <input (input)="setMonto(true)" [(ngModel)]="d.porcentaje"
+                              [ngModelOptions]="{standalone: true}" type="number" class="form-control"
+                              placeholder="Porcentaje">
                           </td>
-                          <td>{{d.porcentaje | number: '.2-2'}}%</td>
+                          <td>{{d.monto | number: '.2-2'}}%</td>
+                        </tr>
+                        <tr style="border-top: solid; border-bottom: solid;">
+                          <td>TOTALES</td>
+                          <td style="text-align: right;">
+                            <b>{{getPorcentaje(true) | number: '.2-2'}}%</b>
+                          </td>
+                          <td style="text-align: right;"
+                            [ngClass]="{'cuadrado': getTotal(true) == prestamoForm.value.monto && getPorcentaje(true) == 100}">
+                            <b>{{getTotal(true) | number: '.2-2'}}</b>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -775,8 +816,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn btn-primary me-1" (click)="putPrestamo()"
-          data-bs-dismiss="modal" type="button">
+        <button class="btn btn-primary me-1" (click)="putPrestamo()" data-bs-dismiss="modal" type="button">
           <i class="fa-duotone fa-floppy-disk"></i> Guardar
         </button>
       </div>
@@ -839,7 +879,7 @@
                     </a>
                   </div>
                 </div>
-                <table id="empoloyees-tbl1" class="table">
+                <table class="table">
                   <thead>
                     <tr>
                       <th>Fecha Inicio</th>
@@ -898,6 +938,7 @@
                     </tr>
                   </tfoot>
                 </table>
+
               </div>
             </div>
           </div>
@@ -916,13 +957,13 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div (change)="calcAmortizacion(true)" class="col-xl-6 mb-3">
+          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
             <label class="form-label">Fecha Inicio
               <span class="text-danger">*</span>
             </label>
             <input formControlName="fecha_inicio" type="date" class="form-control">
           </div>
-          <div (change)="calcAmortizacion(true)" class="col-xl-6 mb-3">
+          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
             <label class="form-label">Fecha Fin
               <span class="text-danger">*</span>
             </label>
@@ -986,13 +1027,13 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <div (change)="calcAmortizacion(true)" class="col-xl-6 mb-3">
+          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
             <label class="form-label">Fecha Inicio
               <span class="text-danger">*</span>
             </label>
             <input formControlName="fecha_inicio" type="date" class="form-control">
           </div>
-          <div (change)="calcAmortizacion(true)" class="col-xl-6 mb-3">
+          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
             <label class="form-label">Fecha Fin
               <span class="text-danger">*</span>
             </label>
@@ -1060,14 +1101,14 @@
             <label class="form-label">Departamento<span class="text-danger">*</span></label>
             <select class="form-control" (change)="setDepartamento($event)">
               <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let d of departamentos" [value]="d.id">{{d.nombre}}</option>
+              <option *ngFor="let d of departamentos" [value]="d.id">{{d.codigo}} - {{d.nombre}}</option>
             </select>
           </div>
           <div class="col-xl-6 mb-3">
             <label class="form-label">Municipio<span class="text-danger">*</span></label>
             <select class="form-control" (change)="setMunicipio($event)">
               <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let m of municipios" [value]="m.id">{{m.nombre}}</option>
+              <option *ngFor="let m of municipios" [value]="m.id">{{m.codigo}} - {{m.nombre}}</option>
             </select>
           </div>
         </div>

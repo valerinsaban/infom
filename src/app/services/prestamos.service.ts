@@ -8,11 +8,8 @@ import { ConfiguracionesService } from './configuraciones.service';
 })
 export class PrestamosService {
 
-  configuracion: any = sessionStorage.getItem('configuracion');
-
   constructor(
     private rootService: RootService,
-    private configuracionesService: ConfiguracionesService
     ) {
   }
 
@@ -22,7 +19,11 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/' + fecha_inicio + '/' + fecha_fin);
   }
 
-  getPrestamosEstado(estado: string, fecha_inicio: any, fecha_fin: any): Promise<any> {
+  getPrestamosEstado(estado: string): Promise<any> {
+    return this.rootService.get(this.route + '/estado/' + estado);
+  }
+
+  getPrestamosEstadoFecha(estado: string, fecha_inicio: any, fecha_fin: any): Promise<any> {
     return this.rootService.get(this.route + '/' + estado + '/' + fecha_inicio + '/' + fecha_fin);
   }
 
@@ -30,8 +31,16 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/count/' + estado + '/' + fecha_inicio + '/' + fecha_fin);
   }
 
-  getPrestamosEstadoMunicipalidad(estado: string, id_municipalidad: any): Promise<any> {
+  getPrestamosEstadoMunicipalidad(estado: string, id_municipalidad: number): Promise<any> {
     return this.rootService.get(this.route + '/municipalidad/' + estado + '/' + id_municipalidad);
+  }
+
+  getCountPrestamosTipoPrestamoClasePrestamo(id_tipo_prestamo: number, id_clase_prestamo: number): Promise<any> {
+    return this.rootService.get(this.route + '/tipo_prestamo/' + id_tipo_prestamo + '/clase_prestamo/' + id_clase_prestamo);
+  }
+
+  getCountPrestamosMunicipalidad(id_municipalidad: any): Promise<any> {
+    return this.rootService.get(this.route + '/municipalidad/' + id_municipalidad);
   }
 
   getPrestamosFiltros(data: any): Promise<any> {
@@ -42,23 +51,13 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  getProyeccion(monto_total: number, plazo_meses: number, intereses: number, fecha: string, porcentaje_iva: number, amortizaciones: any): Promise<any> {
-    let cant_amor = amortizaciones.length;
+  getProyeccion(monto_total: number, plazo_meses: number, intereses: number, fecha: string, porcentaje_iva: number): Promise<any> {
+    let proyeccion: any = [];
     let saldo_actual = monto_total;
-
     let fecha_i = moment(fecha).format('YYYY-MM-DD');
     let fecha_f = moment(fecha).endOf('month').format('YYYY-MM-DD');
     
-    if (cant_amor) {
-      fecha_i = moment(amortizaciones[amortizaciones.length - 1].fecha_fin).add(1, 'day').subtract(1, 'month').format('YYYY-MM-DD');
-      fecha_f = moment(amortizaciones[amortizaciones.length - 1].fecha_fin).format('YYYY-MM-DD');
-    }
-
-    if (cant_amor) {
-      saldo_actual = amortizaciones[cant_amor - 1].saldo;
-    }
-    
-    for (let p = 0; p < (plazo_meses - cant_amor); p++) {
+    for (let p = 0; p < (plazo_meses); p++) {
       let fecha_inicio = moment(fecha_i).add(p, 'month').format('YYYY-MM-DD');
       let fecha_fin = moment(fecha_f).add(p, 'month').endOf('month').format('YYYY-MM-DD');
       if (p > 0) {
@@ -72,18 +71,56 @@ export class PrestamosService {
       let saldo = saldo_actual - capital;
       saldo_actual = saldo;
 
-      amortizaciones.push({
+      proyeccion.push({
         fecha_inicio, fecha_fin, dias, capital, interes, iva, cuota, saldo
       });
     }
 
-    return amortizaciones;
+    return proyeccion;
   }
+
+  // getProyeccion(monto_total: number, plazo_meses: number, intereses: number, fecha: string, porcentaje_iva: number, amortizaciones: any): Promise<any> {
+  //   let cant_amor = amortizaciones.length;
+  //   let saldo_actual = monto_total;
+
+  //   let fecha_i = moment(fecha).format('YYYY-MM-DD');
+  //   let fecha_f = moment(fecha).endOf('month').format('YYYY-MM-DD');
+    
+  //   if (cant_amor) {
+  //     fecha_i = moment(amortizaciones[amortizaciones.length - 1].fecha_fin).add(1, 'day').subtract(1, 'month').format('YYYY-MM-DD');
+  //     fecha_f = moment(amortizaciones[amortizaciones.length - 1].fecha_fin).format('YYYY-MM-DD');
+  //   }
+
+  //   if (cant_amor) {
+  //     saldo_actual = amortizaciones[cant_amor - 1].saldo;
+  //   }
+    
+  //   for (let p = 0; p < (plazo_meses - cant_amor); p++) {
+  //     let fecha_inicio = moment(fecha_i).add(p, 'month').format('YYYY-MM-DD');
+  //     let fecha_fin = moment(fecha_f).add(p, 'month').endOf('month').format('YYYY-MM-DD');
+  //     if (p > 0) {
+  //       fecha_inicio = moment(fecha_i).add(p, 'month').startOf('month').format('YYYY-MM-DD');
+  //     }
+  //     let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days', true) + 1;
+  //     let capital = monto_total / plazo_meses;
+  //     let interes = (saldo_actual * (intereses / 100) / 365) * dias;
+  //     let iva = interes * porcentaje_iva / 100;
+  //     let cuota = capital + interes + iva;
+  //     let saldo = saldo_actual - capital;
+  //     saldo_actual = saldo;
+
+  //     amortizaciones.push({
+  //       fecha_inicio, fecha_fin, dias, capital, interes, iva, cuota, saldo
+  //     });
+  //   }
+
+  //   return amortizaciones;
+  // }
 
   async postPrestamo(data: any): Promise<any> {
     let prestamo = await this.rootService.post(this.route, data);
     if (prestamo.resultado) {
-      await this.rootService.bitacora('prestamo', 'agregar', `creó el prestamo "${prestamo.data.id}"`, prestamo.data);
+      await this.rootService.bitacora('prestamo', 'agregar', `creó el prestamo "${prestamo.data.no_prestamo}"`, prestamo.data);
     }
     return prestamo;
   }
@@ -91,7 +128,7 @@ export class PrestamosService {
   async putPrestamo(id: number, data: any): Promise<any> {
     let prestamo = await this.rootService.put(this.route + '/' + id, data);
     if (prestamo.resultado) {
-      await this.rootService.bitacora('prestamo', 'editar', `editó el prestamo "${prestamo.data.id}"`, prestamo.data);
+      await this.rootService.bitacora('prestamo', 'editar', `editó el prestamo "${prestamo.data.no_prestamo}"`, prestamo.data);
     }
     return prestamo;
   }
@@ -99,7 +136,7 @@ export class PrestamosService {
   async deletePrestamo(id: number): Promise<any> {
     let prestamo = await this.rootService.delete(this.route + '/' + id);
     if (prestamo.resultado) {
-      await this.rootService.bitacora('prestamo', 'eliminar', `eliminó el prestamo "${prestamo.data.id}"`, prestamo.data);
+      await this.rootService.bitacora('prestamo', 'eliminar', `eliminó el prestamo "${prestamo.data.no_prestamo}"`, prestamo.data);
     }
     return prestamo;
   }

@@ -1,13 +1,13 @@
 <div class="page-titles">
   <ol class="breadcrumb">
     <li>
-      <h5 class="bc-title">Clases Prestamos</h5>
+      <h5 class="bc-title">Garantías</h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
         <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Clases Prestamos</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Garantías</a></li>
   </ol>
 </div>
 <div class="container-fluid">
@@ -15,8 +15,8 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!clase_prestamo" class="heading mb-0">Agregar Clase Prestamo</h4>
-          <h4 *ngIf="clase_prestamo" class="heading mb-0">Editar Clase Prestamo</h4>
+          <h4 *ngIf="!clase_prestamo" class="heading mb-0">Agregar Garantía</h4>
+          <h4 *ngIf="clase_prestamo" class="heading mb-0">Editar Garantía</h4>
         </div>
         <div class="card-body">
           <form [formGroup]="clase_prestamoForm" class="finance-hr">
@@ -31,14 +31,9 @@
               <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
             </div>
             <div class="form-group mb-3">
-              <label class="text-secondary"> Monto Min <span class="text-danger">*</span>
+              <label class="text-secondary"> Siglas <span class="text-danger">*</span>
               </label>
-              <input formControlName="monto_min" type="number" class="form-control" placeholder="Monto Min">
-            </div>
-            <div class="form-group mb-3">
-              <label class="text-secondary"> Monto Max <span class="text-danger">*</span>
-              </label>
-              <input formControlName="monto_max" type="number" class="form-control" placeholder="Monto Max">
+              <input formControlName="siglas" type="text" class="form-control" placeholder="Siglas">
             </div>
             <div *ngIf="!clase_prestamo">
               <button (click)="postClasePrestamo()" type="button" class="btn btn-primary mb-3"
@@ -64,15 +59,14 @@
         <div class="card-body p-0">
           <div class="table-responsive active-projects manage-client">
             <div class="tbl-caption">
-              <h4 class="heading mb-0">Clases Prestamos</h4>
+              <h4 class="heading mb-0">Garantías</h4>
             </div>
             <table id="empoloyees-tbl1" class="table">
               <thead>
                 <tr>
                   <th>Codigo</th>
                   <th>Nombre</th>
-                  <th>Monto Min</th>
-                  <th>Monto Max</th>
+                  <th>Siglas</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -80,8 +74,7 @@
                 <tr *ngFor="let d of clases_prestamos; let dindex = index">
                   <td><a class="text-primary">{{d.codigo}}</a></td>
                   <td>{{d.nombre}}</td>
-                  <td>{{d.monto_min | number: '.2-2'}}</td>
-                  <td>{{d.monto_max | number: '.2-2'}}</td>
+                  <td>{{d.siglas}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
@@ -99,6 +92,71 @@
               </tbody>
 
             </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="garantias">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Amortizaciones</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-6 col-xxl-3">
+          <div class="card h-auto">
+            <div class="card-header">
+              <h4 class="heading mb-0">Agregar Clase Prestamo Garantía</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="clase_prestamo_garantiaForm" class="finance-hr">
+                <div class="form-group mb-3">
+                  <label class="form-label">Garantia<span class="text-danger">*</span></label>
+                  <select formControlName="id_garantia" class="form-control">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let g of garantias" [value]="g.id">{{g.nombre}}</option>
+                  </select>
+                </div>
+                <div>
+                  <button (click)="postClasePrestamoGarantia()" type="button" class="btn btn-primary mb-3"
+                    [ngClass]="{'disabled': clase_prestamo_garantiaForm.invalid}">
+                    Guardar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6 col-xxl-9">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects manage-client style-1">
+                <table id="empoloyees-tbl1" class="table">
+                  <thead>
+                    <tr>
+                      <th>Garantia</th>
+                      <th style="text-align: right;">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let t of clases_prestamos_garantias; let aindex = index">
+                      <td>{{t.garantia.nombre}}</td>
+                      <td>
+                        <button (click)="deleteClasePrestamoGarantia(t, aindex)" type="button" class="btn btn-primary light sharp">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>

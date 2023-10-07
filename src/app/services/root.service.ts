@@ -13,7 +13,6 @@ export class RootService {
 
   constructor(
     private httpClient: HttpClient,
-    private router: Router,
     private alertService: AlertService
   ) {
   }
