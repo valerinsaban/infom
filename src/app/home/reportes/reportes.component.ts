@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as moment from 'moment';
 import { ReporteService } from 'src/app/services/reportes.service';
 import { HomeComponent } from '../home.component';
@@ -19,21 +19,35 @@ import { AlertService } from 'src/app/services/alert.service';
 })
 export class ReportesComponent {
 
-  reportes: any = [];
-  reporte: any;
-  id_reporte: number = 0;
-  configuracion: any;
+  @Output() disp = new EventEmitter<any>();
 
+  @Input()
   filtros: any = {
-    codigo_departamento: null,
-    codigo_municipio: null,
-    plazo_meses: null,
+    codigo_departamento: '05',
+    codigo_municipio: '07',
+    plazo_meses: 12,
     mes: null,
   }
+
+  @Input()
+  id_reporte: number = 0;
+
+  @Input()
+  view_reporte: boolean = true;
+
+  reportes: any = [];
+  reporte: any;
+  configuracion: any;
 
   garantias: any = [];
   disponibilidad: any = [];
   municipalidad: any;
+
+  totales: any = {
+    constitucional: 0,
+    iva_paz: 0,
+    total: 0
+  }
 
   constructor(
     private ngxService: NgxUiLoaderService,
@@ -103,9 +117,22 @@ export class ReportesComponent {
         }
       }
     }
+
+    for (let g = 0; g < this.garantias.length; g++) {
+      let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
+      if (this.garantias[g].codigo == '01') {
+        this.totales.constitucional = tot
+      }
+      if (this.garantias[g].codigo == '02') {
+        this.totales.iva_paz = tot
+      }
+    }
+    this.totales.total = this.getTotalMontoDispTotalDisponible();
+
+    this.disp.emit(this.totales)
   }
 
-  async reporteDisponibilidad() {
+  public async reporteDisponibilidad() {
     this.ngxService.start();
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
     if (this.municipalidad) {
@@ -158,14 +185,16 @@ export class ReportesComponent {
       }
 
       let rep: any = await this.reporteService.get('disponibilidad');
-      let contenido: any = document.getElementById(this.reporte.slug);
+      let contenido: any = document.getElementById('disponibilidad');
       contenido = contenido.innerHTML.toString();
 
-      rep = rep.replace("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-      rep = rep.replace("{{usuario}}", HomeComponent.usuario.nombre);
-      rep = rep.replace("{{codigo_municipalidad}}", `${this.municipalidad.departamento.codigo}.${this.municipalidad.municipio.codigo}`);
-      rep = rep.replace("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
-      rep = rep.replace("{{contenido}}", contenido);
+      rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+      rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+      rep = rep.replaceAll("{{codigo_municipalidad}}", `${this.municipalidad.departamento.codigo}.${this.municipalidad.municipio.codigo}`);
+      rep = rep.replaceAll("{{constitucional}}", parseFloat(aporte.constitucional).toLocaleString('en-US'));
+      rep = rep.replaceAll("{{iva_paz}}", parseFloat(aporte.iva_paz).toLocaleString('en-US'));
+      rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
+      rep = rep.replaceAll("{{contenido}}", contenido);
 
       let popupWin: any = window.open("", "_blank");
       popupWin.document.open();
@@ -178,18 +207,18 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
-  async reporteAmortizaciones() {
+  public async reporteAmortizaciones() {
     this.ngxService.start();
     let rep: any = await this.reporteService.get('amortizaciones');
-    let contenido: any = document.getElementById(this.reporte.slug);
+    let contenido: any = document.getElementById('amortizaciones');
     contenido = contenido.innerHTML.toString();
 
-    rep = rep.replace("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replace("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replace("{{fecha_inicio}}", moment(this.filtros.mes).startOf('month').format('DD/MM/YYYY'));
-    rep = rep.replace("{{fecha_fin}}", moment(this.filtros.mes).endOf('month').format('DD/MM/YYYY'));
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.mes).startOf('month').format('DD/MM/YYYY'));
+    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.mes).endOf('month').format('DD/MM/YYYY'));
 
-    rep = rep.replace("{{contenido}}", contenido);
+    rep = rep.replaceAll("{{contenido}}", contenido);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -199,20 +228,20 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
-  getMontoDisp(mes: string, proyecciones: any, type: string) {    
+  getMontoDisp(mes: string, proyecciones: any, type: string) {
     for (let a = 0; a < proyecciones.length; a++) {
       let mes_inicio = moment(proyecciones[a].fecha_inicio).format('YYYY-MM');
       let mes_fin = moment(proyecciones[a].fecha_fin).format('YYYY-MM');
-      if (mes_fin == mes) {     
+      if (mes_fin == mes) {
         if (type == 'cuota') {
-          return proyecciones[a].cuota;          
-        }   
+          return proyecciones[a].cuota;
+        }
         if (type == 'capital') {
-          return proyecciones[a].capital;          
-        }   
+          return proyecciones[a].capital;
+        }
         if (type == 'interes') {
-          return proyecciones[a].interes + proyecciones[a].iva;          
-        }   
+          return proyecciones[a].interes + proyecciones[a].iva;
+        }
       }
     }
     return 0;
@@ -228,7 +257,7 @@ export class ReportesComponent {
         if (mes_fin == mes) {
           total -= prestamos[p].proyecciones[a].cuota;
         }
-      } 
+      }
     }
     return total;
   }
@@ -249,7 +278,7 @@ export class ReportesComponent {
     return total;
   }
 
-  getTotalAportes(aporte: number) {    
+  getTotalAportes(aporte: number) {
     let total = 0;
     for (let d = 0; d < this.disponibilidad.length; d++) {
       let tot = aporte;

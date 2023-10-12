@@ -10,7 +10,6 @@ export class ReporteService {
   route = '/reportes';
 
   constructor(
-    private rootService: RootService,
     private httpClient: HttpClient
   ) {
   }

@@ -25,6 +25,7 @@ export class HomeComponent {
   static id_rol: any;
   static id_menu: any;
   static id_submenu: any;
+  static configuracion: any;
 
   static apiUrl = environment.api;
 
@@ -79,6 +80,7 @@ export class HomeComponent {
     let configuraciones = await this.configuracionesService.getConfiguraciones();
     if (configuraciones) {
       this.configuracion = configuraciones[0];
+      HomeComponent.configuracion = configuraciones[0];
     }
   }
 

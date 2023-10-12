@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AlertService } from 'src/app/services/alert.service';
@@ -20,14 +20,13 @@ import { DepartamentosService } from 'src/app/services/catalogos/departamentos.s
 import { ClasesPrestamosGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
-import { ReporteService } from 'src/app/services/reportes.service';
 
 @Component({
   selector: 'app-prestamos',
   templateUrl: './prestamos.component.html',
   styleUrls: ['./prestamos.component.css']
 })
-export class PrestamosComponent {
+export class PrestamosComponent implements OnInit {
 
   prestamoForm: FormGroup;
   amortizacionForm: FormGroup;
@@ -36,7 +35,6 @@ export class PrestamosComponent {
   prestamo: any;
   municipalidad: any;
   prestamos_garantias: any = [];
-  configuracion: any;
 
   file: any;
   reales: number = 0;
@@ -71,8 +69,12 @@ export class PrestamosComponent {
     id_tipo_prestamo: null,
     id_usuario: null,
     codigo_departamento: null,
-    codigo_municipio: null
+    codigo_municipio: null,
+    plazo_meses: 12
   }
+
+  disponibilidad: any;
+  disp: boolean = false;
 
   constructor(
     private alert: AlertService,
@@ -90,8 +92,7 @@ export class PrestamosComponent {
     private usuariosService: UsuariosService,
     private amortizacionesService: AmortizacionesService,
     private prestamos_garantiasService: PrestamosGarantiasService,
-    private configuracionesService: ConfiguracionesService,
-    private reporteService: ReporteService
+    private configuracionesService: ConfiguracionesService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -131,39 +132,36 @@ export class PrestamosComponent {
       cuota: new FormControl(null, [Validators.required]),
       saldo: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
-    });
+    })
   }
 
   async ngOnInit() {
+    AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
+    AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
+    AppComponent.loadScript('assets/js/range.js');
     this.ngxService.start();
-    await this.getConfiguraciones();
-    await this.getPrestamos();
-    await this.getCountPrestamos();
+    await this.getDepartamentos();
     await this.getFuncionarios();
     await this.getRegionales();
-    await this.getDepartamentos();
     await this.getTiposPrestamos();
     await this.getClasesPrestamos();
     await this.getGarantias();
     await this.getUsuarios();
-    AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
-    AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
-    AppComponent.loadScript('assets/js/range.js');
-    this.ngxService.stop();
+    await this.getPrestamos();
+    await this.getCountPrestamos();
   }
 
-  async getConfiguraciones() {
-    let configuraciones = await this.configuracionesService.getConfiguraciones();
-    if (configuraciones) {
-      this.configuracion = configuraciones[0];
-    }
+  get configuracion() {
+    return HomeComponent.configuracion;
   }
 
   async getDepartamentos() {
+    this.ngxService.start();
     let departamentos = await this.departamentosService.getDepartamentos();
     if (departamentos) {
       this.departamentos = departamentos;
     }
+    this.ngxService.stop();
   }
 
   async setNoPrestamo() {
@@ -187,16 +185,17 @@ export class PrestamosComponent {
         }
       }
 
-      // Part 3
-      correlativo[2] = moment().format('YYYY');
 
       let tipo_clase = await this.prestamosService.getCountPrestamosTipoPrestamoClasePrestamo(id_tipo_prestamo, id_clase_prestamo);
       if (tipo_clase) {
-        // Part 4
-        correlativo[3] = tipo_clase + 1;
+        // Part 3
+        correlativo[2] = tipo_clase + 1;
       } else {
-        correlativo[3] = 1;
+        correlativo[2] = 1;
       }
+
+      // Part 4
+      correlativo[3] = moment().format('YYYY');
 
       if (this.filtros.codigo_departamento && this.filtros.codigo_municipio) {
 
@@ -220,7 +219,6 @@ export class PrestamosComponent {
 
       this.prestamoForm.controls['no_prestamo'].setValue(`${correlativo[0]}.${correlativo[1]}.${correlativo[2]}.${correlativo[3]}.${correlativo[4]}.${correlativo[5]}.${correlativo[6]}`);
 
-
     }
   }
 
@@ -235,7 +233,7 @@ export class PrestamosComponent {
       let municipios = await this.municipiosService.getMunicipioByDepartamento(event.target.value);
       if (municipios) {
         this.municipios = municipios;
-      } 
+      }
     } else {
       this.filtros.codigo_municipio = null;
     }
@@ -261,86 +259,96 @@ export class PrestamosComponent {
         this.municipalidad = municipalidad;
         this.filtros.id_municipalidad = municipalidad.id;
       }
-    }
+    }    
   }
 
   async getPrestamos() {
-    // this.ngxService.startBackground();
+    this.ngxService.start();
     let prestamos = await this.prestamosService.getPrestamosEstadoFecha(this.estado, this.fecha_inicio, this.fecha_fin);
     if (prestamos) {
       this.prestamos = prestamos;
     }
-    // this.ngxService.stopBackground();
+    this.ngxService.stop();
   }
 
   async getPrestamosFiltros() {
-    // this.ngxService.startBackground();
     let prestamos = await this.prestamosService.getPrestamosFiltros(this.filtros);
     if (prestamos) {
       this.prestamos = prestamos;
     }
-    // this.ngxService.stopBackground();
   }
 
   async getCountPrestamos() {
-    // this.ngxService.startBackground();
     this.counts = {};
     this.counts.pendientes = await this.prestamosService.getCountPrestamosEstado('Pendiente', this.fecha_inicio, this.fecha_fin);
     this.counts.aprobados = await this.prestamosService.getCountPrestamosEstado('Aprobado', this.fecha_inicio, this.fecha_fin);
     this.counts.acreditados = await this.prestamosService.getCountPrestamosEstado('Acreditado', this.fecha_inicio, this.fecha_fin);
     this.counts.finalizados = await this.prestamosService.getCountPrestamosEstado('Finalizado', this.fecha_inicio, this.fecha_fin);
     this.counts.rechazados = await this.prestamosService.getCountPrestamosEstado('Rechazado', this.fecha_inicio, this.fecha_fin);
-    // this.ngxService.stopBackground();
   }
 
   async getGarantias() {
+    this.ngxService.start();
     let garantias = await this.garantiasService.getGarantias();
     if (garantias) {
       this.garantias = garantias;
     }
+    this.ngxService.stop();
   }
 
   async getTiposPrestamos() {
+    this.ngxService.start();
     let tipos_prestamos = await this.tipos_prestamosService.getTiposPrestamos();
     if (tipos_prestamos) {
       this.tipos_prestamos = tipos_prestamos;
     }
+    this.ngxService.stop();
   }
 
   async getClasesPrestamos() {
+    this.ngxService.start();
     let clases_prestamos = await this.clases_prestamosService.getClasesPrestamos();
     if (clases_prestamos) {
       this.clases_prestamos = clases_prestamos;
     }
+    this.ngxService.stop();
   }
 
   async getClasesPrestamosGarantias(event: any) {
+    this.ngxService.start();
     let clases_prestamos_garantias = await this.clases_prestamos_garantiasService.getClasesPrestamosGarantias(event.target.value);
     if (clases_prestamos_garantias) {
       this.clases_prestamos_garantias = clases_prestamos_garantias;
       this.prestamoForm.controls['monto'].setValue(0);
     }
+    this.ngxService.stop();
   }
 
   async getFuncionarios() {
+    this.ngxService.start();
     let funcionarios = await this.funcionariosService.getFuncionarios();
     if (funcionarios) {
       this.funcionarios = funcionarios;
     }
+    this.ngxService.stop();
   }
 
   async getRegionales() {
+    this.ngxService.start();
     let regionales = await this.regionalesService.getRegionales();
     if (regionales) {
       this.regionales = regionales;
     }
+    this.ngxService.stop();
   }
 
   async getUsuarios() {
+    this.ngxService.start();
     let usuarios = await this.usuariosService.getUsuarios();
     if (usuarios) {
       this.usuarios = usuarios;
     }
+    this.ngxService.stop();
   }
 
   async getProyeccion() {
@@ -780,8 +788,6 @@ export class PrestamosComponent {
       this.calcAmortizacion();
     }
     this.amortizacionForm.controls['id_prestamo'].setValue(this.prestamo.id);
-    console.log(this.amortizacionForm.value);
-
     this.amortizacion = null;
   }
 
@@ -795,6 +801,31 @@ export class PrestamosComponent {
       codigo_departamento: null,
       codigo_municipio: null
     }
+  }
+
+  recibirDisp(event: any) {
+    this.disponibilidad = event;
+
+    let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
+
+    for (let c = 0; c < this.clases_prestamos_garantias.length; c++) {
+      let monto = this.clases_prestamos_garantias[c].monto;
+      if (this.clases_prestamos_garantias[c].garantia.codigo == '01') {
+        if (monto <= this.disponibilidad.constitucional) {
+          this.disp = true;
+          return;
+        }
+      }
+      if (this.clases_prestamos_garantias[c].garantia.codigo == '02') {
+        if (monto <= this.disponibilidad.constitucional) {
+          this.disp = true;
+          return;
+        }
+      }
+    }
+    
+    this.disp = false;
+
   }
 
 }

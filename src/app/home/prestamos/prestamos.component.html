@@ -244,7 +244,7 @@
                 </div>
                 <hr>
               </div>
-              <div class="row">
+              <div class="row" [hidden]="!disp">
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Acta
                     <span class="text-danger">*</span>
@@ -284,7 +284,7 @@
                 </div>
               </div>
               <hr>
-              <div class="row">
+              <div class="row" [hidden]="!disp">
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">No. Oficio A.J.
                     <span class="text-danger">*</span>
@@ -319,7 +319,7 @@
                 </div>
               </div>
               <div>
-                <button class="btn btn-primary me-1" (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
+                <button [hidden]="!disp" class="btn btn-primary me-1" (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Guardar
                 </button>
                 <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
@@ -424,6 +424,25 @@
                       </tbody>
                     </table>
                   </div>
+
+                  <app-reportes [filtros]="filtros" [id_reporte]="1" [view_reporte]="false" (disp)="recibirDisp($event)"></app-reportes>
+
+                  <hr>
+                  <h4 class="heading mb-0">Disponible Total</h4>
+                  <hr>
+                  <div class="row">
+                    <div class="col-6" style="text-align: left;">
+                      <b>Aporte Constitucional</b>: <br>
+                      <b>IVA Paz: </b>  <br>
+                      <b>Unificadas: </b>
+                    </div>
+                    <div class="col-6" style="text-align: right;" *ngIf="disponibilidad">
+                      <span>{{disponibilidad.constitucional | number: '.2-2'}}</span> <br>
+                      <span>{{disponibilidad.iva_paz | number: '.2-2'}}</span> <br>
+                      <span>{{disponibilidad.total | number: '.2-2'}}</span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </form>
