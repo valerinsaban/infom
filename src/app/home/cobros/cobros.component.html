@@ -26,14 +26,14 @@
               <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
             </div>
             <div class="form-group mb-3">
-              <label class="text-secondary"> Fecha <span class="text-danger">*</span>
-              </label>
-              <input formControlName="fecha" type="date" class="form-control">
-            </div>
-            <div class="form-group mb-3">
               <label class="text-secondary"> Mes <span class="text-danger">*</span>
               </label>
               <input formControlName="mes" type="month" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Fecha Pago <span class="text-danger">*</span>
+              </label>
+              <input formControlName="fecha" type="date" class="form-control">
             </div>
             <div *ngIf="!cobro">
               <button (click)="postCobro()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': cobroForm.invalid}">
@@ -63,16 +63,16 @@
               <thead>
                 <tr>
                   <th>Codigo</th>
-                  <th>Fecha</th>
                   <th>Mes</th>
+                  <th>Fecha Pago</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let d of cobros; let dindex = index">
                   <td><a class="text-primary">{{d.codigo}}</a></td>
-                  <td>{{d.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                   <td>{{d.mes}}</td>
+                  <td>{{d.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">

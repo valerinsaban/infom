@@ -11,6 +11,7 @@ import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { CobrosService } from 'src/app/services/cobros.service';
 
 @Component({
   selector: 'app-reportes',
@@ -59,7 +60,8 @@ export class ReportesComponent {
     private garantiasService: GarantiasService,
     private prestamosService: PrestamosService,
     private prestamos_garantiasService: PrestamosGarantiasService,
-    private amortizacionesService: AmortizacionesService
+    private amortizacionesService: AmortizacionesService,
+    private cobrosService: CobrosService
   ) {
     this.getReportes();
     this.getConfiguraciones();
@@ -106,14 +108,14 @@ export class ReportesComponent {
     return false;
   }
 
-  async imprimir() {
+  async imprimir(print: boolean = true) {
     for (let r = 0; r < this.reportes.length; r++) {
       if (this.reportes[r].id == this.id_reporte) {
-        if (this.reportes[r].slug == 'amortizaciones') {
-          await this.reporteAmortizaciones();
-        }
         if (this.reportes[r].slug == 'disponibilidad') {
-          await this.reporteDisponibilidad();
+          await this.reporteDisponibilidad(print);
+        }
+        if (this.reportes[r].slug == 'amortizaciones') {
+          await this.reporteAmortizaciones(print);
         }
       }
     }
@@ -132,7 +134,7 @@ export class ReportesComponent {
     this.disp.emit(this.totales)
   }
 
-  public async reporteDisponibilidad() {
+  public async reporteDisponibilidad(print: boolean = true) {
     this.ngxService.start();
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
     if (this.municipalidad) {
@@ -185,7 +187,7 @@ export class ReportesComponent {
       }
 
       let rep: any = await this.reporteService.get('disponibilidad');
-      let contenido: any = document.getElementById('disponibilidad');
+      let contenido: any = document.getElementById('rep_disponibilidad');
       contenido = contenido.innerHTML.toString();
 
       rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
@@ -196,10 +198,12 @@ export class ReportesComponent {
       rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
       rep = rep.replaceAll("{{contenido}}", contenido);
 
-      let popupWin: any = window.open("", "_blank");
-      popupWin.document.open();
-      popupWin.document.write(rep);
-      popupWin.document.close();
+      if (print) {
+        let popupWin: any = window.open("", "_blank");
+        popupWin.document.open();
+        popupWin.document.write(rep);
+        popupWin.document.close();
+      }
 
     } else {
       this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
@@ -207,10 +211,19 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
-  public async reporteAmortizaciones() {
+  public async reporteAmortizaciones(print: boolean = true) {
     this.ngxService.start();
+
+    let cobro = await this.cobrosService.getCobroMes(this.filtros.mes);
+    if (cobro) {
+      let amortizaciones = await this.amortizacionesService.getAmortizacionesCobro(cobro.id);
+      console.log(amortizaciones);
+
+    }
+
+
     let rep: any = await this.reporteService.get('amortizaciones');
-    let contenido: any = document.getElementById('amortizaciones');
+    let contenido: any = document.getElementById('rep_amortizaciones');
     contenido = contenido.innerHTML.toString();
 
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
@@ -220,10 +233,12 @@ export class ReportesComponent {
 
     rep = rep.replaceAll("{{contenido}}", contenido);
 
-    let popupWin: any = window.open("", "_blank");
-    popupWin.document.open();
-    popupWin.document.write(rep);
-    popupWin.document.close();
+    if (print) {
+      let popupWin: any = window.open("", "_blank");
+      popupWin.document.open();
+      popupWin.document.write(rep);
+      popupWin.document.close();
+    }
 
     this.ngxService.stop();
   }

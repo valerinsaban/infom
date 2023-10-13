@@ -15,6 +15,14 @@ export class CobrosService {
     return this.rootService.get(this.route);
   }
 
+  getCobroUltimo(): Promise<any> {
+    return this.rootService.get(this.route + '/ultimo');
+  }
+
+  getCobroMes(mes: string): Promise<any> {
+    return this.rootService.get(this.route + '/mes/' + mes);
+  }
+
   getCobro(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }

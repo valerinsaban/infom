@@ -8,10 +8,14 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <style type="text/css">
+    :root {
+      --font-size: 10px;
+    }
+
     @page {
       margin: 25mm 5mm 10mm 5mm;
       size: 330mm 216mm;
-      font-size: 10px;
+      font-size: var(--font-size);
 
       @top-left {
         content: element(header);
@@ -49,7 +53,7 @@
       background-color: white;
       box-shadow: 0 0 0 1px #cfcfcf;
       margin: auto;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
   </style>
 
@@ -252,6 +256,12 @@
     }
 
     Paged.registerHandlers(RepeatingTableHeadersHandler);
+  </script>
+  <script>
+    setTimeout(() => {
+      var r = document.querySelector(':root');
+      r.style.setProperty('--font-size', '9.5px');
+    }, "1000");
   </script>
 
 </body>

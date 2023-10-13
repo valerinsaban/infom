@@ -21,6 +21,9 @@ export class CobrosComponent {
   cobroForm: FormGroup;
   cobros: any = [];
   cobro: any;
+  id_cobro: number = 0;
+
+  cobro_anterior: any;
 
   configuracion: any;
 
@@ -78,8 +81,15 @@ export class CobrosComponent {
       return;
     }
     this.ngxService.start();
+    let cobro_anterior = await this.cobrosService.getCobroUltimo();
+    if (cobro_anterior) {
+      this.cobro_anterior = cobro_anterior;
+    }
+
     let cobro = await this.cobrosService.postCobro(this.cobroForm.value);
     if (cobro.resultado) {
+
+      this.id_cobro = cobro.data.id;
 
       let prestamos = await this.prestamosService.getPrestamosEstado('Acreditado');
       for (let p = 0; p < prestamos.length; p++) {
@@ -94,28 +104,28 @@ export class CobrosComponent {
     this.ngxService.stop();
   }
 
-  calcAmortizacion(p: any, amortizaciones: any) {
+  async calcAmortizacion(p: any, amortizaciones: any) {
     let monto_total = p.monto;
     let plazo_meses = parseFloat(p.plazo_meses);
     let intereses = parseFloat(p.intereses);
     let capital = monto_total / plazo_meses;
 
-    let mes = this.cobroForm.controls['mes'].value;
-    let fecha = this.cobroForm.controls['fecha'].value;
+    let fecha = this.cobro_anterior.fecha;
 
-    let cuotas = [
+    let cuotas: any = [
       { 
-        fecha_inicio: moment(mes).startOf('month').format('YYYY-MM-DD'),
+        fecha_inicio: moment(fecha).startOf('month').format('YYYY-MM-DD'),
         fecha_fin: moment(fecha).format('YYYY-MM-DD')
       },
       { 
         fecha_inicio: moment(fecha).add(1, 'day').format('YYYY-MM-DD'),
-        fecha_fin: moment(mes).endOf('month').format('YYYY-MM-DD')
+        fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
       }
     ]
     for (let i = 0; i < cuotas.length; i++) {
       let fecha_inicio = cuotas[i].fecha_inicio;
       let fecha_fin = cuotas[i].fecha_fin;
+
       if (fecha_inicio && fecha_fin) {
         let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
         let saldo_actual = monto_total;
@@ -127,22 +137,22 @@ export class CobrosComponent {
           capital = monto_total / plazo_meses;
           saldo_actual = parseFloat(amortizaciones[amortizaciones.length - 1].saldo);
         }
-  
-        let interes = (saldo_actual * (intereses / 100) / 365) * dias;
-        let iva = interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
-        let cuota = capital + interes + iva;
-        let saldo = saldo_actual - capital;
-  
-        console.log(saldo_actual);
-        console.log('--------------');
-  
-        console.log(dias);
-        console.log(interes);
-        console.log(iva);
-        console.log(cuota);
-        console.log(saldo);
+
+        cuotas[i].dias = dias;
+        cuotas[i].capital = capital
+        cuotas[i].interes = (saldo_actual * (intereses / 100) / 365) * dias;
+        cuotas[i].iva = cuotas[i].interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
+        cuotas[i].cuota = capital + cuotas[i].interes + cuotas[i].iva;
+        cuotas[i].saldo = saldo_actual - capital;
+        cuotas[i].id_prestamo = p.id;
+        cuotas[i].id_cobro = this.id_cobro;
+
+        let amortizacion = await this.amortizacionesService.postAmortizacion(cuotas[i]);
+
       }
     }
+
+    this.alert.alertMax('Transaccion Correcta', 'Amortizaciones Generadas', 'success');
 
   }
 

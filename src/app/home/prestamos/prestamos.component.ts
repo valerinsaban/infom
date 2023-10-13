@@ -259,7 +259,7 @@ export class PrestamosComponent implements OnInit {
         this.municipalidad = municipalidad;
         this.filtros.id_municipalidad = municipalidad.id;
       }
-    }    
+    }
   }
 
   async getPrestamos() {
@@ -320,6 +320,10 @@ export class PrestamosComponent implements OnInit {
     if (clases_prestamos_garantias) {
       this.clases_prestamos_garantias = clases_prestamos_garantias;
       this.prestamoForm.controls['monto'].setValue(0);
+
+      if (this.clases_prestamos_garantias.length == 1) {
+        this.clases_prestamos_garantias[0].porcentaje = 100;
+      }
     }
     this.ngxService.stop();
   }
@@ -372,15 +376,6 @@ export class PrestamosComponent implements OnInit {
 
     this.amortizaciones = [];
     this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
-  }
-
-  async getAmortizaciones() {
-    this.amortizaciones = [];
-    let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(this.prestamo.id);
-    if (amortizaciones) {
-      this.amortizaciones = amortizaciones;
-      this.reales = amortizaciones.length;
-    }
   }
 
   get fecha_inicio() {
@@ -545,52 +540,6 @@ export class PrestamosComponent implements OnInit {
     })
   }
 
-  async postAmortizacion() {
-    this.ngxService.start();
-    let amortizacion = await this.amortizacionesService.postAmortizacion(this.amortizacionForm.value);
-    if (amortizacion.resultado) {
-      await this.getAmortizaciones();
-      this.alert.alertMax('Transaccion Correcta', amortizacion.mensaje, 'success');
-      this.limpiar2();
-    }
-    this.ngxService.stop();
-  }
-
-  async putAmortizacion() {
-    this.ngxService.start();
-    let amortizacion = await this.amortizacionesService.putAmortizacion(this.amortizacion.id, this.amortizacionForm.value);
-    if (amortizacion.resultado) {
-      await this.getAmortizaciones();
-      this.alert.alertMax('Transaccion Correcta', amortizacion.mensaje, 'success');
-      this.limpiar2();
-    }
-    this.ngxService.stop();
-  }
-
-  async deleteAmortizacion(i: any, index: number) {
-    Swal.fire({
-      title: '¿Estas seguro?',
-      text: "Esta accion no se puede revertir!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar!',
-      cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        this.ngxService.start();
-        let amortizacion = await this.amortizacionesService.deleteAmortizacion(i.id);
-        if (amortizacion.resultado) {
-          this.getAmortizaciones();
-          this.alert.alertMax('Correcto', amortizacion.mensaje, 'success');
-          this.limpiar2();
-        }
-        this.ngxService.stop();
-      }
-    })
-  }
-
   setImage(event: any, imagen: any) {
     const file = event.target.files[0];
     const reader: any = new FileReader();
@@ -640,18 +589,20 @@ export class PrestamosComponent implements OnInit {
     this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
     this.filtros.codigo_municipio = i.municipalidad.municipio.codigo;
 
-    await this.getAmortizaciones();
     await this.getProyeccion();
     this.calcAmortizacion();
   }
 
-  setAmortizacion(i: any, index: number) {
+  async getAmortizaciones(i: any, index: number) {
     i.index = index;
-    this.amortizacion = i;
-    this.amortizacionForm.controls['fecha_inicio'].setValue(i.fecha_inicio);
-    this.amortizacionForm.controls['fecha_fin'].setValue(i.fecha_fin);
-    this.amortizacionForm.controls['id_prestamo'].setValue(this.prestamo.id);
-    this.calcAmortizacion();
+    this.prestamo = i;
+
+    this.amortizaciones = [];
+    let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(this.prestamo.id);
+    if (amortizaciones) {
+      this.amortizaciones = amortizaciones;
+      this.reales = amortizaciones.length;
+    }
   }
 
   calcAmortizacion() {
@@ -823,7 +774,7 @@ export class PrestamosComponent implements OnInit {
         }
       }
     }
-    
+
     this.disp = false;
 
   }

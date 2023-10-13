@@ -162,7 +162,7 @@
                               data-bs-target="#estado">
                               Cambiar Estado
                             </a>
-                            <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item" (click)="setPrestamo(p, mindex)"
+                            <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item" (click)="getAmortizaciones(p, mindex)"
                               data-bs-toggle="offcanvas" data-bs-target="#amortizaciones">
                               Amortizaciones
                             </a>
@@ -876,7 +876,7 @@
                   <li class="list-group-item d-flex px-0 justify-content-between">
                     <strong>Saldo Actual</strong>
                     <span class="mb-0 text-primary">
-                      Q{{(reales ? amortizaciones[reales - 1].saldo : prestamo.monto) |
+                      Q{{(reales ? amortizaciones[reales - 2].saldo : prestamo.monto) |
                       number: '.2-2'}}
                     </span>
                   </li>
@@ -891,12 +891,6 @@
               <div class="table-responsive active-projects manage-client style-1">
                 <div class="tbl-caption">
                   <h4 class="heading mb-0">Amortizaciones ({{amortizaciones.length}})</h4>
-                  <div *ngIf="prestamo">
-                    <a *ngIf="amortizaciones.length < prestamo.plazo_meses" (click)="limpiar2()"
-                      class="btn btn-primary btn-sm" data-bs-toggle="modal" href="#agregar-amortizacion" role="button">
-                      + Agregar Amortizacion
-                    </a>
-                  </div>
                 </div>
                 <table class="table">
                   <thead>
@@ -909,7 +903,6 @@
                       <th style="text-align: right;">IVA</th>
                       <th style="text-align: right;">Cuota</th>
                       <th style="text-align: right;">Saldo</th>
-                      <th style="text-align: right;">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -923,24 +916,6 @@
                       <th style="text-align: right;"><span class="text-primary" [ngClass]="{'real': a.id}">{{a.cuota |
                           number: '.2-2'}}</span></th>
                       <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
-                      <td>
-                        <div *ngIf="a.id" class="dropdown">
-                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown"
-                            [hidden]="aindex < reales - 1">
-                            <i class="fa-solid fa-pencil-alt"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" (click)="setAmortizacion(a, aindex)" data-bs-toggle="modal"
-                              href="#editar-amortizacion">Editar</a>
-                            <a class="dropdown-item" (click)="deleteAmortizacion(a, aindex)">Eliminar</a>
-                          </div>
-                        </div>
-                        <button *ngIf="!a.id" (click)="setAmortizacion(a, aindex)" type="button"
-                          [hidden]="aindex > reales" class="btn btn-primary light sharp" data-bs-toggle="modal"
-                          href="#agregar-amortizacion">
-                          <i class="fa-solid fa-add"></i>
-                        </button>
-                      </td>
                     </tr>
                   </tbody>
                   <tfoot>
@@ -962,146 +937,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="agregar-amortizacion" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" [formGroup]="amortizacionForm">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Agregar Amortizacion</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
-            <label class="form-label">Fecha Inicio
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_inicio" type="date" class="form-control">
-          </div>
-          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
-            <label class="form-label">Fecha Fin
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_fin" type="date" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Dias
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="dias" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Capital
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="capital" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Interes
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="interes" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">IVA
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="iva" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Cuota
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="cuota" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Saldo
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="saldo" type="number" class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
-        <button [ngClass]="{'disabled': amortizacionForm.invalid}" class="btn btn-primary me-1"
-          (click)="postAmortizacion()" data-bs-dismiss="modal" type="button">
-          <i class="fa-duotone fa-floppy-disk"></i> Guardar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="editar-amortizacion" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" [formGroup]="amortizacionForm">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Editar Amortizacion</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
-            <label class="form-label">Fecha Inicio
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_inicio" type="date" class="form-control">
-          </div>
-          <div (change)="calcAmortizacion()" class="col-xl-6 mb-3">
-            <label class="form-label">Fecha Fin
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="fecha_fin" type="date" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Dias
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="dias" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Capital
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="capital" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Interes
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="interes" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">IVA
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="iva" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Cuota
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="cuota" type="number" class="form-control">
-          </div>
-          <div class="col-xl-6 mb-3">
-            <label class="form-label">Saldo
-              <span class="text-danger">*</span>
-            </label>
-            <input formControlName="saldo" type="number" class="form-control">
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
-        <button [ngClass]="{'disabled': amortizacionForm.invalid}" class="btn btn-primary me-1"
-          (click)="putAmortizacion()" data-bs-dismiss="modal" type="button">
-          <i class="fa-duotone fa-floppy-disk"></i> Guardar
-        </button>
       </div>
     </div>
   </div>

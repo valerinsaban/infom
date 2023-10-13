@@ -58,6 +58,9 @@
             <a (click)="imprimir()" href="javascript:void(0);" class="btn btn-primary">
               <i class="fas fa-print"></i> Imprimir
             </a>
+            <a *ngIf="!view_reporte" (click)="imprimir(false)" href="javascript:void(0);" class="btn btn-primary" style="margin-left: 10px;">
+              <i class="fas fa-check"></i> Validar
+            </a>
           </div>
         </div>
       </div>
@@ -67,7 +70,7 @@
         <div class="card-body p-0">
 
           <div hidden>
-            <div id="disponibilidad" style="color: black; font-size: 8px;">
+            <div id="rep_disponibilidad" style="color: black; font-size: 8px;">
 
               <ng-container *ngFor="let g of garantias">
 
@@ -247,7 +250,7 @@
 
             </div>
 
-            <div id="amortizaciones" style="color: black; font-size: 8px;">
+            <div id="rep_amortizaciones" style="color: black; font-size: 8px;">
               <table style="width: 100%">
                 <thead>
                   <tr style="border: solid 1px">
