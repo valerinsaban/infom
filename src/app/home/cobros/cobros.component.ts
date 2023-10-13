@@ -113,11 +113,11 @@ export class CobrosComponent {
     let fecha = this.cobro_anterior.fecha;
 
     let cuotas: any = [
-      { 
+      {
         fecha_inicio: moment(fecha).startOf('month').format('YYYY-MM-DD'),
         fecha_fin: moment(fecha).format('YYYY-MM-DD')
       },
-      { 
+      {
         fecha_inicio: moment(fecha).add(1, 'day').format('YYYY-MM-DD'),
         fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
       }
@@ -140,10 +140,21 @@ export class CobrosComponent {
 
         cuotas[i].dias = dias;
         cuotas[i].capital = capital
+        i == 1 ? cuotas[i].capital = cuotas[0].saldo : null;
+
         cuotas[i].interes = (saldo_actual * (intereses / 100) / 365) * dias;
+        i == 1 ? cuotas[i].interes = (cuotas[0].saldo * (intereses / 100) / 365) * dias : null;
+
         cuotas[i].iva = cuotas[i].interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
-        cuotas[i].cuota = capital + cuotas[i].interes + cuotas[i].iva;
-        cuotas[i].saldo = saldo_actual - capital;
+
+        cuotas[i].cuota = cuotas[i].capital + cuotas[i].interes + cuotas[i].iva;
+        i == 1 ? cuotas[i].cuota = cuotas[i].interes + cuotas[i].iva : null;
+
+        cuotas[i].saldo = saldo_actual - cuotas[i].capital;
+        i == 1 ? cuotas[i].saldo = cuotas[0].saldo : null;
+
+        i == 1 ? cuotas[i].capital = 0 : null;
+
         cuotas[i].id_prestamo = p.id;
         cuotas[i].id_cobro = this.id_cobro;
 

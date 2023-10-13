@@ -12,6 +12,7 @@ import { ConfiguracionesService } from 'src/app/services/configuraciones.service
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { CobrosService } from 'src/app/services/cobros.service';
+import { ClasesPrestamosService } from 'src/app/services/catalogos/clases-prestamos.service';
 
 @Component({
   selector: 'app-reportes',
@@ -26,7 +27,7 @@ export class ReportesComponent {
   filtros: any = {
     codigo_departamento: '05',
     codigo_municipio: '07',
-    plazo_meses: 12,
+    plazo_meses: 48,
     mes: null,
   }
 
@@ -43,6 +44,8 @@ export class ReportesComponent {
   garantias: any = [];
   disponibilidad: any = [];
   municipalidad: any;
+
+  clases_prestamos: any = [];
 
   totales: any = {
     constitucional: 0,
@@ -61,7 +64,8 @@ export class ReportesComponent {
     private prestamosService: PrestamosService,
     private prestamos_garantiasService: PrestamosGarantiasService,
     private amortizacionesService: AmortizacionesService,
-    private cobrosService: CobrosService
+    private cobrosService: CobrosService,
+    private clases_prestamosService: ClasesPrestamosService
   ) {
     this.getReportes();
     this.getConfiguraciones();
@@ -213,6 +217,12 @@ export class ReportesComponent {
 
   public async reporteAmortizaciones(print: boolean = true) {
     this.ngxService.start();
+
+    let clases_prestamos = await this.clases_prestamosService.getClasesPrestamos();
+    this.clases_prestamos = clases_prestamos;
+
+    // let municipalidades = await this.municipalidadesService.getMunicipalidades();
+    
 
     let cobro = await this.cobrosService.getCobroMes(this.filtros.mes);
     if (cobro) {

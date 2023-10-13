@@ -196,6 +196,8 @@
 <div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-prestamo">
   <div class="offcanvas-header">
     <h5 class="modal-title">Creacion de Prestamo</h5>
+    <h5 class="modal-title" style="text-transform: uppercase; font-size: 20px;">{{getTipoPrestamo()}}</h5>
+
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
       <i class="fa-solid fa-xmark"></i>
     </button>
@@ -230,15 +232,15 @@
                   </div>
                 </div>
                 <div class="col-xl-8 mb-3">
-                  <div class="row">
+                  <div class="row" *ngIf="disponibilidad">
                     <div class="col-4 pt-3 pb-3 border-end">
-                      <h6 class="mb-1">{{prestamoForm.controls['no_dictamen'].value}}</h6><span>No. Dictamen</span>
+                      <h6 class="mb-1">{{disponibilidad.constitucional | number: '.2-2'}}</h6><span>Aporte Constitucional</span>
                     </div>
                     <div class="col-4 pt-3 pb-3 border-end">
-                      <h6 class="mb-1">{{prestamoForm.controls['no_convenio'].value}}</h6><span>No. Convenio</span>
+                      <h6 class="mb-1">{{disponibilidad.iva_paz | number: '.2-2'}}</h6><span>IVA Paz</span>
                     </div>
                     <div class="col-4 pt-3 pb-3">
-                      <h6 class="mb-1">{{prestamoForm.controls['no_prestamo'].value}}</h6><span>No. Prestamo</span>
+                      <h6 class="mb-1">{{disponibilidad.total | number: '.2-2'}}</h6><span>Total Disponible</span>
                     </div>
                   </div>
                 </div>
@@ -298,14 +300,14 @@
                   </label>
                   <input formControlName="fecha_oficio_aj" type="date" class="form-control">
                 </div>
-                <div class="col-xl-3 mb-3">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
                   <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_ger" type="number" class="form-control"
                     placeholder="NO. Oficio A.J.">
                 </div>
-                <div class="col-xl-3 mb-3">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
                   <label class="form-label">Fecha Oficio GER
                     <span class="text-danger">*</span>
                   </label>
@@ -317,6 +319,9 @@
                   </label>
                   <textarea formControlName="destino_prestamo" class="form-control" rows="5"></textarea>
                 </div>
+              </div>
+              <div *ngIf="disp == false" style="text-align: center;">
+                <h2 style="text-transform: uppercase;">Disponibilidad Insuficiente</h2>
               </div>
               <div>
                 <button [hidden]="!disp" class="btn btn-primary me-1" (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
@@ -388,7 +393,7 @@
                 </div>
                 <div class="col-xl-8 mb-3">
                   <label class="form-label"></label>
-                  <h2>{{prestamoForm.value.monto | number: '.2-2'}}</h2>
+                  <h2>Q. {{prestamoForm.value.monto | number: '.2-2'}}</h2>
                 </div>
                 <div class="col-xl-12 mb-3">
                   <div class="table-responsive active-projects manage-client">
@@ -418,7 +423,7 @@
                           </td>
                           <td style="text-align: right;"
                             [ngClass]="{'cuadrado': getTotal() == prestamoForm.value.monto && getPorcentaje() == 100}">
-                            <b>{{getTotal() | number: '.2-2'}}</b>
+                            <b>Q. {{getTotal() | number: '.2-2'}}</b>
                           </td>
                         </tr>
                       </tbody>
@@ -464,6 +469,7 @@
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Dias</th>
+                    <th>Disponible</th>
                     <th style="text-align: right;">Capital</th>
                     <th style="text-align: right;">Intereses</th>
                     <th style="text-align: right;">IVA</th>
@@ -477,11 +483,26 @@
                     <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
                     <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
                     <td>{{a.dias}} dias</td>
-                    <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
-                    <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
+                    <td>----</td>
+                    <td style="text-align: right;">
+                      <input class="form-control" type="text" [(ngModel)]="a.capital">
+                    </td>
+                    <td style="text-align: right;">
+                      <input class="form-control" type="text" [(ngModel)]="a.interes">
+                    </td>
+                    <td style="text-align: right;">
+                      <input class="form-control" type="text" [(ngModel)]="a.iva">
+                    </td>
+                    <td style="text-align: right;">
+                      <input class="form-control" type="text" [(ngModel)]="a.cuota">
+                    </td>
+                    <td style="text-align: right;">
+                      <input class="form-control" type="text" [(ngModel)]="a.saldo">
+                    </td>
+                    <!-- <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
                     <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
                     <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
-                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th> -->
                     <td><i class="fas fa-check"></i></td>
                   </tr>
                 </tbody>
@@ -612,14 +633,14 @@
                   </label>
                   <input formControlName="fecha_oficio_aj" type="date" class="form-control">
                 </div>
-                <div class="col-xl-3 mb-3">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_clase_prestamo'].value == 2">
                   <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_ger" type="number" class="form-control"
                     placeholder="NO. Oficio A.J.">
                 </div>
-                <div class="col-xl-3 mb-3">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_clase_prestamo'].value == 2">
                   <label class="form-label">Fecha Oficio GER
                     <span class="text-danger">*</span>
                   </label>

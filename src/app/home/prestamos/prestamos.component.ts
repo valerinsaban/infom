@@ -74,7 +74,7 @@ export class PrestamosComponent implements OnInit {
   }
 
   disponibilidad: any;
-  disp: boolean = false;
+  disp: any;
 
   constructor(
     private alert: AlertService,
@@ -275,6 +275,14 @@ export class PrestamosComponent implements OnInit {
     let prestamos = await this.prestamosService.getPrestamosFiltros(this.filtros);
     if (prestamos) {
       this.prestamos = prestamos;
+    }
+  }
+
+  getTipoPrestamo() {
+    for (let t = 0; t < this.tipos_prestamos.length; t++) {
+      if (this.prestamoForm.controls['id_tipo_prestamo'].value == this.tipos_prestamos[t].id) {
+        return this.tipos_prestamos[t].nombre;
+      }
     }
   }
 

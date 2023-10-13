@@ -271,9 +271,11 @@
                     </td>
                     <td></td>
                   </tr>
-                  <tr style="font-weight: 500; font-size: 12px;">
-                    <td>0015 - FONDO PATRIMONIAL/FIM</td>
-                  </tr>
+                  <ng-container *ngFor="let c of clases_prestamos">
+                    <tr style="font-weight: 500; font-size: 12px;">
+                      <td>{{c.codigo}} - FONDO PATRIMONIAL/{{c.nombre}}</td>
+                    </tr>
+                  </ng-container>
                   <tr>
                     <td>Santo Domingo, Suchitepequez</td>
                     <td><b>10.06.00015.009</b></td>
