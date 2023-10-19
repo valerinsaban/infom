@@ -8,7 +8,6 @@ import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AportesService } from 'src/app/services/aportes.service';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
-import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { CobrosService } from 'src/app/services/cobros.service';
@@ -25,9 +24,9 @@ export class ReportesComponent {
 
   @Input()
   filtros: any = {
-    codigo_departamento: '05',
-    codigo_municipio: '07',
-    plazo_meses: 48,
+    codigo_departamento: '',
+    codigo_municipio: '',
+    plazo_meses: '',
     mes: null,
   }
 
@@ -39,7 +38,6 @@ export class ReportesComponent {
 
   reportes: any = [];
   reporte: any;
-  configuracion: any;
 
   garantias: any = [];
   disponibilidad: any = [];
@@ -53,11 +51,12 @@ export class ReportesComponent {
     total: 0
   }
 
+  meses: any;
+
   constructor(
     private ngxService: NgxUiLoaderService,
     private alert: AlertService,
     private reporteService: ReporteService,
-    private configuracionesService: ConfiguracionesService,
     private municipalidadesService: MunicipalidadesService,
     private aportesService: AportesService,
     private garantiasService: GarantiasService,
@@ -68,7 +67,10 @@ export class ReportesComponent {
     private clases_prestamosService: ClasesPrestamosService
   ) {
     this.getReportes();
-    this.getConfiguraciones();
+  }
+
+  get configuracion() {
+    return HomeComponent.configuracion;
   }
 
   getReportes() {
@@ -84,17 +86,17 @@ export class ReportesComponent {
     ];
   }
 
-  async getConfiguraciones() {
-    let configuraciones = await this.configuracionesService.getConfiguraciones();
-    if (configuraciones) {
-      this.configuracion = configuraciones[0];
-    }
-  }
-
   async setReporte() {
     for (let r = 0; r < this.reportes.length; r++) {
       if (this.reportes[r].id == this.id_reporte) {
         this.reporte = this.reportes[r];
+
+        let mes_inicio = moment();
+        let mes_fin = moment(this.configuracion.periodo_fin + '-01');
+        let diff_meses: any = mes_fin.diff(mes_inicio, 'months', true) + 1;
+        this.meses = parseInt(diff_meses);
+        this.filtros.plazo_meses = this.meses;
+
       }
     }
   }
@@ -140,6 +142,7 @@ export class ReportesComponent {
 
   public async reporteDisponibilidad(print: boolean = true) {
     this.ngxService.start();
+
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
     if (this.municipalidad) {
       let aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
@@ -150,13 +153,27 @@ export class ReportesComponent {
         prestamos[i].prestamos_garantias = prestamos_garantias
       }
 
-      this.disponibilidad = [];
+      // let total_hojas = Math.ceil(this.filtros.plazo_meses / 12);
+      // let hojas: any = [];
+      // let restantes = this.filtros.plazo_meses;
+      // for (let t = 0; t < total_hojas; t++) {
+      //   hojas.push({ disponibilidad: [], garantias: this.garantias });
+      //   for (let i = 0; i < 12; i++) {
+      //     hojas[t].disponibilidad.push({
+      //       mes: moment(aporte.mes).add(i + 1, 'month').add(t, 'year').format('YYYY-MM'),
+      //     })
+      //   }
+      //   restantes = restantes - 12;
+      // }
 
+      
+      this.disponibilidad = [];
       for (let i = 0; i < this.filtros.plazo_meses; i++) {
         this.disponibilidad.push({
           mes: moment(aporte.mes).add(i + 1, 'month').format('YYYY-MM'),
         });
       }
+      
 
       for (let g = 0; g < this.garantias.length; g++) {
         this.garantias[g].prestamos = [];
@@ -222,7 +239,7 @@ export class ReportesComponent {
     this.clases_prestamos = clases_prestamos;
 
     // let municipalidades = await this.municipalidadesService.getMunicipalidades();
-    
+
 
     let cobro = await this.cobrosService.getCobroMes(this.filtros.mes);
     if (cobro) {

@@ -45,7 +45,7 @@
                 <label class="form-label">Plazo Meses</label>
                 <div class="input-group mb-3">
                   <input [(ngModel)]="filtros.plazo_meses" [ngModelOptions]="{standalone: true}" type="number"
-                    class="form-control">
+                    [max]="meses" class="form-control">
                 </div>
               </div>
 
@@ -54,11 +54,13 @@
         </div>
         <div class="card-footer">
           <div class="text-center">
-            <a *ngIf="view_reporte" (click)="limpiar()" href="javascript:void(0);" class="btn btn-outline-primary me-2"> Limpiar</a>
+            <a *ngIf="view_reporte" (click)="limpiar()" href="javascript:void(0);" class="btn btn-outline-primary me-2">
+              Limpiar</a>
             <a (click)="imprimir()" href="javascript:void(0);" class="btn btn-primary">
               <i class="fas fa-print"></i> Imprimir
             </a>
-            <a *ngIf="!view_reporte" (click)="imprimir(false)" href="javascript:void(0);" class="btn btn-primary" style="margin-left: 10px;">
+            <a *ngIf="!view_reporte" (click)="imprimir(false)" href="javascript:void(0);" class="btn btn-primary"
+              style="margin-left: 10px;">
               <i class="fas fa-check"></i> Validar
             </a>
           </div>

@@ -28,7 +28,8 @@ export class ConfiguracionesComponent {
       direccion: new FormControl(null),
       sitio_web: new FormControl(null),
       porcentaje_interes: new FormControl(null),
-      porcentaje_iva: new FormControl(null)
+      porcentaje_iva: new FormControl(null),
+      periodo_fin: new FormControl(null)
     });
   }
 
