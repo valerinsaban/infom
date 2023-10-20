@@ -662,6 +662,7 @@ export class PrestamosComponent implements OnInit {
     let total = 0;
     for (let a = 0; a < this.amortizaciones.length; a++) {
       total += parseFloat(this.amortizaciones[a].capital);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
     }
     return total;
   }
@@ -670,6 +671,7 @@ export class PrestamosComponent implements OnInit {
     let total = 0;
     for (let a = 0; a < this.amortizaciones.length; a++) {
       total += parseFloat(this.amortizaciones[a].interes);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
     }
     return total;
   }
@@ -678,6 +680,7 @@ export class PrestamosComponent implements OnInit {
     let total = 0;
     for (let a = 0; a < this.amortizaciones.length; a++) {
       total += parseFloat(this.amortizaciones[a].iva);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
     }
     return total;
   }
@@ -686,6 +689,7 @@ export class PrestamosComponent implements OnInit {
     let total = 0;
     for (let a = 0; a < this.amortizaciones.length; a++) {
       total += parseFloat(this.amortizaciones[a].cuota);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
     }
     return total;
   }
