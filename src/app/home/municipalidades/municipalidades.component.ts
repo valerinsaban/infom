@@ -99,6 +99,9 @@ export class MunicipalidadesComponent {
     this.ngxService.start();
     await this.getDepartamentos();
     await this.getBancos();
+    await this.getProfesiones();
+    await this.getPuestos();
+    await this.getEstadosCiviles();
     this.ngxService.stop();
   }
 
