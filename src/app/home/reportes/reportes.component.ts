@@ -12,6 +12,8 @@ import { MunicipalidadesService } from 'src/app/services/municipalidades.service
 import { AlertService } from 'src/app/services/alert.service';
 import { CobrosService } from 'src/app/services/cobros.service';
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
+import { PuestosService } from 'src/app/services/catalogos/puestos.service';
+import { PartidosPoliticosService } from 'src/app/services/catalogos/partidos-politicos.service';
 
 @Component({
   selector: 'app-reportes',
@@ -43,6 +45,9 @@ export class ReportesComponent {
   disponibilidad: any = [];
   municipalidad: any;
 
+  puestos: any = [];
+  partidos: any = [];
+
   programas: any = [];
 
   totales: any = {
@@ -64,7 +69,9 @@ export class ReportesComponent {
     private prestamos_garantiasService: PrestamosGarantiasService,
     private amortizacionesService: AmortizacionesService,
     private cobrosService: CobrosService,
-    private programasService: ProgramasService
+    private programasService: ProgramasService,
+    private puestosService: PuestosService,
+    private partidosService: PartidosPoliticosService
   ) {
     this.getReportes();
   }
@@ -76,11 +83,17 @@ export class ReportesComponent {
   getReportes() {
     this.reportes = [
       {
-        id: 1, nombre: 'Disponibilidad', slug: 'disponibilidad',
+        id: 1, nombre: 'Catalogo de Puestos', slug: 'cat-puestos', filtros: []
+      },
+      {
+        id: 2, nombre: 'Catalogo de Partidos Politicos', slug: 'cat-partidos', filtros: []
+      },
+      {
+        id: 100, nombre: 'Disponibilidad', slug: 'disponibilidad',
         filtros: ['codigo_departamento', 'codigo_municipio', 'plazo_meses']
       },
       {
-        id: 2, nombre: 'Amortizaciones', slug: 'amortizaciones',
+        id: 200, nombre: 'Amortizaciones', slug: 'amortizaciones',
         filtros: ['mes']
       }
     ];
@@ -117,6 +130,14 @@ export class ReportesComponent {
   async imprimir(print: boolean = true) {
     for (let r = 0; r < this.reportes.length; r++) {
       if (this.reportes[r].id == this.id_reporte) {
+        if (this.reportes[r].slug == 'cat-puestos') {
+          await this.reporteCatPuestos(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-partidos') {
+          await this.reporteCatPartidos(print);
+        }
+
         if (this.reportes[r].slug == 'disponibilidad') {
           await this.reporteDisponibilidad(print);
         }
@@ -138,6 +159,28 @@ export class ReportesComponent {
     this.totales.total = this.getTotalMontoDispTotalDisponible();
 
     this.disp.emit(this.totales)
+  }
+
+  public async reporteCatPuestos(print: boolean = true) {
+    this.ngxService.start();
+
+    let puestos = await this.puestosService.getPuestos();
+    this.puestos = puestos;
+
+    this.catalogo('cat-puestos', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatPartidos(print: boolean = true) {
+    this.ngxService.start();
+
+    let partidos = await this.partidosService.getPartidosPoliticos();
+    this.partidos = partidos;
+
+    this.catalogo('cat-partidos', print)
+
+    this.ngxService.stop();
   }
 
   public async reporteDisponibilidad(print: boolean = true) {
@@ -166,14 +209,14 @@ export class ReportesComponent {
       //   restantes = restantes - 12;
       // }
 
-      
+
       this.disponibilidad = [];
       for (let i = 0; i < this.filtros.plazo_meses; i++) {
         this.disponibilidad.push({
           mes: moment(aporte.mes).add(i + 1, 'month').format('YYYY-MM'),
         });
       }
-      
+
 
       for (let g = 0; g < this.garantias.length; g++) {
         this.garantias[g].prestamos = [];
@@ -363,6 +406,28 @@ export class ReportesComponent {
       total += Math.round((tot + Number.EPSILON) * 100) / 100;
     }
     return total;
+  }
+
+  print(rep: any) {
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+  }
+
+  async catalogo(slug: any, print: any) {
+    let rep: any = await this.reporteService.get(slug);
+    let contenido: any = document.getElementById(slug);
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    if (print) {
+      this.print(rep)
+    }
   }
 
   limpiar() {

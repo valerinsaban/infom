@@ -349,6 +349,42 @@
                 </tbody>
               </table>
             </div>
+
+            <div id="cat-puestos" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of puestos; let pindex = index">
+                    <td>{{pindex + 1}}</td>
+                    <td>{{p.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-partidos" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of partidos; let pindex = index">
+                    <td>{{pindex + 1}}</td>
+                    <td>{{p.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
           </div>
 
         </div>
