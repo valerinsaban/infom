@@ -1,13 +1,13 @@
 <div class="page-titles">
   <ol class="breadcrumb">
     <li>
-      <h5 class="bc-title">Generos</h5>
+      <h5 class="bc-title">Estados civiles</h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
       <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Generos</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Partido Politico</a></li>
   </ol>
 </div>
 <div class="container-fluid">
@@ -15,28 +15,23 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!genero" class="heading mb-0">Agregar Genero</h4>
-          <h4 *ngIf="genero" class="heading mb-0">Editar Genero</h4>
+          <h4 *ngIf="!partidoPolitico" class="heading mb-0">Agregar Partido Politico</h4>
+          <h4 *ngIf="partidoPolitico" class="heading mb-0">Editar Partido Politico</h4>
         </div>
         <div class="card-body">
-          <form [formGroup]="generoForm" class="finance-hr">
-            <div class="form-group mb-3">
-              <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
-              </label>
-              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
-            </div>
+          <form [formGroup]="partidoPoliticoForm" class="finance-hr">
             <div class="form-group mb-3">
               <label class="text-secondary"> Nombre <span class="text-danger">*</span>
               </label>
               <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
             </div>
-            <div *ngIf="!genero">
-              <button (click)="postGenero()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': generoForm.invalid}">
+            <div *ngIf="!partidoPolitico">
+              <button (click)="postPartidoPolitico()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': partidoPoliticoForm.invalid}">
                 Guardar
               </button>
             </div>
-            <div *ngIf="genero">
-              <button (click)="putGenero()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': generoForm.invalid}">
+            <div *ngIf="partidoPolitico">
+              <button (click)="putPartidoPolitico()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': partidoPoliticoForm.invalid}">
                 Guardar
               </button>
               <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
@@ -52,28 +47,26 @@
         <div class="card-body p-0">
           <div class="table-responsive active-projects manage-client">
             <div class="tbl-caption">
-              <h4 class="heading mb-0">Generos</h4>
+              <h4 class="heading mb-0">Partidos Politicos</h4>
             </div>
             <table id="empoloyees-tbl1" class="table">
               <thead>
                 <tr>
-                  <th>Codigo</th>
                   <th>Nombre</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let d of generos; let dindex = index">
-                  <td><a class="text-primary">{{d.codigo}}</a></td>
-                  <td>{{d.nombre}}</td>
+                <tr *ngFor="let d of partidosPoliticos; let dindex = index">
+                  <td><a class="text-primary">{{d.nombre}}</a></td>
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setGenero(d, dindex)">Editar</a>
-                        <a class="dropdown-item" (click)="deleteGenero(d, dindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="setPartidoPolitico(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deletePartidoPolitico(d, dindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>

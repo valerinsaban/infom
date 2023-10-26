@@ -194,6 +194,15 @@
                       <option *ngFor="let d of bancos" [value]="d.id">{{d.nombre}}</option>
                     </select>
                   </div>
+                  <div class="col-xl-12 mb-3">
+                    <label class="form-label">Partido Politico
+                      <span class="text-danger">*</span>
+                    </label>
+                    <select formControlName="id_partido_politico" class="form-control">
+                      <option value="null">--- Seleccione un registro ---</option>
+                      <option *ngFor="let p of partidos_politicos" [value]="p.id">{{p.nombre}}</option>
+                    </select>
+                  </div>
                 </div>
                 <div>
                   <button [ngClass]="{'disabled': municipalidadForm.invalid}" class="btn btn-primary me-1"

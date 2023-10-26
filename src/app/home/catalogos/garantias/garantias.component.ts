@@ -23,7 +23,6 @@ export class GarantiasComponent {
     private garantiaService: GarantiasService
   ) {
     this.garantiaForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       porcentaje: new FormControl(null, [Validators.required])
     });
@@ -106,7 +105,6 @@ export class GarantiasComponent {
   setGarantia(i: any, index: number) {
     i.index = index;
     this.garantia = i;
-    this.garantiaForm.controls['codigo'].setValue(i.codigo);
     this.garantiaForm.controls['nombre'].setValue(i.nombre);
     this.garantiaForm.controls['porcentaje'].setValue(i.porcentaje);
   }

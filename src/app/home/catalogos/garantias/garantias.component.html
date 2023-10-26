@@ -21,11 +21,6 @@
         <div class="card-body">
           <form [formGroup]="garantiaForm" class="finance-hr">
             <div class="form-group mb-3">
-              <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
-              </label>
-              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
-            </div>
-            <div class="form-group mb-3">
               <label class="text-secondary"> Nombre <span class="text-danger">*</span>
               </label>
               <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
@@ -62,7 +57,6 @@
             <table id="empoloyees-tbl1" class="table">
               <thead>
                 <tr>
-                  <th>Codigo</th>
                   <th>Nombre</th>
                   <th>Porcentaje</th>
                   <th>Acciones</th>
@@ -70,8 +64,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let d of garantias; let dindex = index">
-                  <td><a class="text-primary">{{d.codigo}}</a></td>
-                  <td>{{d.nombre}}</td>
+                  <td><a class="text-primary">{{d.nombre}}</a></td>
                   <td>{{d.porcentaje}}%</td>
                   <td>
                     <div class="dropdown">

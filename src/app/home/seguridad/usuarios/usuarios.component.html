@@ -51,6 +51,12 @@
             </div>
 
             <div class="form-group mb-3">
+              <label class="text-secondary"> Acceso <span class="text-danger">*</span>
+              </label> <br>
+              <input formControlName="acceso" type="checkbox" class="form-check-input">
+            </div>
+
+            <div class="form-group mb-3">
               <label class="text-secondary font-w500"> Regional <span class="text-danger">*</span>
               </label>
               <select formControlName="id_regional" class="form-control">
@@ -100,6 +106,7 @@
                   <th>DPI</th>
                   <th>Usuario</th>
                   <th>Rol</th>
+                  <th>Acceso</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -110,6 +117,9 @@
                   <td>{{u.dpi}}</td>
                   <td>{{u.usuario}}</td>
                   <td>{{u.rol.nombre}}</td>
+                  <td>
+                    <input [(ngModel)]="u.acceso" type="checkbox" class="form-check-input" [disabled]="true">
+                  </td>
                   <td>
                     <div class="dropdown">
                       <button (click)="setUsuario(u, uindex)" type="button" class="btn btn-primary light sharp" data-bs-toggle="modal"

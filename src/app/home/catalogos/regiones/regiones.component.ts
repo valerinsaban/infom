@@ -24,7 +24,6 @@ export class RegionesComponent {
     private regionService: RegionesService
   ) {
     this.regionForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required])
     });
   }
@@ -107,7 +106,6 @@ export class RegionesComponent {
   setRegion(i: any, index: number) {
     i.index = index;
     this.region = i;
-    this.regionForm.controls['codigo'].setValue(i.codigo);
     this.regionForm.controls['nombre'].setValue(i.nombre);
   }
 

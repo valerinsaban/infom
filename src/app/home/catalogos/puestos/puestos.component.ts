@@ -23,7 +23,6 @@ export class PuestosComponent {
     private ngxService: NgxUiLoaderService,
     private puestosService: PuestosService) {
     this.puestoForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required])
     });
   }
@@ -105,7 +104,6 @@ export class PuestosComponent {
   setPuesto(i: any, index: number) {
     i.index = index;
     this.puesto = i;
-    this.puestoForm.controls['codigo'].setValue(i.codigo);
     this.puestoForm.controls['nombre'].setValue(i.nombre);
   }
 

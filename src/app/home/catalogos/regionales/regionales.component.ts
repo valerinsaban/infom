@@ -23,7 +23,6 @@ export class RegionalesComponent {
     private regionalesService: RegionalesService
   ) {
     this.regionalForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       direccion: new FormControl(null),
       telefono: new FormControl(null),
@@ -108,7 +107,6 @@ export class RegionalesComponent {
   setRegional(i: any, index: number) {
     i.index = index;
     this.regional = i;
-    this.regionalForm.controls['codigo'].setValue(i.codigo);
     this.regionalForm.controls['nombre'].setValue(i.nombre);
     this.regionalForm.controls['direccion'].setValue(i.direccion);
     this.regionalForm.controls['telefono'].setValue(i.telefono);

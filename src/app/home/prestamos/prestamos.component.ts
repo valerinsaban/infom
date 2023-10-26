@@ -169,55 +169,42 @@ export class PrestamosComponent implements OnInit {
 
     let id_tipo_prestamo = this.prestamoForm.controls['id_tipo_prestamo'].value;
     let id_programa = this.prestamoForm.controls['id_programa'].value;
+    // let tipo_clase = await this.prestamosService.getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo, id_programa);
+    if (this.filtros.codigo_departamento && this.filtros.codigo_municipio) {
+      this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+    }
 
-    if (id_tipo_prestamo && id_programa) {
+    let prestamo_muni = await this.prestamosService.getCountPrestamosMunicipalidad(this.municipalidad.id);
+
+    if (id_tipo_prestamo && id_programa && this.municipalidad && prestamo_muni) {
+      
+      correlativo[0] = this.municipalidad.departamento.codigo;
+      correlativo[1] = this.municipalidad.municipio.codigo;
+      correlativo[2] = prestamo_muni + 1;
+
+
       for (let t = 0; t < this.tipos_prestamos.length; t++) {
         if (this.tipos_prestamos[t].id == id_tipo_prestamo) {
           // Part 1
-          correlativo[0] = this.tipos_prestamos[t].siglas;
+          correlativo[3] = this.tipos_prestamos[t].siglas;
         }
       }
 
       for (let t = 0; t < this.programas.length; t++) {
         if (this.programas[t].id == id_programa) {
           // Part 2
-          correlativo[1] = this.programas[t].siglas;
+          correlativo[4] = this.programas[t].siglas;
         }
       }
 
+      // if (tipo_clase) {
+      //   // Part 3
+      //   correlativo[5] = tipo_clase + 1;
+      // } else {
+      //   correlativo[5] = 1;
+      // }
 
-      let tipo_clase = await this.prestamosService.getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo, id_programa);
-      if (tipo_clase) {
-        // Part 3
-        correlativo[2] = tipo_clase + 1;
-      } else {
-        correlativo[2] = 1;
-      }
-
-      // Part 4
-      correlativo[3] = moment().format('YYYY');
-
-      if (this.filtros.codigo_departamento && this.filtros.codigo_municipio) {
-
-        this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
-
-        if (this.municipalidad) {
-          // Part 5, 6
-          correlativo[4] = this.municipalidad.departamento.codigo;
-          correlativo[5] = this.municipalidad.municipio.codigo
-
-          let prestamo_muni = await this.prestamosService.getCountPrestamosMunicipalidad(this.municipalidad.id);
-          if (prestamo_muni) {
-            // Part 7
-            correlativo[6] = prestamo_muni + 1;
-          } else {
-            correlativo[6] = 1;
-          }
-        }
-
-      }
-
-      this.prestamoForm.controls['no_prestamo'].setValue(`${correlativo[0]}.${correlativo[1]}.${correlativo[2]}.${correlativo[3]}.${correlativo[4]}.${correlativo[5]}.${correlativo[6]}`);
+      this.prestamoForm.controls['no_prestamo'].setValue(`${correlativo[0]}.${correlativo[1]}.${correlativo[2]}.${correlativo[3]}.${correlativo[4]}`);
 
     }
   }
@@ -773,13 +760,13 @@ export class PrestamosComponent implements OnInit {
 
     for (let c = 0; c < this.programas_garantias.length; c++) {
       let monto = this.programas_garantias[c].monto;
-      if (this.programas_garantias[c].garantia.codigo == '01') {
+      if (this.programas_garantias[c].garantia.id == 1) {
         if (monto <= this.disponibilidad.constitucional) {
           this.disp = true;
           return;
         }
       }
-      if (this.programas_garantias[c].garantia.codigo == '02') {
+      if (this.programas_garantias[c].garantia.id == 2) {
         if (monto <= this.disponibilidad.constitucional) {
           this.disp = true;
           return;

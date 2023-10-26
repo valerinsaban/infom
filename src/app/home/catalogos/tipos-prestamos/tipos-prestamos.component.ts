@@ -26,7 +26,6 @@ export class TiposPrestamosComponent {
     private garantiasService: GarantiasService
   ) {
     this.tipo_prestamoForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       siglas: new FormControl(null, [Validators.required]),
       monto_min: new FormControl(null, [Validators.required]),
@@ -120,7 +119,6 @@ export class TiposPrestamosComponent {
     this.ngxService.start();
     i.index = index;
     this.tipo_prestamo = i;
-    this.tipo_prestamoForm.controls['codigo'].setValue(i.codigo);
     this.tipo_prestamoForm.controls['nombre'].setValue(i.nombre);
     this.tipo_prestamoForm.controls['siglas'].setValue(i.siglas);
     this.tipo_prestamoForm.controls['monto_min'].setValue(i.monto_min);

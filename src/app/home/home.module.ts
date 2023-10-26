@@ -10,7 +10,6 @@ import { PuestosComponent } from './catalogos/puestos/puestos.component';
 import { RegionesComponent } from './catalogos/regiones/regiones.component';
 import { UsuariosComponent } from './seguridad/usuarios/usuarios.component';
 import { RolesComponent } from './seguridad/roles/roles.component';
-import { GenerosComponent } from './catalogos/generos/generos.component';
 import { GarantiasComponent } from './catalogos/garantias/garantias.component';
 import { MunicipalidadesComponent } from './municipalidades/municipalidades.component';
 import { RegionalesComponent } from './catalogos/regionales/regionales.component';
@@ -23,7 +22,6 @@ import { PrestamosComponent } from './prestamos/prestamos.component';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { AportesComponent } from './aportes/aportes.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ProduccionComponent } from './produccion/produccion.component';
 import { BitacorasComponent } from './seguridad/bitacoras/bitacoras.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { RepresentantesComponent } from './representantes/representantes.component';
@@ -32,6 +30,7 @@ import { ProgramasComponent } from './catalogos/programas/programas.component';
 import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
 import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
 import { CobrosComponent } from './cobros/cobros.component';
+import { PartidosPoliticosComponent } from './catalogos/partidos-politicos/partidos-politicos.component';
 
 const routes: Routes = [
   {
@@ -46,7 +45,6 @@ const routes: Routes = [
       { path: 'aportes', component: AportesComponent},
       { path: 'dashboard', component: DashboardComponent},
       { path: 'bitacoras', component: BitacorasComponent},
-      { path: 'produccion', component: ProduccionComponent},
       { path: 'reportes', component: ReportesComponent},
       { path: 'cobros', component: CobrosComponent},
       { path: 'configuraciones', component: ConfiguracionesComponent},
@@ -57,12 +55,12 @@ const routes: Routes = [
       { path: 'estados-civiles', component: EstadosCivilesComponent },
       { path: 'puestos', component: PuestosComponent},
       { path: 'regiones', component: RegionesComponent},
-      { path: 'generos', component: GenerosComponent},
       { path: 'garantias', component: GarantiasComponent},
       { path: 'tipos-prestamos', component: TiposPrestamosComponent},
       { path: 'programas', component: ProgramasComponent},
       { path: 'profesiones', component: ProfesionesComponent},
       { path: 'bancos', component: BancosComponent},
+      { path: 'partidos-politicos', component: PartidosPoliticosComponent},
 
       // Seguridad
       { path: 'regionales', component: RegionalesComponent},
@@ -85,7 +83,6 @@ const routes: Routes = [
     RegionesComponent,
     UsuariosComponent,
     RolesComponent,
-    GenerosComponent,
     GarantiasComponent,
     MunicipalidadesComponent,
     RegionalesComponent,
@@ -97,7 +94,6 @@ const routes: Routes = [
     PrestamosComponent,
     AportesComponent,
     DashboardComponent,
-    ProduccionComponent,
     BitacorasComponent,
     RepresentantesComponent,
     ReportesComponent,
@@ -105,6 +101,7 @@ const routes: Routes = [
     ConfiguracionesComponent,
     ProgramasComponent,
     CobrosComponent,
+    PartidosPoliticosComponent,
   ],
   imports: [
     CommonModule,

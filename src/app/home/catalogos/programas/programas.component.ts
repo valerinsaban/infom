@@ -30,7 +30,6 @@ export class ProgramasComponent {
     private garantiasService: GarantiasService
   ) {
     this.programaForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       siglas: new FormControl(null, [Validators.required])
     });
@@ -176,7 +175,6 @@ export class ProgramasComponent {
     this.ngxService.start();
     i.index = index;
     this.programa = i;
-    this.programaForm.controls['codigo'].setValue(i.codigo);
     this.programaForm.controls['nombre'].setValue(i.nombre);
     this.programaForm.controls['siglas'].setValue(i.siglas);
 

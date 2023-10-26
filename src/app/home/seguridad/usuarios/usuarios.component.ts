@@ -35,6 +35,7 @@ export class UsuariosComponent {
       dpi: new FormControl(null, [Validators.required]),
       usuario: new FormControl(null, [Validators.required]),
       clave: new FormControl(null),
+      acceso: new FormControl(null),
       id_regional: new FormControl(null, [Validators.required]),
       id_rol: new FormControl(null, [Validators.required])
     })
@@ -154,6 +155,7 @@ export class UsuariosComponent {
     this.usuarioForm.controls['dpi'].setValue(i.dpi);
     this.usuarioForm.controls['usuario'].setValue(i.usuario);
     // this.usuarioForm.controls['clave'].setValue(i.clave);
+    this.usuarioForm.controls['acceso'].setValue(i.acceso);
     this.usuarioForm.controls['id_regional'].setValue(i.id_regional);
     this.usuarioForm.controls['id_rol'].setValue(i.id_rol);
   }

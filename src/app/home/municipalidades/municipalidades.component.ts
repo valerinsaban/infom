@@ -20,6 +20,7 @@ import { ProfesionesService } from 'src/app/services/catalogos/profesiones.servi
 import { EstadosCivilesService } from 'src/app/services/catalogos/estados-civiles.service';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { ReporteService } from 'src/app/services/reportes.service';
+import { PartidosPoliticosService } from 'src/app/services/catalogos/partidos-politicos.service';
 
 @Component({
   selector: 'app-municipalidades',
@@ -40,6 +41,7 @@ export class MunicipalidadesComponent {
   profesiones: any = [];
   estados_civiles: any = [];
   bancos: any = [];
+  partidos_politicos: any = [];
 
   departamento: any;
   municipio: any;
@@ -62,7 +64,8 @@ export class MunicipalidadesComponent {
     private funcionariosService: FuncionariosService,
     private puestosService: PuestosService,
     private profesionesService: ProfesionesService,
-    private estados_civilesService: EstadosCivilesService
+    private estados_civilesService: EstadosCivilesService,
+    private partidos_politicosService: PartidosPoliticosService
   ) {
     this.municipalidadForm = new FormGroup({
       direccion: new FormControl(null),
@@ -71,7 +74,8 @@ export class MunicipalidadesComponent {
       no_cuenta: new FormControl(null),
       id_departamento: new FormControl(null, [Validators.required]),
       id_municipio: new FormControl(null, [Validators.required]),
-      id_banco: new FormControl(null, [Validators.required])
+      id_banco: new FormControl(null, [Validators.required]),
+      id_partido_politico: new FormControl(null, [Validators.required])
     });
     this.funcionarioForm = new FormGroup({
       codigo: new FormControl(null, [Validators.required]),
@@ -102,6 +106,7 @@ export class MunicipalidadesComponent {
     await this.getProfesiones();
     await this.getPuestos();
     await this.getEstadosCiviles();
+    await this.getPartidosPoliticos();
     this.ngxService.stop();
   }
 
@@ -141,6 +146,13 @@ export class MunicipalidadesComponent {
     let bancos = await this.bancosService.getBancos();
     if (bancos) {
       this.bancos = bancos;
+    }
+  }
+
+  async getPartidosPoliticos() {
+    let partidos_politicos = await this.partidos_politicosService.getPartidosPoliticos();
+    if (partidos_politicos) {
+      this.partidos_politicos = partidos_politicos;
     }
   }
 
@@ -245,6 +257,7 @@ export class MunicipalidadesComponent {
     this.municipalidadForm.controls['id_departamento'].setValue(i.id_departamento);
     this.municipalidadForm.controls['id_municipio'].setValue(i.id_municipio);
     this.municipalidadForm.controls['id_banco'].setValue(i.id_banco);
+    this.municipalidadForm.controls['id_partido_politico'].setValue(i.id_partido_politico);
 
     this.getFuncionarios();
   }

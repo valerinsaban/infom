@@ -128,10 +128,10 @@ export class ReportesComponent {
 
     for (let g = 0; g < this.garantias.length; g++) {
       let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
-      if (this.garantias[g].codigo == '01') {
+      if (this.garantias[g].id == 1) {
         this.totales.constitucional = tot
       }
-      if (this.garantias[g].codigo == '02') {
+      if (this.garantias[g].id == 2) {
         this.totales.iva_paz = tot
       }
     }
@@ -177,11 +177,11 @@ export class ReportesComponent {
 
       for (let g = 0; g < this.garantias.length; g++) {
         this.garantias[g].prestamos = [];
-        if (this.garantias[g].codigo == '01') {
+        if (this.garantias[g].id == 1) {
           this.garantias[g].aporte = aporte.constitucional * this.garantias[g].porcentaje / 100;
           this.garantias[g].aporte_total = aporte.constitucional;
         }
-        if (this.garantias[g].codigo == '02') {
+        if (this.garantias[g].id == 2) {
           this.garantias[g].aporte = aporte.iva_paz * this.garantias[g].porcentaje / 100;
           this.garantias[g].aporte_total = aporte.iva_paz
         }

@@ -24,7 +24,6 @@ export class ProfesionesComponent {
     private profesionesService: ProfesionesService
   ) {
     this.profesionForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required])
     });
   }
@@ -106,7 +105,6 @@ export class ProfesionesComponent {
   setProfesion(i: any, index: number) {
     i.index = index;
     this.profesion = i;
-    this.profesionForm.controls['codigo'].setValue(i.codigo);
     this.profesionForm.controls['nombre'].setValue(i.nombre);
   }
 

@@ -23,7 +23,6 @@ export class EstadosCivilesComponent {
     private estadoCivilService: EstadosCivilesService
   ) {
     this.estadoCivilForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required])
     });
   }
@@ -105,7 +104,6 @@ export class EstadosCivilesComponent {
   setEstadoCivil(i: any, index: number) {
     i.index = index;
     this.estadoCivil = i;
-    this.estadoCivilForm.controls['codigo'].setValue(i.codigo);
     this.estadoCivilForm.controls['nombre'].setValue(i.nombre);
   }
 

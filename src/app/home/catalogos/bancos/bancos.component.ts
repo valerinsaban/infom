@@ -23,7 +23,6 @@ export class BancosComponent {
     private bancoService: BancosService
   ) {
     this.bancoForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       siglas: new FormControl(null, [Validators.required])
     });
@@ -106,7 +105,6 @@ export class BancosComponent {
   setBanco(i: any, index: number) {
     i.index = index;
     this.banco = i;
-    this.bancoForm.controls['codigo'].setValue(i.codigo);
     this.bancoForm.controls['nombre'].setValue(i.nombre);
     this.bancoForm.controls['siglas'].setValue(i.siglas);
   }

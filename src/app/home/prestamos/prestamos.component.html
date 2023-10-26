@@ -109,7 +109,7 @@
                       <th>Municipalidad</th>
                       <th>No. Prestamo</th>
                       <th>Tipo Prestamo</th>
-                      <th>Clase Prestamo</th>
+                      <th>Programa</th>
                       <th>Fecha</th>
                       <th class="text-end">Monto</th>
                       <th class="text-end">Estado</th>
@@ -133,7 +133,7 @@
                         <span>{{p.tipoPrestamo.nombre}}</span>
                       </td>
                       <td>
-                        <span>{{p.Programa.nombre}}</span>
+                        <span>{{p.programa.nombre}}</span>
                       </td>
                       <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td class="text-end">
@@ -349,7 +349,7 @@
                   <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-4 mb-3">
-                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
+                  <label class="form-label">Programa<span class="text-danger">*</span></label>
                   <select (change)="getProgramasGarantias($event)" formControlName="id_programa"
                     class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
@@ -469,7 +469,6 @@
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Dias</th>
-                    <th>Disponible</th>
                     <th style="text-align: right;">Capital</th>
                     <th style="text-align: right;">Intereses</th>
                     <th style="text-align: right;">IVA</th>
@@ -483,8 +482,7 @@
                     <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
                     <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
                     <td>{{a.dias}} dias</td>
-                    <td>----</td>
-                    <td style="text-align: right;">
+                    <!-- <td style="text-align: right;">
                       <input class="form-control" type="text" [(ngModel)]="a.capital">
                     </td>
                     <td style="text-align: right;">
@@ -498,11 +496,12 @@
                     </td>
                     <td style="text-align: right;">
                       <input class="form-control" type="text" [(ngModel)]="a.saldo">
-                    </td>
-                    <!-- <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
+                    </td> -->
+                    <th style="text-align: right;">{{a.capital | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
                     <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
                     <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
-                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th> -->
+                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
                     <td><i class="fas fa-check"></i></td>
                   </tr>
                 </tbody>
@@ -679,7 +678,7 @@
                   <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-4 mb-3">
-                  <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
+                  <label class="form-label">Programa<span class="text-danger">*</span></label>
                   <select (change)="getProgramasGarantias($event)" formControlName="id_programa"
                     class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
