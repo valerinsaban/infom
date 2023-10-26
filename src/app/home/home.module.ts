@@ -28,7 +28,7 @@ import { BitacorasComponent } from './seguridad/bitacoras/bitacoras.component';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { RepresentantesComponent } from './representantes/representantes.component';
 import { ReportesComponent } from './reportes/reportes.component';
-import { ClasesPrestamosComponent } from './catalogos/clases-prestamos/clases-prestamos.component';
+import { ProgramasComponent } from './catalogos/programas/programas.component';
 import { ConfiguracionesComponent } from './configuraciones/configuraciones.component';
 import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
 import { CobrosComponent } from './cobros/cobros.component';
@@ -60,7 +60,7 @@ const routes: Routes = [
       { path: 'generos', component: GenerosComponent},
       { path: 'garantias', component: GarantiasComponent},
       { path: 'tipos-prestamos', component: TiposPrestamosComponent},
-      { path: 'clases-prestamos', component: ClasesPrestamosComponent},
+      { path: 'programas', component: ProgramasComponent},
       { path: 'profesiones', component: ProfesionesComponent},
       { path: 'bancos', component: BancosComponent},
 
@@ -103,7 +103,7 @@ const routes: Routes = [
     ReportesComponent,
     TiposPrestamosComponent,
     ConfiguracionesComponent,
-    ClasesPrestamosComponent,
+    ProgramasComponent,
     CobrosComponent,
   ],
   imports: [

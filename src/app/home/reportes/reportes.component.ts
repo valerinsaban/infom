@@ -11,7 +11,7 @@ import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { CobrosService } from 'src/app/services/cobros.service';
-import { ClasesPrestamosService } from 'src/app/services/catalogos/clases-prestamos.service';
+import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 
 @Component({
   selector: 'app-reportes',
@@ -43,7 +43,7 @@ export class ReportesComponent {
   disponibilidad: any = [];
   municipalidad: any;
 
-  clases_prestamos: any = [];
+  programas: any = [];
 
   totales: any = {
     constitucional: 0,
@@ -64,7 +64,7 @@ export class ReportesComponent {
     private prestamos_garantiasService: PrestamosGarantiasService,
     private amortizacionesService: AmortizacionesService,
     private cobrosService: CobrosService,
-    private clases_prestamosService: ClasesPrestamosService
+    private programasService: ProgramasService
   ) {
     this.getReportes();
   }
@@ -235,8 +235,8 @@ export class ReportesComponent {
   public async reporteAmortizaciones(print: boolean = true) {
     this.ngxService.start();
 
-    let clases_prestamos = await this.clases_prestamosService.getClasesPrestamos();
-    this.clases_prestamos = clases_prestamos;
+    let programas = await this.programasService.getProgramas();
+    this.programas = programas;
 
     // let municipalidades = await this.municipalidadesService.getMunicipalidades();
 

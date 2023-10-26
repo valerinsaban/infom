@@ -1,13 +1,13 @@
 <div class="page-titles">
   <ol class="breadcrumb">
     <li>
-      <h5 class="bc-title">Garantías</h5>
+      <h5 class="bc-title">Programas</h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
         <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Garantías</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Programas</a></li>
   </ol>
 </div>
 <div class="container-fluid">
@@ -15,11 +15,11 @@
     <div class="col-xl-3 col-xxl-4">
       <div class="card h-auto">
         <div class="card-header">
-          <h4 *ngIf="!clase_prestamo" class="heading mb-0">Agregar Garantía</h4>
-          <h4 *ngIf="clase_prestamo" class="heading mb-0">Editar Garantía</h4>
+          <h4 *ngIf="!programa" class="heading mb-0">Agregar Programa</h4>
+          <h4 *ngIf="programa" class="heading mb-0">Editar Programa</h4>
         </div>
         <div class="card-body">
-          <form [formGroup]="clase_prestamoForm" class="finance-hr">
+          <form [formGroup]="programaForm" class="finance-hr">
             <div class="form-group mb-3">
               <label class="text-secondary font-w500"> Codigo<span class="text-danger">*</span>
               </label>
@@ -35,15 +35,15 @@
               </label>
               <input formControlName="siglas" type="text" class="form-control" placeholder="Siglas">
             </div>
-            <div *ngIf="!clase_prestamo">
-              <button (click)="postClasePrestamo()" type="button" class="btn btn-primary mb-3"
-                [ngClass]="{'disabled': clase_prestamoForm.invalid}">
+            <div *ngIf="!programa">
+              <button (click)="postPrograma()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': programaForm.invalid}">
                 Guardar
               </button>
             </div>
-            <div *ngIf="clase_prestamo">
-              <button (click)="putClasePrestamo()" type="button" class="btn btn-primary mb-3"
-                [ngClass]="{'disabled': clase_prestamoForm.invalid}">
+            <div *ngIf="programa">
+              <button (click)="putPrograma()" type="button" class="btn btn-primary mb-3"
+                [ngClass]="{'disabled': programaForm.invalid}">
                 Guardar
               </button>
               <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
@@ -59,7 +59,7 @@
         <div class="card-body p-0">
           <div class="table-responsive active-projects manage-client">
             <div class="tbl-caption">
-              <h4 class="heading mb-0">Garantías</h4>
+              <h4 class="heading mb-0">Programas</h4>
             </div>
             <table id="empoloyees-tbl1" class="table">
               <thead>
@@ -71,7 +71,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let d of clases_prestamos; let dindex = index">
+                <tr *ngFor="let d of programas; let dindex = index">
                   <td><a class="text-primary">{{d.codigo}}</a></td>
                   <td>{{d.nombre}}</td>
                   <td>{{d.siglas}}</td>
@@ -81,10 +81,10 @@
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setClasePrestamo(d, dindex)">Editar</a>
-                        <a class="dropdown-item" (click)="setClasePrestamo(d, dindex)" data-bs-toggle="offcanvas"
+                        <a class="dropdown-item" (click)="setPrograma(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="setPrograma(d, dindex)" data-bs-toggle="offcanvas"
                           href="#garantias">Garantias</a>
-                        <a class="dropdown-item" (click)="deleteClasePrestamo(d, dindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="deletePrograma(d, dindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>
@@ -101,7 +101,7 @@
 
 <div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="garantias">
   <div class="offcanvas-header">
-    <h5 class="modal-title">Amortizaciones</h5>
+    <h5 class="modal-title">Garantias</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
       <i class="fa-solid fa-xmark"></i>
     </button>
@@ -109,13 +109,13 @@
   <div class="offcanvas-body">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-xl-6 col-xxl-3">
+        <div class="col-xl-6 col-xxl-4">
           <div class="card h-auto">
             <div class="card-header">
-              <h4 class="heading mb-0">Agregar Clase Prestamo Garantía</h4>
+              <h4 class="heading mb-0">Elige una garantia</h4>
             </div>
             <div class="card-body">
-              <form [formGroup]="clase_prestamo_garantiaForm" class="finance-hr">
+              <form [formGroup]="programa_garantiaForm" class="finance-hr">
                 <div class="form-group mb-3">
                   <label class="form-label">Garantia<span class="text-danger">*</span></label>
                   <select formControlName="id_garantia" class="form-control">
@@ -124,8 +124,8 @@
                   </select>
                 </div>
                 <div>
-                  <button (click)="postClasePrestamoGarantia()" type="button" class="btn btn-primary mb-3"
-                    [ngClass]="{'disabled': clase_prestamo_garantiaForm.invalid}">
+                  <button (click)="postProgramaGarantia()" type="button" class="btn btn-primary mb-3"
+                    [ngClass]="{'disabled': programa_garantiaForm.invalid}">
                     Guardar
                   </button>
                 </div>
@@ -133,7 +133,7 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-6 col-xxl-9">
+        <div class="col-xl-6 col-xxl-8">
           <div class="card">
             <div class="card-body p-0">
               <div class="table-responsive active-projects manage-client style-1">
@@ -145,10 +145,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let t of clases_prestamos_garantias; let aindex = index">
+                    <tr *ngFor="let t of programas_garantias; let aindex = index">
                       <td>{{t.garantia.nombre}}</td>
                       <td>
-                        <button (click)="deleteClasePrestamoGarantia(t, aindex)" type="button" class="btn btn-primary light sharp">
+                        <button (click)="deleteProgramaGarantia(t, aindex)" type="button" class="btn btn-primary light sharp">
                           <i class="fa-solid fa-trash"></i>
                         </button>
                       </td>

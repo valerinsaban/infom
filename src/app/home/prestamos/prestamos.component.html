@@ -133,7 +133,7 @@
                         <span>{{p.tipoPrestamo.nombre}}</span>
                       </td>
                       <td>
-                        <span>{{p.clasePrestamo.nombre}}</span>
+                        <span>{{p.Programa.nombre}}</span>
                       </td>
                       <td>{{p.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td class="text-end">
@@ -350,10 +350,10 @@
                 </div>
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
-                  <select (change)="getClasesPrestamosGarantias($event)" formControlName="id_clase_prestamo"
+                  <select (change)="getProgramasGarantias($event)" formControlName="id_programa"
                     class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
+                    <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">
@@ -406,7 +406,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let t of clases_prestamos_garantias; let dindex = index">
+                        <tr *ngFor="let t of programas_garantias; let dindex = index">
                           <td>{{t.garantia.nombre}} ({{t.garantia.porcentaje}}%)</td>
                           <td>
                             <input (input)="setMonto()" [(ngModel)]="t.porcentaje" [ngModelOptions]="{standalone: true}"
@@ -633,14 +633,14 @@
                   </label>
                   <input formControlName="fecha_oficio_aj" type="date" class="form-control">
                 </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_clase_prestamo'].value == 2">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_programa'].value == 2">
                   <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_ger" type="number" class="form-control"
                     placeholder="NO. Oficio A.J.">
                 </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_clase_prestamo'].value == 2">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_programa'].value == 2">
                   <label class="form-label">Fecha Oficio GER
                     <span class="text-danger">*</span>
                   </label>
@@ -680,10 +680,10 @@
                 </div>
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Clase Prestamo<span class="text-danger">*</span></label>
-                  <select (change)="getClasesPrestamosGarantias($event)" formControlName="id_clase_prestamo"
+                  <select (change)="getProgramasGarantias($event)" formControlName="id_programa"
                     class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of clases_prestamos" [value]="i.id">{{i.nombre}}</option>
+                    <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">

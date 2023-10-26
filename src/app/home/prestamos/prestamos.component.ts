@@ -14,10 +14,10 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AppComponent } from 'src/app/app.component';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
-import { ClasesPrestamosService } from 'src/app/services/catalogos/clases-prestamos.service';
+import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
-import { ClasesPrestamosGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
+import { ProgramasGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
 
@@ -39,9 +39,9 @@ export class PrestamosComponent implements OnInit {
   file: any;
   reales: number = 0;
 
-  clases_prestamos: any = [];
+  programas: any = [];
   tipos_prestamos: any = [];
-  clases_prestamos_garantias: any = [];
+  programas_garantias: any = [];
   garantias: any = [];
   funcionarios: any = [];
   regionales: any = [];
@@ -83,8 +83,8 @@ export class PrestamosComponent implements OnInit {
     private municipiosService: MunicipiosService,
     private prestamosService: PrestamosService,
     private tipos_prestamosService: TiposPrestamosService,
-    private clases_prestamosService: ClasesPrestamosService,
-    private clases_prestamos_garantiasService: ClasesPrestamosGarantiasService,
+    private programasService: ProgramasService,
+    private programas_garantiasService: ProgramasGarantiasService,
     private garantiasService: GarantiasService,
     private municipalidadesService: MunicipalidadesService,
     private funcionariosService: FuncionariosService,
@@ -116,7 +116,7 @@ export class PrestamosComponent implements OnInit {
       fecha_oficio_ger: new FormControl(null),
       estado: new FormControl(null, [Validators.required]),
       id_tipo_prestamo: new FormControl(null, [Validators.required]),
-      id_clase_prestamo: new FormControl(null, [Validators.required]),
+      id_programa: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
       id_regional: new FormControl(null, [Validators.required]),
@@ -144,7 +144,7 @@ export class PrestamosComponent implements OnInit {
     await this.getFuncionarios();
     await this.getRegionales();
     await this.getTiposPrestamos();
-    await this.getClasesPrestamos();
+    await this.getProgramas();
     await this.getGarantias();
     await this.getUsuarios();
     await this.getPrestamos();
@@ -168,9 +168,9 @@ export class PrestamosComponent implements OnInit {
     let correlativo: any = ['', '', '', '', '', '', ''];
 
     let id_tipo_prestamo = this.prestamoForm.controls['id_tipo_prestamo'].value;
-    let id_clase_prestamo = this.prestamoForm.controls['id_clase_prestamo'].value;
+    let id_programa = this.prestamoForm.controls['id_programa'].value;
 
-    if (id_tipo_prestamo && id_clase_prestamo) {
+    if (id_tipo_prestamo && id_programa) {
       for (let t = 0; t < this.tipos_prestamos.length; t++) {
         if (this.tipos_prestamos[t].id == id_tipo_prestamo) {
           // Part 1
@@ -178,15 +178,15 @@ export class PrestamosComponent implements OnInit {
         }
       }
 
-      for (let t = 0; t < this.clases_prestamos.length; t++) {
-        if (this.clases_prestamos[t].id == id_clase_prestamo) {
+      for (let t = 0; t < this.programas.length; t++) {
+        if (this.programas[t].id == id_programa) {
           // Part 2
-          correlativo[1] = this.clases_prestamos[t].siglas;
+          correlativo[1] = this.programas[t].siglas;
         }
       }
 
 
-      let tipo_clase = await this.prestamosService.getCountPrestamosTipoPrestamoClasePrestamo(id_tipo_prestamo, id_clase_prestamo);
+      let tipo_clase = await this.prestamosService.getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo, id_programa);
       if (tipo_clase) {
         // Part 3
         correlativo[2] = tipo_clase + 1;
@@ -313,24 +313,24 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.stop();
   }
 
-  async getClasesPrestamos() {
+  async getProgramas() {
     this.ngxService.start();
-    let clases_prestamos = await this.clases_prestamosService.getClasesPrestamos();
-    if (clases_prestamos) {
-      this.clases_prestamos = clases_prestamos;
+    let programas = await this.programasService.getProgramas();
+    if (programas) {
+      this.programas = programas;
     }
     this.ngxService.stop();
   }
 
-  async getClasesPrestamosGarantias(event: any) {
+  async getProgramasGarantias(event: any) {
     this.ngxService.start();
-    let clases_prestamos_garantias = await this.clases_prestamos_garantiasService.getClasesPrestamosGarantias(event.target.value);
-    if (clases_prestamos_garantias) {
-      this.clases_prestamos_garantias = clases_prestamos_garantias;
+    let programas_garantias = await this.programas_garantiasService.getProgramasGarantias(event.target.value);
+    if (programas_garantias) {
+      this.programas_garantias = programas_garantias;
       this.prestamoForm.controls['monto'].setValue(0);
 
-      if (this.clases_prestamos_garantias.length == 1) {
-        this.clases_prestamos_garantias[0].porcentaje = 100;
+      if (this.programas_garantias.length == 1) {
+        this.programas_garantias[0].porcentaje = 100;
       }
     }
     this.ngxService.stop();
@@ -416,8 +416,8 @@ export class PrestamosComponent implements OnInit {
   async setMonto(edit: boolean = false) {
     let total = parseFloat(this.prestamoForm.controls['monto'].value);
 
-    for (let g = 0; g < this.clases_prestamos_garantias.length; g++) {
-      this.clases_prestamos_garantias[g].monto = total * this.clases_prestamos_garantias[g].porcentaje / 100;
+    for (let g = 0; g < this.programas_garantias.length; g++) {
+      this.programas_garantias[g].monto = total * this.programas_garantias[g].porcentaje / 100;
     }
 
     if (edit) {
@@ -431,8 +431,8 @@ export class PrestamosComponent implements OnInit {
 
   getTotal(edit: boolean = false) {
     let total = 0;
-    for (let g = 0; g < this.clases_prestamos_garantias.length; g++) {
-      total += parseFloat(this.clases_prestamos_garantias[g].monto)
+    for (let g = 0; g < this.programas_garantias.length; g++) {
+      total += parseFloat(this.programas_garantias[g].monto)
     }
     if (edit) {
       total = 0;
@@ -445,8 +445,8 @@ export class PrestamosComponent implements OnInit {
 
   getPorcentaje(edit: boolean = false) {
     let porcentaje = 0;
-    for (let g = 0; g < this.clases_prestamos_garantias.length; g++) {
-      porcentaje += parseFloat(this.clases_prestamos_garantias[g].porcentaje)
+    for (let g = 0; g < this.programas_garantias.length; g++) {
+      porcentaje += parseFloat(this.programas_garantias[g].porcentaje)
     }
     if (edit) {
       porcentaje = 0;
@@ -466,18 +466,18 @@ export class PrestamosComponent implements OnInit {
 
       let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
 
-      for (let g = 0; g < this.clases_prestamos_garantias.length; g++) {
-        if (this.clases_prestamos_garantias[g].monto && this.clases_prestamos_garantias[g].monto > 0) {
+      for (let g = 0; g < this.programas_garantias.length; g++) {
+        if (this.programas_garantias[g].monto && this.programas_garantias[g].monto > 0) {
 
-          let monto = parseFloat(this.clases_prestamos_garantias[g].monto);
+          let monto = parseFloat(this.programas_garantias[g].monto);
 
           let porcentaje = monto / monto_total * 100;
 
-          if (this.clases_prestamos_garantias[g].monto) {
+          if (this.programas_garantias[g].monto) {
             await this.prestamos_garantiasService.postPrestamoGarantia({
-              monto: parseFloat(this.clases_prestamos_garantias[g].monto),
+              monto: parseFloat(this.programas_garantias[g].monto),
               porcentaje: porcentaje,
-              id_garantia: this.clases_prestamos_garantias[g].garantia.id,
+              id_garantia: this.programas_garantias[g].garantia.id,
               id_prestamo: prestamo.data.id
             });
           }
@@ -583,7 +583,7 @@ export class PrestamosComponent implements OnInit {
     this.prestamoForm.controls['fecha_oficio_ger'].setValue(i.fecha_oficio_ger);
     this.prestamoForm.controls['estado'].setValue(i.estado);
     this.prestamoForm.controls['id_tipo_prestamo'].setValue(i.id_tipo_prestamo);
-    this.prestamoForm.controls['id_clase_prestamo'].setValue(i.id_clase_prestamo);
+    this.prestamoForm.controls['id_programa'].setValue(i.id_programa);
     this.prestamoForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
     this.prestamoForm.controls['id_funcionario'].setValue(i.id_funcionario);
     this.prestamoForm.controls['id_regional'].setValue(i.id_regional);
@@ -739,7 +739,7 @@ export class PrestamosComponent implements OnInit {
     this.filtros.codigo_departamento = null;
     this.filtros.codigo_municipio = null;
     this.amortizaciones = [];
-    this.clases_prestamos_garantias = [];
+    this.programas_garantias = [];
   }
 
   limpiar2() {
@@ -771,15 +771,15 @@ export class PrestamosComponent implements OnInit {
 
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
 
-    for (let c = 0; c < this.clases_prestamos_garantias.length; c++) {
-      let monto = this.clases_prestamos_garantias[c].monto;
-      if (this.clases_prestamos_garantias[c].garantia.codigo == '01') {
+    for (let c = 0; c < this.programas_garantias.length; c++) {
+      let monto = this.programas_garantias[c].monto;
+      if (this.programas_garantias[c].garantia.codigo == '01') {
         if (monto <= this.disponibilidad.constitucional) {
           this.disp = true;
           return;
         }
       }
-      if (this.clases_prestamos_garantias[c].garantia.codigo == '02') {
+      if (this.programas_garantias[c].garantia.codigo == '02') {
         if (monto <= this.disponibilidad.constitucional) {
           this.disp = true;
           return;
