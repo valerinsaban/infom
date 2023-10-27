@@ -384,9 +384,346 @@
               </table>
             </div>
 
+            <div id="cat-regionales" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let r of regionales; let rindex = index">
+                    <td>{{rindex + 1}}</td>
+                    <td>{{r.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
+            <div id="cat-regiones" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let r of regiones; let rindex = index">
+                    <td>{{rindex + 1}}</td>
+                    <td>{{r.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-garantias" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                    <th>Porcentaje</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let g of garantias; let gindex = index">
+                    <td>{{gindex + 1}}</td>
+                    <td>{{g.nombre}}</td>
+                    <td>{{g.porcentaje}}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-municipios" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Departamento</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let m of municipios; let mindex = index">
+                    <td>{{mindex + 1}}</td>
+                    <td>{{m.codigo}}</td>
+                    <td>{{m.nombre}}</td>
+                    <td>{{m.departamento.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-tipos-prestamos" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                    <th>Siglas</th>
+                    <th>Monto Min</th>
+                    <th>Monto Max</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let t of tiposPrestamos; let tindex = index">
+                    <td>{{tindex + 1}}</td>
+                    <td>{{t.nombre}}</td>
+                    <td>{{t.siglas}}</td>
+                    <td>{{t.monto_min}}</td>
+                    <td>{{t.monto_max}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-estados-civiles" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let e of estadosCiviles; let eindex = index">
+                    <td>{{eindex + 1}}</td>
+                    <td>{{e.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-programas" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Siglas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of programas; let pindex = index">
+                    <td>{{pindex + 1}}</td>
+                    <td>{{p.codigo}}</td>
+                    <td>{{p.nombre}}</td>
+                    <td>{{p.siglas}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-profesiones" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of profesiones; let pindex = index">
+                    <td>{{pindex + 1}}</td>
+                    <td>{{p.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-departamentos" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of departamentos; let dindex = index">
+                    <td>{{dindex + 1}}</td>
+                    <td>{{d.codigo}}</td>
+                    <td>{{d.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cat-bancos" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                    <th>Siglas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let b of bancos; let bindex = index">
+                    <td>{{bindex + 1}}</td>
+                    <td>{{b.nombre}}</td>
+                    <td>{{b.siglas}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="disponibilidad-muni-general" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>CODIGO</th>
+                    <th>DEPARTAMENTO</th>
+                    <th>MUNICIPIO</th>
+                    <th>APORTE CONSTITUCIONAL</th>
+                    <th>IVA PAZ</th>
+                    <th>TOTAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <tr>
+                    <td>01</td>
+                    <td>GUATEMALA</td>
+                    <td>Municipio de Guatemala</td>
+                    <td>350,118,998.56</td>
+                    <td>424,023,999.45</td>
+                    <td>774,142,998.01</td>
+                  </tr>
+                  <tr>
+                    <td>02</td>
+                    <td>GUATEMALA</td>
+                    <td>Santa Catarina Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>424,023,999.45</td>
+                    <td>774,142,998.01</td>
+                  </tr>
+                  <tr>
+                    <td>03</td>
+                    <td>GUATEMALA</td>
+                    <td>San José Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>424,023,999.45</td>
+                    <td>774,142,998.01</td>
+                  </tr>
+                  <tr>
+                    <td>04</td>
+                    <td>GUATEMALA</td>
+                    <td>San José del Golfo</td>
+                    <td>350,118,998.56</td>
+                    <td>424,023,999.45</td>
+                    <td>774,142,998.01</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="creditos-analizados" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>CODIGO</th>
+                    <th>DEPARTAMENTO</th>
+                    <th>MUNICIPIO</th>
+                    <th>MONTO</th>
+                    <th>DESTINO</th>
+                    <th>ANALISTA</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                  <tr>
+                    <td>01</td>
+                    <td>GUATEMALA</td>
+                    <td>Municipio de Guatemala</td>
+                    <td>350,118,998.56</td>
+                    <td>MEJORAMIENTO DE CALLES </td>
+                    <td>LEONEL BARILLAS</td>
+                  </tr>
+                  <tr>
+                    <td>02</td>
+                    <td>GUATEMALA</td>
+                    <td>Santa Catarina Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>MOVIMIENTO</td>
+                    <td>LEONEL BARILLAS</td>
+                  </tr>
+                  <tr>
+                    <td>03</td>
+                    <td>GUATEMALA</td>
+                    <td>San José Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>MEJORAMIENTO DE CALLES</td>
+                    <td>LEONEL BARILLAS</td>
+                  </tr>
+                  <tr>
+                    <td>04</td>
+                    <td>GUATEMALA</td>
+                    <td>San José del Golfo</td>
+                    <td>350,118,998.56</td>
+                    <td>MEJORAMIENTO DE CALLES</td>
+                    <td>LEONEL BARILLAS</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="situado-constitucional" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>CODIGO</th>
+                    <th>DEPARTAMENTO</th>
+                    <th>MUNICIPIO</th>
+                    <th>APORTE</th>
+                    <th>APORTE 90%</th>
+                    <th>IVA PAZ 75%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>01</td>
+                    <td>GUATEMALA</td>
+                    <td>Municipio de Guatemala</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                  <tr>
+                    <td>02</td>
+                    <td>GUATEMALA</td>
+                    <td>Santa Catarina Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                  <tr>
+                    <td>03</td>
+                    <td>GUATEMALA</td>
+                    <td>San José Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                  <tr>
+                    <td>04</td>
+                    <td>GUATEMALA</td>
+                    <td>San José del Golfo</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
           </div>
-
         </div>
       </div>
     </div>

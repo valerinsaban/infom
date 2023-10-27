@@ -14,6 +14,14 @@ import { CobrosService } from 'src/app/services/cobros.service';
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { PuestosService } from 'src/app/services/catalogos/puestos.service';
 import { PartidosPoliticosService } from 'src/app/services/catalogos/partidos-politicos.service';
+import { RegionalesService } from 'src/app/services/catalogos/regionales.service';
+import { RegionesService } from 'src/app/services/catalogos/regiones.service';
+import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
+import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
+import { EstadosCivilesService } from 'src/app/services/catalogos/estados-civiles.service';
+import { ProfesionesService } from 'src/app/services/catalogos/profesiones.service';
+import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
+import { BancosService } from 'src/app/services/catalogos/bancos.service';
 
 @Component({
   selector: 'app-reportes',
@@ -47,6 +55,14 @@ export class ReportesComponent {
 
   puestos: any = [];
   partidos: any = [];
+  regionales: any = [];
+  regiones: any = [];
+  municipios: any = [];
+  tiposPrestamos: any = [];
+  estadosCiviles: any = [];
+  profesiones: any = [];
+  departamentos: any = [];
+  bancos: any = [];
 
   programas: any = [];
 
@@ -71,7 +87,15 @@ export class ReportesComponent {
     private cobrosService: CobrosService,
     private programasService: ProgramasService,
     private puestosService: PuestosService,
-    private partidosService: PartidosPoliticosService
+    private partidosService: PartidosPoliticosService,
+    private regionalesService: RegionalesService,
+    private regionesService: RegionesService,
+    private municipiosService: MunicipiosService,
+    private tiposPrestamosService: TiposPrestamosService,
+    private estadosCivilesService: EstadosCivilesService,
+    private profesionesService: ProfesionesService,
+    private departamentosService: DepartamentosService,
+    private bancosService: BancosService
   ) {
     this.getReportes();
   }
@@ -88,6 +112,50 @@ export class ReportesComponent {
       {
         id: 2, nombre: 'Catalogo de Partidos Politicos', slug: 'cat-partidos', filtros: []
       },
+      {
+        id: 3, nombre: 'Catalogo de Regionales', slug: 'cat-regionales', filtros: []
+      },
+      {
+        id: 4, nombre: 'Catalogo de Regiones', slug: 'cat-regiones', filtros: []
+      },
+      {
+        id: 5, nombre: 'Catalogo de Garantias', slug: 'cat-garantias', filtros: []
+      },
+      {
+        id: 6, nombre: 'Catalogo de Municipios', slug: 'cat-municipios', filtros: []
+      },
+      {
+        id: 7, nombre: 'Catalogo Tipos Prestamos', slug: 'cat-tipos-prestamos', filtros: []
+      },
+
+      {
+        id: 8, nombre: 'Catalogo Estados Civiles', slug: 'cat-estados-civiles', filtros: []
+      },
+
+      {
+        id: 9, nombre: 'Catalogo Programas', slug: 'cat-programas', filtros: []
+      },
+
+      {
+        id: 10, nombre: 'Catalogo Profesiones', slug: 'cat-profesiones', filtros: []
+      },
+
+      {
+        id: 11, nombre: 'Catalogo Departamentos', slug: 'cat-departamentos', filtros: []
+      },
+
+      {
+        id: 12, nombre: 'Catalogo Bancos', slug: 'cat-bancos', filtros: []
+      },
+
+      {
+        id: 13, nombre: 'Disponibilidad Municipal General', slug: 'disponibilidad-muni-general', filtros: []
+      },
+
+      {
+        id: 14, nombre: 'Creditos Analizados', slug: 'creditos-analizados', filtros: []
+      },
+      
       {
         id: 100, nombre: 'Disponibilidad', slug: 'disponibilidad',
         filtros: ['codigo_departamento', 'codigo_municipio', 'plazo_meses']
@@ -138,6 +206,54 @@ export class ReportesComponent {
           await this.reporteCatPartidos(print);
         }
 
+        if (this.reportes[r].slug == 'cat-regionales') {
+          await this.reporteCatRegionales(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-regiones') {
+          await this.reporteCatRegiones(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-garantias') {
+          await this.reporteCatGarantias(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-municipios') {
+          await this.reporteCatMunicipios(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-tipos-prestamos') {
+          await this.reporteCatTiposPrestamos(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-estados-civiles') {
+          await this.reporteCatEstadosCiviles(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-programas') {
+          await this.reporteCatProgramas(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-profesiones') {
+          await this.reporteCatProfesiones(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-departamentos') {
+          await this.reporteCatDepartamentos(print);
+        }
+
+        if (this.reportes[r].slug == 'cat-bancos') {
+          await this.reporteCatBancos(print);
+        }
+
+        if (this.reportes[r].slug == 'disponibilidad-muni-general') {
+          await this.reporteDisponibilidadMunicipal(print);
+        }
+
+        if (this.reportes[r].slug == 'creditos-analizados') {
+          await this.reporteCreditosAnalizados(print);
+        }
+
         if (this.reportes[r].slug == 'disponibilidad') {
           await this.reporteDisponibilidad(print);
         }
@@ -182,6 +298,134 @@ export class ReportesComponent {
 
     this.ngxService.stop();
   }
+
+  public async reporteCatRegionales(print: boolean = true) {
+    this.ngxService.start();
+
+    let regionales = await this.regionalesService.getRegionales();
+    this.regionales = regionales;
+
+    this.catalogo('cat-regionales', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatRegiones(print: boolean = true) {
+    this.ngxService.start();
+
+    let regiones = await this.regionesService.getRegiones();
+    this.regiones = regiones;
+
+    this.catalogo('cat-regiones', print)
+
+    this.ngxService.stop();
+  }
+  
+  public async reporteCatGarantias(print: boolean = true) {
+    this.ngxService.start();
+
+    let garantias = await this.garantiasService.getGarantias();
+    this.garantias = garantias;
+
+    this.catalogo('cat-garantias', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatMunicipios(print: boolean = true) {
+    this.ngxService.start();
+
+    let municipios = await this.municipiosService.getMunicipios();
+    this.municipios = municipios;
+
+    this.catalogo('cat-municipios', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatTiposPrestamos(print: boolean = true) {
+    this.ngxService.start();
+
+    let tiposPrestamos = await this.tiposPrestamosService.getTiposPrestamos();
+    this.tiposPrestamos = tiposPrestamos;
+
+    this.catalogo('cat-tipos-prestamos', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatEstadosCiviles(print: boolean = true) {
+    this.ngxService.start();
+
+    let estadosCiviles = await this.estadosCivilesService.getEstadosCiviles();
+    this.estadosCiviles = estadosCiviles;
+
+    this.catalogo('cat-estados-civiles', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatProgramas(print: boolean = true) {
+    this.ngxService.start();
+
+    let programas = await this.programasService.getProgramas();
+    this.programas = programas;
+
+    this.catalogo('cat-programas', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatProfesiones(print: boolean = true) {
+    this.ngxService.start();
+
+    let profesiones = await this.profesionesService.getProfesiones();
+    this.profesiones = profesiones;
+
+    this.catalogo('cat-profesiones', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatDepartamentos(print: boolean = true) {
+    this.ngxService.start();
+
+    let departamentos = await this.departamentosService.getDepartamentos();
+    this.departamentos = departamentos;
+
+    this.catalogo('cat-departamentos', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCatBancos(print: boolean = true) {
+    this.ngxService.start();
+
+    let bancos = await this.bancosService.getBancos();
+    this.bancos = bancos;
+
+    this.catalogo('cat-bancos', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteDisponibilidadMunicipal(print: boolean = true) {
+    this.ngxService.start();
+
+    this.catalogo('disponibilidad-muni-general', print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCreditosAnalizados(print: boolean = true) {
+    this.ngxService.start();
+
+    this.catalogo('creditos-analizados', print)
+
+    this.ngxService.stop();
+  }
+
+  
 
   public async reporteDisponibilidad(print: boolean = true) {
     this.ngxService.start();
