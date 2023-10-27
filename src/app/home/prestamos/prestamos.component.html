@@ -76,27 +76,27 @@
                     <p class="acreditado count">Prestamos acreditados</p>
                   </div>
                 </a>
-                <a (click)="estado = 'Finalizado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
-                  [ngClass]="{'finalizado': estado == 'Finalizado'}">
+                <a (click)="estado = 'Cancelado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'cancelado': estado == 'Cancelado'}">
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
-                      <h2 class="finalizado count">{{counts.finalizados}}</h2>
-                      <h2 *ngIf="!counts.finalizados  == null"><i class="fa-solid fa-spinner fa-spin finalizado"></i>
+                      <h2 class="cancelado count">{{counts.cancelados}}</h2>
+                      <h2 *ngIf="!counts.cancelados  == null"><i class="fa-solid fa-spinner fa-spin cancelado"></i>
                       </h2>
-                      <span>Finalizados</span>
+                      <span>Cancelados</span>
                     </div>
-                    <p class="finalizado count">Prestamos finalizados</p>
+                    <p class="cancelado count">Prestamos cancelados</p>
                   </div>
                 </a>
-                <a (click)="estado = 'Rechazado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
-                  [ngClass]="{'rechazado': estado == 'Rechazado'}">
+                <a (click)="estado = 'Anulado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'anulado': estado == 'Anulado'}">
                   <div class="task-summary">
                     <div class="d-flex align-items-center">
-                      <h2 class="rechazado count">{{counts.rechazados}}</h2>
-                      <h2 *ngIf="!counts.rechazados  == null"><i class="fa-solid fa-spinner fa-spin rechazado"></i></h2>
-                      <span>Rechazados</span>
+                      <h2 class="anulado count">{{counts.anulados}}</h2>
+                      <h2 *ngIf="!counts.anulados  == null"><i class="fa-solid fa-spinner fa-spin anulado"></i></h2>
+                      <span>Anulados</span>
                     </div>
-                    <p class="rechazado count">Prestamos rechazados</p>
+                    <p class="anulado count">Prestamos anulados</p>
                   </div>
                 </a>
               </div>
@@ -162,8 +162,13 @@
                               data-bs-target="#estado">
                               Cambiar Estado
                             </a>
-                            <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item" (click)="getAmortizaciones(p, mindex)"
-                              data-bs-toggle="offcanvas" data-bs-target="#amortizaciones">
+                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDestinosPrestamo(p)"
+                              data-bs-toggle="offcanvas" data-bs-target="#destinos_prestamos">
+                              Destinos
+                            </a>
+                            <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item"
+                              (click)="getAmortizaciones(p, mindex)" data-bs-toggle="offcanvas"
+                              data-bs-target="#amortizaciones">
                               Amortizaciones
                             </a>
                             <a class="dropdown-item" (click)="deletePrestamo(p, mindex)">
@@ -234,7 +239,8 @@
                 <div class="col-xl-8 mb-3">
                   <div class="row" *ngIf="disponibilidad">
                     <div class="col-4 pt-3 pb-3 border-end">
-                      <h6 class="mb-1">{{disponibilidad.constitucional | number: '.2-2'}}</h6><span>Aporte Constitucional</span>
+                      <h6 class="mb-1">{{disponibilidad.constitucional | number: '.2-2'}}</h6><span>Aporte
+                        Constitucional</span>
                     </div>
                     <div class="col-4 pt-3 pb-3 border-end">
                       <h6 class="mb-1">{{disponibilidad.iva_paz | number: '.2-2'}}</h6><span>IVA Paz</span>
@@ -313,18 +319,26 @@
                   </label>
                   <input formControlName="fecha_oficio_ger" type="date" class="form-control">
                 </div>
-                <div class="col-xl-12 mb-3">
+                <div class="col-xl-9 mb-3">
                   <label class="form-label">Destino Prestamo
                     <span class="text-danger">*</span>
                   </label>
-                  <textarea formControlName="destino_prestamo" class="form-control" rows="5"></textarea>
+                  <textarea formControlName="destino" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="col-xxl-3 mb-3">
+                  <label class="form-label">No. Destinos
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="no_destinos" type="number" class="form-control"
+                    placeholder="No. Destinos">
                 </div>
               </div>
               <div *ngIf="disp == false" style="text-align: center;">
                 <h2 style="text-transform: uppercase;">Disponibilidad Insuficiente</h2>
               </div>
               <div>
-                <button [hidden]="!disp" class="btn btn-primary me-1" (click)="postPrestamo()" data-bs-dismiss="offcanvas" type="button">
+                <button [hidden]="!disp" class="btn btn-primary me-1" (click)="postPrestamo()"
+                  data-bs-dismiss="offcanvas" type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Guardar
                 </button>
                 <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
@@ -350,8 +364,7 @@
                 </div>
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Programa<span class="text-danger">*</span></label>
-                  <select (change)="getProgramasGarantias($event)" formControlName="id_programa"
-                    class="form-control">
+                  <select (change)="getProgramasGarantias($event)" formControlName="id_programa" class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
                     <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
                   </select>
@@ -430,7 +443,8 @@
                     </table>
                   </div>
 
-                  <app-reportes [filtros]="filtros" [id_reporte]="1" [view_reporte]="false" (disp)="recibirDisp($event)"></app-reportes>
+                  <app-reportes [filtros]="filtros" [id_reporte]="100" [view_reporte]="false"
+                    (disp)="recibirDisp($event)"></app-reportes>
 
                   <hr>
                   <h4 class="heading mb-0">Disponible Total</h4>
@@ -438,7 +452,7 @@
                   <div class="row">
                     <div class="col-6" style="text-align: left;">
                       <b>Aporte Constitucional</b>: <br>
-                      <b>IVA Paz: </b>  <br>
+                      <b>IVA Paz: </b> <br>
                       <b>Unificadas: </b>
                     </div>
                     <div class="col-6" style="text-align: right;" *ngIf="disponibilidad">
@@ -624,7 +638,7 @@
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_aj" type="number" class="form-control"
-                    placeholder="NO. Oficio A.J.">
+                    placeholder="No. Oficio A.J.">
                 </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Fecha Oficio A.J.
@@ -637,7 +651,7 @@
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_ger" type="number" class="form-control"
-                    placeholder="NO. Oficio A.J.">
+                    placeholder="No. Oficio A.J.">
                 </div>
                 <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_programa'].value == 2">
                   <label class="form-label">Fecha Oficio GER
@@ -645,11 +659,18 @@
                   </label>
                   <input formControlName="fecha_oficio_ger" type="date" class="form-control">
                 </div>
-                <div class="col-xl-12 mb-3">
+                <div class="col-xl-9 mb-3">
                   <label class="form-label">Destino Prestamo
                     <span class="text-danger">*</span>
                   </label>
-                  <textarea formControlName="destino_prestamo" class="form-control" rows="5"></textarea>
+                  <textarea formControlName="destino" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="col-xxl-3 mb-3">
+                  <label class="form-label">No. Destinos
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="no_destinos" type="number" class="form-control"
+                    placeholder="No. Destinos">
                 </div>
               </div>
               <div>
@@ -679,8 +700,7 @@
                 </div>
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Programa<span class="text-danger">*</span></label>
-                  <select (change)="getProgramasGarantias($event)" formControlName="id_programa"
-                    class="form-control">
+                  <select (change)="getProgramasGarantias($event)" formControlName="id_programa" class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
                     <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
                   </select>
@@ -832,32 +852,123 @@
   </div>
 </div>
 
-<div class="modal fade" id="estado" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" [formGroup]="prestamoForm">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">Estado de Prestamo</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-xl-12 mb-3">
-            <label class="form-label">Estado<span class="text-danger">*</span></label>
-            <select formControlName="estado" class="form-control">
-              <option value="Pendiente">Pendiente</option>
-              <option value="Aprobado">Aprobado</option>
-              <option value="Acreditado">Acreditado</option>
-              <option value="Finalizado">Finalizado</option>
-              <option value="Rechazado">Rechazado</option>
-            </select>
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="destinos_prestamos">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Destinos Prestamos</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-3 col-xxl-3">
+          <div class="card h-auto">
+            <div class="card-header">
+              <h4 class="heading mb-0">Agregar Destino</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="destinoPrestamoForm" class="finance-hr">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Codigo <span class="text-danger">*</span></label>
+                  <div class="input-group mb-3">
+                    <input [(ngModel)]="destino.codigo" [ngModelOptions]="{'standalone': true}" type="text"
+                      class="form-control" (input)="setDestino($event)" placeholder="Codigo">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#destinos">
+                      <i class="fad fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+                  </label>
+                  <input [(ngModel)]="destino.nombre" [ngModelOptions]="{'standalone': true}" type="text"
+                    class="form-control" placeholder="Nombre" [disabled]="true">
+                </div>
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Monto <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="monto" type="number" class="form-control" placeholder="Monto">
+                </div>
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Descripcion <span class="text-danger">*</span>
+                  </label>
+                  <textarea formControlName="descripcion" class="form-control"></textarea>
+                </div>
+                <div *ngIf="!destino_prestamo">
+                  <button (click)="postDestinoPrestamo()" type="button" class="btn btn-primary mb-3"
+                    [ngClass]="{'disabled': destinoPrestamoForm.invalid}">
+                    Guardar
+                  </button>
+                </div>
+                <div *ngIf="destino_prestamo">
+                  <button (click)="putDestinoPrestamo()" type="button" class="btn btn-primary mb-3"
+                    [ngClass]="{'disabled': destinoPrestamoForm.invalid}">
+                    Guardar
+                  </button>
+                  <button style="margin-left: 10px;" (click)="limpiar3()" type="button" class="btn btn-primary mb-3">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
-        <button class="btn btn-primary me-1" (click)="putPrestamo()" data-bs-dismiss="modal" type="button">
-          <i class="fa-duotone fa-floppy-disk"></i> Guardar
-        </button>
+        <div class="col-xl-9 col-xxl-9">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects task-table">
+                <div class="tbl-caption" *ngIf="prestamo">
+                  <h4 class="heading mb-0">Destinos {{destinos_prestamos.length}} / {{prestamo.no_destinos}}</h4>
+                </div>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Codigo</th>
+                      <th>Nombre</th>
+                      <th>Descripcion</th>
+                      <th style="text-align: right;">Monto</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let d of destinos_prestamos; let mindex = index">
+                      <td>{{d.destino.codigo}}</td>
+                      <td>{{d.destino.nombre}}</td>
+                      <td>{{d.descripcion}}</td>
+                      <td style="text-align: right;">{{d.monto | number: '.2-2'}}</td>
+                      <td class="text-end">
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setDestinoPrestamo(d, mindex)">
+                              Editar
+                            </a>
+                            <a class="dropdown-item" (click)="deleteDestinoPrestamo(d, mindex)">
+                              Eliminar
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr>
+                      <th></th>
+                      <th></th>
+                      <th style="text-align: right;">TOTALES</th>
+                      <th style="text-align: right;">{{getTotalDestinosPrestamos() | number: '.2-2'}}</th>
+                      <th></th>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -991,6 +1102,59 @@
   </div>
 </div>
 
+<div class="modal fade" id="estado" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" [formGroup]="prestamoForm">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Estado de Prestamo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">Estado<span class="text-danger">*</span></label>
+            <select formControlName="estado" class="form-control">
+              <option value="Pendiente">Pendiente</option>
+              <option value="Aprobado">Aprobado</option>
+              <option value="Acreditado">Acreditado</option>
+              <option value="Cancelado">Cancelado</option>
+              <option value="Anulado">Anulado</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary me-1" (click)="putPrestamo()" data-bs-dismiss="modal" type="button">
+          <i class="fa-duotone fa-floppy-disk"></i> Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="destinos" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Busqueda de Destinos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xl-12 mb-3">
+            <label class="form-label">Destinos<span class="text-danger">*</span></label>
+            <select class="form-control" (change)="setDestino($event)">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let d of destinos" [value]="d.id">{{d.codigo}} - {{d.nombre}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="filtros" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -1022,10 +1186,28 @@
             </select>
           </div>
           <div class="col-xl-6 mb-3">
+            <label class="form-label">Programa<span class="text-danger">*</span></label>
+            <select [(ngModel)]="filtros.id_programa" [ngModelOptions]="{standalone: true}" class="form-control">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
+            </select>
+          </div>
+          <div class="col-xl-6 mb-3">
             <label class="form-label">Usuario<span class="text-danger">*</span></label>
             <select [(ngModel)]="filtros.id_usuario" [ngModelOptions]="{standalone: true}" class="form-control">
               <option value="null">--- Seleccione un registro ---</option>
               <option *ngFor="let i of usuarios" [value]="i.id">{{i.nombre}} {{i.apellido}}</option>
+            </select>
+          </div>
+          <div class="col-xl-6 mb-3">
+            <label class="form-label">Estado<span class="text-danger">*</span></label>
+            <select [(ngModel)]="filtros.estado" [ngModelOptions]="{standalone: true}" class="form-control">
+              <option value="null">--- Seleccione un registro ---</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="Aprobado">Aprobado</option>
+              <option value="Acreditado">Acreditado</option>
+              <option value="Cancelado">Cancelado</option>
+              <option value="Anulado">Anulado</option>
             </select>
           </div>
           <div class="col-xl-6 mb-3">

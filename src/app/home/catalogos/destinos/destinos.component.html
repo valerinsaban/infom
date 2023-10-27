@@ -1,0 +1,89 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Destinos</h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+      <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Destinos</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-3 col-xxl-4">
+      <div class="card h-auto">
+        <div class="card-header">
+          <h4 *ngIf="!destino" class="heading mb-0">Agregar Destino</h4>
+          <h4 *ngIf="destino" class="heading mb-0">Editar Destino</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="destinoForm" class="finance-hr">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Codigo <span class="text-danger">*</span>
+              </label>
+              <input formControlName="codigo" type="text" class="form-control" placeholder="Codigo">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+              </label>
+              <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+            </div>
+            <div *ngIf="!destino">
+              <button (click)="postDestino()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': destinoForm.invalid}">
+                Guardar
+              </button>
+            </div>
+            <div *ngIf="destino">
+              <button (click)="putDestino()" type="button" class="btn btn-primary mb-3" [ngClass]="{'disabled': destinoForm.invalid}">
+                Guardar
+              </button>
+              <button style="margin-left: 10px;" (click)="cancelarEdicion()" type="button" class="btn btn-primary mb-3">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-9 col-xxl-8">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="table-responsive active-projects manage-client">
+            <div class="tbl-caption">
+              <h4 class="heading mb-0">Destinos</h4>
+            </div>
+            <table id="empoloyees-tbl1" class="table">
+              <thead>
+                <tr>
+                  <th>Codigo</th>
+                  <th>Nombre</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let d of destinos; let dindex = index">
+                  <td><a class="text-primary">{{d.codigo}}</a></td>
+                  <td>{{d.nombre}}</td>
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-list"></i>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" (click)="setDestino(d, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="deleteDestino(d, dindex)">Eliminar</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,10 @@
   width: 100% !important;
 }
 
+#destinos_prestamos {
+  width: 100% !important;
+}
+
 .count {
   background-color: transparent !important;
 }
@@ -40,13 +44,13 @@
   border-radius: 10px;
 }
 
-.finalizado {
+.cancelado {
   background-color: #daf5e6;
   color: #3AC977 !important;
   border-radius: 10px;
 }
 
-.rechazado {
+.anulado {
   background-color: #ffdede;
   color: #FF5E5E !important;
   border-radius: 10px;

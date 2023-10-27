@@ -20,6 +20,8 @@ import { DepartamentosService } from 'src/app/services/catalogos/departamentos.s
 import { ProgramasGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
+import { DestinosService } from 'src/app/services/catalogos/destinos.service';
+import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-prestamos.service';
 
 @Component({
   selector: 'app-prestamos',
@@ -30,6 +32,7 @@ export class PrestamosComponent implements OnInit {
 
   prestamoForm: FormGroup;
   amortizacionForm: FormGroup;
+  destinoPrestamoForm: FormGroup;
 
   prestamos: any = [];
   prestamo: any;
@@ -51,6 +54,12 @@ export class PrestamosComponent implements OnInit {
 
   amortizaciones: any = [];
   amortizacion: any;
+  destinos: any = [];
+  destino: any = {
+    codigo: null
+  };
+  destinos_prestamos: any = [];
+  destino_prestamo: any;
 
   estado: string = 'Pendiente';
 
@@ -58,8 +67,8 @@ export class PrestamosComponent implements OnInit {
     pendientes: null,
     aprobados: null,
     acreditados: null,
-    finalizados: null,
-    rechazados: null,
+    cancelados: null,
+    anulados: null,
   }
 
   filtros: any = {
@@ -67,10 +76,11 @@ export class PrestamosComponent implements OnInit {
     id_funcionario: null,
     id_municipalidad: null,
     id_tipo_prestamo: null,
+    id_programa: null,
     id_usuario: null,
+    estado: null,
     codigo_departamento: null,
-    codigo_municipio: null,
-    plazo_meses: 12
+    codigo_municipio: null
   }
 
   disponibilidad: any;
@@ -92,7 +102,8 @@ export class PrestamosComponent implements OnInit {
     private usuariosService: UsuariosService,
     private amortizacionesService: AmortizacionesService,
     private prestamos_garantiasService: PrestamosGarantiasService,
-    private configuracionesService: ConfiguracionesService
+    private destinosService: DestinosService,
+    private destinos_prestamosService: DestinoPrestamosService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -105,7 +116,8 @@ export class PrestamosComponent implements OnInit {
       fecha_acta: new FormControl(null),
       intereses: new FormControl(null),
       periodo_gracia: new FormControl(0),
-      destino_prestamo: new FormControl(null),
+      destino: new FormControl(null),
+      no_destinos: new FormControl(null),
       acta: new FormControl(null),
       punto: new FormControl(null),
       fecha_memorial: new FormControl(null),
@@ -133,6 +145,12 @@ export class PrestamosComponent implements OnInit {
       saldo: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
     })
+    this.destinoPrestamoForm = new FormGroup({
+      descripcion: new FormControl(null, [Validators.required]),
+      monto: new FormControl(null, [Validators.required]),
+      id_destino: new FormControl(null, [Validators.required]),
+      id_prestamo: new FormControl(null, [Validators.required])
+    })
   }
 
   async ngOnInit() {
@@ -148,6 +166,7 @@ export class PrestamosComponent implements OnInit {
     await this.getGarantias();
     await this.getUsuarios();
     await this.getPrestamos();
+    await this.getDestinos();
     await this.getCountPrestamos();
   }
 
@@ -177,7 +196,7 @@ export class PrestamosComponent implements OnInit {
     let prestamo_muni = await this.prestamosService.getCountPrestamosMunicipalidad(this.municipalidad.id);
 
     if (id_tipo_prestamo && id_programa && this.municipalidad && prestamo_muni) {
-      
+
       correlativo[0] = this.municipalidad.departamento.codigo;
       correlativo[1] = this.municipalidad.municipio.codigo;
       correlativo[2] = prestamo_muni + 1;
@@ -249,6 +268,15 @@ export class PrestamosComponent implements OnInit {
     }
   }
 
+  async setDestino(event: any) {
+    for (let d = 0; d < this.destinos.length; d++) {
+      if (event.target.value == this.destinos[d].id) {
+        this.destino = this.destinos[d];
+        this.destinoPrestamoForm.controls['id_destino'].setValue(this.destino.id);
+      }
+    }
+  }
+
   async getPrestamos() {
     this.ngxService.start();
     let prestamos = await this.prestamosService.getPrestamosEstadoFecha(this.estado, this.fecha_inicio, this.fecha_fin);
@@ -278,8 +306,8 @@ export class PrestamosComponent implements OnInit {
     this.counts.pendientes = await this.prestamosService.getCountPrestamosEstado('Pendiente', this.fecha_inicio, this.fecha_fin);
     this.counts.aprobados = await this.prestamosService.getCountPrestamosEstado('Aprobado', this.fecha_inicio, this.fecha_fin);
     this.counts.acreditados = await this.prestamosService.getCountPrestamosEstado('Acreditado', this.fecha_inicio, this.fecha_fin);
-    this.counts.finalizados = await this.prestamosService.getCountPrestamosEstado('Finalizado', this.fecha_inicio, this.fecha_fin);
-    this.counts.rechazados = await this.prestamosService.getCountPrestamosEstado('Rechazado', this.fecha_inicio, this.fecha_fin);
+    this.counts.cancelados = await this.prestamosService.getCountPrestamosEstado('Cancelado', this.fecha_inicio, this.fecha_fin);
+    this.counts.anulados = await this.prestamosService.getCountPrestamosEstado('Anulado', this.fecha_inicio, this.fecha_fin);
   }
 
   async getGarantias() {
@@ -291,6 +319,15 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.stop();
   }
 
+  async getDestinos() {
+    this.ngxService.start();
+    let destinos = await this.destinosService.getDestinos();
+    if (destinos) {
+      this.destinos = destinos;
+    }
+    this.ngxService.stop();
+  }
+
   async getTiposPrestamos() {
     this.ngxService.start();
     let tipos_prestamos = await this.tipos_prestamosService.getTiposPrestamos();
@@ -298,6 +335,14 @@ export class PrestamosComponent implements OnInit {
       this.tipos_prestamos = tipos_prestamos;
     }
     this.ngxService.stop();
+  }
+
+  async getDestinosPrestamo(i: any) {
+    this.destinos_prestamos = [];
+    let destinos_prestamos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.prestamo.id);
+    if (destinos_prestamos) {
+      this.destinos_prestamos = destinos_prestamos;
+    }
   }
 
   async getProgramas() {
@@ -444,6 +489,53 @@ export class PrestamosComponent implements OnInit {
     return porcentaje;
   }
 
+  async postDestinoPrestamo() {
+    this.ngxService.start();
+
+    let destino_prestamo = await this.destinos_prestamosService.postDestinoPrestamo(this.destinoPrestamoForm.value);
+    if (destino_prestamo.resultado) {
+      await this.getDestinosPrestamo(this.prestamo.id);
+      this.alert.alertMax('Transaccion Correcta', destino_prestamo.mensaje, 'success');
+      this.limpiar3();
+    }
+    this.ngxService.stop();
+  }
+
+  async putDestinoPrestamo() {
+    this.ngxService.start();
+    let destino_prestamo = await this.destinos_prestamosService.putDestinoPrestamo(this.destino_prestamo.id, this.destinoPrestamoForm.value);
+    if (destino_prestamo.resultado) {
+      await this.getDestinosPrestamo(this.prestamo.id);
+      this.alert.alertMax('Transaccion Correcta', destino_prestamo.mensaje, 'success');
+      this.limpiar3();
+    }
+    this.ngxService.stop();
+  }
+
+  async deleteDestinoPrestamo(i: any, index: number) {
+    Swal.fire({
+      title: '¿Estas seguro?',
+      text: "Esta accion no se puede revertir!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Eliminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.ngxService.start();
+        let destino_prestamo = await this.destinos_prestamosService.deleteDestinoPrestamo(i.id);
+        if (destino_prestamo.resultado) {
+          this.destinos_prestamos.splice(index, 1);
+          this.alert.alertMax('Correcto', destino_prestamo.mensaje, 'success');
+          this.limpiar3();
+        }
+        this.ngxService.stop();
+      }
+    })
+  }
+
   async postPrestamo() {
     this.ngxService.start();
     await this.setNoPrestamo();
@@ -482,7 +574,7 @@ export class PrestamosComponent implements OnInit {
 
   async putPrestamo() {
     let estado = this.prestamoForm.controls['estado'].value;
-    if (estado == 'Finalizado') {
+    if (estado == 'Cancelado') {
       let saldo = (this.amortizaciones.length ? parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo) : this.prestamo.monto).toFixed(2);
       if (parseInt(saldo) != 0) {
         this.alert.alertMax('Transaccion Incorrecta', `Prestamo con Q${saldo} de saldo pendiente`, 'error');
@@ -559,7 +651,8 @@ export class PrestamosComponent implements OnInit {
     this.prestamoForm.controls['fecha_acta'].setValue(i.fecha_acta ? moment.utc(i.fecha_acta).format('YYYY-MM-DD') : i.fecha_acta);
     this.prestamoForm.controls['intereses'].setValue(i.intereses);
     this.prestamoForm.controls['periodo_gracia'].setValue(i.periodo_gracia);
-    this.prestamoForm.controls['destino_prestamo'].setValue(i.destino_prestamo);
+    this.prestamoForm.controls['destino'].setValue(i.destino);
+    this.prestamoForm.controls['no_destinos'].setValue(i.no_destinos);
     this.prestamoForm.controls['acta'].setValue(i.acta);
     this.prestamoForm.controls['punto'].setValue(i.punto);
     this.prestamoForm.controls['fecha_memorial'].setValue(i.fecha_memorial ? moment.utc(i.fecha_memorial).format('YYYY-MM-DD') : i.fecha_memorial);
@@ -577,6 +670,7 @@ export class PrestamosComponent implements OnInit {
     this.prestamoForm.controls['id_usuario'].setValue(i.id_usuario);
 
     this.amortizacionForm.controls['id_prestamo'].setValue(i.id);
+    this.destinoPrestamoForm.controls['id_prestamo'].setValue(i.id);
 
     this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
 
@@ -586,6 +680,17 @@ export class PrestamosComponent implements OnInit {
 
     await this.getProyeccion();
     this.calcAmortizacion();
+  }
+
+  async setDestinoPrestamo(i: any, index: number) {
+    i.index = index;
+    this.destino_prestamo = i;
+    this.destino = i.destino;
+
+    this.destinoPrestamoForm.controls['descripcion'].setValue(i.descripcion);
+    this.destinoPrestamoForm.controls['monto'].setValue(i.monto);
+    this.destinoPrestamoForm.controls['id_destino'].setValue(i.id_destino);
+    this.destinoPrestamoForm.controls['id_prestamo'].setValue(i.id_prestamo);
   }
 
   async getAmortizaciones(i: any, index: number) {
@@ -681,6 +786,15 @@ export class PrestamosComponent implements OnInit {
     return total;
   }
 
+  getTotalDestinosPrestamos() {
+    let total = 0;
+    for (let a = 0; a < this.destinos_prestamos.length; a++) {
+      total += parseFloat(this.destinos_prestamos[a].monto);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
+  }
+
   colorClass(p: any) {
     if (p.estado == 'Pendiente') {
       return 'pendiente'
@@ -691,11 +805,11 @@ export class PrestamosComponent implements OnInit {
     if (p.estado == 'Acreditado') {
       return 'acreditado'
     }
-    if (p.estado == 'Finalizado') {
-      return 'finalizado'
+    if (p.estado == 'Cancelado') {
+      return 'cancelado'
     }
-    if (p.estado == 'Rechazado') {
-      return 'rechazado'
+    if (p.estado == 'Anulado') {
+      return 'anulado'
     }
     return '';
   }
@@ -741,13 +855,24 @@ export class PrestamosComponent implements OnInit {
     this.amortizacion = null;
   }
 
+  limpiar3() {
+    this.destinoPrestamoForm.reset();
+    this.destinoPrestamoForm.controls['id_prestamo'].setValue(this.prestamo.id);
+    this.destino_prestamo = null;
+    this.destino = {
+      codigo: null
+    };;
+  }
+
   limpiarFiltros() {
     this.filtros = {
       id_regional: null,
       id_funcionario: null,
       id_municipalidad: null,
       id_tipo_prestamo: null,
+      id_programa: null,
       id_usuario: null,
+      estado: null,
       codigo_departamento: null,
       codigo_municipio: null
     }

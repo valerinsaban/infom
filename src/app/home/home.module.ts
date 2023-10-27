@@ -31,6 +31,7 @@ import { ConfiguracionesComponent } from './configuraciones/configuraciones.comp
 import { TiposPrestamosComponent } from './catalogos/tipos-prestamos/tipos-prestamos.component';
 import { CobrosComponent } from './cobros/cobros.component';
 import { PartidosPoliticosComponent } from './catalogos/partidos-politicos/partidos-politicos.component';
+import { DestinosComponent } from './catalogos/destinos/destinos.component';
 
 const routes: Routes = [
   {
@@ -61,6 +62,7 @@ const routes: Routes = [
       { path: 'profesiones', component: ProfesionesComponent},
       { path: 'bancos', component: BancosComponent},
       { path: 'partidos-politicos', component: PartidosPoliticosComponent},
+      { path: 'destinos', component: DestinosComponent},
 
       // Seguridad
       { path: 'regionales', component: RegionalesComponent},
@@ -102,6 +104,7 @@ const routes: Routes = [
     ProgramasComponent,
     CobrosComponent,
     PartidosPoliticosComponent,
+    DestinosComponent,
   ],
   imports: [
     CommonModule,
