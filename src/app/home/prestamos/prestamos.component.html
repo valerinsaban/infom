@@ -146,11 +146,11 @@
                       </td>
                       <td class="text-end">
                         <div class="dropdown">
-                          <a (click)="reporte('PDF', p.id)" class="btn btn-primary light sharp"
-                            style="margin-right: 10px;">
+                          <a class="btn btn-primary light" style="margin-right: 10px;" data-bs-toggle="modal"
+                            data-bs-target="#impresiones">
                             <i class="fa-solid fa-print"></i>
                           </a>
-                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                          <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
                             <i class="fa-solid fa-list"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
@@ -329,8 +329,7 @@
                   <label class="form-label">No. Destinos
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="no_destinos" type="number" class="form-control"
-                    placeholder="No. Destinos">
+                  <input formControlName="no_destinos" type="number" class="form-control" placeholder="No. Destinos">
                 </div>
               </div>
               <div *ngIf="disp == false" style="text-align: center;">
@@ -669,8 +668,7 @@
                   <label class="form-label">No. Destinos
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="no_destinos" type="number" class="form-control"
-                    placeholder="No. Destinos">
+                  <input formControlName="no_destinos" type="number" class="form-control" placeholder="No. Destinos">
                 </div>
               </div>
               <div>
@@ -914,11 +912,11 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-9 col-xxl-9">
+        <div class="col-xl-9 col-xxl-9" *ngIf="prestamo">
           <div class="card">
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
-                <div class="tbl-caption" *ngIf="prestamo">
+                <div class="tbl-caption">
                   <h4 class="heading mb-0">Destinos {{destinos_prestamos.length}} / {{prestamo.no_destinos}}</h4>
                 </div>
                 <table class="table">
@@ -939,7 +937,7 @@
                       <td style="text-align: right;">{{d.monto | number: '.2-2'}}</td>
                       <td class="text-end">
                         <div class="dropdown">
-                          <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                          <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
                             <i class="fa-solid fa-list"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
@@ -959,8 +957,12 @@
                       <th></th>
                       <th></th>
                       <th style="text-align: right;">TOTALES</th>
-                      <th style="text-align: right;">{{getTotalDestinosPrestamos() | number: '.2-2'}}</th>
-                      <th></th>
+                      <th style="text-align: right;">
+                        <span [ngClass]="{'cancelado': destinosCompletos()}">
+                          {{getTotalDestinosPrestamos() | number: '.2-2'}}
+                        </span>
+                      </th>
+                      <th style="text-align: right;">{{prestamo.monto | number: '.2-2'}}</th>
                     </tr>
                   </tbody>
                 </table>
@@ -1231,6 +1233,56 @@
         <button class="btn btn-primary me-1" (click)="getPrestamosFiltros()" data-bs-dismiss="modal" type="button">
           <i class="fas fa-search"></i> Buscar
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="impresiones" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Impresiones</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <ul class="setting-list" style="font-size: 16px;">
+            <li class="mb-2">
+              <a href="">
+                <i class="fa-solid fa-download"></i>
+                <span class="text-primary ms-2">HOJA TECNICA</span>
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="">
+                <i class="fa-solid fa-download"></i>
+                <span class="text-primary ms-2">DICTAMEN</span>
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="">
+                <i class="fa-solid fa-download"></i>
+                <span class="text-primary ms-2">RESOLUCION</span>
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="">
+                <i class="fa-solid fa-download"></i>
+                <span class="text-primary ms-2">CONVENIO DE ASISTENCIA FINANCIERA</span>
+              </a>
+            </li>
+            <li class="mb-2">
+              <a href="">
+                <i class="fa-solid fa-download"></i>
+                <span class="text-primary ms-2">CONVENIO INTERINSTITUCIONAL</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn light" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>

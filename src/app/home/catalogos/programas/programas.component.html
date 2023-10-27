@@ -77,7 +77,7 @@
                   <td>{{d.siglas}}</td>
                   <td>
                     <div class="dropdown">
-                      <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                      <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
@@ -148,7 +148,7 @@
                     <tr *ngFor="let t of programas_garantias; let aindex = index">
                       <td>{{t.garantia.nombre}}</td>
                       <td>
-                        <button (click)="deleteProgramaGarantia(t, aindex)" type="button" class="btn btn-primary light sharp">
+                        <button (click)="deleteProgramaGarantia(t, aindex)" type="button" class="btn btn-primary light">
                           <i class="fa-solid fa-trash"></i>
                         </button>
                       </td>

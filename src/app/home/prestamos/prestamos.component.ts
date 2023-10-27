@@ -814,6 +814,15 @@ export class PrestamosComponent implements OnInit {
     return '';
   }
 
+  destinosCompletos() {
+    if (this.destinos_prestamos.length == parseInt(this.prestamo.no_destinos)) {
+      if (parseFloat(this.prestamo.monto) == this.getTotalDestinosPrestamos()) {
+        return true
+      }   
+    }
+    return false;
+  }
+
   async reporte(format: string, id: number) {
     this.ngxService.start();
     window.open(HomeComponent.apiUrl + '/reportes/' + format + '/prestamo/resumen/' + id, "_blank");
