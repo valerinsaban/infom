@@ -26,7 +26,7 @@ export class DesembolsosService {
   async postDesembolso(data: any): Promise<any> {
     let desembolso = await this.rootService.post(this.route, data);
     if (desembolso.resultado) {
-      await this.rootService.bitacora('desembolso', 'agregar', `creó el desembolso "${desembolso.data.nombre}"`, desembolso.data);
+      await this.rootService.bitacora('desembolso', 'agregar', `creó el desembolso "${desembolso.data.mes}"`, desembolso.data);
     }
     return desembolso;
   }
@@ -34,7 +34,7 @@ export class DesembolsosService {
   async putDesembolso(id: number, data: any): Promise<any> {
     let desembolso = await this.rootService.put(this.route + '/' + id, data);
     if (desembolso.resultado) {
-      await this.rootService.bitacora('desembolso', 'editar', `editó el desembolso "${desembolso.data.nombre}"`, desembolso.data);
+      await this.rootService.bitacora('desembolso', 'editar', `editó el desembolso "${desembolso.data.mes}"`, desembolso.data);
     }
     return desembolso;
   }
@@ -42,7 +42,7 @@ export class DesembolsosService {
   async deleteDesembolso(id: number): Promise<any> {
     let desembolso = await this.rootService.delete(this.route + '/' + id);
     if (desembolso.resultado) {
-      await this.rootService.bitacora('desembolso', 'eliminar', `eliminó el desembolso "${desembolso.data.nombre}"`, desembolso.data);
+      await this.rootService.bitacora('desembolso', 'eliminar', `eliminó el desembolso "${desembolso.data.mes}"`, desembolso.data);
     }
     return desembolso;
   }
