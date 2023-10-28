@@ -574,7 +574,24 @@
               </table>
             </div>
 
-            <div id="disponibilidad-muni-general" style="color: black; font-size: 8px;">
+            <div id="cat-destinos" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>CODIGO</th>
+                    <th>NOMBRE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let d of destinos; let dindex = index">
+                    <td>{{d.codigo}}</td>
+                    <td>{{d.nombre}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="disponibilidad-general" style="color: black; font-size: 8px;">
               <table class="table">
                 <thead>
                   <tr>
@@ -677,6 +694,54 @@
             <div id="situado-constitucional" style="color: black; font-size: 8px;">
               <table class="table">
                 <thead>
+                  <h4 style="text-align: center;">JUNIO</h4>
+                  <tr>
+                    <th>CODIGO</th>
+                    <th>DEPARTAMENTO</th>
+                    <th>MUNICIPIO</th>
+                    <th>APORTE</th>
+                    <th>APORTE 90%</th>
+                    <th>IVA PAZ 75%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>01</td>
+                    <td>GUATEMALA</td>
+                    <td>Municipio de Guatemala</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                  <tr>
+                    <td>02</td>
+                    <td>GUATEMALA</td>
+                    <td>Santa Catarina Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                  <tr>
+                    <td>03</td>
+                    <td>GUATEMALA</td>
+                    <td>San José Pinula</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                  <tr>
+                    <td>04</td>
+                    <td>GUATEMALA</td>
+                    <td>San José del Golfo</td>
+                    <td>350,118,998.56</td>
+                    <td>3150,7098.56</td>
+                    <td>262,589,348.92</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table">
+                <thead>
+                  <h4 style="text-align: center;">JULIO</h4>
                   <tr>
                     <th>CODIGO</th>
                     <th>DEPARTAMENTO</th>
@@ -723,6 +788,47 @@
               </table>
             </div>
             
+            <div id="datos-bancarios" style="color: black; font-size: 8px;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>DATOS</th>
+                    <th>DESCRIPCION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Numero de Acta:</td>
+                    <td>2209</td>
+                  </tr>
+                  <tr>
+                    <td>Fecha de Acta:</td>
+                    <td>15/08/2023</td>
+                  </tr>
+                  <tr>
+                    <td>Punto de Acta</td>
+                    <td>4to</td>
+                  </tr>
+                  <tr>
+                    <td>Numero de Convenio</td>
+                    <td>22345</td>
+                  </tr>
+                  <tr>
+                    <td>Fecha de Convenio</td>
+                    <td>18/08/2023</td>
+                  </tr>
+                  <tr>
+                    <td>Banco</td>
+                    <td>Banrural</td>
+                  </tr>
+                  <tr>
+                    <td>No. de Cuenta</td>
+                    <td>3267874990</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
           </div>
         </div>
       </div>

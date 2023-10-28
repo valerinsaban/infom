@@ -22,6 +22,7 @@ import { EstadosCivilesService } from 'src/app/services/catalogos/estados-civile
 import { ProfesionesService } from 'src/app/services/catalogos/profesiones.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { BancosService } from 'src/app/services/catalogos/bancos.service';
+import { DestinosService } from 'src/app/services/catalogos/destinos.service';
 
 @Component({
   selector: 'app-reportes',
@@ -63,6 +64,7 @@ export class ReportesComponent {
   profesiones: any = [];
   departamentos: any = [];
   bancos: any = [];
+  destinos: any = [];
 
   programas: any = [];
 
@@ -95,7 +97,8 @@ export class ReportesComponent {
     private estadosCivilesService: EstadosCivilesService,
     private profesionesService: ProfesionesService,
     private departamentosService: DepartamentosService,
-    private bancosService: BancosService
+    private bancosService: BancosService,
+    private destinosService: DestinosService
   ) {
     this.getReportes();
   }
@@ -107,22 +110,22 @@ export class ReportesComponent {
   getReportes() {
     this.reportes = [
       {
-        id: 1, nombre: 'Catalogo de Puestos', slug: 'cat-puestos', filtros: []
+        id: 1, nombre: 'Catalogo Puestos', slug: 'cat-puestos', filtros: []
       },
       {
-        id: 2, nombre: 'Catalogo de Partidos Politicos', slug: 'cat-partidos', filtros: []
+        id: 2, nombre: 'Catalogo Partidos Politicos', slug: 'cat-partidos', filtros: []
       },
       {
-        id: 3, nombre: 'Catalogo de Regionales', slug: 'cat-regionales', filtros: []
+        id: 3, nombre: 'Catalogo Regionales', slug: 'cat-regionales', filtros: []
       },
       {
-        id: 4, nombre: 'Catalogo de Regiones', slug: 'cat-regiones', filtros: []
+        id: 4, nombre: 'Catalogo Regiones', slug: 'cat-regiones', filtros: []
       },
       {
-        id: 5, nombre: 'Catalogo de Garantias', slug: 'cat-garantias', filtros: []
+        id: 5, nombre: 'Catalogo Garantias', slug: 'cat-garantias', filtros: []
       },
       {
-        id: 6, nombre: 'Catalogo de Municipios', slug: 'cat-municipios', filtros: []
+        id: 6, nombre: 'Catalogo Municipios', slug: 'cat-municipios', filtros: []
       },
       {
         id: 7, nombre: 'Catalogo Tipos Prestamos', slug: 'cat-tipos-prestamos', filtros: []
@@ -149,17 +152,29 @@ export class ReportesComponent {
       },
 
       {
-        id: 13, nombre: 'Disponibilidad Municipal General', slug: 'disponibilidad-muni-general', filtros: []
+        id: 13, nombre: 'Catalogo Destinos', slug: 'cat-destinos', filtros: []
       },
 
       {
-        id: 14, nombre: 'Creditos Analizados', slug: 'creditos-analizados', filtros: []
+        id: 14, nombre: 'Disponibilidad General', slug: 'disponibilidad-general', filtros: []
       },
-      
       {
         id: 100, nombre: 'Disponibilidad', slug: 'disponibilidad',
         filtros: ['codigo_departamento', 'codigo_municipio', 'plazo_meses']
       },
+
+      {
+        id: 15, nombre: 'Creditos Analizados', slug: 'creditos-analizados', filtros: []
+      },
+
+      {
+        id: 16, nombre: 'Situado Constitucional', slug: 'situado-constitucional', filtros: []
+      },
+
+      {
+        id: 17, nombre: 'Datos Bancarios', slug: 'datos-bancarios', filtros: []
+      },
+      
       {
         id: 200, nombre: 'Amortizaciones', slug: 'amortizaciones',
         filtros: ['mes']
@@ -246,12 +261,24 @@ export class ReportesComponent {
           await this.reporteCatBancos(print);
         }
 
-        if (this.reportes[r].slug == 'disponibilidad-muni-general') {
+        if (this.reportes[r].slug == 'cat-destinos') {
+          await this.reporteCatDestinos(print);
+        }
+
+        if (this.reportes[r].slug == 'disponibilidad-general') {
           await this.reporteDisponibilidadMunicipal(print);
         }
 
         if (this.reportes[r].slug == 'creditos-analizados') {
           await this.reporteCreditosAnalizados(print);
+        }
+
+        if (this.reportes[r].slug == 'situado-constitucional') {
+          await this.reporteSituadoConstitucional(print);
+        }
+
+        if (this.reportes[r].slug == 'datos-bancarios') {
+          await this.reporteDatosBancarios(print);
         }
 
         if (this.reportes[r].slug == 'disponibilidad') {
@@ -409,10 +436,20 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
+  public async reporteCatDestinos(print: boolean = true) {
+    this.ngxService.start();
+
+    let destinos = await this.destinosService.getDestinos();
+    this.destinos = destinos;
+
+    this.catalogo('cat-destinos', print)
+
+    this.ngxService.stop();
+  }
   public async reporteDisponibilidadMunicipal(print: boolean = true) {
     this.ngxService.start();
 
-    this.catalogo('disponibilidad-muni-general', print)
+    this.catalogo('disponibilidad-general', print)
 
     this.ngxService.stop();
   }
@@ -425,7 +462,21 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
+  public async reporteSituadoConstitucional(print: boolean = true) {
+    this.ngxService.start();
+
+    this.catalogo('situado-constitucional', print)
+
+    this.ngxService.stop();
+  }
   
+  public async reporteDatosBancarios(print: boolean = true) {
+    this.ngxService.start();
+
+    this.catalogo('datos-bancarios', print)
+
+    this.ngxService.stop();
+  }
 
   public async reporteDisponibilidad(print: boolean = true) {
     this.ngxService.start();
