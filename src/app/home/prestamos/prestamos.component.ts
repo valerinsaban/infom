@@ -22,6 +22,7 @@ import { ConfiguracionesService } from 'src/app/services/configuraciones.service
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
 import { DestinosService } from 'src/app/services/catalogos/destinos.service';
 import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-prestamos.service';
+import { DesembolsosService } from 'src/app/services/desembolsos.service';
 
 @Component({
   selector: 'app-prestamos',
@@ -33,6 +34,7 @@ export class PrestamosComponent implements OnInit {
   prestamoForm: FormGroup;
   amortizacionForm: FormGroup;
   destinoPrestamoForm: FormGroup;
+  desembolsoForm: FormGroup;
 
   prestamos: any = [];
   prestamo: any;
@@ -60,6 +62,8 @@ export class PrestamosComponent implements OnInit {
   };
   destinos_prestamos: any = [];
   destino_prestamo: any;
+  desembolsos: any = [];
+  desembolso: any;
 
   estado: string = 'Pendiente';
 
@@ -103,7 +107,8 @@ export class PrestamosComponent implements OnInit {
     private amortizacionesService: AmortizacionesService,
     private prestamos_garantiasService: PrestamosGarantiasService,
     private destinosService: DestinosService,
-    private destinos_prestamosService: DestinoPrestamosService
+    private destinos_prestamosService: DestinoPrestamosService,
+    private desembolsosService: DesembolsosService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -144,13 +149,19 @@ export class PrestamosComponent implements OnInit {
       cuota: new FormControl(null, [Validators.required]),
       saldo: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
-    })
+    });
     this.destinoPrestamoForm = new FormGroup({
       descripcion: new FormControl(null, [Validators.required]),
       monto: new FormControl(null, [Validators.required]),
       id_destino: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
-    })
+    });
+    this.desembolsoForm = new FormGroup({
+      numero: new FormControl(null, [Validators.required]),
+      mes: new FormControl(null, [Validators.required]),
+      monto: new FormControl(null, [Validators.required]),
+      id_prestamo: new FormControl(null, [Validators.required])
+    });
   }
 
   async ngOnInit() {
@@ -345,6 +356,14 @@ export class PrestamosComponent implements OnInit {
     }
   }
 
+  async getDesembolsos(i: any) {
+    this.desembolsos = [];
+    let desembolsos = await this.desembolsosService.getDesembolsosPrestamo(this.prestamo.id);
+    if (desembolsos) {
+      this.desembolsos = desembolsos;
+    }
+  }
+
   async getProgramas() {
     this.ngxService.start();
     let programas = await this.programasService.getProgramas();
@@ -536,6 +555,53 @@ export class PrestamosComponent implements OnInit {
     })
   }
 
+  async postDesembolso() {
+    this.ngxService.start();
+
+    let desembolso = await this.desembolsosService.postDesembolso(this.desembolsoForm.value);
+    if (desembolso.resultado) {
+      await this.getDesembolsos(this.prestamo.id);
+      this.alert.alertMax('Transaccion Correcta', desembolso.mensaje, 'success');
+      this.limpiar4();
+    }
+    this.ngxService.stop();
+  }
+
+  async putDesembolso() {
+    this.ngxService.start();
+    let desembolso = await this.desembolsosService.putDesembolso(this.desembolso.id, this.desembolsoForm.value);
+    if (desembolso.resultado) {
+      await this.getDesembolsos(this.prestamo.id);
+      this.alert.alertMax('Transaccion Correcta', desembolso.mensaje, 'success');
+      this.limpiar4();
+    }
+    this.ngxService.stop();
+  }
+
+  async deleteDesembolso(i: any, index: number) {
+    Swal.fire({
+      title: '¿Estas seguro?',
+      text: "Esta accion no se puede revertir!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Eliminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.ngxService.start();
+        let desembolso = await this.desembolsosService.deleteDesembolso(i.id);
+        if (desembolso.resultado) {
+          this.desembolsos.splice(index, 1);
+          this.alert.alertMax('Correcto', desembolso.mensaje, 'success');
+          this.limpiar4();
+        }
+        this.ngxService.stop();
+      }
+    })
+  }
+
   async postPrestamo() {
     this.ngxService.start();
     await this.setNoPrestamo();
@@ -671,6 +737,7 @@ export class PrestamosComponent implements OnInit {
 
     this.amortizacionForm.controls['id_prestamo'].setValue(i.id);
     this.destinoPrestamoForm.controls['id_prestamo'].setValue(i.id);
+    this.desembolsoForm.controls['id_prestamo'].setValue(i.id);
 
     this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
 
@@ -691,6 +758,16 @@ export class PrestamosComponent implements OnInit {
     this.destinoPrestamoForm.controls['monto'].setValue(i.monto);
     this.destinoPrestamoForm.controls['id_destino'].setValue(i.id_destino);
     this.destinoPrestamoForm.controls['id_prestamo'].setValue(i.id_prestamo);
+  }
+
+  async setDesembolso(i: any, index: number) {
+    i.index = index;
+    this.desembolso = i;
+
+    this.desembolsoForm.controls['numero'].setValue(i.numero);
+    this.desembolsoForm.controls['mes'].setValue(i.mes);
+    this.desembolsoForm.controls['monto'].setValue(i.monto);
+    this.desembolsoForm.controls['id_prestamo'].setValue(i.id_prestamo);
   }
 
   async getAmortizaciones(i: any, index: number) {
@@ -795,6 +872,15 @@ export class PrestamosComponent implements OnInit {
     return total;
   }
 
+  getTotalDesembolsos() {
+    let total = 0;
+    for (let a = 0; a < this.desembolsos.length; a++) {
+      total += parseFloat(this.desembolsos[a].monto);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
+  }
+
   colorClass(p: any) {
     if (p.estado == 'Pendiente') {
       return 'pendiente'
@@ -820,6 +906,13 @@ export class PrestamosComponent implements OnInit {
         return true
       }   
     }
+    return false;
+  }
+
+  desembolsosCompletos() {
+    if (parseFloat(this.prestamo.monto) == this.getTotalDesembolsos()) {
+      return true
+    }   
     return false;
   }
 
@@ -870,7 +963,13 @@ export class PrestamosComponent implements OnInit {
     this.destino_prestamo = null;
     this.destino = {
       codigo: null
-    };;
+    };
+  }
+
+  limpiar4() {
+    this.desembolsoForm.reset();
+    this.desembolsoForm.controls['id_prestamo'].setValue(this.prestamo.id);
+    this.desembolso = null;
   }
 
   limpiarFiltros() {

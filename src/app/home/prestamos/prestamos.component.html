@@ -166,6 +166,10 @@
                               data-bs-toggle="offcanvas" data-bs-target="#destinos_prestamos">
                               Destinos
                             </a>
+                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDesembolsos(p)"
+                              data-bs-toggle="offcanvas" data-bs-target="#desembolsos">
+                              Desembolsos
+                            </a>
                             <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item"
                               (click)="getAmortizaciones(p, mindex)" data-bs-toggle="offcanvas"
                               data-bs-target="#amortizaciones">
@@ -930,7 +934,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let d of destinos_prestamos; let mindex = index">
+                    <tr *ngFor="let d of destinos_prestamos; let dindex = index">
                       <td>{{d.destino.codigo}}</td>
                       <td>{{d.destino.nombre}}</td>
                       <td>{{d.descripcion}}</td>
@@ -941,10 +945,10 @@
                             <i class="fa-solid fa-list"></i>
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" (click)="setDestinoPrestamo(d, mindex)">
+                            <a class="dropdown-item" (click)="setDestinoPrestamo(d, dindex)">
                               Editar
                             </a>
-                            <a class="dropdown-item" (click)="deleteDestinoPrestamo(d, mindex)">
+                            <a class="dropdown-item" (click)="deleteDestinoPrestamo(d, dindex)">
                               Eliminar
                             </a>
                           </div>
@@ -958,8 +962,120 @@
                       <th></th>
                       <th style="text-align: right;">TOTALES</th>
                       <th style="text-align: right;">
-                        <span [ngClass]="{'cancelado': destinosCompletos()}">
+                        <span [ngClass]="{'cuadrado': destinosCompletos()}">
                           {{getTotalDestinosPrestamos() | number: '.2-2'}}
+                        </span>
+                      </th>
+                      <th style="text-align: right;">{{prestamo.monto | number: '.2-2'}}</th>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="desembolsos">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Plan de Desembolsos</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-3 col-xxl-3">
+          <div class="card h-auto">
+            <div class="card-header">
+              <h4 class="heading mb-0">Agregar Desembolso</h4>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="desembolsoForm" class="finance-hr">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Numero <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="numero" type="text" class="form-control" placeholder="Numero">
+                </div>
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Mes <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="mes" type="month" class="form-control" placeholder="Mes">
+                </div>
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Monto <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="monto" type="number" class="form-control" placeholder="Monto">
+                </div>
+                <div *ngIf="!desembolso">
+                  <button (click)="postDesembolso()" type="button" class="btn btn-primary mb-3"
+                    [ngClass]="{'disabled': desembolsoForm.invalid}">
+                    Guardar
+                  </button>
+                </div>
+                <div *ngIf="desembolso">
+                  <button (click)="putDesembolso()" type="button" class="btn btn-primary mb-3"
+                    [ngClass]="{'disabled': desembolsoForm.invalid}">
+                    Guardar
+                  </button>
+                  <button style="margin-left: 10px;" (click)="limpiar3()" type="button" class="btn btn-primary mb-3">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-9 col-xxl-9" *ngIf="prestamo">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive active-projects task-table">
+                <div class="tbl-caption">
+                  <h4 class="heading mb-0">Desembolsos {{desembolsos.length}}</h4>
+                </div>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Numero</th>
+                      <th>Mes</th>
+                      <th style="text-align: right;">Monto</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let d of desembolsos; let dindex = index">
+                      <td>{{d.numero}}</td>
+                      <td>{{d.mes}}</td>
+                      <td style="text-align: right;">{{d.monto | number: '.2-2'}}</td>
+                      <td class="text-end">
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-list"></i>
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" (click)="setDesembolso(d, dindex)">
+                              Editar
+                            </a>
+                            <a class="dropdown-item" (click)="deleteDesembolso(d, dindex)">
+                              Eliminar
+                            </a>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr>
+                      <th></th>
+                      <th style="text-align: right;">TOTALES</th>
+                      <th style="text-align: right;">
+                        <span [ngClass]="{'cuadrado': desembolsosCompletos()}">
+                          {{getTotalDesembolsos() | number: '.2-2'}}
                         </span>
                       </th>
                       <th style="text-align: right;">{{prestamo.monto | number: '.2-2'}}</th>
