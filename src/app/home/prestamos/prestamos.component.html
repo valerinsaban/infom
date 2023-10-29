@@ -103,7 +103,7 @@
             </div>
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
-                <table id="empoloyeestbl2" class="table" style="margin-bottom: 150px;">
+                <table id="empoloyeestbl2" class="table" style="margin-bottom: 200px;">
                   <thead>
                     <tr>
                       <th>Municipalidad</th>
@@ -294,6 +294,13 @@
                   <input formControlName="periodo_gracia" type="number" class="form-control"
                     placeholder="Periodo Gracia" (input)="getProyeccion2()">
                 </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Resolucion<span class="text-danger">*</span></label>
+                  <select formControlName="id_resolucion" class="form-control">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of resoluciones" [value]="i.id">{{i.numero}} - {{i.nombre}}</option>
+                  </select>
+                </div>
               </div>
               <hr>
               <div class="row" [hidden]="!disp">
@@ -329,7 +336,7 @@
                   </label>
                   <textarea formControlName="destino" class="form-control" rows="5"></textarea>
                 </div>
-                <div class="col-xxl-3 mb-3">
+                <div class="col-xl-3 mb-3">
                   <label class="form-label">No. Destinos
                     <span class="text-danger">*</span>
                   </label>
@@ -446,24 +453,8 @@
                     </table>
                   </div>
 
-                  <app-reportes [filtros]="filtros" [id_reporte]="100" [view_reporte]="false"
+                  <app-reportes [filtros]="filtros" [slug_reporte]="'disponibilidad'" [view_reporte]="false"
                     (disp)="recibirDisp($event)"></app-reportes>
-
-                  <hr>
-                  <h4 class="heading mb-0">Disponible Total</h4>
-                  <hr>
-                  <div class="row">
-                    <div class="col-6" style="text-align: left;">
-                      <b>Aporte Constitucional</b>: <br>
-                      <b>IVA Paz: </b> <br>
-                      <b>Unificadas: </b>
-                    </div>
-                    <div class="col-6" style="text-align: right;" *ngIf="disponibilidad">
-                      <span>{{disponibilidad.constitucional | number: '.2-2'}}</span> <br>
-                      <span>{{disponibilidad.iva_paz | number: '.2-2'}}</span> <br>
-                      <span>{{disponibilidad.total | number: '.2-2'}}</span>
-                    </div>
-                  </div>
 
                 </div>
               </div>
@@ -633,6 +624,13 @@
                   <input formControlName="periodo_gracia" type="number" class="form-control"
                     placeholder="Periodo Gracia" (input)="getProyeccion2()">
                 </div>
+                <div class="col-xl-3 mb-3">
+                  <label class="form-label">Resolucion<span class="text-danger">*</span></label>
+                  <select formControlName="id_resolucion" class="form-control">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of resoluciones" [value]="i.id">{{i.numero}} - {{i.nombre}}</option>
+                  </select>
+                </div>
               </div>
               <hr>
               <div class="row">
@@ -641,7 +639,7 @@
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_aj" type="number" class="form-control"
-                    placeholder="No. Oficio A.J.">
+                    placeholder="NO. Oficio A.J.">
                 </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Fecha Oficio A.J.
@@ -649,14 +647,14 @@
                   </label>
                   <input formControlName="fecha_oficio_aj" type="date" class="form-control">
                 </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_programa'].value == 2">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
                   <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_ger" type="number" class="form-control"
-                    placeholder="No. Oficio A.J.">
+                    placeholder="NO. Oficio A.J.">
                 </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_programa'].value == 2">
+                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
                   <label class="form-label">Fecha Oficio GER
                     <span class="text-danger">*</span>
                   </label>
@@ -668,7 +666,7 @@
                   </label>
                   <textarea formControlName="destino" class="form-control" rows="5"></textarea>
                 </div>
-                <div class="col-xxl-3 mb-3">
+                <div class="col-xl-3 mb-3">
                   <label class="form-label">No. Destinos
                     <span class="text-danger">*</span>
                   </label>

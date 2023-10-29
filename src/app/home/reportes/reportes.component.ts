@@ -35,18 +35,21 @@ export class ReportesComponent {
 
   @Input()
   filtros: any = {
-    codigo_departamento: '',
-    codigo_municipio: '',
-    plazo_meses: '',
+    codigo_departamento: null,
+    codigo_municipio: null,
+    plazo_meses: null,
     mes: null,
+    mes_inicio: null,
+    mes_fin: null
   }
 
   @Input()
-  id_reporte: number = 0;
+  slug_reporte: any;
 
   @Input()
   view_reporte: boolean = true;
 
+  reportes_catalogos: any = [];
   reportes: any = [];
   reporte: any;
 
@@ -65,8 +68,9 @@ export class ReportesComponent {
   departamentos: any = [];
   bancos: any = [];
   destinos: any = [];
-
   programas: any = [];
+
+  aportes: any = [];
 
   totales: any = {
     constitucional: 0,
@@ -108,83 +112,34 @@ export class ReportesComponent {
   }
 
   getReportes() {
+    this.reportes_catalogos = [
+      { slug: 'cat-puestos', nombre: 'Catalogo Puestos' },
+      { slug: 'cat-partidos', nombre: 'Catalogo Partidos Politicos' },
+      { slug: 'cat-regionales', nombre: 'Catalogo Regionales' },
+      { slug: 'cat-regiones', nombre: 'Catalogo Regiones' },
+      { slug: 'cat-garantias', nombre: 'Catalogo Garantias' },
+      { slug: 'cat-municipios', nombre: 'Catalogo Municipios' },
+      { slug: 'cat-tipos-prestamos', nombre: 'Catalogo Tipos Prestamos' },
+      { slug: 'cat-estados-civiles', nombre: 'Catalogo Estados Civiles' },
+      { slug: 'cat-programas', nombre: 'Catalogo Programas' },
+      { slug: 'cat-profesiones', nombre: 'Catalogo Profesiones' },
+      { slug: 'cat-departamentos', nombre: 'Catalogo Departamentos' },
+      { slug: 'cat-bancos', nombre: 'Catalogo Bancos' },
+      { slug: 'cat-destinos', nombre: 'Catalogo Destinos' }
+    ];
     this.reportes = [
-      {
-        id: 1, nombre: 'Catalogo Puestos', slug: 'cat-puestos', filtros: []
-      },
-      {
-        id: 2, nombre: 'Catalogo Partidos Politicos', slug: 'cat-partidos', filtros: []
-      },
-      {
-        id: 3, nombre: 'Catalogo Regionales', slug: 'cat-regionales', filtros: []
-      },
-      {
-        id: 4, nombre: 'Catalogo Regiones', slug: 'cat-regiones', filtros: []
-      },
-      {
-        id: 5, nombre: 'Catalogo Garantias', slug: 'cat-garantias', filtros: []
-      },
-      {
-        id: 6, nombre: 'Catalogo Municipios', slug: 'cat-municipios', filtros: []
-      },
-      {
-        id: 7, nombre: 'Catalogo Tipos Prestamos', slug: 'cat-tipos-prestamos', filtros: []
-      },
-
-      {
-        id: 8, nombre: 'Catalogo Estados Civiles', slug: 'cat-estados-civiles', filtros: []
-      },
-
-      {
-        id: 9, nombre: 'Catalogo Programas', slug: 'cat-programas', filtros: []
-      },
-
-      {
-        id: 10, nombre: 'Catalogo Profesiones', slug: 'cat-profesiones', filtros: []
-      },
-
-      {
-        id: 11, nombre: 'Catalogo Departamentos', slug: 'cat-departamentos', filtros: []
-      },
-
-      {
-        id: 12, nombre: 'Catalogo Bancos', slug: 'cat-bancos', filtros: []
-      },
-
-      {
-        id: 13, nombre: 'Catalogo Destinos', slug: 'cat-destinos', filtros: []
-      },
-
-      {
-        id: 14, nombre: 'Disponibilidad General', slug: 'disponibilidad-general', filtros: []
-      },
-      {
-        id: 100, nombre: 'Disponibilidad', slug: 'disponibilidad',
-        filtros: ['codigo_departamento', 'codigo_municipio', 'plazo_meses']
-      },
-
-      {
-        id: 15, nombre: 'Creditos Analizados', slug: 'creditos-analizados', filtros: []
-      },
-
-      {
-        id: 16, nombre: 'Situado Constitucional', slug: 'situado-constitucional', filtros: []
-      },
-
-      {
-        id: 17, nombre: 'Datos Bancarios', slug: 'datos-bancarios', filtros: []
-      },
-      
-      {
-        id: 200, nombre: 'Amortizaciones', slug: 'amortizaciones',
-        filtros: ['mes']
-      }
+      { slug: 'disponibilidad', nombre: 'Reporte Disponibilidad', filtros: ['codigo_departamento', 'codigo_municipio', 'plazo_meses'] },
+      { slug: 'disponibilidad-general', nombre: 'Reporte Disponibilidad General', filtros: ['plazo_meses'] },
+      { slug: 'situado-constitucional', nombre: 'Reporte Situado Constitucional', filtros: ['mes_inicio', 'mes_fin'] },
+      { slug: 'datos-bancarios', nombre: 'Reporte Datos Bancarios', filtros: ['codigo_departamento', 'codigo_municipio'] },
+      { slug: 'creditos-analizados', nombre: 'Reporte Creditos Analizados', filtros: [] },
+      { slug: 'intereses-dev-no-percibios', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] }
     ];
   }
 
   async setReporte() {
     for (let r = 0; r < this.reportes.length; r++) {
-      if (this.reportes[r].id == this.id_reporte) {
+      if (this.reportes[r].slug == this.slug_reporte) {
         this.reporte = this.reportes[r];
 
         let mes_inicio = moment();
@@ -199,7 +154,7 @@ export class ReportesComponent {
 
   filtro(filtro: string) {
     for (let r = 0; r < this.reportes.length; r++) {
-      if (this.reportes[r].id == this.id_reporte) {
+      if (this.reportes[r].slug == this.slug_reporte) {
         for (let f = 0; f < this.reportes[r].filtros.length; f++) {
           if (this.reportes[r].filtros[f] == filtro) {
             return true;
@@ -211,274 +166,268 @@ export class ReportesComponent {
   }
 
   async imprimir(print: boolean = true) {
-    for (let r = 0; r < this.reportes.length; r++) {
-      if (this.reportes[r].id == this.id_reporte) {
-        if (this.reportes[r].slug == 'cat-puestos') {
-          await this.reporteCatPuestos(print);
-        }
 
-        if (this.reportes[r].slug == 'cat-partidos') {
-          await this.reporteCatPartidos(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-regionales') {
-          await this.reporteCatRegionales(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-regiones') {
-          await this.reporteCatRegiones(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-garantias') {
-          await this.reporteCatGarantias(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-municipios') {
-          await this.reporteCatMunicipios(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-tipos-prestamos') {
-          await this.reporteCatTiposPrestamos(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-estados-civiles') {
-          await this.reporteCatEstadosCiviles(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-programas') {
-          await this.reporteCatProgramas(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-profesiones') {
-          await this.reporteCatProfesiones(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-departamentos') {
-          await this.reporteCatDepartamentos(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-bancos') {
-          await this.reporteCatBancos(print);
-        }
-
-        if (this.reportes[r].slug == 'cat-destinos') {
-          await this.reporteCatDestinos(print);
-        }
-
-        if (this.reportes[r].slug == 'disponibilidad-general') {
-          await this.reporteDisponibilidadMunicipal(print);
-        }
-
-        if (this.reportes[r].slug == 'creditos-analizados') {
-          await this.reporteCreditosAnalizados(print);
-        }
-
-        if (this.reportes[r].slug == 'situado-constitucional') {
-          await this.reporteSituadoConstitucional(print);
-        }
-
-        if (this.reportes[r].slug == 'datos-bancarios') {
-          await this.reporteDatosBancarios(print);
-        }
-
-        if (this.reportes[r].slug == 'disponibilidad') {
-          await this.reporteDisponibilidad(print);
-        }
-        if (this.reportes[r].slug == 'amortizaciones') {
-          await this.reporteAmortizaciones(print);
-        }
-      }
+    // Catalogos
+    if (this.slug_reporte == 'cat-puestos') {
+      await this.reporteCatPuestos(this.slug_reporte, print);
     }
 
-    for (let g = 0; g < this.garantias.length; g++) {
-      let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
-      if (this.garantias[g].id == 1) {
-        this.totales.constitucional = tot
-      }
-      if (this.garantias[g].id == 2) {
-        this.totales.iva_paz = tot
-      }
+    if (this.slug_reporte == 'cat-partidos') {
+      await this.reporteCatPartidos(this.slug_reporte, print);
     }
-    this.totales.total = this.getTotalMontoDispTotalDisponible();
 
-    this.disp.emit(this.totales)
+    if (this.slug_reporte == 'cat-regionales') {
+      await this.reporteCatRegionales(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-regiones') {
+      await this.reporteCatRegiones(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-garantias') {
+      await this.reporteCatGarantias(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-municipios') {
+      await this.reporteCatMunicipios(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-tipos-prestamos') {
+      await this.reporteCatTiposPrestamos(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-estados-civiles') {
+      await this.reporteCatEstadosCiviles(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-programas') {
+      await this.reporteCatProgramas(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-profesiones') {
+      await this.reporteCatProfesiones(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-departamentos') {
+      await this.reporteCatDepartamentos(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-bancos') {
+      await this.reporteCatBancos(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cat-destinos') {
+      await this.reporteCatDestinos(this.slug_reporte, print);
+    }
+
+    // Reportes
+    if (this.slug_reporte == 'disponibilidad-general') {
+      await this.reporteDisponibilidadGeneral(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'creditos-analizados') {
+      await this.reporteCreditosAnalizados(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'situado-constitucional') {
+      await this.reporteSituadoConstitucional(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'datos-bancarios') {
+      await this.reporteDatosBancarios(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'disponibilidad') {
+      await this.reporteDisponibilidad(this.slug_reporte, print);
+
+      for (let g = 0; g < this.garantias.length; g++) {
+        let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
+        if (this.garantias[g].id == 1) {
+          this.totales.constitucional = tot
+        }
+        if (this.garantias[g].id == 2) {
+          this.totales.iva_paz = tot
+        }
+      }
+      this.totales.total = this.getTotalMontoDispTotalDisponible();
+      this.disp.emit(this.totales)
+    }
+
+    if (this.slug_reporte == 'intereses-dev-no-percibios') {
+      await this.reporteAmortizaciones(this.slug_reporte, print);
+    }
   }
 
-  public async reporteCatPuestos(print: boolean = true) {
+  // Catalogos
+
+  public async reporteCatPuestos(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let puestos = await this.puestosService.getPuestos();
     this.puestos = puestos;
 
-    this.catalogo('cat-puestos', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatPartidos(print: boolean = true) {
+  public async reporteCatPartidos(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let partidos = await this.partidosService.getPartidosPoliticos();
     this.partidos = partidos;
 
-    this.catalogo('cat-partidos', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatRegionales(print: boolean = true) {
+  public async reporteCatRegionales(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let regionales = await this.regionalesService.getRegionales();
     this.regionales = regionales;
 
-    this.catalogo('cat-regionales', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatRegiones(print: boolean = true) {
+  public async reporteCatRegiones(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let regiones = await this.regionesService.getRegiones();
     this.regiones = regiones;
 
-    this.catalogo('cat-regiones', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
-  
-  public async reporteCatGarantias(print: boolean = true) {
+
+  public async reporteCatGarantias(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let garantias = await this.garantiasService.getGarantias();
     this.garantias = garantias;
 
-    this.catalogo('cat-garantias', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatMunicipios(print: boolean = true) {
+  public async reporteCatMunicipios(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let municipios = await this.municipiosService.getMunicipios();
     this.municipios = municipios;
 
-    this.catalogo('cat-municipios', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatTiposPrestamos(print: boolean = true) {
+  public async reporteCatTiposPrestamos(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let tiposPrestamos = await this.tiposPrestamosService.getTiposPrestamos();
     this.tiposPrestamos = tiposPrestamos;
 
-    this.catalogo('cat-tipos-prestamos', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatEstadosCiviles(print: boolean = true) {
+  public async reporteCatEstadosCiviles(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let estadosCiviles = await this.estadosCivilesService.getEstadosCiviles();
     this.estadosCiviles = estadosCiviles;
 
-    this.catalogo('cat-estados-civiles', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatProgramas(print: boolean = true) {
+  public async reporteCatProgramas(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let programas = await this.programasService.getProgramas();
     this.programas = programas;
 
-    this.catalogo('cat-programas', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatProfesiones(print: boolean = true) {
+  public async reporteCatProfesiones(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let profesiones = await this.profesionesService.getProfesiones();
     this.profesiones = profesiones;
 
-    this.catalogo('cat-profesiones', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatDepartamentos(print: boolean = true) {
+  public async reporteCatDepartamentos(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let departamentos = await this.departamentosService.getDepartamentos();
     this.departamentos = departamentos;
 
-    this.catalogo('cat-departamentos', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatBancos(print: boolean = true) {
+  public async reporteCatBancos(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let bancos = await this.bancosService.getBancos();
     this.bancos = bancos;
 
-    this.catalogo('cat-bancos', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCatDestinos(print: boolean = true) {
+  public async reporteCatDestinos(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let destinos = await this.destinosService.getDestinos();
     this.destinos = destinos;
 
-    this.catalogo('cat-destinos', print)
+    let rep: any = await this.reporteService.get('catalogos/' + slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
-  public async reporteDisponibilidadMunicipal(print: boolean = true) {
+
+  // Reportes
+
+  public async reporteDisponibilidadGeneral(slug: any, print: boolean = true) {
     this.ngxService.start();
 
-    this.catalogo('disponibilidad-general', print)
+    let rep: any = await this.reporteService.get(slug);
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
 
-  public async reporteCreditosAnalizados(print: boolean = true) {
-    this.ngxService.start();
-
-    this.catalogo('creditos-analizados', print)
-
-    this.ngxService.stop();
-  }
-
-  public async reporteSituadoConstitucional(print: boolean = true) {
-    this.ngxService.start();
-
-    this.catalogo('situado-constitucional', print)
-
-    this.ngxService.stop();
-  }
-  
-  public async reporteDatosBancarios(print: boolean = true) {
-    this.ngxService.start();
-
-    this.catalogo('datos-bancarios', print)
-
-    this.ngxService.stop();
-  }
-
-  public async reporteDisponibilidad(print: boolean = true) {
+  public async reporteDisponibilidad(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
@@ -545,24 +494,13 @@ export class ReportesComponent {
         }
       }
 
-      let rep: any = await this.reporteService.get('disponibilidad');
-      let contenido: any = document.getElementById('rep_disponibilidad');
-      contenido = contenido.innerHTML.toString();
-
-      rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-      rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+      let rep: any = await this.reporteService.get(slug);
       rep = rep.replaceAll("{{codigo_municipalidad}}", `${this.municipalidad.departamento.codigo}.${this.municipalidad.municipio.codigo}`);
       rep = rep.replaceAll("{{constitucional}}", parseFloat(aporte.constitucional).toLocaleString('en-US'));
       rep = rep.replaceAll("{{iva_paz}}", parseFloat(aporte.iva_paz).toLocaleString('en-US'));
       rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
-      rep = rep.replaceAll("{{contenido}}", contenido);
 
-      if (print) {
-        let popupWin: any = window.open("", "_blank");
-        popupWin.document.open();
-        popupWin.document.write(rep);
-        popupWin.document.close();
-      }
+      this.catalogo(rep, slug, print)
 
     } else {
       this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
@@ -570,7 +508,51 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
-  public async reporteAmortizaciones(print: boolean = true) {
+  public async reporteCreditosAnalizados(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteSituadoConstitucional(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    this.aportes = [];
+    let meses = moment(this.filtros.mes_fin).diff(moment(this.filtros.mes_inicio), 'month', true) + 1;
+    for (let m = 0; m < meses; m++) {
+      let mes = moment(this.filtros.mes_inicio).add(m, 'month').format('YYYY-MM');
+      let aportes = await this.aportesService.getAportesMes(mes);
+      this.aportes.push({
+        mes: mes,
+        data: aportes
+      })
+    }
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{mes_inicio}}", moment(this.filtros.mes_inicio).format('MMMM YYYY'));
+    rep = rep.replaceAll("{{mes_fin}}", moment(this.filtros.mes_fin).format('MMMM YYYY'));
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteDatosBancarios(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{departamento}}", this.municipalidad.departamento.nombre);
+    rep = rep.replaceAll("{{municipio}}", this.municipalidad.municipio.nombre);
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteAmortizaciones(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let programas = await this.programasService.getProgramas();
@@ -578,35 +560,22 @@ export class ReportesComponent {
 
     // let municipalidades = await this.municipalidadesService.getMunicipalidades();
 
-
     let cobro = await this.cobrosService.getCobroMes(this.filtros.mes);
     if (cobro) {
       let amortizaciones = await this.amortizacionesService.getAmortizacionesCobro(cobro.id);
       console.log(amortizaciones);
-
     }
 
 
-    let rep: any = await this.reporteService.get('amortizaciones');
-    let contenido: any = document.getElementById('rep_amortizaciones');
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.mes).startOf('month').format('DD/MM/YYYY'));
     rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.mes).endOf('month').format('DD/MM/YYYY'));
-
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    if (print) {
-      let popupWin: any = window.open("", "_blank");
-      popupWin.document.open();
-      popupWin.document.write(rep);
-      popupWin.document.close();
-    }
+    this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
   }
+
+  // Funciones
 
   getMontoDisp(mes: string, proyecciones: any, type: string) {
     for (let a = 0; a < proyecciones.length; a++) {
@@ -631,6 +600,8 @@ export class ReportesComponent {
     let total = aporte;
 
     for (let p = 0; p < prestamos.length; p++) {
+      console.log(prestamos[p].proyecciones);
+
       for (let a = 0; a < prestamos[p].proyecciones.length; a++) {
         let mes_inicio = moment(prestamos[p].proyecciones[a].fecha_inicio).format('YYYY-MM');
         let mes_fin = moment(prestamos[p].proyecciones[a].fecha_fin).format('YYYY-MM');
@@ -703,6 +674,32 @@ export class ReportesComponent {
     return total;
   }
 
+  getTotalConstitucional(mes: string) {
+    let total = 0;
+    for (let a = 0; a < this.aportes.length; a++) {
+      if (this.aportes[a].mes == mes) {
+        for (let d = 0; d < this.aportes[a].data.length; d++) {
+          let tot = parseFloat(this.aportes[a].data[d].constitucional);
+          total += Math.round((tot + Number.EPSILON) * 100) / 100;
+        }
+      }
+    }
+    return total;
+  }
+
+  getTotalIvaPaz(mes: string) {
+    let total = 0;
+    for (let a = 0; a < this.aportes.length; a++) {
+      if (this.aportes[a].mes == mes) {
+        for (let d = 0; d < this.aportes[a].data.length; d++) {
+          let tot = parseFloat(this.aportes[a].data[d].iva_paz);
+          total += Math.round((tot + Number.EPSILON) * 100) / 100;
+        }
+      }
+    }
+    return total;
+  }
+
   print(rep: any) {
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -710,14 +707,12 @@ export class ReportesComponent {
     popupWin.document.close();
   }
 
-  async catalogo(slug: any, print: any) {
-    let rep: any = await this.reporteService.get(slug);
+  async catalogo(rep: any, slug: any, print: any) {
     let contenido: any = document.getElementById(slug);
     contenido = contenido.innerHTML.toString();
 
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-
     rep = rep.replaceAll("{{contenido}}", contenido);
 
     if (print) {
@@ -729,7 +724,10 @@ export class ReportesComponent {
     this.filtros = {
       codigo_departamento: null,
       codigo_municipio: null,
-      mes: null
+      plazo_meses: null,
+      mes: null,
+      mes_inicio: null,
+      mes_fin: null
     }
   }
 

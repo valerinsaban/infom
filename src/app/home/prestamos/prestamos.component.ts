@@ -23,6 +23,7 @@ import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamo
 import { DestinosService } from 'src/app/services/catalogos/destinos.service';
 import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-prestamos.service';
 import { DesembolsosService } from 'src/app/services/desembolsos.service';
+import { ResolucionesService } from 'src/app/services/catalogos/resoluciones.service';
 
 @Component({
   selector: 'app-prestamos',
@@ -53,6 +54,7 @@ export class PrestamosComponent implements OnInit {
   usuarios: any = [];
   departamentos: any = [];
   municipios: any = [];
+  resoluciones: any = [];
 
   amortizaciones: any = [];
   amortizacion: any;
@@ -84,7 +86,8 @@ export class PrestamosComponent implements OnInit {
     id_usuario: null,
     estado: null,
     codigo_departamento: null,
-    codigo_municipio: null
+    codigo_municipio: null,
+    plazo_meses: 12
   }
 
   disponibilidad: any;
@@ -108,7 +111,8 @@ export class PrestamosComponent implements OnInit {
     private prestamos_garantiasService: PrestamosGarantiasService,
     private destinosService: DestinosService,
     private destinos_prestamosService: DestinoPrestamosService,
-    private desembolsosService: DesembolsosService
+    private desembolsosService: DesembolsosService,
+    private resolucionesService: ResolucionesService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -135,6 +139,7 @@ export class PrestamosComponent implements OnInit {
       id_tipo_prestamo: new FormControl(null, [Validators.required]),
       id_programa: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
+      id_resolucion: new FormControl(null, [Validators.required]),
       id_funcionario: new FormControl(null, [Validators.required]),
       id_regional: new FormControl(null, [Validators.required]),
       id_usuario: new FormControl(HomeComponent.id_usuario, [Validators.required])
@@ -176,8 +181,9 @@ export class PrestamosComponent implements OnInit {
     await this.getProgramas();
     await this.getGarantias();
     await this.getUsuarios();
+    this.getDestinos();
+    await this.getResoluciones();
     await this.getPrestamos();
-    await this.getDestinos();
     await this.getCountPrestamos();
   }
 
@@ -194,12 +200,15 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.stop();
   }
 
-  async setNoPrestamo() {
-    let correlativo: any = ['', '', '', '', '', '', ''];
+  async setCorrelativo() {
+    let no_dictamen: string = '';
+    let no_prestamo: string = '';
 
+    let fecha_inicio = moment().startOf('year').format('YYYY-MM-DD');
+    let fecha_fin = moment().endOf('year').format('YYYY-MM-DD');
     let id_tipo_prestamo = this.prestamoForm.controls['id_tipo_prestamo'].value;
     let id_programa = this.prestamoForm.controls['id_programa'].value;
-    // let tipo_clase = await this.prestamosService.getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo, id_programa);
+    let tipo_clase = await this.prestamosService.getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo, id_programa, fecha_inicio, fecha_fin);
     if (this.filtros.codigo_departamento && this.filtros.codigo_municipio) {
       this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
     }
@@ -208,33 +217,49 @@ export class PrestamosComponent implements OnInit {
 
     if (id_tipo_prestamo && id_programa && this.municipalidad && prestamo_muni) {
 
-      correlativo[0] = this.municipalidad.departamento.codigo;
-      correlativo[1] = this.municipalidad.municipio.codigo;
-      correlativo[2] = prestamo_muni + 1;
-
+      no_prestamo += this.municipalidad.departamento.codigo;
+      no_prestamo += '-'
+      no_prestamo += this.municipalidad.municipio.codigo;
+      no_prestamo += '-'
+      no_prestamo += prestamo_muni + 1;
+      no_prestamo += '-'
 
       for (let t = 0; t < this.tipos_prestamos.length; t++) {
         if (this.tipos_prestamos[t].id == id_tipo_prestamo) {
-          // Part 1
-          correlativo[3] = this.tipos_prestamos[t].siglas;
+          no_prestamo += this.tipos_prestamos[t].siglas;
+          no_prestamo += '-FP-'
+          no_dictamen += this.tipos_prestamos[t].siglas;
+          no_dictamen += '-FP-'
         }
       }
 
       for (let t = 0; t < this.programas.length; t++) {
         if (this.programas[t].id == id_programa) {
-          // Part 2
-          correlativo[4] = this.programas[t].siglas;
+          no_prestamo += this.programas[t].siglas;
+
+          no_dictamen += this.programas[t].siglas;
+          no_dictamen += '-'
         }
       }
 
-      // if (tipo_clase) {
-      //   // Part 3
-      //   correlativo[5] = tipo_clase + 1;
-      // } else {
-      //   correlativo[5] = 1;
-      // }
+      no_dictamen += this.municipalidad.departamento.codigo;
+      no_dictamen += '-'
+      no_dictamen += this.municipalidad.municipio.codigo;
+      no_dictamen += '-'
 
-      this.prestamoForm.controls['no_prestamo'].setValue(`${correlativo[0]}.${correlativo[1]}.${correlativo[2]}.${correlativo[3]}.${correlativo[4]}`);
+      if (tipo_clase) {
+        no_dictamen += tipo_clase + 1;
+        no_dictamen += '-'
+      } else {
+        no_dictamen += 1;
+        no_dictamen += '-'
+      }
+
+      no_dictamen += moment().format('YYYY')
+
+      this.prestamoForm.controls['no_prestamo'].setValue(no_prestamo);
+      this.prestamoForm.controls['no_dictamen'].setValue(no_dictamen);
+      this.prestamoForm.controls['no_convenio'].setValue(this.municipalidad.no_convenio);
 
     }
   }
@@ -373,6 +398,15 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.stop();
   }
 
+  async getResoluciones() {
+    this.ngxService.start();
+    let resoluciones = await this.resolucionesService.getResoluciones();
+    if (resoluciones) {
+      this.resoluciones = resoluciones;
+    }
+    this.ngxService.stop();
+  }
+
   async getProgramasGarantias(event: any) {
     this.ngxService.start();
     let programas_garantias = await this.programas_garantiasService.getProgramasGarantias(event.target.value);
@@ -435,6 +469,8 @@ export class PrestamosComponent implements OnInit {
 
     this.amortizaciones = [];
     this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
+
+    this.filtros.plazo_meses = plazo_meses;
   }
 
   get fecha_inicio() {
@@ -604,7 +640,7 @@ export class PrestamosComponent implements OnInit {
 
   async postPrestamo() {
     this.ngxService.start();
-    await this.setNoPrestamo();
+    await this.setCorrelativo();
 
     let prestamo = await this.prestamosService.postPrestamo(this.prestamoForm.value);
     if (prestamo.resultado) {
@@ -731,6 +767,7 @@ export class PrestamosComponent implements OnInit {
     this.prestamoForm.controls['id_tipo_prestamo'].setValue(i.id_tipo_prestamo);
     this.prestamoForm.controls['id_programa'].setValue(i.id_programa);
     this.prestamoForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
+    this.prestamoForm.controls['id_resolucion'].setValue(i.id_resolucion);
     this.prestamoForm.controls['id_funcionario'].setValue(i.id_funcionario);
     this.prestamoForm.controls['id_regional'].setValue(i.id_regional);
     this.prestamoForm.controls['id_usuario'].setValue(i.id_usuario);
@@ -904,7 +941,7 @@ export class PrestamosComponent implements OnInit {
     if (this.destinos_prestamos.length == parseInt(this.prestamo.no_destinos)) {
       if (parseFloat(this.prestamo.monto) == this.getTotalDestinosPrestamos()) {
         return true
-      }   
+      }
     }
     return false;
   }
@@ -912,7 +949,7 @@ export class PrestamosComponent implements OnInit {
   desembolsosCompletos() {
     if (parseFloat(this.prestamo.monto) == this.getTotalDesembolsos()) {
       return true
-    }   
+    }
     return false;
   }
 
@@ -986,21 +1023,19 @@ export class PrestamosComponent implements OnInit {
     }
   }
 
-  recibirDisp(event: any) {
+  recibirDisp(event: any) {    
     this.disponibilidad = event;
-
-    let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
-
     for (let c = 0; c < this.programas_garantias.length; c++) {
       let monto = this.programas_garantias[c].monto;
-      if (this.programas_garantias[c].garantia.id == 1) {
+      
+      if (this.programas_garantias[c].garantia.id == 1) {        
         if (monto <= this.disponibilidad.constitucional) {
           this.disp = true;
           return;
         }
       }
       if (this.programas_garantias[c].garantia.id == 2) {
-        if (monto <= this.disponibilidad.constitucional) {
+        if (monto <= this.disponibilidad.iva_paz) {
           this.disp = true;
           return;
         }

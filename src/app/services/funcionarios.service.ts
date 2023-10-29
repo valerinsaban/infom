@@ -15,6 +15,10 @@ export class FuncionariosService {
     return this.rootService.get(this.route);
   }
 
+  getFuncionariosMunicipalidad(id_municipalidad: number): Promise<any> {
+    return this.rootService.get(this.route + '/municipalidad/' + id_municipalidad);
+  }
+
   getFuncionario(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }

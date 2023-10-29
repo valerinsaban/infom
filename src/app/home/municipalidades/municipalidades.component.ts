@@ -9,17 +9,10 @@ import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import * as moment from 'moment';
 import { BancosService } from 'src/app/services/catalogos/bancos.service';
-import { AportesService } from 'src/app/services/aportes.service';
-import { GarantiasService } from 'src/app/services/catalogos/garantias.service';
-import { PrestamosService } from 'src/app/services/prestamos.service';
-import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
-import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import { FuncionariosService } from 'src/app/services/funcionarios.service';
 import { PuestosService } from 'src/app/services/catalogos/puestos.service';
 import { ProfesionesService } from 'src/app/services/catalogos/profesiones.service';
 import { EstadosCivilesService } from 'src/app/services/catalogos/estados-civiles.service';
-import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
-import { ReporteService } from 'src/app/services/reportes.service';
 import { PartidosPoliticosService } from 'src/app/services/catalogos/partidos-politicos.service';
 
 @Component({
@@ -72,13 +65,17 @@ export class MunicipalidadesComponent {
       correo: new FormControl(null),
       telefono: new FormControl(null),
       no_cuenta: new FormControl(null),
+      no_acta: new FormControl(null),
+      punto_acta: new FormControl(null),
+      fecha_acta: new FormControl(null),
+      no_convenio: new FormControl(null),
+      fecha_convenio: new FormControl(null),
       id_departamento: new FormControl(null, [Validators.required]),
       id_municipio: new FormControl(null, [Validators.required]),
-      id_banco: new FormControl(null, [Validators.required]),
-      id_partido_politico: new FormControl(null, [Validators.required])
+      id_banco: new FormControl(null),
+      id_partido_politico: new FormControl(null)
     });
     this.funcionarioForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       apellido: new FormControl(null, [Validators.required]),
       fecha_nacimiento: new FormControl(null, [Validators.required]),
@@ -90,12 +87,13 @@ export class MunicipalidadesComponent {
       estado: new FormControl(null, [Validators.required]),
       imagen_carnet: new FormControl(null),
       imagen_acta_toma_posecion: new FormControl(null),
-      imagen_fotografia: new FormControl(null),
+      imagen_dpi: new FormControl(null),
       imagen_firma: new FormControl(null),
+      imagen_sello: new FormControl(null),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_puesto: new FormControl(null, [Validators.required]),
       id_profesion: new FormControl(null, [Validators.required]),
-      id_estado_civil: new FormControl(null, [Validators.required])
+      id_estado_civil: new FormControl(null)
     });
   }
 
@@ -157,10 +155,12 @@ export class MunicipalidadesComponent {
   }
 
   async getFuncionarios() {
-    let funcionarios = await this.funcionariosService.getFuncionarios();
+    this.ngxService.start();
+    let funcionarios = await this.funcionariosService.getFuncionariosMunicipalidad(this.municipalidad.id);
     if (funcionarios) {
       this.funcionarios = funcionarios;
     }
+    this.ngxService.stop();
   }
 
   async getPuestos() {
@@ -254,10 +254,17 @@ export class MunicipalidadesComponent {
     this.municipalidadForm.controls['correo'].setValue(i.correo);
     this.municipalidadForm.controls['telefono'].setValue(i.telefono);
     this.municipalidadForm.controls['no_cuenta'].setValue(i.no_cuenta);
+    this.municipalidadForm.controls['no_acta'].setValue(i.no_acta);
+    this.municipalidadForm.controls['punto_acta'].setValue(i.punto_acta);
+    this.municipalidadForm.controls['fecha_acta'].setValue(i.fecha_acta);
+    this.municipalidadForm.controls['no_convenio'].setValue(i.no_convenio);
+    this.municipalidadForm.controls['fecha_convenio'].setValue(i.fecha_convenio);
     this.municipalidadForm.controls['id_departamento'].setValue(i.id_departamento);
     this.municipalidadForm.controls['id_municipio'].setValue(i.id_municipio);
     this.municipalidadForm.controls['id_banco'].setValue(i.id_banco);
     this.municipalidadForm.controls['id_partido_politico'].setValue(i.id_partido_politico);
+
+    this.funcionarioForm.controls['id_municipalidad'].setValue(i.id);
 
     this.getFuncionarios();
   }
@@ -272,7 +279,7 @@ export class MunicipalidadesComponent {
     if (funcionario.resultado) {
       await this.getFuncionarios();
       this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
-      this.limpiar();
+      this.limpiar2();
     }
     this.ngxService.stop();
   }
@@ -287,7 +294,7 @@ export class MunicipalidadesComponent {
     if (funcionario.resultado) {
       await this.getFuncionarios();
       this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
-      this.limpiar();
+      this.limpiar2();
     }
     this.ngxService.stop();
   }
@@ -313,7 +320,7 @@ export class MunicipalidadesComponent {
         if (funcionario.resultado) {
           this.funcionarios.splice(index, 1);
           this.alert.alertMax('Correcto', funcionario.mensaje, 'success');
-          this.limpiar();
+          this.limpiar2();
         }
         this.ngxService.stop();
       }
@@ -323,7 +330,6 @@ export class MunicipalidadesComponent {
   setFuncionario(i: any, index: number) {
     i.index = index;
     this.funcionario = i;
-    this.funcionarioForm.controls['codigo'].setValue(i.codigo);
     this.funcionarioForm.controls['nombre'].setValue(i.nombre);
     this.funcionarioForm.controls['apellido'].setValue(i.apellido);
     this.funcionarioForm.controls['fecha_nacimiento'].setValue(moment.utc(i.fecha_nacimiento).format('YYYY-MM-DD'));
@@ -335,14 +341,14 @@ export class MunicipalidadesComponent {
     this.funcionarioForm.controls['estado'].setValue(i.estado);
     this.funcionarioForm.controls['imagen_carnet'].setValue(i.imagen_carnet);
     this.funcionarioForm.controls['imagen_acta_toma_posecion'].setValue(i.imagen_acta_toma_posecion);
-    this.funcionarioForm.controls['imagen_fotografia'].setValue(i.imagen_fotografia);
+    this.funcionarioForm.controls['imagen_dpi'].setValue(i.imagen_dpi);
     this.funcionarioForm.controls['imagen_firma'].setValue(i.imagen_firma);
+    this.funcionarioForm.controls['imagen_sello'].setValue(i.imagen_sello);
     this.funcionarioForm.controls['id_municipalidad'].setValue(i.id_municipalidad);
     this.funcionarioForm.controls['id_puesto'].setValue(i.id_puesto);
     this.funcionarioForm.controls['id_profesion'].setValue(i.id_profesion);
     this.funcionarioForm.controls['id_estado_civil'].setValue(i.id_estado_civil);
 
-    this.municipalidad = i.municipalidad;
     this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
     this.filtros.codigo_municipio = i.municipalidad.municipio.codigo;
   }
@@ -380,6 +386,12 @@ export class MunicipalidadesComponent {
   limpiar() {
     this.municipalidadForm.reset();
     this.municipalidad = null;
+  }
+
+  limpiar2() {
+    this.funcionarioForm.reset();
+    this.funcionarioForm.controls['id_municipalidad'].setValue(this.municipalidad.id)
+    this.funcionario = null;
   }
 
 }

@@ -34,8 +34,8 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/municipalidad/' + estado + '/' + id_municipalidad);
   }
 
-  getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo: number, id_programa: number): Promise<any> {
-    return this.rootService.get(this.route + '/tipo_prestamo/' + id_tipo_prestamo + '/programa/' + id_programa);
+  getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo: number, id_programa: number, fecha_inicio: string , fecha_fin: string): Promise<any> {
+    return this.rootService.get(this.route + '/tipo_prestamo/' + id_tipo_prestamo + '/programa/' + id_programa + '/rango/' + fecha_inicio + '/' + fecha_fin);
   }
 
   getCountPrestamosMunicipalidad(id_municipalidad: any): Promise<any> {
