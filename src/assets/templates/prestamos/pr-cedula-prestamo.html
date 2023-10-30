@@ -7,50 +7,50 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    <style type="text/css">
-      :root {
-        --color-background: #303030;
-        --color-pageSheet: #cfcfcf;
-        --color-paper: white;
-        --bs-body-line-height: 1.5;
+  <style type="text/css">
+    :root {
+      --color-background: #303030;
+      --color-pageSheet: #cfcfcf;
+      --color-paper: white;
+      --bs-body-line-height: 1.5;
+    }
+
+    @page {
+      margin: 25mm 5mm 10mm 5mm;
+
+      @top-left {
+        content: element(header);
+        padding-top: 15mm;
+        margin-bottom: 70px;
       }
-  
-      @page {
-        margin: 25mm 5mm 10mm 5mm;
-  
-        @top-left {
-          content: element(header);
-          padding-top: 15mm;
-          margin-bottom: 70px;
-        }
-  
-        @bottom-right {
-          content: 'Pagina ' counter(page) ' de ' counter(pages)
-        }
-  
+
+      @bottom-right {
+        content: 'Pagina ' counter(page) ' de ' counter(pages)
       }
-  
-      #header {
-        position: running(header);
-      }
-  
-      .pagedjs_page {
-        background-color: white;
-        box-shadow: 0 0 0 1px #cfcfcf;
-        margin: auto;
-        margin-bottom: 10px;
-      }
-  
-      body {
-        background-color: var(--color-background);
-        font-size: 12px !important;
-      }
-  
-      tr th {
-        background-color: #848484 !important;
-        color: white !important;
-      }
-    </style>
+
+    }
+
+    #header {
+      position: running(header);
+    }
+
+    .pagedjs_page {
+      background-color: white;
+      box-shadow: 0 0 0 1px #cfcfcf;
+      margin: auto;
+      margin-bottom: 10px;
+    }
+
+    body {
+      background-color: var(--color-background);
+      font-size: 12px !important;
+    }
+
+    tr th {
+      background-color: #848484 !important;
+      color: white !important;
+    }
+  </style>
 
 </head>
 
@@ -67,10 +67,12 @@
         </span>
         <br>
         <span style="font-size: 11px;">
-          CONVENIO INTERINSTITUCIONAL ADMINISTRATIVO Y FINANCIERO No. {{VARIABLE}} <br>
+          ORMATO DE CEDULA PARA PRESTAMO
+          NUEVO CARTERA
         </span>
       </div>
       <div class="col-3" style="text-align: right;">
+        Resolucion No.: FIP-1-2021
         Generado: <b>{{generado}}</b> <br>
         Usuario: <b>{{usuario}}</b>
       </div>
