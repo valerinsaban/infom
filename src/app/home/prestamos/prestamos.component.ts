@@ -18,12 +18,12 @@ import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { ProgramasGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
-import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
 import { DestinosService } from 'src/app/services/catalogos/destinos.service';
 import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-prestamos.service';
 import { DesembolsosService } from 'src/app/services/desembolsos.service';
 import { ResolucionesService } from 'src/app/services/catalogos/resoluciones.service';
+import { ReporteService } from 'src/app/services/reportes.service';
 
 @Component({
   selector: 'app-prestamos',
@@ -112,7 +112,8 @@ export class PrestamosComponent implements OnInit {
     private destinosService: DestinosService,
     private destinos_prestamosService: DestinoPrestamosService,
     private desembolsosService: DesembolsosService,
-    private resolucionesService: ResolucionesService
+    private resolucionesService: ResolucionesService,
+    private reportesService: ReporteService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -953,12 +954,6 @@ export class PrestamosComponent implements OnInit {
     return false;
   }
 
-  async reporte(format: string, id: number) {
-    this.ngxService.start();
-    window.open(HomeComponent.apiUrl + '/reportes/' + format + '/prestamo/resumen/' + id, "_blank");
-    this.ngxService.stop();
-  }
-
   limpiar() {
     this.prestamoForm.reset();
     // this.prestamoForm.controls['no_dictamen'].setValue(1);
@@ -1044,6 +1039,28 @@ export class PrestamosComponent implements OnInit {
 
     this.disp = false;
 
+  }
+
+  public async reportePrestamo(slug: any) {
+    this.ngxService.start();
+
+    let rep: any = await this.reportesService.get('prestamos/' + slug);
+    let contenido: any = document.getElementById(slug);
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
+    rep = rep.replaceAll("{{municipio}}", this.prestamo.municipalidad.municipio.nombre);
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+
+    this.ngxService.stop();
   }
 
 }

@@ -146,8 +146,8 @@
                       </td>
                       <td class="text-end">
                         <div class="dropdown">
-                          <a class="btn btn-primary light" style="margin-right: 10px;" data-bs-toggle="modal"
-                            data-bs-target="#impresiones">
+                          <a (click)="setPrestamo(p, mindex)" class="btn btn-primary light" style="margin-right: 10px;"
+                            data-bs-toggle="modal" data-bs-target="#impresiones">
                             <i class="fa-solid fa-print"></i>
                           </a>
                           <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
@@ -1363,31 +1363,31 @@
         <div class="row">
           <ul class="setting-list" style="font-size: 16px;">
             <li class="mb-2">
-              <a href="">
+              <a routerLink="./" (click)="reportePrestamo('pr-hoja-tecnica')">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">HOJA TECNICA</span>
               </a>
             </li>
             <li class="mb-2">
-              <a href="">
+              <a routerLink="./" (click)="reportePrestamo('pr-dictamen')">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">DICTAMEN</span>
               </a>
             </li>
             <li class="mb-2">
-              <a href="">
+              <a routerLink="./" (click)="reportePrestamo('pr-resolucion')">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">RESOLUCION</span>
               </a>
             </li>
             <li class="mb-2">
-              <a href="">
+              <a routerLink="./" (click)="reportePrestamo('pr-convenio-asistencia-fi')">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">CONVENIO DE ASISTENCIA FINANCIERA</span>
               </a>
             </li>
             <li class="mb-2">
-              <a href="">
+              <a routerLink="./" (click)="reportePrestamo('pr-convenio-interistitucional')">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">CONVENIO INTERINSTITUCIONAL</span>
               </a>
@@ -1397,6 +1397,1201 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn light" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="prestamo" hidden>
+
+  <div id="pr-hoja-tecnica" style="color: black">
+    <div style="margin: 0px 50px">
+      <p style="text-align: justify">
+        SOLICITUD PARA PRÉSTAMO DE INVERSIÓN CON RECURSOS PROPIOS DEL FONDO
+        PATRIMONIAL DEL INFOM, POR Q. {{prestamo.monto | number: '.2-2'}}
+      </p>
+
+      <table class="table table-bordered" style="text-align: justify">
+        <tbody>
+          <tr *ngIf="prestamo.id_tipo_prestamo == 2">
+            <td>SOLICITUD DE LA GERENCIA DE INFOM</td>
+            <td>Oficio No. GER-{{prestamo.no_oficio_ger}}</td>
+            <td>FOLIO</td>
+          </tr>
+          <tr>
+            <td>FUNDAMENTO LEGAL</td>
+            <td>
+              <ol type="a">
+                <li>
+                  Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la República de Guatemala, (artículos 4º,
+                  numeral romano II, inciso 1) y articulos
+                  <span *ngIf="prestamo.id_tipo_prestamo == 1">
+                    23 inciso a) y b).
+                  </span>
+                  <span *ngIf="prestamo.id_tipo_prestamo == 2">
+                    30 inciso g) y h).
+                  </span>
+                </li>
+                <li>
+                  Reglamento para la Asistencia Financiera a las Municipalidades de la República de Guatemala
+                  <span *ngIf="prestamo.id_tipo_prestamo == 2">Articulos del Variable</span> (Resolución No.
+                  {{prestamo.resolucion.numero}} J.D. de fecha {{prestamo.resolucion.fecha | date: 'dd/MM/YYYY':'UTC'}} , artículos del
+                  VARIABLE)
+                </li>
+                <li>
+                  Código Municipal. Artículos del 112 al 115 del DECRETO NÚMERO 12-2002 de fecha 13 de mayo del año
+                  2002, y sus Reformas según Decreto Número 14--2012, de fecha 17 de Julio del año 2012.
+                </li>
+                <li>
+                  Convenio Interinstitucional, Administrativo y Financiero {{prestamo.no_convenio}}, de fecha
+                  {{prestamo.fecha | date: 'dd/MM/YYYY':'UTC'}}, suscrito
+                  entre el Instituto de Fomento Municipal, el VARIABLE y la Municipalidad de {{prestamo.municipalidad.nombre}}
+                </li>
+              </ol>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>DICTAMEN ÁREA DE CRÉDITOS DE LA DIRECCIÓN FINANCIERA</td>
+            <td>Dictamen No. <span>FP-</span> - {{prestamo.no_dictamen}} del VARIABLE</td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>SOLICITUD DEL ALCALDE</td>
+            <td>Memorial de fecha VARIABLE, suscrito por el alcalde Municipal, solicitando un préstamo de Inversión para
+              la Municipalidad de VARIABLE</td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>CERTIFICACIÓN MUNICIPAL</td>
+            <td>Certificación del VARIABLE del punto VARIABLE del acta de Concejo Municipal No. VARIABLE de fecha
+              VARIABLE
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>DESTINO</td>
+            <td>VARIABLE</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>MONTO</td>
+            <td>VARIABLE</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>MODALIDAD</td>
+            <td>Préstamo Fondo Patrimonial.</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PLAZO</td>
+            <td>VARIABLE</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>AMORTIZACIÓN</td>
+            <td>VARIABLE pagos mensuales de VARIABLE , cada uno, más intereses e IVA sobre los intereses, comprometiendo
+              los recursos del VARIABLE y subsidiariamente VARIABLE - para Inversión, de acuerdo a las entregas de los
+              Aportes Constitucionales por parte del Gobierno Central, según cuadro adjunto.</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>GARANTÍA </td>
+            <td>Los ingresos que le corresponden a la municipalidad provenientes del VARIABLE y subsidiariamente
+              VARIABLE
+              - para inversión </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>TASA DE INTERÉS</td>
+            <td>VARIABLE % anual sobre saldos deudores.</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>CAPACIDAD DE PAGO</td>
+            <td>De acuerdo con los Ingresos del VARIABLE para inversión, es aceptable.</td>
+            <td>16</td>
+          </tr>
+          <tr>
+            <td>PRÉSTAMOS VIGENTES </td>
+            <td>VARIABLE</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>PROYECCIÓN</td>
+            <td>
+              <table class="table table-bordered" style="font-size:8pt" width=100%>
+                <div style="text-align: center; font-size:8pt">
+                  <p>DISPONIBILIDAD APORTE CONSTITUCIONAL</p>
+                  <p>(Quetzales)</p>
+                  <p>MUNICIPALIDAD DE: SAN JUAN TECUACO, DEPARTAMENTO DE SANTA ROSA
+                  </p>
+                </div>
+                <thead>
+                  <tr>
+                    <th>Número Pago</th>
+                    <th>Disponibilidad</th>
+                    <th>Cuota</th>
+                    <th>Nueva Disponibilidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                  </tr>
+                  <tr>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                  </tr>
+                  <caption align="bottom" style="text-align: left; font-size:5pt">
+                    *Capital, Intereses e IVA.
+                  </caption>
+                </tbody>
+              </table>
+            </td>
+            <td>.</td>
+          <tr>
+            <td colspan="4">
+              <table class="table table-bordered" style="font-size:8pt" width=100%>
+                <p style="text-align: center; font-size:8pt">
+                  PROYECCIÓN DE RECUPERACIÓN DE PRÉSTAMO EN QUETZALES
+                </p>
+                <thead>
+                  <tr>
+                    <th>NÚMERO DE PAGO</th>
+                    <th>MES COMPROMETIDO</th>
+                    <th>INTERESES A COBRAR</th>
+                    <th>IVA SOBRE INTERESES</th>
+                    <th>INTERESES MAS IVA</th>
+                    <th>AMORTIZACION AL CREDITO</th>
+                    <th>PAGO A DESCONTAR</th>
+                    <th>SALDO A CAPITAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                  </tr>
+                  <tr>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                    <td>VARIABLE</td>
+                  </tr>
+                </tbody>
+              </table>
+              <br>
+            </td>
+          </tr>
+          <tr>
+            <td>DICTAMEN</td>
+            <td>De acuerdo con la información que se tuvo a la vista, el área de Créditos de la Dirección Financiera
+              emite
+              Dictamen favorable sobre la solicitud de préstamo planteada por la Municipalidad de VARIABLE por un monto
+              de
+              VARIABLE , tomando como referencia la capacidad de pago en el renglón de Inversión con recursos del
+              VARIABLE
+              y VARIABLE para Inversión, la cual es suficiente para cubrir adecuadamente el servicio de deuda del
+              préstamo
+              que solicita, por lo que se recomienda a la Gerencia (VARIABLE, APROBACIÓN O ELEVARLO A JUNTA DIRECTIVA).
+            </td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <div style="text-align: center; font-weight: 700">
+        <p>VARIABLE</p>
+        <p>Analista de Creditos</p>
+      </div>
+      <div class="row" style="font-weight: 700">
+        <div class="col-5">
+          <p style="margin-left: 20%">VARIABLE</p>
+          <p>SUPERVISOR ÁREA DE CRÉDITOS</p>
+        </div>
+        <div class="col-7" style="text-align: right">
+          <p style="margin-right: 20%">VARIABLE</p>
+          <p>SUBDIRECTOR DE ASISTENCIA FINANCIERA MUNICIPAL</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="pr-dictamen" style="color: black">
+    <div style="margin: 0px 50px">
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <td style="width: 50%">ASUNTO:</td>
+            <td style="width: 50%; text-align: justify">
+              Municipalidad de VARIABLE, DEPARTAMENTO DE VARIABLE, solicita un
+              Préstamo con recursos propios del Fondo Patrimonial del INFOM por un
+              monto de VARIABLE, que será utilizado para la ejecución del proyecto
+              (s) VARIABLE.
+            </td>
+          </tr>
+          <tr>
+            <td>FECHA:</td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <ol type="I">
+                <li>ANTECEDENTES:</li>
+              </ol>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <ol>
+                <li style="margin-left: 5%">SOLICITUD MUNICIPAL:</li>
+              </ol>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700;">1.1. Memorial de Fecha:</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">1.2. Certificación de Acta de Fecha:</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">1.3. Acta Número:</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">1.4. Fecha de Acta:</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">1.5. Punto de Acta:</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <ol start="2">
+                <li style="margin-left: 5%">CONDICIONES:</li>
+              </ol>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.1. Monto:</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.2. Destino:</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.3. Plazo:</p>
+            </td>
+            <td style="text-align: justify">
+              VARIABLE (VARIABLE números) MESES, contados a partir del mes de
+              VARIABLE del año dos mil VARIABLE al mes de VARIABLE del año
+              VARIABLE
+              <span>, (VARIABLE que incluyen VARIABLE meses de período de gracia
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.4. Período de Gracia (variable)</p>
+            </td>
+            <td>VARIABLE</td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.5. Amortizaciones:</p>
+            </td>
+            <td style="text-align: justify">
+              (00) pagos mensuales de VARIABLE QUETZALES EXACTOS (Q. VARIABLE)
+              cada uno, más intereses e IVA.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.6. Tasa de Interés:</p>
+            </td>
+            <td style="text-align: justify">
+              La tasa de interés es del VARIABLE POR CIENTO (VARIABLE%) anual
+              sobre saldos deudores.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.7. Garantía:</p>
+            </td>
+            <td style="text-align: justify">
+              Los ingresos que le corresponden a la municipalidad provenientes del
+              VARIABLE y subsidiariamente el VARIABLE.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p style="margin-left: 30%; font-weight: 700">2.8. Forma de Entrega:</p>
+            </td>
+            <td style="text-align: justify">
+              El desembolso se realizará en VARIABLE entrega con acreditamiento a
+              la cuenta única del Tesoro a nombre de la Municipalidad de VARIABLE,
+              Departamento de VARIABLE, número VARIABLE (VARIABLE), del Banco
+              VARIABLE, por un monto de VARIABLE QUETZALES EXACTOS (Q. VARIABLE).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ol type="I" start="2">
+        <li>CONSIDERACIONES:</li>
+      </ol>
+      <ol style="margin-left: 5%">
+        <li>BASE LEGAL:</li>
+        <div style="margin-left: 5%; text-align: justify">
+          <br>
+          <p>
+            1.1 Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la
+            República de Guatemala), artículos 4º. numeral romano II, inciso 1) y
+            <span>30 inciso g) y h).</span>
+          </p>
+          <p>
+            1.2 Código Municipal, Artículos del 112 al 115 del DECRETO NÚMERO
+            12-2002 de fecha 13 de mayo del año 2002 y sus Reformas según Decreto
+            Número 14-2012, de fecha 17 de Julio del año 2012.
+          </p>
+          <p>
+            1.3 Reglamento para la Asistencia Financiera a las Municipalidades de
+            la República de Guatemala (Resolución número VARIABLE J.D. de fecha
+            VARIABLE, artículos del VARIABLE.
+          </p>
+          <p>
+            1.4 Convenio Interinstitucional, Administrativo y Financiero número
+            VARIABLE, de fecha VARIABLE, suscrito entre el Instituto de Fomento
+            Municipal, la Municipalidad de VARIABLE, Departamento de VARIABLE y el
+            Banco de VARIABLE.
+          </p>
+        </div>
+        <li>SITUACIÓN FINANCIERA MUNICIPAL</li>
+        <br>
+        <div style="margin-left: 5%; text-align: justify">
+          <p>2.1 ESTADO DE OBLIGACIONES CON INFOM:</p>
+          <p>
+            De conformidad con el balance general del área de cartera de INFOM, la
+            Municipalidad de VARIABLE, DEPARTAMENTO DE VARIABLE a la fecha
+            VARIABLE refleja los siguientes préstamos vigentes:
+          </p>
+          <table class="table table-bordered" style="text-align: center; width:  100%;">
+            <thead>
+              <tr>
+                <th>No. Prestamo</th>
+                <th>Monto</th>
+                <th>Garantia</th>
+                <th>Destino</th>
+                <th>Vencimiento</th>
+                <th>Saldo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+              </tr>
+              <tr>
+                <td>Totales</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+                <td>.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>2.2 CAPACIDAD DE PAGO MUNICIPAL:</p>
+          <p>
+            De acuerdo a la distribución del VARIABLE para Inversión, la
+            Municipalidad percibe aproximadamente Q. VARIABLE mensuales, monto que
+            es suficiente para respaldar la cobertura del préstamo que solicita en
+            el plazo de VARIABLE (00) meses, incluyendo el pago de intereses e IVA
+            sobre intereses.
+          </p>
+        </div>
+      </ol>
+      <ol type="I" start="3">
+        <li>OBSERVACIONES:</li>
+        <br>
+        <p style="margin-left: 10%; text-align: justify">
+          El presente dictamen fue elaborado de acuerdo a las normas establecidas
+          en el Reglamento para la Asistencia Financiera a las Municipalidades de
+          la República de Guatemala (Resolución número VARIABLE J.D. de fecha
+          VARIABLE, artículos del VARIABLE.
+        </p>
+        <li>DICTAMEN:</li>
+        <br>
+        <p style="margin-left: 10%; text-align: justify">
+          Con base en lo expuesto, el área de Créditos de la Dirección Financiera
+          emite dictamen favorable sobre la solicitud de préstamo presentada por
+          la Municipalidad de VARIABLE, Departamento de VARIABLE por un monto de
+          VARIABLE (Q.VARIABLE), la cual cumple con los requisitos establecidos en
+          el Reglamento de Asistencia Financiera a las Municipalidades de la
+          República de Guatemala y tomando como referencia la capacidad financiera
+          de la Municipalidad con los recursos del VARIABLE y subsidiariamente el
+          VARIABLE, la cual se determina que suficiente para cubrir adecuadamente
+          el servicio de deuda del préstamo que solicita, se recomienda a la
+          Gerencia su aprobación.
+        </p>
+      </ol>
+      <br />
+      <p style="text-align: center">Atentamente,</p>
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-6" style="text-align: left; font-weight: 700">
+          <p>________________________</p>
+          <p style="margin-left: 10%">ANALISTA DE CRÉDITOS</p>
+        </div>
+        <div class="col-6" style="text-align: right; font-weight: 700">
+          <p>________________________</p>
+          <p style="margin-right: 5%">SUPERVISOR, ÁREA DE CRÉDITOS</p>
+        </div>
+        <p style="text-align: center">Vo.Bo</p>
+        <div class="col-6" style="text-align: left; font-weight: 700">
+          <p>________________________</p>
+          <p style="margin-left: 10%">SUBDIRECTOR DE ASISTENCIA</p>
+          <p style="margin-left: 10%">FINANCIERA MUNICIPAL</p>
+        </div>
+        <div class="col-6" style="text-align: right; font-weight: 700">
+          <p>________________________</p>
+          <p style="margin-right: 5%">DIRECTOR FINANCIERO</p>
+        </div>
+        <p style="text-align: center">Vo.Bo</p>
+      </div>
+      <div style="text-align: center; font-weight: 700">
+        <p>________________________</p>
+        <p>DIRECTOR FINANCIERO</p>
+      </div>
+    </div>
+  </div>
+  <div id="pr-resolucion" style="color: black">
+    <div style="margin: 0px 50px">
+
+      <p style="text-align: justify">
+        LA <span *ngIf="prestamo.id_tipo_prestamo ==1">GERENCIA</span> <span
+          *ngIf="prestamo.id_tipo_prestamo == 2">JUNTA DIRECTIVA</span> DEL INSTITUTO DE
+        FOMENTO MUNICIPAL, <span>conoció</span> <span>deliberó</span> de forma y
+        de fondo el contenido del Dictamen No. VARIABLE, de fecha VARIABLE asunto
+        sometido a su conocimiento y,
+      </p>
+      <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
+      <p style="text-align: justify">
+        Que el Instituto de Fomento Municipal de acuerdo a su Ley Orgánica
+        (DECRETO NÚMERO 1132 del Congreso de la República de Guatemala) fue creado
+        para promover el progreso de los municipios dando asistencia técnica y
+        financiera a las municipalidades.
+      </p>
+      <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
+      <p style="text-align: justify">
+        Municipalidad de VARIABLE, DEPARTAMENTO DE VARIABLE, presentó a este
+        Instituto Memorial de fecha VARIABLE de VARIABLE de VARIABLE y
+        certificación del VARIABLE de VARIABLE del año VARIABLE, del punto
+        VARIABLE del acta de Concejo Municipal No. VARIABLE del VARIABLE de
+        VARIABLE del año VARIABLE, solicitando al INFOM un préstamo de por un
+        monto de VARIABLE QUETZALES EXACTOS (Q. VARIABLE), que será utilizado para
+        la ejecución del proyecto VARIABLE ofreciendo como garantía los recursos
+        provenientes del VARIABLE y subsidiariamente el VARIABLE, a un plazo de
+        VARIABLE meses.
+      </p>
+      <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
+      <p style="text-align: justify">
+        Que a través del Dictamen número VARIABLE guion dos mil VARIABLE
+        (VARIABLE) del VARIABLE de VARIABLE de dos mil VARIABLE, el Analista de
+        Créditos, la Supervisora de Créditos y el Subdirector de Asistencia
+        Financiera Municipal, con el visto bueno del Director Financiero, y del
+        Gerente Administrativo Financiero, dictaminaron que la Municipalidad de
+        VARIABLE, Departamento de VARIABLE, cumple con los requisitos establecidos
+        en el Reglamento de Asistencia Financiera a las Municipalidades de la
+        República de Guatemala y cuenta con capacidad de pago en el renglón de
+        Inversión con recursos provenientes del VARIABLE y subsidiariamente el
+        VARIABLE para cubrir adecuadamente el servicio de deuda el préstamo
+        solicitado.
+      </p>
+      <div>
+        <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
+        <p style="text-align: justify">
+          Que el Gerente del Instituto a través del oficio GER VARIABLE (GER
+          VARIABLE ), del VARIABLE de VARIABLE de dos mil VARIABLE, trasladó para
+          aprobación de la junta directiva, la solicitud de préstamo de la
+          municipalidad de VARIABLE por un monto de VARIABLE (Q. VARIABLE) para la
+          ejecución de los proyectos de VARIABLE a un plazo de VARIABLE,
+          ofreciendo como garantía los recursos del VARIABLE y subsidiriamente el
+          VARIABLE
+        </p>
+      </div>
+      <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
+      <p style="text-align: justify">
+        Que mediante VARIABLE AJ guion VARIABLE guion dos mil VARIABLE (AJ-
+        VARIABLE) del VARIABLE de VARIABLE de dos mil VARIABLE, la Dirección de
+        Asesoría Jurídica del Instituto dictaminó que el préstamo solicitado
+        cumple con los requisitos establecidos en el Reglamento para la Asistencia
+        Financiera a las Municipalidades de la República, siendo legalmente
+        procedente su aprobación.
+      </p>
+      <p style="text-align: center; font-weight: 700">POR TANTO:</p>
+      <p style="text-align: justify">
+        La <span *ngIf="prestamo.id_tipo_prestamo ==1">Gerencia</span>
+        <span *ngIf="prestamo.id_tipo_prestamo ==2">Junta Directiva</span> del Instituto de
+        Fomento Municipal, en ejercicio de las atribuciones que le confiere el
+        artículo 4º. numeral romano II, inciso 1) y articulos
+        <span *ngIf="prestamo.id_tipo_prestamo ==1">30 inciso g) y h)</span>,
+        <span *ngIf="prestamo.id_tipo_prestamo ==2">23 inciso a) y b)</span> Ley
+        Orgánica del INFOM (decreto número 1132 del Congreso de la República de
+        Guatemala); artículos 112, 114 y 115 del Decreto número 12-2002 del
+        Congreso de la República, Código Municipal; Artículos del VARIABLE al
+        VARIABLE del Reglamento para la Asistencia Financiera a las
+        Municipalidades de la República de Guatemala, por unanimidad
+      </p>
+      <p style="text-align: center; font-weight: 700">RESUELVE:</p>
+      <ol type="I">
+        <li style="text-align: justify">
+          CONCEDER A LA MUNICIPALIDAD DEL MUNICIPIO DE VARIABLE, DEPARTAMENTO DE
+          VARIABLE, un préstamo con Garantía del VARIABLE y subsidiariamente el
+          VARIABLE para Inversión, con recursos propios del Fondo Patrimonial,
+          bajo las siguientes condiciones:
+        </li>
+      </ol>
+      <table>
+        <tbody>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a">
+                <li style="margin-left: 40%">MONTO:</li>
+              </ol>
+            </td>
+            <td style="width: 40%">VARIABLE</td>
+          </tr>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a" start="2">
+                <li style="margin-left: 40%">DESTINO:</li>
+              </ol>
+            </td>
+            <td style="width: 40%">VARIABLE</td>
+          </tr>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a" start="3">
+                <li style="margin-left: 40%">PLAZO:</li>
+              </ol>
+            </td>
+            <td style="width: 40%; text-align: justify">
+              VARIABLE (00) MESES, <span *ngIf="prestamo.id_tipo_prestamo ==1">empezando</span>
+              <span *ngIf="prestamo.id_tipo_prestamo ==2">iniciando</span>a
+              contarse a partir del mes de VARIABLE del año VARIABLE ( ) al mes de
+              VARIABLE del año VARIABLE ( )
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a" start="4">
+                <li style="margin-left: 40%">PERÍODO DE GRACIA:</li>
+              </ol>
+            </td>
+            <td style="width: 40%; text-align: justify">VARIABLE (00) meses</td>
+          </tr>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a" start="5">
+                <li style="margin-left: 40%">AMORTIZACIONES:</li>
+              </ol>
+            </td>
+            <td style="width: 40%; text-align: justify">
+              VARIABLE ( ) pago(s) mensuales de la siguiente forma: VARIABLE (Q.
+              VARIABLE), más intereses y el Impuesto al Valor Agregado -IVA-,
+              sobre intereses.
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a" start="6">
+                <li style="margin-left: 40%">TASA DE INTERÉS:</li>
+              </ol>
+            </td>
+            <td style="width: 40%; text-align: justify">
+              La tasa de interés es del VARIABLE POR CIENTO ( VARIABLE %) anual
+              sobre saldos deudores.
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a" start="7">
+                <li style="margin-left: 40%">GARANTIA:</li>
+              </ol>
+            </td>
+            <td style="width: 40%; text-align: justify">
+              Los ingresos que le corresponden a la municipalidad provenientes del
+              VARIABLE y subsidiariamente el VARIABLE.
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 60%">
+              <ol type="a" start="8">
+                <li style="margin-left: 40%">FORMA DE ENTREGA:</li>
+              </ol>
+            </td>
+            <td style="width: 40%; text-align: justify">
+              El desembolso se realizará en una sola entrega con acreditamiento a
+              la cuenta Única del Tesoro, a nombre de la Municipalidad de
+              VARIABLE, Departamento de VARIABLE número VARIABLE (VARIABLE), del
+              Banco VARIABLE, por un monto de VARIABLE (Q. VARIABLE).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <ol type="I" start="2">
+        <li style="text-align: justify">
+          CONDICIONES ADICIONALES: A) La municipalidad no caerá en mora, en caso
+          que el Gobierno Central no sitúe oportunamente los fondos
+          correspondientes del VARIABLE y VARIABLE; B) Para el otorgamiento de
+          este préstamo, la municipalidad se compromete a: B1) Efectuar el pago
+          correspondiente con los recursos provenientes del VARIABLE y
+          subsidiariamente el VARIABLE para inversión. Si el Ministerio de
+          Finanzas Públicas traslada directamente a la Municipalidad dichos
+          fondos, la municipalidad autoriza al Director Financiero Municipal para
+          que deposite dentro de los primeros cinco (5) días hábiles contados a
+          partir de la fecha de entrega de los fondos, directamente en las
+          oficinas centrales del Instituto de Fomento Municipal, la cantidad que
+          se haya señalado para cubrir la amortización; B2) Hacer la ampliación o
+          transferencia presupuestaria según corresponda, con el valor equivalente
+          al préstamo que se le otorga, B3) Provisionar la amortización de capital
+          y el pago de intereses e Impuesto al Valor Agregado (IVA) sobre los
+          intereses con los recursos del Aporte Constitucional y el Impuesto al
+          Valor Agregado (IVA-PAZ); C) El plazo para formalizar el préstamo por
+          parte de la Municipalidad es hasta de diez (10) días hábiles, que se
+          contarán a partir del día siguiente de la fecha de notificación
+          electrónica o física de la presente resolución. En caso que la
+          Municipalidad no se presente a formalizar la suscripción del convenio de
+          préstamo respectivo en el plazo establecido, la Resolución emitida para
+          su aprobación quedará automáticamente sin efecto y se aplicará lo
+          establecido en el artículo dieciséis (16) del Reglamento para la
+          Asistencia Financiera a las Municipalidades de la República de
+          Guatemala, D) La utilización y manejo de los recursos financieros
+          concedidos en préstamos por el Instituto a las Municipalidades del país
+          queda bajo la estricta responsabilidad del Concejo Municipal. III.
+          SUPERVISIÓN: La Supervisión de los proyectos financiados con préstamos
+          otorgados por el Instituto, es responsabilidad exclusiva de la
+          municipalidad solicitante. Sin embargo, el INFOM podrá prestar el
+          servicio de supervisión de las obras a requerimiento de la
+          municipalidad, de conformidad con el Reglamento de Tarifas por Servicios
+          Prestados por el Instituto de Fomento Municipal. IV. Esta resolución
+          surte efectos inmediatos. V. Se instruye a la Gerencia
+          <span>Administrativa para que a través de la Subdirecicón de Asistencia
+            Financiera del Instituto de Fomento Municipal proceda a realizar las
+            notificaciones correspondientes.</span>
+        </li>
+      </ol>
+      <br />
+      <br />
+      <div style="font-weight: 700">
+        <p style="margin-left: 15%">F________________________</p>
+        <p style="margin-left: 25%">GERENTE</p>
+      </div>
+      <br />
+      <h6 style="text-align: center">
+        INSTITUTO DE FOMENTO MUNICIPAL PRÉSTAMO CON RECURSOS PROPIOS DEL FONDO
+        PATRIMONIAL DE INFOM DICTAMEN No. VARIABLE (VARIABLE)
+      </h6>
+      <br />
+      <br />
+      <p>TABLA DE AMORTIZACION A CAPITAL</p>
+      <table class="table table-bordered width=100%">
+        <thead>
+          <tr>
+            <th>No. PAGO</th>
+            <th>MES</th>
+            <th>AÑO</th>
+            <th>AMORTIZACIÓN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>.</td>
+            <td>.</td>
+            <td>.</td>
+            <td>.</td>
+          </tr>
+          <tr>
+            <td>.</td>
+            <td>.</td>
+            <td>.</td>
+            <td>.</td>
+          </tr>
+          <tr>
+            <td>.</td>
+            <td>.</td>
+            <td>.</td>
+            <td>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="pr-convenio-asistencia-fi" style="color: black">
+    <div style="margin: 0px 50px">
+      <p style="text-align: justify">
+        En la ciudad de Guatemala, el VARIABLE de VARIABLE de dos mil VARIABLE,
+        NOSOTROS: Por una parte VARIABLE, de VARIABLE años de edad, (ESTADO
+        CIVIL), (NACIONALIDAD), (PROFESIÓN), con domicilio en el departamento de
+        VARIABLE, me identifico con el Documento Personal de Identificación con
+        Código Único de Identificación número VARIABLE (VARIABLE), extendido por
+        el Registro Nacional de las Personas -RENAP- de la República de VARIABLE
+        actúo en representación del Instituto de Fomento Municipal, en mi calidad
+        de Gerente, que acredito con: A) Certificación del Acuerdo Gubernativo
+        número VARIABLE (VARIABLE) de fecha VARIABLE (VARIABLE) de VARIABLE del
+        año dos mil VARIABLE (VARIABLE) del Presidente de la República de
+        Guatemala, acuerdo donde consta mi nombramiento; B) Certificación de la
+        resolución número VARIABLE guion dos mil VARIABLE (VARIABLE) de fecha
+        VARIABLE (VARIABLE) de VARIABLE de dos mil VARIABLE (VARIABLE), emitida
+        por la Junta Directiva del Instituto de Fomento Municipal, a través de la
+        cual se me nombra como Gerente del Instituto de Fomento Municipal y C)
+        Certificación del acta número VARIABLE (VARIABLE) de fecha VARIABLE
+        (VARIABLE) de VARIABLE de dos mil VARIABLE (VARIABLE), en la que consta la
+        toma de posesión del cargo, emitida por la Secretaría General del
+        Instituto de Fomento Municipal –INFOM; señalo como lugar para recibir
+        notificaciones la octava calle (8ª) uno guion sesenta y seis (1-66) zona
+        nueve (9) del municipio y departamento de Guatemala; en el transcurso del
+        presente instrumento el Instituto de Fomento Municipal podrá ser
+        denominado como “INFOM” o el “ACREEDOR” indistintamente; y, VARIABLE
+        (ALCALDE), de VARIABLE (VARIABLE) años de edad, (ESTADO CIVIL),
+        (NACIONALIDAD), (PROFESIÓN, con domicilio en el municipio de VARIABLE,
+        departamento de VARIABLE, me identifico con el Documento Personal de
+        Identificación con Código Único de Identificación número VARIABLE
+        (VARIABLE), extendido por el Registro Nacional de las Personas -RENAP- de
+        la República de Guatemala, actúo en mi calidad de ALCALDE MUNICIPAL del
+        municipio de VARIABLE, departamento de VARIABLE, lo cual acredito con: A)
+        Certificación del Acuerdo de Adjudicación del cargo número VARIABLE
+        (VARIABLE), extendido por la Junta Electoral del Tribunal Supremo
+        Electoral de VARIABLE, de fecha VARIABLE (VARIABLE) de VARIABLE de dos mil
+        VARIABLE (VARIABLE) B) Certificación del Acta de Toma de Posesión del
+        cargo número VARIABLE guion dos mil VARIABLE (VARIABLE), de fecha VARIABLE
+        (VARIABLE) de VARIABLE del año dos mil VARIABLE (VARIABLE) extendida por
+        la Secretaría Municipal de VARIABLE, departamento de VARIABLE, Debidamente
+        autorizado para la celebración del presente convenio según certificación
+        del punto VARIABLE del acta número VARIABLE guion dos mil VARIABLE
+        (VARIABLE) de fecha VARIABLE (VARIABLE ) de VARIABLE del año dos mil
+        VARIABLE (VARIABLE); señalo como lugar para recibir notificaciones la sede
+        de la Alcaldía Municipal de VARIABLE, Departamento de VARIABLE, ubicada en
+        (DIRECCIÓN EXACTA DE MUNICIPALIDAD, VARIABLE), en adelante denominada
+        indistintamente como la “MUNICIPALIDAD” o la “DEUDORA". Por este acto
+        celebramos CONVENIO DE ASISTENCIA FINANCIERA de conformidad con las
+        siguientes Cláusulas: PRIMERA: BASE LEGAL: Artículo cuatro (4) numeral dos
+        (II) de la Ley Orgánica del Instituto de Fomento Municipal, Decreto mil
+        ciento treinta y dos (1132) del Congreso de la República de Guatemala y
+        Reglamento para la Asistencia Financiera a las Municipalidades de la
+        República de Guatemala (Resolución número VARIABLE de fecha VARIABLE,
+        artículos del VARIABLE SEGUNDA: ANTECEDENTES: Mediante solicitud de fecha
+        VARIABLE (VARIABLE) de VARIABLE de dos mil VARIABLE (VARIABLE), suscrita
+        por el señor Alcalde Municipal, la Municipalidad solicitó préstamo por la
+        cantidad de VARIABLE (Q. VARIABLE), autorizado según punto VARIABLE del
+        acta de Concejo Municipal número VARIABLE guion dos mil VARIABLE
+        (VARIABLE) de fecha VARIABLE (VARIABLE) de VARIABLE del año dos mil
+        VARIABLE (VARIABLE), del Concejo Municipal, que será utilizado para la
+        VARIABLE. TERCERA: DE LA ASISTENCIA FINANCIERA: El INFOM por este acto
+        otorga a la Municipalidad, en calidad de préstamo, la cantidad de VARIABLE
+        (VARIABLE) con recursos del Fondo Patrimonial del Instituto de Fomento
+        Municipal, de acuerdo a los términos y condiciones estipuladas en la
+        Resolución VARIABLE (VARIABLE) de fecha VARIABLE (VARIABLE) de VARIABLE de
+        dos mil VARIABLE (VARIABLE), emitida por la <span *ngIf="prestamos.id_tipo_prestamo == 2">Gerencia</span>
+        <span *ngIf="prestamos.id_tipo_prestamo == 1">Junta Directiva</span> del Instituto de Fomento Municipal, misma
+        que
+        en su parte conducente literalmente cita lo siguiente: “…RESUELVE¨: I.
+        CONCEDER A LA MUNICIPALIDAD DEL MUNICIPIO DE VARIABLE, un préstamo con
+        garantía del VARIABLE y subsidiariamente el VARIABLE para Inversión, con
+        recursos propios del Fondo Patrimonial, bajo las siguientes condiciones:
+        a) MONTO: VARIABLE (Q. VARIABLE); b) DESTINO: VARIABLE; c) PLAZO: VARIABLE
+        (VARIABLE) MESES, empezando a contarse a partir del mes de VARIABLE al mes
+        de VARIABLE ---------------- ; d) PERÍODO DE GRACIA: VARIABLE (VARIABLE)
+        meses; e) AMORTIZACIONES: VARIABLE ( ) pago(s) mensuales de la siguiente
+        forma: VARIABLE (Q. VARIABLE), más intereses y el Impuesto al Valor
+        Agregado -IVA-, sobre intereses, comprometiendo los recursos del VARIABLE
+        y subsidiariamente el VARIABLE para Inversión, de acuerdo a las entregas
+        de los Aportes Constitucionales por parte del Gobierno Central; f)
+        GARANTÍA: Los ingresos que le corresponden a la municipalidad provenientes
+        del VARIABLE y subsidiariamente el VARIABLE; g) TASA DE INTERÉS: La tasa
+        de interés es del VARIABLE POR CIENTO (VARIABLE %) anual sobre saldos
+        deudores. Los intereses y el Impuesto al Valor Agregado -IVA- sobre los
+        intereses correspondientes serán pagados por la deudora con los recursos
+        provenientes del Aporte Constitucional y el Impuesto al Valor Agregado
+        -IVAPAZ-, conjuntamente con las amortizaciones de capital de este
+        préstamo; h) FORMA DE ENTREGA: El desembolso se realizará en una sola
+        entrega con acreditamiento a la cuenta Única del Tesoro Municipal, de la
+        Municipalidad de VARIABLE número VARIABLE (VARIABLE), de la entidad
+        bancaria VARIABLE, por un monto de dos VARIABLE (Q. VARIABLE). II.
+        CONDICIONES ADICIONALES: A) Para la cancelación de este préstamo y para
+        cubrir otras obligaciones adquiridas por la Municipalidad con el Instituto
+        de Fomento Municipal, la Municipalidad del municipio de VARIABLE,
+        departamento de VARIABLE, el VARIABLE de VARIABLE de dos mil VARIABLE,
+        suscribió el Convenio Interinstitucional, Administrativo y Financiero
+        número VARIABLE guion dos mil VARIABLE (VARIABLE ) conjuntamente con
+        VARIABLE -y el Instituto de Fomento Municipal y, para que, de la cuenta
+        número VARIABLE (VARIABLE), en la que el Ministerio de Finanzas Públicas
+        depositará el Aporte Constitucional, el Impuesto al Valor Agregado
+        (IVA-PAZ) y otros aportes legales, efectúe los retiros necesarios para
+        cubrir ésta y otras obligaciones adquiridas por la municipalidad con y por
+        intermedio del INFOM; B) La municipalidad no caerá en mora, en caso que el
+        Gobierno Central no sitúe oportunamente los fondos correspondientes al
+        Aporte Constitucional y el Impuesto al Valor Agregado -IVAPAZ-. C. Para el
+        otorgamiento de este préstamo, la municipalidad se compromete a: C1)
+        Efectuar el pago correspondiente, con los recursos provenientes del
+        VARIABLE y subsidiariamente VARIABLE para inversión. Si el Ministerio de
+        Finanzas Públicas traslada directamente a la Municipalidad dichos fondos,
+        la municipalidad autoriza al Director Financiero Municipal para que
+        deposite dentro de los primeros cinco (5) días hábiles contados a partir
+        de la fecha de entrega de los fondos, directamente en las oficinas
+        centrales del Instituto de Fomento Municipal, la cantidad que se haya
+        señalado para cubrir la amortización; C2) Hacer la ampliación o
+        transferencia presupuestaria según corresponda, con el valor equivalente
+        al préstamo que se le otorga, C3) Provisionar la amortización de capital y
+        el pago de intereses e Impuesto al Valor Agregado (IVA) sobre los
+        intereses con los recursos del Aporte Constitucional y el Impuesto al
+        Valor Agregado (IVA-PAZ); D) El plazo para formalizar el préstamo por
+        parte de la Municipalidad es hasta de diez (10) días hábiles, que se
+        contarán a partir del día siguiente de la fecha de notificación
+        electrónica o física de la Resolución que corresponda para el efecto. En
+        caso que la Municipalidad no se presente a formalizar la suscripción del
+        convenio de préstamo respectivo en el plazo establecido, la Resolución
+        emitida para su aprobación se quedará automáticamente sin efecto y se
+        aplicará lo establecido en el artículo dieciséis (16) del Reglamento para
+        la Asistencia Financiera a las Municipalidades de la República de
+        Guatemala, Resolución de Junta Directiva número ciento setenta y nueve
+        guion dos mil veintitrés (179-2023); E) La utilización y manejo de los
+        recursos financieros concedidos en préstamos por el Instituto a las
+        Municipalidades del país queda bajo la estricta responsabilidad del
+        Concejo Municipal;. III. SUPERVISIÓN: La Supervisión de los proyectos
+        financiados con préstamos otorgados por el Instituto, es responsabilidad
+        exclusiva de la municipalidad solicitante. Sin embargo, el INFOM podrá
+        prestar el servicio de supervisión de las obras a requerimiento de la
+        municipalidad, de conformidad con el reglamento de tarifas por servicios
+        prestados por el Instituto de Fomento Municipal. …”. CUARTA:
+        RECONOCIMIENTO DE LA DEUDA: Yo, VARIABLE en representación de la
+        MUNICIPALIDAD y en la calidad con que actúo, declaro que mi representada
+        se reconoce DEUDORA del INSTITUTO DE FOMENTO MUNICIPAL para el efecto
+        comparezco ante el Gerente del Instituto de Fomento Municipal como
+        autoridad competente de dicho Instituto, a reconocer la obligación que mi
+        representada contrae por este instrumento, en forma lisa, llana, pura e
+        incondicional, por la cantidad de VARIABLE (Q. VARIABLE) que tengo
+        recibidos a entera satisfacción en calidad de préstamo, en los términos y
+        condiciones expuestas en el presente convenio. QUINTA: INCUMPLIMIENTO DE
+        PAGO: Si la MUNICIPALIDAD no paga según el plan de amortización de la
+        resolución del préstamo autorizado, se le informará vía telefónica al
+        tesorero municipal y se enviará requerimiento por escrito al alcalde de la
+        municipalidad que incumpla con el plan de pagos firmado, para que realice
+        el pago en las cuentas de INFOM. Agotado lo indicado anteriormente y si el
+        incumplimiento de pago persiste, se procederá al requerimiento formal de
+        la deuda total o parcial, según corresponda, mediante resolución emitida
+        por la autoridad correspondiente del Instituto de Fomento Municipal, se
+        tendrá por agotada la fase conciliatoria y por concluida la vía
+        administrativa, si no se cancela la deuda dentro de un plazo de treinta
+        (30) días se iniciará el cobro de la deuda por la vía judicial. SEXTA:
+        EJECUCIÓN JUDICIAL POR INCUMPLIMIENTO DE OBLIGACIONES: La MUNICIPALIDAD
+        acepta como buenas y exactas las cuentas que se reclamen y como líquido,
+        exigible y de plazo vencido cualquier saldo o cantidad que se demande,
+        renunciando expresamente al fuero de su domicilio y sometiéndose a los
+        Tribunales de Justicia de la República que el Instituto de Fomento
+        Municipal elija. Constituyendo el presente convenio título ejecutivo para
+        proceder por la vía económico –coactivo de conformidad con lo regulado en
+        los artículos 45 y 83 del Decreto 1126 que contiene la Ley del Tribunal de
+        Cuentas. SÉPTIMA: ACEPTACIÓN: En los términos y condiciones estipuladas y
+        en la calidad con que actuamos aceptamos expresamente el contenido del
+        presente convenio y previa lectura del mismo y enterados de su contenido,
+        objeto, validez y demás efectos legales, lo aceptamos, ratificamos y
+        firmamos, el cual queda contenido en VARIABLE (VARIABLE) hojas de papel
+        membretado del Instituto de Fomento Municipal -INFOM-, impresas únicamente
+        en su anverso.
+      </p>
+      <br />
+      <br />
+      <div style="text-align: left; font-weight: 700">
+        <p>f________________________</p>
+        <p style="margin-left: 10%">AlCALDE</p>
+      </div>
+      <br />
+      <div style="text-align: right; font-weight: 700">
+        <p>f________________________</p>
+        <p style="margin-right: 10%">GERENTE</p>
+      </div>
+    </div>
+  </div>
+  <div id="pr-convenio-interistitucional" style="color: black">
+    <div style="margin: 0px 50px">
+      <h6 style="text-align: justify">
+        CONVENIO INTERINSTITUCIONAL, ADMINISTRATIVO Y FINANCIERO NÚMERO VARIABLE
+        GUION DOS MIL VARIABLE (VARIABLE -20 VARIABLE). CELEBRADO ENTRE EL
+        INSTITUTO DE FOMENTO MUNICIPAL -INFOM-, LA MUNICIPALIDAD DE VARIABLE,
+        DEPARTAMENTO DE VARIABLE Y EL VARIABLE.
+      </h6>
+      <p style="text-align: justify">
+        En la ciudad de Guatemala, el VARIABLE de VARIABLE de dos mil VARIABLE,
+        Nosotros: (VARIABLE GERENTE), de VARIABLE años de edad, (VARIABLE-ESTADO
+        CIVIL, (VARIABLE-NACIONALIDAD), (VARIABLE-PROFESIÓN), de este domicilio,
+        me identifico con Documento Personal de Identificación (DPI), con Código
+        Único de Identificación (CUI) VARIABLE (VARIABLE) extendido por el
+        Registro Nacional de las Personas (RENAP) de la República de Guatemala;
+        actúo en mi calidad de GERENTE Y REPRESENTANTE LEGAL DEL INSTITUTO DE
+        FOMENTO MUNICIPAL -INFOM-, lo que acredito con: a) Nombramiento contenido
+        en Acuerdo Gubernativo número VARIABLE (VARIABLE ) de fecha VARIABLE
+        (VARIABLE) de VARIABLE del año VARIABLE (VARIABLE) del Presidente de la
+        República de Guatemala; b) Certificación de la resolución número VARIABLE
+        guion dos mil VARIABLE (VARIABLE) de fecha VARIABLE de VARIABLE de dos mil
+        VARIABLE (VARIABLE), emitida por la Junta Directiva del Instituto de
+        Fomento Municipal, a través de la cual se me nombra como Gerente del
+        Instituto de Fomento Municipal; c) Certificación del acta número VARIABLE
+        guion dos mil VARIABLE (VARIABLE) del libro de actas de la Secretaría
+        General, de fecha VARIABLE (VARIABLE) de VARIABLE de dos mil VARIABLE
+        (VARIABLE), en la que consta la toma de posesión del cargo; y d) Me
+        encuentro debidamente facultado para suscribir el presente convenio con
+        base a la autorización de la Junta Directiva del Instituto contenida en la
+        resolución número VARIABLE guion dos mil VARIABLE (VARIABLE) de fecha
+        VARIABLE de VARIABLE de dos mil VARIABLE; señalo como lugar para
+        notificaciones la octava (8va.) calle uno guion sesenta y seis (1-66) de
+        la zona nueve (09), de la ciudad y departamento de Guatemala, en lo
+        sucesivo podrá ser denominado como “EL INFOM”; Por otra parte, VARIABLE de
+        VARIABLE años de edad, (VARIABLE-ESTADO CIVIL), (VARIABLE-PROFESIÓN),
+        (VARIABLE-NACIONALIDAD), con domicilio en el municipio de VARIABLE
+        Departamento de VARIABLE me identifico con Documento Personal de
+        Identificación, con Código Único de identificación número VARIABLE
+        (VARIABLE) extendido por el Registro Nacional de las Personas de la
+        República de Guatemala; actúo en mi calidad de ALCALDE MUNICIPAL Y EN
+        REPRESENTACION LEGAL DE LA MUNICIPALIDAD DE VARIABLE, DEPARTAMENTO DE
+        VARIABLE, calidad que acredito con: a) Certificación del Acuerdo de
+        Adjudicación del cargo número VARIABLE dos mil VARIABLE (VARIABLE) de
+        fecha VARIABLE de VARIABLE de dos mil VARIABLE extendido por la Junta
+        Electoral Departamental del Tribunal Supremo Electoral, en el cual se hace
+        la adjudicación del cargo; b) Certificación del Acta de Toma de Posesión
+        del cargo número VARIABLE guion dos mil VARIABLE (VARIABLE), de fecha
+        VARIABLE de VARIABLE del año dos mil VARIABLE, en la cual en el punto
+        VARIABLE, se da posesión al cargo como Alcalde Municipal; extendida por el
+        Secretario Municipal, de conformidad con el Artículo 84, literal b del
+        Decreto Número doce guion dos mil dos (12-2002) del Congreso de la
+        República de Guatemala; y, c) Certificación del punto VARIABLE del Acta
+        número VARIABLE guion dos mil VARIABLE (VARIABLE) de fecha VARIABLE de
+        VARIABLE de dos mil VARIABLE, donde el Concejo Municipal me autoriza para
+        la suscripción del presente convenio; señalo como lugar para recibir
+        notificaciones y citaciones el Edificio Municipal, ubicado en VARIABLE,
+        VARIABLE, Departamento de VARIABLE en lo sucesivo podrá ser denominada
+        como “LA MUNICIPALIDAD”, y VARIABLE de VARIABLE años de edad, VARIABLE
+        ESTADO CIVIL, guatemalteco, VARIABLE PROFESIÓN, con domicilio en el
+        departamento de VARIABLE, me identifico con Documento Personal de
+        Identificación (DPI), con Código Único de Identificación (CUI) VARIABLE
+        (VARIABLE) extendido por el Registro Nacional de las Personas de la
+        República de Guatemala, actúo en mi calidad de VARIABLE DEL BANCO DE
+        VARIABLE personería que acredito con mi nombramiento contenido en acta
+        notarial autorizada en esta ciudad por el Notario VARIABLE, con fecha
+        VARIABLE de VARIABLE de dos mil VARIABLE, inscrita en el Registro
+        Mercantil General de la República con el número VARIABLE (VARIABLE), folio
+        VARIABLE (VARIABLE), del libro VARIABLE (VARIABLE) de Auxiliares de
+        Comercio; llamado en lo sucesivo “EL BANCO”. Los otorgantes hacemos
+        constar: Que toda la documentación relacionada se tuvo a la vista,
+        hallarnos en el libre ejercicio de nuestros derechos civiles y que además
+        nos encontramos, cada uno, debidamente facultados para la celebración del
+        presente instrumento, las representaciones que ejercitamos son
+        suficientes, de conformidad con la ley para el otorgamiento del presente
+        Convenio Interinstitucional Administrativo y Financiero, según se
+        establece en las cláusulas siguientes: PRIMERA: A) ANTECEDENTES: I) El día
+        VARIABLE (VARIABLE) de VARIABLE de dos mil VARIABLE (VARIABLE) EL
+        MINISTERIO DE FINANZAS PÚBLICAS, EL INSTITUTO DE FOMENTO MUNICIPAL
+        -INFOM-, LA MUNICIPALIDAD DE VARIABLE Y VARIABLE SUSCRIBIERON EL CONVENIO
+        INTERINSTITUCIONAL NÚMERO CERO VARIABLE GUION DOS MIL VARIABLE (VARIABLE),
+        y II) Opinión Conjunta número seiscientos cincuenta y tres guion dos mil
+        nueve guion AJ guion TN (653-2009-AJ-TN), expediente número veinte
+        millones noventa mil doscientos noventa y seis (20090296) emitido por el
+        Ministerio de Finanzas Públicas, Asesoría Jurídica-Tesorería Nacional, el
+        día catorce de octubre de dos mil nueve, el cual en su parte conducente
+        literalmente cita: De conformidad con las normas jurídicas citadas y
+        revisión efectuada a los documentos “OPINAMOS: Que desde el punto de vista
+        legal, el Ministerio de Finanzas Públicas no tiene la obligación de
+        suscribir los convenios interinstitucionales entre el Instituto de Fomento
+        Municipal -INFOM-, las municipalidades del país y los bancos del sistema,
+        en virtud que este Ministerio únicamente tiene el compromiso de transferir
+        los recursos a la cuenta y banco que se encuentre registrado y que
+        corresponda a cada una de las municipalidades del país. No obstante, el
+        Ministerio de Finanzas Públicas a través de Tesorería Nacional, continuará
+        brindando el apoyo interinstitucional, de acuerdo a lo indicado en el
+        análisis del caso concreto en sus numerales del uno al cuatro”; B) BASE
+        LEGAL: El presente convenio se suscribe con fundamento en A) Artículos
+        cincuenta y cuatro (54) y cincuenta y cinco (55) literal a), del Decreto
+        número ciento uno guion noventa y siete (101-97) del Congreso de la
+        República de Guatemala, Ley Orgánica del Presupuesto y el artículo sesenta
+        (60) de su reglamento, contenido en el Acuerdo Gubernativo número
+        quinientos cuarenta guion dos mil trece (540-2013); B) Artículo ciento
+        dieciocho (118) del Decreto número doce guion dos mil dos (12-2002) del
+        Congreso de la República de Guatemala, Código Municipal, C) Decreto número
+        mil ciento treinta y dos (1132) del Congreso de la República de Guatemala,
+        Ley Orgánica del Instituto de Fomento Municipal; D) Opinión Conjunta
+        número seiscientos cincuenta y tres guion dos mil nueve guion AJ guion TN
+        (653-2009-AJ-TN), expediente número veinte millones noventa mil doscientos
+        noventa y seis (20090296) emitido por el Ministerio de Finanzas Públicas,
+        Asesoría Jurídica-Tesorería Nacional, el día catorce de octubre de dos mil
+        nueve; E) Acuerdo Ministerial Número quinientos cincuenta y ocho guion dos
+        mil veintiuno (558-2021) de fecha veintiséis (26) de noviembre del año dos
+        mil veintiuno (2021) del Ministerio de Finanzas Públicas y F) Artículo 118
+        Asignación constitucional y entrega de fondos del Código Municipal Decreto
+        número doce guion dos mil dos del Congreso de la República de Guatemala.
+        SEGUNDA: DEL OBJETO DEL CONVENIO: El presente convenio tiene por objeto:
+        a) establecer la CUENTA ÚNICA DEL TESORO MUNICIPALIDAD DE VARIABLE,
+        DEPARTAMENTO DE VARIABLE (Cuenta Única Pagadora) monetaria número VARIABLE
+        (VARIABLE), aperturada por “LA MUNICIPALIDAD” en “EL BANCO DE DESARROLLO
+        RURAL, SOCIEDAD ANÓNIMA”; b) establecer el procedimiento para el
+        cumplimiento de la cancelación de la amortización de los préstamos
+        otorgados a “LA MUNICIPALIDAD” por parte de “EL INFOM”; c) establecer el
+        procedimiento para que el banco debite la amortización del préstamo
+        adquirido por “LA MUNICIPALIDAD” con entidades bancarias nacionales en la
+        que haya intermediación financiera de “EL INFOM”; d) establecer el
+        procedimiento para realizar el débito a la Municipalidad para pagar las
+        cuotas al Plan de Prestaciones del Empleado Municipal; y e) establecer el
+        procedimiento para el pago por los servicios técnicos que presta “EL
+        INFOM” a “LA MUNICIPALIDAD”, amparados en Convenios de pago que forman
+        parte de la Cartera de “INFOM” vigentes a la fecha. TERCERA: OBLIGACIONES
+        DE LAS PARTES: I) “LA MUNICIPALIDAD” deberá entregar a “EL BANCO” el
+        original de los recibos contables correspondientes de ingresos,
+        denominados siete “B” (7B) autorizados por la Contraloría General de
+        Cuentas, uno por cada renglón de la suma acreditada de cada aporte, según
+        corresponda, los que serán enviados al Ministerio de Finanzas Públicas
+        (Dirección Financiera) como soporte del pago; II) “EL BANCO” remitirá a la
+        Dirección Financiera del Ministerio de Finanzas Públicas, en un plazo no
+        mayor de diez días hábiles, a partir de efectuado el acreditamiento en
+        cuenta a “LA MUNICIPALIDAD¨ el recibo original forma siete “B” (7B), donde
+        consten los respectivos acreditamientos por cada renglón, debiendo éstos
+        estar firmados, sellados de recibido y operados por EL BANCO”, para que
+        sirvan de constancia de que han sido debidamente operados; así como de
+        comprobante de pago para los registros contables. III) “EL BANCO” tendrá
+        la disponibilidad inmediata de los fondos para que “LA MUNICIPALIDAD”
+        pueda hacer uso de los recursos depositados en su cuenta monetaria, por
+        parte de Tesorería Nacional. IV) “EL BANCO” sin ningún costo, a
+        requerimiento de “EL INFOM”, debitará de la cuenta de “LA MUNICIPALIDAD”
+        los montos necesarios que permitan cubrir obligaciones y compromisos de
+        “LA MUNICIPALIDAD” con “EL INFOM”, que se deriven de Préstamos,
+        Intermediaciones Financieras, Plan de Prestaciones del Empleado Municipal,
+        Convenios de Pago, de acuerdo con los Convenios que “LA MUNICIPALIDAD”
+        haya suscrito con “EL INFOM” y que se encuentren dentro de la Cartera de
+        “EL INFOM”. Para el efecto “EL INFOM”, al momento de requerir a “EL BANCO”
+        los descuentos correspondientes, acompañará copia de la autorización que,
+        en virtud de la negociación de que se trate, tales como Préstamos,
+        Intermediación Financiera, Plan de Prestaciones del Empleado Municipal,
+        Convenios de Pago u otros que hubiere emitido legalmente “LA
+        MUNICIPALIDAD”. V) “LA MUNICIPALIDAD” se compromete, de conformidad con lo
+        estipulado en el punto VARIABLE del acta número VARIABLE guion dos mil
+        VARIABLE (VARIABLE) del Libro de Actas del Concejo Municipal donde se
+        encuentra dicha acta, de fecha VARIABLE de VARIABLE de dos mil VARIABLE, a
+        no cancelar la cuenta monetaria aperturada en “EL BANCO”; así como
+        mantener los fondos suficientes referentes al aporte constitucional y
+        demás aportes provenientes de disposiciones legales, durante la vigencia
+        del presente convenio, con la finalidad de cumplir con las obligaciones
+        contraídas con “EL INFOM”, hasta su total cumplimiento. CUARTA: DE LOS
+        SERVICIOS QUE PRESTARÁ EL BANCO: “EL BANCO” contraerá las siguientes
+        obligaciones: a) No cobrará a “LA MUNICIPALIDAD” por la apertura y manejo
+        de cuenta. b) No establecerá límites mínimos a saldos de la cuenta. c)
+        Deberá suministrar la información que el Ministerio de Finanzas Públicas
+        solicite al mismo y que sea de su competencia. d) Informará inmediatamente
+        a Tesorería Nacional cualquier anomalía que exista en la cuenta de “LA
+        MUNICIPALIDAD” antes de efectuar el acreditamiento en cuenta. e) Debitará
+        de la cuenta de “LA MUNICIPALIDAD” los montos que le requiera “EL INFOM”.
+        f) “EL BANCO” permitirá la cancelación de la cuenta de depósito monetarios
+        de “LA MUNICIPALIDAD”, únicamente contra la presentación del finiquito por
+        cumplimiento de la totalidad de las obligaciones, otorgado por “EL INFOM”
+        a favor de “LA MUNICIPALIDAD”, en consecuencia, “EL BANCO” dejará de
+        efectuar los descuentos a que se refiere el presente Convenio; asimismo,
+        “EL BANCO” se obliga a no cancelar la cuenta aperturada por “LA
+        MUNICIPALIDAD” por ninguna circunstancia, hasta que no hubieren
+        finiquitado la totalidad de las obligaciones a que se refiere el presente
+        convenio. QUINTA: DEL PAGO DE LOS SERVICIOS: No habrá ninguna erogación
+        por parte de “EL INFOM” ni de “LA MUNICIPALIDAD” a “EL BANCO”, por los
+        servicios prestados por el banco. SEXTA: DE LOS REQUERIMIENTOS PARA
+        IMPLEMENTAR LOS PAGOS: A) Los requerimientos de carácter seguridad que “EL
+        BANCO” deberá observar es: Toda la información enviada de la Tesorería
+        Nacional hacia las entidades bancarias debe trasladarse encapsulada y con
+        sus respectivos códigos de seguridad. B) De los aspectos de conciliación
+        de información: B.I) “EL BANCO garantizará la capacidad para suministrar
+        con oportunidad y confiabilidad la información requerida para la
+        conciliación de cuentas de la Tesorería Nacional del Ministerio de
+        Finanzas Públicas; B.II) “EL BANCO” se compromete a tener los
+        procedimientos para cumplir con los lineamientos se seguridad compatibles
+        con las operaciones a que se obliga. B.III) “EL BANCO” notificará a través
+        de Estados de Cuenta a “LA MUNICIPALIDAD”, los abonos y los descuentos que
+        de acuerdo a la cláusula tercera del presente convenio se efectúen a su
+        cuenta, también lo hará a la Tesorería Nacional. SÉPTIMA: DE LA
+        RESPONSABILIDAD DE LOS ACREDITAMIENTOS: De existir acreditamientos
+        erróneos por parte de “El Banco” a la cuenta de “La Municipalidad”, será
+        responsabilidad de “El Banco”. OCTAVA: VIGENCIA. El presente sustituye
+        cualquier convenio celebrado con anterioridad que contradiga o se oponga a
+        lo pactado por las partes en el presente instrumento. NOVENA: MODIFICACIÓN
+        O AMPLIACIÓN: El presente Convenio podrá ser ampliado o modificado, por
+        mutuo acuerdo entre las partes, en cualquier momento, debiendo cumplirse
+        con las mismas formalidades del presente convenio. DÉCIMA: CONTROVERSIAS:
+        Las controversias que surjan con motivo de la aplicación de este Convenio
+        serán sometidas a la vía conciliatoria directa, interviniendo las partes
+        suscriptoras del presente convenio y una vez no se diluciden por esta vía
+        en un plazo de hasta treinta (30) días, serán sometidas a la jurisdicción
+        del Tribunal de lo Contencioso Administrativo. DÉCIMA PRIMERA: ACEPTACIÓN:
+        Los comparecientes en las calidades con que respectivamente actuamos,
+        manifestamos que aceptamos todas y cada una de las cláusulas contenidas en
+        el presente Convenio Interinstitucional, Administrativo y Financiero, el
+        cual es leído íntegramente y bien enterados de su contenido, objeto,
+        validez y efectos legales, lo aceptamos, ratificamos y firmamos en
+        VARIABLE (VARIABLE) ejemplares originales impresos en ambos lados, uno
+        para cada una de las partes que en él intervinieron.
+      </p>
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-6" style="text-align: left; font-weight: 700">
+          <p style="margin-left: 10%">VARIABLE</p>
+          <p>Gerente de INFOM</p>
+        </div>
+        <div class="col-6" style="text-align: right; font-weight: 700">
+          <p style="margin-right: 10%">VARIABLE</p>
+          <p>Alcalde Municipal de VARIABLE, <br>
+            Departamento de VARIABLE</p>
+        </div>
+      </div>
+      <br />
+      <div style="text-align: center; font-weight: 700">
+        <p style="margin-right: 5%">VARIABLE</p>
+        <p>VARIABLE (BANCO)</p>
       </div>
     </div>
   </div>
