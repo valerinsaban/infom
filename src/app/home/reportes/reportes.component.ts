@@ -133,7 +133,8 @@ export class ReportesComponent {
       { slug: 'situado-constitucional', nombre: 'Reporte Situado Constitucional', filtros: ['mes_inicio', 'mes_fin'] },
       { slug: 'datos-bancarios', nombre: 'Reporte Datos Bancarios', filtros: ['codigo_departamento', 'codigo_municipio'] },
       { slug: 'creditos-analizados', nombre: 'Reporte Creditos Analizados', filtros: [] },
-      { slug: 'intereses-dev-no-percibios', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] }
+      { slug: 'intereses-dev-no-percibios', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] },
+      { slug: 'prestamos-otorgados', nombre: 'Prestamos Otorgados', filtros: []},
     ];
   }
 
@@ -238,7 +239,11 @@ export class ReportesComponent {
     }
 
     if (this.slug_reporte == 'disponibilidad') {
-      await this.reporteDisponibilidad(this.slug_reporte, print);
+      await this.reportePrestamosOtorgados(this.slug_reporte, print);
+
+    if (this.slug_reporte == 'prestamos-otorgados') {
+        await this.reportePrestamosOtorgados(this.slug_reporte, print);
+      }
 
       for (let g = 0; g < this.garantias.length; g++) {
         let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
@@ -570,6 +575,14 @@ export class ReportesComponent {
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.mes).startOf('month').format('DD/MM/YYYY'));
     rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.mes).endOf('month').format('DD/MM/YYYY'));
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+  public async reportePrestamosOtorgados(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
     this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
