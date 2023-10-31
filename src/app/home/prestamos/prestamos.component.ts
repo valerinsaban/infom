@@ -222,6 +222,7 @@ export class PrestamosComponent implements OnInit {
 
   async setCorrelativo() {
     let no_dictamen: string = '';
+    let no_convenio: string = '';
     let no_prestamo: string = '';
 
     let fecha_inicio = moment().startOf('year').format('YYYY-MM-DD');
@@ -234,22 +235,25 @@ export class PrestamosComponent implements OnInit {
     }
 
     let prestamo_muni = await this.prestamosService.getCountPrestamosMunicipalidad(this.municipalidad.id);
+    let prestamo_ano = await this.prestamosService.getCountPrestamosFecha(fecha_inicio, fecha_fin)
 
-    if (id_tipo_prestamo && id_programa && this.municipalidad && prestamo_muni) {
+    if (id_tipo_prestamo && id_programa && this.municipalidad) {
 
       no_prestamo += this.municipalidad.departamento.codigo;
-      no_prestamo += '-'
+      no_prestamo += '.'
       no_prestamo += this.municipalidad.municipio.codigo;
-      no_prestamo += '-'
+      no_prestamo += '.'
       no_prestamo += prestamo_muni + 1;
-      no_prestamo += '-'
+      no_prestamo += '.'
 
       for (let t = 0; t < this.tipos_prestamos.length; t++) {
         if (this.tipos_prestamos[t].id == id_tipo_prestamo) {
           no_prestamo += this.tipos_prestamos[t].siglas;
-          no_prestamo += '-FP-'
+          no_prestamo += '.FP.'
           no_dictamen += this.tipos_prestamos[t].siglas;
-          no_dictamen += '-FP-'
+          no_dictamen += '.FP.'
+          no_convenio += this.tipos_prestamos[t].siglas;
+          no_convenio += '-'
         }
       }
 
@@ -258,28 +262,32 @@ export class PrestamosComponent implements OnInit {
           no_prestamo += this.programas[t].siglas;
 
           no_dictamen += this.programas[t].siglas;
-          no_dictamen += '-'
+          no_dictamen += '.'
         }
       }
 
       no_dictamen += this.municipalidad.departamento.codigo;
-      no_dictamen += '-'
+      no_dictamen += '.'
       no_dictamen += this.municipalidad.municipio.codigo;
-      no_dictamen += '-'
+      no_dictamen += '.'
+
+      no_convenio += prestamo_ano + 1;
+      no_convenio += '-'
 
       if (tipo_clase) {
         no_dictamen += tipo_clase + 1;
-        no_dictamen += '-'
+        no_dictamen += '.'
       } else {
         no_dictamen += 1;
-        no_dictamen += '-'
+        no_dictamen += '.'
       }
 
-      no_dictamen += moment().format('YYYY')
+      no_dictamen += moment().format('YYYY');
+      no_convenio += moment().format('YYYY');
 
       this.prestamoForm.controls['no_prestamo'].setValue(no_prestamo);
       this.prestamoForm.controls['no_dictamen'].setValue(no_dictamen);
-      this.prestamoForm.controls['no_convenio'].setValue(this.municipalidad.no_convenio);
+      this.prestamoForm.controls['no_convenio'].setValue(no_convenio);
 
     }
   }

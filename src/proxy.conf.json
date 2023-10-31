@@ -1,7 +1,5 @@
 {
-  "/megaprint": {
-      "target": "https://dev2.api.ifacere-fel.com/api/solicitarToken",
-      "secure": false,
-      "logLevel": "debug"
+  "/api": {
+    "target": "https://dev2.api.ifacere-fel.com"
   }
 }

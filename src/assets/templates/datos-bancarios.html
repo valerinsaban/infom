@@ -56,29 +56,31 @@
 
 <body>
 
-  <nav id="header" class="navbar">
+  <div id="header">
     <div class="row">
       <div class="col-3">
         <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
       </div>
       <div class="col-6" style="text-align: center;">
-        <span style="font-size: 14px;">
-          <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b> <br>
+        <span style="font-size: 12px;">
+          <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b>
         </span>
         <br>
         <span style="font-size: 11px;">
           DATOS BANCARIOS MUNICIPALES
         </span>
         <br>
-        <span style="font-size: 11px; text-transform: uppercase;">{{departamento}}, {{municipio}}</span>
+        <span style="font-size: 11px; text-transform: uppercase;">
+          {{departamento}}, {{municipio}}
+        </span>
       </div>
       <div class="col-3" style="text-align: right;">
         Generado: <b>{{generado}}</b> <br>
         Usuario: <b>{{usuario}}</b>
       </div>
     </div>
-  </nav>
-  <hr>
+    <hr>
+  </div>
 
   {{contenido}}
 

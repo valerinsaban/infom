@@ -9,6 +9,8 @@ import { PrestamosService } from 'src/app/services/prestamos.service';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import * as moment from 'moment';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
+import { FacturasService } from 'src/app/services/documentos/facturas.service';
+import { RecibosService } from 'src/app/services/documentos/recibos.service';
 
 @Component({
   selector: 'app-cobros',
@@ -33,6 +35,8 @@ export class CobrosComponent {
     private cobrosService: CobrosService,
     private prestamosService: PrestamosService,
     private amortizacionesService: AmortizacionesService,
+    private facturasService: FacturasService,
+    private recibosService: RecibosService,
     private configuracionesService: ConfiguracionesService
   ) {
     this.cobroForm = new FormGroup({
@@ -105,6 +109,8 @@ export class CobrosComponent {
   }
 
   async calcAmortizacion(p: any, amortizaciones: any) {
+    console.log(p);
+    
     let monto_total = p.monto;
     let plazo_meses = parseFloat(p.plazo_meses);
     let intereses = parseFloat(p.intereses);
@@ -122,6 +128,9 @@ export class CobrosComponent {
         fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
       }
     ]
+
+    let interes_iva = 0;
+
     for (let i = 0; i < cuotas.length; i++) {
       let fecha_inicio = cuotas[i].fecha_inicio;
       let fecha_fin = cuotas[i].fecha_fin;
@@ -160,8 +169,34 @@ export class CobrosComponent {
 
         let amortizacion = await this.amortizacionesService.postAmortizacion(cuotas[i]);
 
+        interes_iva += cuotas[i].interes + cuotas[i].iva;
+
       }
+
     }
+        
+    let factura = await this.facturasService.postFactura({
+      numero: p.id,
+      fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+      nit: p.municipalidad.nit,
+      nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
+      autorizacion: null,
+      serie_fel: null,
+      numero_fel: null,
+      monto: interes_iva,
+      estado: 'VIGENTE',
+    });
+
+
+
+    let recibo = await this.recibosService.postRecibo({
+      numero: p.id,
+      fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+      nit: p.municipalidad.nit,
+      nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
+      monto: interes_iva,
+      estado: 'VIGENTE',
+    });
 
     this.alert.alertMax('Transaccion Correcta', 'Amortizaciones Generadas', 'success');
 

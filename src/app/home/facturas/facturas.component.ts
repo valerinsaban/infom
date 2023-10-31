@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FacturasService } from 'src/app/services/facturas.service';
+import { FacturasService } from 'src/app/services/documentos/facturas.service';
 import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AlertService } from 'src/app/services/alert.service';
 import { MegaPrintService } from 'src/app/services/megaprint.service';
-import { AppComponent } from 'src/app/app.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-facturas',
@@ -34,6 +35,7 @@ export class FacturasComponent {
       numero: new FormControl(null),
       fecha: new FormControl(null),
       nit: new FormControl(null),
+      nombre: new FormControl(null),
       autorizacion: new FormControl(null),
       serie_fel: new FormControl(null),
       numero_fel: new FormControl(null),
@@ -60,21 +62,36 @@ export class FacturasComponent {
     this.ngxService.stop();
   }
 
+  setFactura(f: any, u: number) {
+
+  }
+
   async postFactura() {
 
   }
 
   async putFactura() {
-    
+
   }
 
-  async deleteFactura() {
+  async deleteFactura(f: any, u: number) {
 
   }
 
   async getToken() {
-    let data = await this.megaprintService.solicitarToken();
-    console.log(data);
+    try {
+      let data = await this.megaprintService.solicitarToken();
+      data.subscribe(statusCode => {
+        console.log(JSON.parse(JSON.stringify(statusCode)));
+      });   
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    return throwError(() => error);
   }
 
 }

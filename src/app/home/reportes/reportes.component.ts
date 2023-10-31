@@ -135,6 +135,13 @@ export class ReportesComponent {
       { slug: 'creditos-analizados', nombre: 'Reporte Creditos Analizados', filtros: [] },
       { slug: 'intereses-dev-no-percibios', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] },
       { slug: 'prestamos-otorgados', nombre: 'Prestamos Otorgados', filtros: [] },
+      { slug: 'recibo', nombre: 'Recibo', filtros: [] },
+      { slug: 'recibos-emitidos', nombre: 'Recibos Emitidos', filtros: ['fecha_inicio', 'fecha_fin'] },
+      { slug: 'libro-ventas', nombre: 'Libro de Ventas', filtros: ['fecha_inicio', 'fecha_fin'] },
+      { slug: 'amortizaciones-prestamos', nombre: 'Amortizaciones a Prestamos', filtros: ['mes', 'fecha'] },
+      { slug: 'confirmacion-saldos', nombre: 'Confirmacion de Saldos', filtros: [] },
+      { slug: 'asignaciones', nombre: 'Reporte de asignaciones, cobros y disponibilidad', filtros: [] },
+      { slug: 'cur', nombre: 'Auxiliar para generacion de CUR de Ingresos', filtros: [] },
     ];
   }
 
@@ -260,6 +267,34 @@ export class ReportesComponent {
 
     if (this.slug_reporte == 'prestamos-otorgados') {
       await this.reportePrestamosOtorgados(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'recibo') {
+      await this.reporteRecibo(this.slug_reporte, print);
+    }
+    
+    if (this.slug_reporte == 'recibos-emitidos') {
+      await this.reporteRecibosEmitidos(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'libro-ventas') {
+      await this.reporteLibroVentas(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'amortizaciones-prestamos') {
+      await this.reporteAmortizacionesPrestamos(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'confirmacion-saldos') {
+      await this.reporteConfirmacionSaldos(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'asignaciones') {
+      await this.reporteAsignaciones(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'cur') {
+      await this.reporteCUR(this.slug_reporte, print);
     }
   }
 
@@ -579,7 +614,77 @@ export class ReportesComponent {
 
     this.ngxService.stop();
   }
+
   public async reportePrestamosOtorgados(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteRecibo(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteRecibosEmitidos(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD/MM/YYYY'));
+    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD/MM/YYYY'));    
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteLibroVentas(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD/MM/YYYY'));
+    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD/MM/YYYY'));    
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteAmortizacionesPrestamos(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{mes}}", moment(this.filtros.mes).format('MMMM YYYY'));
+    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD/MM/YYYY'));    
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteConfirmacionSaldos(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteAsignaciones(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCUR(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let rep: any = await this.reporteService.get(slug);

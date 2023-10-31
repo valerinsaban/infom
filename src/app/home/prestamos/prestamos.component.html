@@ -108,6 +108,7 @@
                     <tr>
                       <th>Municipalidad</th>
                       <th>No. Prestamo</th>
+                      <th>No. Dictamen</th>
                       <th>Tipo Prestamo</th>
                       <th>Programa</th>
                       <th>Fecha</th>
@@ -128,6 +129,9 @@
                       </td>
                       <td>
                         <span>{{p.no_prestamo}}</span>
+                      </td>
+                      <td>
+                        <span>{{p.no_dictamen}}</span>
                       </td>
                       <td>
                         <span>{{p.tipoPrestamo.nombre}}</span>
@@ -300,12 +304,6 @@
                   </label>
                   <input formControlName="periodo_gracia" type="number" class="form-control"
                     placeholder="Periodo Gracia" (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Convenio
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_convenio" type="text" class="form-control" placeholder="No. Convenio">
                 </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Resolucion<span class="text-danger">*</span></label>
@@ -633,12 +631,6 @@
                   </label>
                   <input formControlName="periodo_gracia" type="number" class="form-control"
                     placeholder="Periodo Gracia" (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Convenio
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_convenio" type="text" class="form-control" placeholder="No. Convenio">
                 </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Resolucion<span class="text-danger">*</span></label>

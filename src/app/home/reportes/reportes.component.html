@@ -36,6 +36,27 @@
                     class="form-control">
                 </div>
               </div>
+              <div *ngIf="filtro('fecha')">
+                <label class="form-label">Fecha</label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.fecha" [ngModelOptions]="{standalone: true}" type="date"
+                    class="form-control">
+                </div>
+              </div>
+              <div *ngIf="filtro('fecha_inicio')">
+                <label class="form-label">Fecha Inicio</label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.fecha_inicio" [ngModelOptions]="{standalone: true}" type="date"
+                    class="form-control">
+                </div>
+              </div>
+              <div *ngIf="filtro('fecha_fin')">
+                <label class="form-label">Fecha Fin</label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.fecha_fin" [ngModelOptions]="{standalone: true}" type="date"
+                    class="form-control">
+                </div>
+              </div>
               <div *ngIf="filtro('codigo_departamento')">
                 <label class="form-label">Codigo Departamento</label>
                 <div class="input-group mb-3">
@@ -918,6 +939,691 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <div id="recibo" style="color: black; font-size: 8px;">
+              <table class="table table-borderless" style="width: 100%">
+                <tbody>
+                  <tr>
+                    <td rowspan="8" style="
+                      writing-mode: vertical-rl;
+                      transform: rotate(180deg);
+                      font-size: 8px;
+                      border-right: 2px solid; 
+                      height: 500px; 
+                      width: 28px;
+                      padding: 0px;">
+                      IMPRESO POR EL INSTITUTO DE FOMENTO MUNICIPAL -INFOM- NIT: 97425-0,
+                      100,000 SEGÚN ENVIO MUNICIPAL No. 31054 DE FECHA 05/06/2014
+                      CORRELATIVO No. 01/2014 DE FECHA 05/08/2014, CUENTA 11-20, LIBRO 12,
+                      FOLIO 38
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border-top: 2px solid; border-right: 2px solid;" colspan="2">
+                      <b>RECIBÍ DE:</b> MUNICIPALIDAD DE COATEPEQUE, QUETZALTENANGO
+                      <br><br>
+                      <b>LA SUMA DE:</b>Trescientos Ochenta y un mil cuatrocientos ventiun
+                      quetzales con 97/100
+                      <br><br>
+                      <b>POR:</b> AMORTIZACIÓN CORRESPONDIENTE AL <br />
+                      PERIODO DE AGOSTO/2023, CAPITAL Q265,140.00 <br />
+                      INTERÉS Q. 103,823.19 IVA Q12,458.78 RECUPERADOS <br />
+                      CON EL APORTE CONSTITUCIONAL, PRÉSTAMO <br />
+                      09.20.0012.002 RESOLUCIÓN PDM-II-334-98 <br />
+                      DE COATEPEQUE, QUETZALTENANGO SEGÚN <br />
+                      FAACTURA No. DTE 2113882526
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border-right: 2px solid; border-top: 2px solid;" colspan="2">
+                      <b>ABONO A CUENTA:</b>
+                      <br><br>
+                      <b>EXPEDIDO:</b>
+                    </td>
+                  </tr>
+                  <tr style="border-right: 2px solid;">
+                    <td style="border-bottom: 2px solid;"><b>GUATEMALA, 18 De Septiembre de 2023:</b></td>
+                    <td style="border-bottom: 2px solid;"><b>FIRMA ELECTRONICA:</b> dVljNxNXWlandnakJDJksk</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style="text-align: center;">
+                AUTORIZACIÓN POR LA CONTRALORÍA GENEREAL DE CUENTAS SEGÚN RESOLUCIÓN
+                No. DM./001275 Gestión: 61796 de Fecha 09/05/2014
+              </p>
+            </div>
+
+            <div id="recibos-emitidos" style="color: black; font-size: 8px;">
+              <p>Tipo De Recibos: <b>Préstamos / Otros.</b></p>
+              <table class="table table-striped"
+                style="border: 1px solid; font-size: 80%; text-align: center; width: 100%">
+                <thead>
+                  <tr style="border: 1px solid">
+                    <td>Cajero</td>
+                    <td>Número</td>
+                    <td>Fecha</td>
+                    <td>Recibí De</td>
+                    <td>Votal</td>
+                    <td>Descripción</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2,104</td>
+                    <td>37,037</td>
+                    <td>01/09/2023</td>
+                    <td>BANCO DE DESARROLLO RURAL S.A</td>
+                    <td>37.06</td>
+                    <td style="text-align: justify">
+                      CAPITALIZACION DE LOS INTERESES GENERADOS DURANTE EL MES DE AGOSTO
+                      2023, SEGÚN NOTA DE CRÉDITO No. 782763647 DE FECHA 31/08/2023,
+                      CUENTA MONETARIA No. 3621006463 A NOMBRE DE PROGRAMA PRÉSTAMO BID
+                      2242 BL GU, SEGÚN OFICIO BID-11905-0798-2023
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2,104</td>
+                    <td>37,038</td>
+                    <td>01/09/2023</td>
+                    <td>BANCO DE LOS TRABAJADORES</td>
+                    <td>112.59</td>
+                    <td style="text-align: justify">
+                      CAPITALIZACION DE LOS INTERESES GENERADOS DURANTE EL MES DE AGOSTO
+                      2023, SEGÚN NOTA DE CRÉDITO No. 782763647 DE FECHA 31/08/2023,
+                      CUENTA MONETARIA No. 3621006463 A NOMBRE DE PROGRAMA PRÉSTAMO BID
+                      2242 BL GU, SEGÚN OFICIO BID-11905-0798-2023
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2,104</td>
+                    <td>37,038</td>
+                    <td>01/09/2023</td>
+                    <td>BANCO DE LOS TRABAJADORES</td>
+                    <td>112.59</td>
+                    <td style="text-align: justify">
+                      CAPITALIZACION DE LOS INTERESES GENERADOS DURANTE EL MES DE AGOSTO
+                      2023, SEGÚN NOTA DE CRÉDITO No. 782763647 DE FECHA 31/08/2023,
+                      CUENTA MONETARIA No. 3621006463 A NOMBRE DE PROGRAMA PRÉSTAMO BID
+                      2242 BL GU, SEGÚN OFICIO BID-11905-0798-2023
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <br />
+              <br />
+              <p>Firma Digital: 1cc7154ad97wBBDJkjdkSKbdh</p>
+              <br />
+              <p style="text-align: center">
+                8a. calle 1-66 zona 9, Guatemala, C.A <br />
+                PBX: (502) 2422-6900
+              </p>
+            </div>
+
+            <div id="libro-ventas" style="color: black; font-size: 8px;">
+              <table class="table table-hover">
+                <thead>
+                  <tr style="border: 1px solid">
+                    <th>Fecha</th>
+                    <th>Serie</th>
+                    <th>Numero</th>
+                    <th>Nit</th>
+                    <th>Comprador</th>
+                    <th>Valor Nominal</th>
+                    <th>Iva Fiscal</th>
+                    <th>Monto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>04/09/2023</td>
+                    <td>1658BC6E</td>
+                    <td>2894873624</td>
+                    <td>9532377-5</td>
+                    <td>
+                      Programa de Agua Potable Y Saneamiento Para el Desarrollo Humano
+                    </td>
+                    <td>3,571.43</td>
+                    <td>428.57</td>
+                    <td>4,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>04/09/2023</td>
+                    <td>1658BC6E</td>
+                    <td>2894873624</td>
+                    <td>9532377-5</td>
+                    <td>Municipalidad de Ciudad Vieja Sacatepequez</td>
+                    <td>3,571.43</td>
+                    <td>428.57</td>
+                    <td>4,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>04/09/2023</td>
+                    <td>1658BC6E</td>
+                    <td>2894873624</td>
+                    <td>9532377-5</td>
+                    <td>Adilio de Jesus Ramirez Lopez</td>
+                    <td>3,571.43</td>
+                    <td>428.57</td>
+                    <td>4,000.00</td>
+                  </tr>
+                  <tr>
+                    <td>04/09/2023</td>
+                    <td>1658BC6E</td>
+                    <td>2894873624</td>
+                    <td>9532377-5</td>
+                    <td>Municipalidad Fray Bartolome De Las Casas</td>
+                    <td>3,571.43</td>
+                    <td>428.57</td>
+                    <td>4,000.00</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr style="border: 1px solid">
+                    <td colspan="4"><b>Firma Digital:</b> 3de3e3ejdshjfshjfhsjfkjjksi</td>
+                    <td><b>Total por Página:</b></td>
+                    <td><b>340,737.65</b></td>
+                    <td><b>40,888.52</b></td>
+                    <td><b>381,626.17</b></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div id="amortizaciones-prestamos" style="color: black; font-size: 8px;">
+              <br />
+              <h3>BANRURAL</h3>
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th style="width: 10%;">No. Cuenta</th>
+                    <th style="width: auto;">Municipalidad / Garantía</th>
+                    <th style="width: 20%;" class="text-end">Valor a Descontar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-top: 1px solid">
+                    <td>0235237201</td>
+                    <td>MIXCO GUATEMALA</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b>APORTE CONSTITUCIONAL</b></td>
+                    <td class="text-end">1,408,093.51</td>
+                  </tr>
+                  <tr style="border-top: 1px solid">
+                    <td>8478727887</td>
+                    <td>GUASTATOYA, EL PROGRESO</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b>APORTE CONSTITUCIONAL</b></td>
+                    <td style="text-align: right">445,882.03</td>
+                  </tr>
+                  <tr style="border-top: 1px solid">
+                    <td>0574374783</td>
+                    <td>EL JICARO, EL PROGRESO</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b>APORTE CONSTITUCIONAL</b></td>
+                    <td style="text-align: right">535,719.69</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b>IVA - PAZ</b></td>
+                    <td style="text-align: right">170.99</td>
+                  </tr>
+                  <tr style="border-top: 1px solid">
+                    <td>0235237201</td>
+                    <td>SANSARE, EL PROGRESO</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b>APORTE CONSTITUCIONAL</b></td>
+                    <td style="text-align: right">678,778.69</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b>IVA - PAZ</b></td>
+                    <td style="text-align: right">100,000.00</td>
+                  </tr>
+                  <tr style="border-top: 1px solid">
+                    <td>8347823748</td>
+                    <td>SANTO DOMINGO XENACOJ, SACATEPEQUEZ</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b>APORTE CONSTITUCIONAL</b></td>
+                    <td style="text-align: right">315,778.69</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" style="text-align: right">TOTAL</td>
+                    <td style="border-top: 1px solid; text-align: right"> 3,484,423.60</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="confirmacion-saldos" style="color: black; font-size: 8px;">
+              <p>
+                Señor <br />
+                Alcalde Municipal <br />
+                Municipalidad de SAN ANTONIO ILOTENANGO, EL QUICHE <br />
+                Ciudad.
+              </p>
+              <br />
+              <p style="text-align: justify">
+                Con motivo del cierre de operaciones mensuales del Área de Cartera al
+                30/09/2023, le rogamos que confirme el saldo que reflejan nuestros
+                registros, acerca de los préstamos que la Municipalidad tiene con el
+                Instituto de Fomento Municipal -INFOM-, siendo los siguientes:
+              </p>
+              <br />
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th rowspan="2" style="border: 1px solid">No. DE PRESTAMO</th>
+                    <th rowspan="2" style="border: 1px solid">No. DE RESOLUCIÓN</th>
+                    <th rowspan="2" style="border: 1px solid">MONTO PRESTAMO</th>
+                    <th rowspan="2" style="border: 1px solid">FECHA DE VENCIMIENTO</th>
+                    <th rowspan="2" style="border: 1px solid">SALDO A LA FECHA</th>
+                    <th colspan="2" style="text-align: center; border: solid 1px">RESPUESTA</th>
+                  </tr>
+                  <tr>
+                    <th style="border: 1px solid">CONFORME</th>
+                    <th style="border: 1px solid">INCONFORME</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>14.08.0015.024</td>
+                    <td>46-2020</td>
+                    <td>5,581,000.00</td>
+                    <td>30/11/2023</td>
+                    <td>455,000.00</td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+                    </td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>14.08.0015.025</td>
+                    <td>JD-163-2020</td>
+                    <td>2,952,461.65</td>
+                    <td>31/10/2023</td>
+                    <td>213,461.65</td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+                    </td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>14.08.0015.026</td>
+                    <td>229-2020</td>
+                    <td>12,800,000.00</td>
+                    <td>30/08/2023</td>
+                    <td>339,000.00</td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+                    </td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>14.08.0015.027</td>
+                    <td>270-2021</td>
+                    <td>2,500,000.00</td>
+                    <td>30/10/2023</td>
+                    <td>299,000.00</td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+                    </td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>14.08.0015.028</td>
+                    <td>291-2021</td>
+                    <td>3,805,892.29</td>
+                    <td>30/10/2023</td>
+                    <td>444,892.29</td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+                    </td>
+                    <td>
+                      <input class="form-control" style="border: 1px solid; height: 30px">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <br>
+              <p style="text-align: justify">Si los saldos anteriores concuerdan o no con los registros contables de la
+                municipalidad, sírvase indicar en la casilla de respuesta y firmar en el espacio inferior reservado para
+                el efecto, y enviar esta solicitud al correo electrónico <u>cartera@infom.gob.gt</u>, o comunicarse al
+                PBX 23-17-19-91
+                <br>
+                <br>
+                Si no está conforme, deberá consignar en el espacio de <u>observaciones</u> el saldo según los registros
+                contables de la municipalidad, adjuntando para el efecto la documentación de respaldo que justifique la
+                diferencia.
+                <br>
+                <br>
+                <b>ESTA NO ES UNA SOLICITUD DE COBROS</b>, por lo que le agradeceremos que la presente solicitud sea
+                atendida en un plazo no mayor de 10 días hábiles de recibida la misma; <b>en caso contrario se darán
+                  como válidos los saldos indicados.</b>
+              </p>
+              <br>
+              <p>Atentamente,</p>
+              <br>
+              <div class="row">
+                <div class="col-4" style="margin-left: 10%">
+                  <p><b>Licenciado Sebastián Sor Cotzojay</b></p>
+                  <p style="margin-left: 10%">SUPERVISOR DE CARTERA</p>
+                </div>
+                <div class="col-6" style="text-align: right">
+                  <p style="margin-right: 20%">Vo.Bo.__________</p>
+                  <p style="text-align: center">SUB-DIRECCIÓN DE ASISTENCIA FINANCIERA MUNICIPAL <br> Y/O DIRECTOR
+                    FINANCIERO</p>
+                </div>
+              </div>
+              <br>
+              <br>
+              <p>Observaciones</p>
+              <table class="table table-borderless" style="width: 100%">
+                <tbody>
+                  <tr style="border-top: 1px solid">
+                    <td style="color: white">.</td>
+                  </tr>
+                  <tr style="border-top: 1px solid">
+                    <td style="color: white">.</td>
+                  </tr>
+                  <tr style="border-top: 1px solid">
+                    <td style="color: white">.</td>
+                  </tr>
+                  <tr style="border-top: 1px solid">
+                    <td style="color: white">.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <br>
+              <br>
+              <div class="row">
+                <div class="col-6">
+                  <p style="margin-left: 10%">_________</p>
+                  <p>NOMBRE, FIRMA Y SELLO DEL TESORERO</p>
+                </div>
+                <div class="col-6" style="text-align: right">
+                  <p>Vo.Bo.__________</p>
+                  <p>NOMBRE, FIRMA Y SELLO DEL ALCALDE</p>
+                </div>
+              </div>
+              <br>
+              <p style="text-align: right">Fecha:___de_______del año_____</p>
+            </div>
+
+            <div id="asignaciones" style="color: black; font-size: 8px;">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid">CODIGO MUNICIPAL</th>
+                    <th style="border: 1px solid">MUNICIPALIDAD</th>
+                    <th style="border: 1px solid">APORTE CONSTITUCIONAL</th>
+                    <th style="border: 1px solid">IVA PAZ</th>
+                    <th style="border: 1px solid">CIRCULACION DE VEHICULOS</th>
+                    <th style="border: 1px solid">TOTAL ASIGNADO</th>
+                    <th style="border: 1px solid">TOTAL COBRADO</th>
+                    <th style="border: 1px solid">DISPONIBLE</th>
+                    <th style="border: 1px solid">PORCENTAJE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>02 06</td>
+                    <td>SANSARE, EL PROGRESO</td>
+                    <td>776,391.21</td>
+                    <td>879, 569.19</td>
+                    <td>80,022.92</td>
+                    <td>1,735,982.92</td>
+                    <td>778,778.69</td>
+                    <td>957,204.23</td>
+                    <td>899,999.00</td>
+                  </tr>
+                  <tr>
+                    <td>04 08</td>
+                    <td>SAN MIGUEL POCHUTA, CHIMALTENANGO</td>
+                    <td>632,606.62</td>
+                    <td>716,676.44</td>
+                    <td>65,202.66</td>
+                    <td>1,414,485.72</td>
+                    <td>615,317.92</td>
+                    <td>799,167.80</td>
+                    <td>678,998.67</td>
+                  </tr>
+                  <tr>
+                    <td>02 06</td>
+                    <td>SANSARE, EL PROGRESO</td>
+                    <td>776,391.21</td>
+                    <td>879, 569.19</td>
+                    <td>80,022.92</td>
+                    <td>1,735,982.92</td>
+                    <td>778,778.69</td>
+                    <td>957,204.23</td>
+                    <td>899,999.00</td>
+                  </tr>
+                  <tr>
+                    <td>04 08</td>
+                    <td>SAN MIGUEL POCHUTA, CHIMALTENANGO</td>
+                    <td>632,606.62</td>
+                    <td>716,676.44</td>
+                    <td>65,202.66</td>
+                    <td>1,414,485.72</td>
+                    <td>615,317.92</td>
+                    <td>799,167.80</td>
+                    <td>678,998.67</td>
+                  </tr>
+                  <tr>
+                    <td>02 06</td>
+                    <td>SANSARE, EL PROGRESO</td>
+                    <td>776,391.21</td>
+                    <td>879, 569.19</td>
+                    <td>80,022.92</td>
+                    <td>1,735,982.92</td>
+                    <td>778,778.69</td>
+                    <td>957,204.23</td>
+                    <td>899,999.00</td>
+                  </tr>
+                  <tr>
+                    <td>04 08</td>
+                    <td>SAN MIGUEL POCHUTA, CHIMALTENANGO</td>
+                    <td>632,606.62</td>
+                    <td>716,676.44</td>
+                    <td>65,202.66</td>
+                    <td>1,414,485.72</td>
+                    <td>615,317.92</td>
+                    <td>799,167.80</td>
+                    <td>678,998.67</td>
+                  </tr>
+                  <tr>
+                    <td>02 06</td>
+                    <td>SANSARE, EL PROGRESO</td>
+                    <td>776,391.21</td>
+                    <td>879, 569.19</td>
+                    <td>80,022.92</td>
+                    <td>1,735,982.92</td>
+                    <td>778,778.69</td>
+                    <td>957,204.23</td>
+                    <td>899,999.00</td>
+                  </tr>
+                  <tr>
+                    <td>04 08</td>
+                    <td>SAN MIGUEL POCHUTA, CHIMALTENANGO</td>
+                    <td>632,606.62</td>
+                    <td>716,676.44</td>
+                    <td>65,202.66</td>
+                    <td>1,414,485.72</td>
+                    <td>615,317.92</td>
+                    <td>799,167.80</td>
+                    <td>678,998.67</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="cur" style="color: black; font-size: 8px;">
+              <div style="border: 3px double">
+                <p>
+                  <b>ENTREGA:
+                    <span style="font-size: 14px">Septiembre/2023 (SEP23-A) - Entrega de Fecha 13/10/2023</span></b>
+                </p>
+                <p><b>BANCO: </b><span style="font-size: 14px">BANRURAL</span></p>
+                <p><b>FONDOS: </b><span style="font-size: 14px">INFOM</span></p>
+              </div>
+              <br />
+              <div style="border: 1px solid">
+                <h4 style="margin-left: 5%">PRESTAMOS</h4>
+                <div class="row">
+                  <div class="col-5" style="border: 1px dotted; margin-left: 10%; margin-bottom: 3%">
+                    <h6>Capital</h6>
+                    <div class="row">
+                      <div class="col-6">
+                        <p><i>Corto Plazo</i></p>
+                        <p><i>Largo Plazo</i></p>
+                        <p><b>Total de Capital</b></p>
+                      </div>
+                      <div class="col-6">
+                        <p>2,343,502.00</p>
+                        <p>16,546,339.66</p>
+                        <p style="border-top: 1px solid">18,889,841.66</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <h4>
+                      * Intereses <br />
+                      <br />* I.V.A.
+                    </h4>
+                  </div>
+                  <div class="col-3" style="text-align: right">
+                    <p>788,156.32</p>
+                    <p>94,578.74</p>
+                  </div>
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-7" style="border: 1px solid">
+                  <h4>SERVICIOS DE LABORATORIO</h4>
+                  <div class="row">
+                    <div class="col-6">
+                      <p style="margin-left: 10%"><b>* Monto </b></p>
+                      <p style="margin-left: 10%"><b>* I.V.A. </b></p>
+                    </div>
+                    <div class="col-4" style="text-align: right; margin-right: 5%">
+                      <p>64,598.23</p>
+                      <p>7,751.77</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-7" style="border: 1px solid">
+                  <h4>SERVICIOS TECNICOS</h4>
+                  <div class="row">
+                    <div class="col-6">
+                      <p style="margin-left: 10%"><b>* Monto </b></p>
+                      <p style="margin-left: 10%"><b>* I.V.A. </b></p>
+                    </div>
+                    <div class="col-4" style="text-align: right; margin-right: 5%">
+                      <p>0.00</p>
+                      <p>0.00</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4" style="border: 3px double; margin-left: 3%">
+                  <h4>* SUMATORIA</h4>
+                  <p style="text-align: right">955,085.06</p>
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-10" style="border: 1px solid">
+                  <h4>AUMENTOS</h4>
+                  <div class="row">
+                    <div class="col-6" style="font-weight: 500">
+                      <p>PRESTAMOS (LINEAS DE CREDITO) LARGO PLAZO</p>
+                      <p>DEPOSITO PARA PAGO DE INTERESES E IVA (LINEA DE CREDITO)</p>
+                      <p>INTERMEDIACION FINANCIERA</p>
+                      <p>PLAN DE PRESTACIONES , ANAM, AUXILIO POSTUMO</p>
+                      <p>CUENTA AJENA</p>
+                      <p>MANCOSUR</p>
+                      <p>MASUR</p>
+                      <p>MANPACIFIC</p>
+                      <p>MANSOHUE</p>
+                      <p>MANALTOS</p>
+                      <br />
+                      <p style="text-align: right">SUB-TOTAL</p>
+                    </div>
+                    <div class="col-6" style="text-align: right">
+                      <br />
+                      <p>0.00</p>
+                      <p>0.00</p>
+                      <p>716,597.70</p>
+                      <p>1,474,332.39</p>
+                      <p>0.00</p>
+                      <p>0.00</p>
+                      <p>20,000.00</p>
+                      <p>0.00</p>
+                      <p>0.00</p>
+                      <p>20,000.00</p>
+                      <br />
+                      <p style="border-top: 1px dotted">2,230,930.09</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-6" style="border: 2px solid; margin-left: 25%">
+                  <div class="row">
+                    <div class="col-6" style="margin-top: 10px">
+                      <h4>GRAN TOTAL:</h4>
+                    </div>
+                    <div class="col-6">
+                      <p style="
+                          border-top: 2px solid;
+                          border-bottom: 4px double;
+                          margin-top: 10px;
+                          font-weight: 500;
+                        ">
+                        22,075,856.81
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br />
+              <br />
+              <br />
+              <p style="text-align: right; margin-right: 15%">
+                (f)___________
+              </p>
             </div>
 
           </div>

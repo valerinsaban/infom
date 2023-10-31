@@ -26,6 +26,10 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/' + estado + '/' + fecha_inicio + '/' + fecha_fin);
   }
 
+  getCountPrestamosFecha(fecha_inicio: any, fecha_fin: any): Promise<any> {
+    return this.rootService.get(this.route + '/count/fecha/' + fecha_inicio + '/' + fecha_fin);
+  }
+
   getCountPrestamosEstado(estado: string, fecha_inicio: any, fecha_fin: any): Promise<any> {
     return this.rootService.get(this.route + '/count/' + estado + '/' + fecha_inicio + '/' + fecha_fin);
   }
