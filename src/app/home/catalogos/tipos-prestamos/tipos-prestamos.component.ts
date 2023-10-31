@@ -29,7 +29,10 @@ export class TiposPrestamosComponent {
       nombre: new FormControl(null, [Validators.required]),
       siglas: new FormControl(null, [Validators.required]),
       monto_min: new FormControl(null, [Validators.required]),
-      monto_max: new FormControl(null)
+      monto_max: new FormControl(null),
+      centro_costo: new FormControl(null),
+      producto: new FormControl(null),
+      subproducto: new FormControl(null)
     });
   }
 
@@ -123,6 +126,9 @@ export class TiposPrestamosComponent {
     this.tipo_prestamoForm.controls['siglas'].setValue(i.siglas);
     this.tipo_prestamoForm.controls['monto_min'].setValue(i.monto_min);
     this.tipo_prestamoForm.controls['monto_max'].setValue(i.monto_max);
+    this.tipo_prestamoForm.controls['centro_costo'].setValue(i.centro_costo);
+    this.tipo_prestamoForm.controls['producto'].setValue(i.producto);
+    this.tipo_prestamoForm.controls['subproducto'].setValue(i.subproducto);
 
     this.ngxService.stop();
   }

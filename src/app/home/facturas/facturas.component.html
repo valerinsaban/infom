@@ -1,0 +1,254 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Facturas</h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Facturas</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive active-projects style-1">
+            <div class="tbl-caption">
+              <div>
+                <div class="input-group input-group-sm mb-3">
+                  <input name="daterange" class="form-control-sm" style="width: 180px;" />
+                  <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <a class="btn btn-primary btn-sm" data-bs-toggle="modal" href="#filtros" role="button">
+                  <i class="fas fa-filter"></i>
+                </a>
+                <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-factura" role="button"
+                  style="margin-left: 10px;">
+                  + Agregar Factura
+                </a>
+              </div>
+            </div>
+
+            <table class="table table-sm mb-0">
+              <thead class="bg-primary">
+                <tr>
+                  <th class="align-middle">No.</th>
+                  <th class="align-middle pe-7">Fecha</th>
+                  <th class="align-middle">NIT</th>
+                  <th class="align-middle text-end">Estado</th>
+                  <th class="align-middle text-end">Monto</th>
+                  <th class="no-sort"></th>
+                </tr>
+              </thead>
+              <tbody id="orders">
+                <tr *ngFor="let f of facturas" class="btn-reveal-trigger">
+                  <td class="py-2">
+                    <a href="#">
+                      <span class="order">#181</span></a> by <span class="">Ricky
+                      Antony</span><br><a href="mailto:ricky@example.com">ricky@example.com</a>
+                  </td>
+                  <td class="py-2">20/04/2020</td>
+                  <td class="py-2">Ricky Antony, 2392 Main Avenue, Penasauka, New Jersey 02149
+                    <p class="mb-0 text-500">Via Flat Rate</p>
+                  </td>
+                  <td class="py-2 text-end"><span class="badge badge-success badge-sm">Completed<span
+                        class="ms-1 fa fa-check"></span></span>
+                  </td>
+                  <td class="py-2 text-end font-w600">$99
+                  </td>
+                  <td class="py-2 text-end">
+                    <div class="dropdown text-sans-serif"><button class="btn btn-primary tp-btn-light sharp"
+                        type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport"
+                        aria-haspopup="true" aria-expanded="false"><span><svg xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24"
+                            version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                              <rect x="0" y="0" width="24" height="24"></rect>
+                              <circle fill="#000000" cx="12" cy="5" r="2"></circle>
+                              <circle fill="#000000" cx="12" cy="12" r="2"></circle>
+                              <circle fill="#000000" cx="12" cy="19" r="2"></circle>
+                            </g>
+                          </svg></span></button>
+                      <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
+                        <div class="py-2"><a class="dropdown-item" href="javascript:void(0);">Completed</a><a
+                            class="dropdown-item" href="javascript:void(0);">Processing</a><a class="dropdown-item"
+                            href="javascript:void(0);">On Hold</a><a class="dropdown-item"
+                            href="javascript:void(0);">Pending</a>
+                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger"
+                            href="javascript:void(0);">Delete</a>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-factura">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Factura</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-4">
+                  <h4 class="mb-3">Agregar Factura</h4>
+                  <form [formGroup]="facturaForm" class="needs-validation">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Fecha</label>
+                        <input formControlName="fecha" type="date" class="form-control">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">NIT</label>
+                        <input formControlName="nit" type="text" class="form-control" placeholder="NIT">
+                      </div>
+                      <div class="col-md-12 mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre" readonly>
+                      </div>
+                    </div>
+
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">
+                      Generar Factura
+                    </button>
+                  </form>
+                </div>
+                <div class="col-lg-8">
+                  <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-black">Detalles</span>
+                    <span class="badge badge-primary badge-pill">{{facturas_detalles.length}}</span>
+                  </h4>
+
+                  <div class="table-responsive">
+                    <table class="table table-responsive-md">
+                      <thead>
+                        <tr>
+                          <th style="width:80px;"><strong>#</strong></th>
+                          <th><strong>PATIENT</strong></th>
+                          <th><strong>DR NAME</strong></th>
+                          <th><strong>DATE</strong></th>
+                          <th><strong>STATUS</strong></th>
+                          <th><strong>PRICE</strong></th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><strong>01</strong></td>
+                          <td>Mr. Bobby</td>
+                          <td>Dr. Jackson</td>
+                          <td>01 August 2020</td>
+                          <td><span class="badge light badge-success">Successful</span></td>
+                          <td>$21.56</td>
+                          <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn btn-success light sharp" data-bs-toggle="dropdown">
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
+                                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24" />
+                                    <circle fill="#000000" cx="5" cy="12" r="2" />
+                                    <circle fill="#000000" cx="12" cy="12" r="2" />
+                                    <circle fill="#000000" cx="19" cy="12" r="2" />
+                                  </g>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>02</strong></td>
+                          <td>Mr. Bobby</td>
+                          <td>Dr. Jackson</td>
+                          <td>01 August 2020</td>
+                          <td><span class="badge light badge-danger">Canceled</span></td>
+                          <td>$21.56</td>
+                          <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn btn-danger light sharp" data-bs-toggle="dropdown">
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
+                                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24" />
+                                    <circle fill="#000000" cx="5" cy="12" r="2" />
+                                    <circle fill="#000000" cx="12" cy="12" r="2" />
+                                    <circle fill="#000000" cx="19" cy="12" r="2" />
+                                  </g>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>03</strong></td>
+                          <td>Mr. Bobby</td>
+                          <td>Dr. Jackson</td>
+                          <td>01 August 2020</td>
+                          <td><span class="badge light badge-warning">Pending</span></td>
+                          <td>$21.56</td>
+                          <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn btn-warning light sharp" data-bs-toggle="dropdown">
+                                <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
+                                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24" />
+                                    <circle fill="#000000" cx="5" cy="12" r="2" />
+                                    <circle fill="#000000" cx="12" cy="12" r="2" />
+                                    <circle fill="#000000" cx="19" cy="12" r="2" />
+                                  </g>
+                                </svg>
+                              </button>
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <form>
+                    <div class="input-group">
+                      <input type="text" class="form-control" placeholder="Promo code">
+                      <button type="submit" class="input-group-text">Redeem</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

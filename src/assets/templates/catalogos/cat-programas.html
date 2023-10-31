@@ -7,59 +7,61 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    <style type="text/css">
-      :root {
-        --color-background: #303030;
-        --color-pageSheet: #cfcfcf;
-        --color-paper: white;
-        --bs-body-line-height: 1.5;
+  <style type="text/css">
+    :root {
+      --color-background: #303030;
+      --color-pageSheet: #cfcfcf;
+      --color-paper: white;
+      --bs-body-line-height: 1.5;
+    }
+
+    @page {
+      margin: 25mm 5mm 10mm 5mm;
+
+      @top-left {
+        content: element(header);
+        padding-top: 15mm;
+        margin-bottom: 70px;
       }
-  
-      @page {
-        margin: 25mm 5mm 10mm 5mm;
-  
-        @top-left {
-          content: element(header);
-          padding-top: 15mm;
-          margin-bottom: 70px;
-        }
-  
-        @bottom-right {
-          content: 'Pagina ' counter(page) ' de ' counter(pages)
-        }
-  
+
+      @bottom-right {
+        content: 'Pagina ' counter(page) ' de ' counter(pages)
       }
-  
-      #header {
-        position: running(header);
-      }
-  
-      .pagedjs_page {
-        background-color: white;
-        box-shadow: 0 0 0 1px #cfcfcf;
-        margin: auto;
-        margin-bottom: 10px;
-      }
-  
-      body {
-        background-color: var(--color-background);
-        font-size: 10px !important;
-      }
-  
-      tr th {
-        background-color: #848484 !important;
-        color: white !important;
-      }
-    </style>
+
+    }
+
+    #header {
+      position: running(header);
+    }
+
+    .pagedjs_page {
+      background-color: white;
+      box-shadow: 0 0 0 1px #cfcfcf;
+      margin: auto;
+      margin-bottom: 10px;
+    }
+
+    body {
+      background-color: var(--color-background);
+      font-size: 10px !important;
+    }
+
+    tr th {
+      background-color: #848484 !important;
+      color: white !important;
+    }
+  </style>
 
 </head>
 
 <body>
 
-  <nav id="header" class="navbar">
-    <div class="container-fluid">
-      <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
-      <div style="text-align: center; text-transform: uppercase;">
+  <div id="header">
+    <div class="row">
+      <div class="col-3">
+        <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
+      </div>
+      <div class="col-6" style="text-align: center;">
         <span style="font-size: 12px;">
           <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b>
         </span>
@@ -68,13 +70,13 @@
           CATALOGO DE PROGRAMAS
         </span>
       </div>
-      <div style="text-align: right;">
+      <div class="col-3" style="text-align: right;">
         Generado: <b>{{generado}}</b> <br>
         Usuario: <b>{{usuario}}</b>
       </div>
     </div>
-  </nav>
-  <hr>
+    <hr>
+  </div>
 
   {{contenido}}
 
@@ -246,12 +248,12 @@
 
     Paged.registerHandlers(RepeatingTableHeadersHandler);
   </script>
-<script>
-  setTimeout(() => {
-    var r = document.querySelector(':root');
-    r.style.setProperty('--bs-body-line-height', '1.4');
-  }, "1000");
-</script>
+  <script>
+    setTimeout(() => {
+      var r = document.querySelector(':root');
+      r.style.setProperty('--bs-body-line-height', '1.4');
+    }, "1000");
+  </script>
 </body>
 
 </html>

@@ -65,6 +65,7 @@ export class MunicipalidadesComponent {
       correo: new FormControl(null),
       telefono: new FormControl(null),
       no_cuenta: new FormControl(null),
+      nit: new FormControl(null),
       no_acta: new FormControl(null),
       punto_acta: new FormControl(null),
       fecha_acta: new FormControl(null),
@@ -254,6 +255,7 @@ export class MunicipalidadesComponent {
     this.municipalidadForm.controls['correo'].setValue(i.correo);
     this.municipalidadForm.controls['telefono'].setValue(i.telefono);
     this.municipalidadForm.controls['no_cuenta'].setValue(i.no_cuenta);
+    this.municipalidadForm.controls['nit'].setValue(i.nit);
     this.municipalidadForm.controls['no_acta'].setValue(i.no_acta);
     this.municipalidadForm.controls['punto_acta'].setValue(i.punto_acta);
     this.municipalidadForm.controls['fecha_acta'].setValue(i.fecha_acta);

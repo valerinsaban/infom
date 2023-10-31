@@ -33,6 +33,8 @@ import { CobrosComponent } from './cobros/cobros.component';
 import { PartidosPoliticosComponent } from './catalogos/partidos-politicos/partidos-politicos.component';
 import { DestinosComponent } from './catalogos/destinos/destinos.component';
 import { ResolucionesComponent } from './catalogos/resoluciones/resoluciones.component';
+import { FacturasComponent } from './facturas/facturas.component';
+import { RecibosComponent } from './recibos/recibos.component';
 
 const routes: Routes = [
   {
@@ -49,6 +51,8 @@ const routes: Routes = [
       { path: 'bitacoras', component: BitacorasComponent},
       { path: 'reportes', component: ReportesComponent},
       { path: 'cobros', component: CobrosComponent},
+      { path: 'facturas', component: FacturasComponent},
+      { path: 'recibos', component: RecibosComponent},
       { path: 'configuraciones', component: ConfiguracionesComponent},
 
       // Catalogos
@@ -108,6 +112,8 @@ const routes: Routes = [
     PartidosPoliticosComponent,
     DestinosComponent,
     ResolucionesComponent,
+    FacturasComponent,
+    RecibosComponent
   ],
   imports: [
     CommonModule,

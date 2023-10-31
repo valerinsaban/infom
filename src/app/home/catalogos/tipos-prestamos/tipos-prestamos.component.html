@@ -40,6 +40,21 @@
               </label>
               <input formControlName="monto_max" type="number" class="form-control" placeholder="Monto Max">
             </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Centro de Costo <span class="text-danger">*</span>
+              </label>
+              <input formControlName="centro_costo" type="text" class="form-control" placeholder="Centro de Costo">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Producto <span class="text-danger">*</span>
+              </label>
+              <input formControlName="producto" type="text" class="form-control" placeholder="Producto">
+            </div>
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Sub Producto <span class="text-danger">*</span>
+              </label>
+              <input formControlName="subproducto" type="text" class="form-control" placeholder="Sub Producto">
+            </div>
             <div *ngIf="!tipo_prestamo">
               <button (click)="postTipoPrestamo()" type="button" class="btn btn-primary mb-3"
                 [ngClass]="{'disabled': tipo_prestamoForm.invalid}">
@@ -73,25 +88,31 @@
                   <th>Siglas</th>
                   <th>Monto Min</th>
                   <th>Monto Max</th>
+                  <!-- <th>Centro de C.</th>
+                  <th>Producto</th>
+                  <th>Sub Producto</th> -->
                   <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let d of tipos_prestamos; let dindex = index">
-                  <td><a class="text-primary">{{d.nombre}}</a></td>
-                  <td>{{d.siglas}}</td>
-                  <td>{{d.monto_min | number: '.2-2'}}</td>
-                  <td>{{d.monto_max | number: '.2-2'}}</td>
+                <tr *ngFor="let t of tipos_prestamos; let dindex = index">
+                  <td><a class="text-primary">{{t.nombre}}</a></td>
+                  <td>{{t.siglas}}</td>
+                  <td>{{t.monto_min | number: '.2-2'}}</td>
+                  <td>{{t.monto_max | number: '.2-2'}}</td>
+                  <!-- <td>{{t.centro_costo}}</td>
+                  <td>{{t.producto}}</td>
+                  <td>{{t.subproducto}}</td> -->
                   <td>
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setTipoPrestamo(d, dindex)">Editar</a>
-                        <a class="dropdown-item" (click)="setTipoPrestamo(d, dindex)" data-bs-toggle="offcanvas"
+                        <a class="dropdown-item" (click)="setTipoPrestamo(t, dindex)">Editar</a>
+                        <a class="dropdown-item" (click)="setTipoPrestamo(t, dindex)" data-bs-toggle="offcanvas"
                           href="#garantias">Garantias</a>
-                        <a class="dropdown-item" (click)="deleteTipoPrestamo(d, dindex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="deleteTipoPrestamo(t, dindex)">Eliminar</a>
                       </div>
                     </div>
                   </td>

@@ -24,6 +24,9 @@ import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-pre
 import { DesembolsosService } from 'src/app/services/desembolsos.service';
 import { ResolucionesService } from 'src/app/services/catalogos/resoluciones.service';
 import { ReporteService } from 'src/app/services/reportes.service';
+import { OrdenesPagosService } from 'src/app/services/ordenes_pagos.service';
+
+declare function numeroALetras(number: any): any;
 
 @Component({
   selector: 'app-prestamos',
@@ -36,6 +39,7 @@ export class PrestamosComponent implements OnInit {
   amortizacionForm: FormGroup;
   destinoPrestamoForm: FormGroup;
   desembolsoForm: FormGroup;
+  ordenPagoForm: FormGroup;
 
   prestamos: any = [];
   prestamo: any;
@@ -66,6 +70,8 @@ export class PrestamosComponent implements OnInit {
   destino_prestamo: any;
   desembolsos: any = [];
   desembolso: any;
+  ordenes_pagos: any = [];
+  orden_pago: any;
 
   estado: string = 'Pendiente';
 
@@ -112,6 +118,7 @@ export class PrestamosComponent implements OnInit {
     private destinosService: DestinosService,
     private destinos_prestamosService: DestinoPrestamosService,
     private desembolsosService: DesembolsosService,
+    private ordenes_pagosService: OrdenesPagosService,
     private resolucionesService: ResolucionesService,
     private reportesService: ReporteService
   ) {
@@ -168,6 +175,18 @@ export class PrestamosComponent implements OnInit {
       monto: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
     });
+    this.ordenPagoForm = new FormGroup({
+      numero: new FormControl(null),
+      fecha: new FormControl(null, [Validators.required]),
+      monto: new FormControl(null, [Validators.required]),
+      no_recibo: new FormControl(null, [Validators.required]),
+      no_acta: new FormControl(null, [Validators.required]),
+      punto_acta: new FormControl(null, [Validators.required]),
+      fecha_acta: new FormControl(null, [Validators.required]),
+      id_prestamo: new FormControl(null, [Validators.required])
+    });
+
+    AppComponent.loadScript('assets/js/letras.js');
   }
 
   async ngOnInit() {
@@ -333,7 +352,7 @@ export class PrestamosComponent implements OnInit {
   getTipoPrestamo() {
     for (let t = 0; t < this.tipos_prestamos.length; t++) {
       if (this.prestamoForm.controls['id_tipo_prestamo'].value == this.tipos_prestamos[t].id) {
-        return this.tipos_prestamos[t].nombre;
+        return this.tipos_prestamos[t];
       }
     }
   }
@@ -374,19 +393,28 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.stop();
   }
 
-  async getDestinosPrestamo(i: any) {
+  async getDestinosPrestamo() {
     this.destinos_prestamos = [];
     let destinos_prestamos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.prestamo.id);
     if (destinos_prestamos) {
       this.destinos_prestamos = destinos_prestamos;
+      this.destinos_prestamos.sort((a: any, b: any) => b.monto - a.monto);
     }
   }
 
-  async getDesembolsos(i: any) {
+  async getDesembolsos() {
     this.desembolsos = [];
     let desembolsos = await this.desembolsosService.getDesembolsosPrestamo(this.prestamo.id);
     if (desembolsos) {
       this.desembolsos = desembolsos;
+    }
+  }
+
+  async getOrdenesPagos() {
+    this.ordenes_pagos = [];
+    let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamo(this.prestamo.id);
+    if (ordenes_pagos) {
+      this.ordenes_pagos = ordenes_pagos;
     }
   }
 
@@ -550,7 +578,7 @@ export class PrestamosComponent implements OnInit {
 
     let destino_prestamo = await this.destinos_prestamosService.postDestinoPrestamo(this.destinoPrestamoForm.value);
     if (destino_prestamo.resultado) {
-      await this.getDestinosPrestamo(this.prestamo.id);
+      await this.getDestinosPrestamo();
       this.alert.alertMax('Transaccion Correcta', destino_prestamo.mensaje, 'success');
       this.limpiar3();
     }
@@ -561,7 +589,7 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.start();
     let destino_prestamo = await this.destinos_prestamosService.putDestinoPrestamo(this.destino_prestamo.id, this.destinoPrestamoForm.value);
     if (destino_prestamo.resultado) {
-      await this.getDestinosPrestamo(this.prestamo.id);
+      await this.getDestinosPrestamo();
       this.alert.alertMax('Transaccion Correcta', destino_prestamo.mensaje, 'success');
       this.limpiar3();
     }
@@ -597,7 +625,7 @@ export class PrestamosComponent implements OnInit {
 
     let desembolso = await this.desembolsosService.postDesembolso(this.desembolsoForm.value);
     if (desembolso.resultado) {
-      await this.getDesembolsos(this.prestamo.id);
+      await this.getDesembolsos();
       this.alert.alertMax('Transaccion Correcta', desembolso.mensaje, 'success');
       this.limpiar4();
     }
@@ -608,7 +636,7 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.start();
     let desembolso = await this.desembolsosService.putDesembolso(this.desembolso.id, this.desembolsoForm.value);
     if (desembolso.resultado) {
-      await this.getDesembolsos(this.prestamo.id);
+      await this.getDesembolsos();
       this.alert.alertMax('Transaccion Correcta', desembolso.mensaje, 'success');
       this.limpiar4();
     }
@@ -633,6 +661,59 @@ export class PrestamosComponent implements OnInit {
           this.desembolsos.splice(index, 1);
           this.alert.alertMax('Correcto', desembolso.mensaje, 'success');
           this.limpiar4();
+        }
+        this.ngxService.stop();
+      }
+    })
+  }
+
+  async postOrdenPago() {
+    this.ngxService.start();
+
+    let fecha_inicio = moment().startOf('year').format('YYYY-MM-DD');
+    let fecha_fin = moment().endOf('year').format('YYYY-MM-DD');
+    let numero = await this.ordenes_pagosService.getCountOrdenesPagosFecha(fecha_inicio, fecha_fin);
+    numero = (parseInt(numero) + 1) + '-' + moment().format('YYYY') + '-' + this.getTipoPrestamo().siglas;
+    this.ordenPagoForm.controls['numero'].setValue(numero);
+
+    let orden_pago = await this.ordenes_pagosService.postOrdenPago(this.ordenPagoForm.value);
+    if (orden_pago.resultado) {
+      await this.getOrdenesPagos();
+      this.alert.alertMax('Transaccion Correcta', orden_pago.mensaje, 'success');
+      this.limpiar5();
+    }
+    this.ngxService.stop();
+  }
+
+  async putOrdenPago() {
+    this.ngxService.start();
+    let orden_pago = await this.ordenes_pagosService.putOrdenPago(this.orden_pago.id, this.ordenPagoForm.value);
+    if (orden_pago.resultado) {
+      await this.getOrdenesPagos();
+      this.alert.alertMax('Transaccion Correcta', orden_pago.mensaje, 'success');
+      this.limpiar5();
+    }
+    this.ngxService.stop();
+  }
+
+  async deleteOrdenPago(i: any, index: number) {
+    Swal.fire({
+      title: '¿Estas seguro?',
+      text: "Esta accion no se puede revertir!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Eliminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.ngxService.start();
+        let orden_pago = await this.ordenes_pagosService.deleteOrdenPago(i.id);
+        if (orden_pago.resultado) {
+          this.ordenes_pagos.splice(index, 1);
+          this.alert.alertMax('Correcto', orden_pago.mensaje, 'success');
+          this.limpiar5();
         }
         this.ngxService.stop();
       }
@@ -776,6 +857,7 @@ export class PrestamosComponent implements OnInit {
     this.amortizacionForm.controls['id_prestamo'].setValue(i.id);
     this.destinoPrestamoForm.controls['id_prestamo'].setValue(i.id);
     this.desembolsoForm.controls['id_prestamo'].setValue(i.id);
+    this.ordenPagoForm.controls['id_prestamo'].setValue(i.id);
 
     this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
 
@@ -806,6 +888,20 @@ export class PrestamosComponent implements OnInit {
     this.desembolsoForm.controls['mes'].setValue(i.mes);
     this.desembolsoForm.controls['monto'].setValue(i.monto);
     this.desembolsoForm.controls['id_prestamo'].setValue(i.id_prestamo);
+  }
+
+  async setOrdenPago(i: any, index: number) {
+    i.index = index;
+    this.orden_pago = i;
+
+    this.ordenPagoForm.controls['numero'].setValue(i.numero);
+    this.ordenPagoForm.controls['fecha'].setValue(i.fecha);
+    this.ordenPagoForm.controls['monto'].setValue(i.monto);
+    this.ordenPagoForm.controls['no_recibo'].setValue(i.no_recibo);
+    this.ordenPagoForm.controls['no_acta'].setValue(i.no_acta);
+    this.ordenPagoForm.controls['punto_acta'].setValue(i.punto_acta);
+    this.ordenPagoForm.controls['fecha_acta'].setValue(i.fecha_acta);
+    this.ordenPagoForm.controls['id_prestamo'].setValue(i.id_prestamo);
   }
 
   async getAmortizaciones(i: any, index: number) {
@@ -919,6 +1015,15 @@ export class PrestamosComponent implements OnInit {
     return total;
   }
 
+  getTotalOrdenesPagos() {
+    let total = 0;
+    for (let a = 0; a < this.ordenes_pagos.length; a++) {
+      total += parseFloat(this.ordenes_pagos[a].monto);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
+  }
+
   colorClass(p: any) {
     if (p.estado == 'Pendiente') {
       return 'pendiente'
@@ -954,6 +1059,13 @@ export class PrestamosComponent implements OnInit {
     return false;
   }
 
+  ordenesPagosCompletos() {
+    if (parseFloat(this.prestamo.monto) == this.getTotalOrdenesPagos()) {
+      return true
+    }
+    return false;
+  }
+  
   limpiar() {
     this.prestamoForm.reset();
     // this.prestamoForm.controls['no_dictamen'].setValue(1);
@@ -1004,6 +1116,12 @@ export class PrestamosComponent implements OnInit {
     this.desembolso = null;
   }
 
+  limpiar5() {
+    this.ordenPagoForm.reset();
+    this.ordenPagoForm.controls['id_prestamo'].setValue(this.prestamo.id);
+    this.orden_pago = null;
+  }
+
   limpiarFiltros() {
     this.filtros = {
       id_regional: null,
@@ -1018,12 +1136,12 @@ export class PrestamosComponent implements OnInit {
     }
   }
 
-  recibirDisp(event: any) {    
+  recibirDisp(event: any) {
     this.disponibilidad = event;
     for (let c = 0; c < this.programas_garantias.length; c++) {
       let monto = this.programas_garantias[c].monto;
-      
-      if (this.programas_garantias[c].garantia.id == 1) {        
+
+      if (this.programas_garantias[c].garantia.id == 1) {
         if (monto <= this.disponibilidad.constitucional) {
           this.disp = true;
           return;
@@ -1061,6 +1179,10 @@ export class PrestamosComponent implements OnInit {
     popupWin.document.close();
 
     this.ngxService.stop();
+  }
+
+  letras(number: number) {    
+    return numeroALetras(number);
   }
 
 }

@@ -18,6 +18,10 @@
   width: 100% !important;
 }
 
+#ordenes_pagos {
+  width: 100% !important;
+}
+
 .count {
   background-color: transparent !important;
 }

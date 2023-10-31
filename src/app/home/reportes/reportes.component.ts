@@ -134,7 +134,7 @@ export class ReportesComponent {
       { slug: 'datos-bancarios', nombre: 'Reporte Datos Bancarios', filtros: ['codigo_departamento', 'codigo_municipio'] },
       { slug: 'creditos-analizados', nombre: 'Reporte Creditos Analizados', filtros: [] },
       { slug: 'intereses-dev-no-percibios', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] },
-      { slug: 'prestamos-otorgados', nombre: 'Prestamos Otorgados', filtros: []},
+      { slug: 'prestamos-otorgados', nombre: 'Prestamos Otorgados', filtros: [] },
     ];
   }
 
@@ -222,6 +222,22 @@ export class ReportesComponent {
     }
 
     // Reportes
+    if (this.slug_reporte == 'disponibilidad') {
+      await this.reporteDisponibilidad(this.slug_reporte, print);
+
+      for (let g = 0; g < this.garantias.length; g++) {
+        let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
+        if (this.garantias[g].id == 1) {
+          this.totales.constitucional = tot
+        }
+        if (this.garantias[g].id == 2) {
+          this.totales.iva_paz = tot
+        }
+      }
+      this.totales.total = this.getTotalMontoDispTotalDisponible();
+      this.disp.emit(this.totales)
+    }
+    
     if (this.slug_reporte == 'disponibilidad-general') {
       await this.reporteDisponibilidadGeneral(this.slug_reporte, print);
     }
@@ -238,28 +254,12 @@ export class ReportesComponent {
       await this.reporteDatosBancarios(this.slug_reporte, print);
     }
 
-    if (this.slug_reporte == 'disponibilidad') {
-      await this.reportePrestamosOtorgados(this.slug_reporte, print);
-
-    if (this.slug_reporte == 'prestamos-otorgados') {
-        await this.reportePrestamosOtorgados(this.slug_reporte, print);
-      }
-
-      for (let g = 0; g < this.garantias.length; g++) {
-        let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
-        if (this.garantias[g].id == 1) {
-          this.totales.constitucional = tot
-        }
-        if (this.garantias[g].id == 2) {
-          this.totales.iva_paz = tot
-        }
-      }
-      this.totales.total = this.getTotalMontoDispTotalDisponible();
-      this.disp.emit(this.totales)
-    }
-
     if (this.slug_reporte == 'intereses-dev-no-percibios') {
       await this.reporteAmortizaciones(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'prestamos-otorgados') {
+      await this.reportePrestamosOtorgados(this.slug_reporte, print);
     }
   }
 
