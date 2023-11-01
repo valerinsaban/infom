@@ -26,9 +26,9 @@
                 </div>
               </div>
               <div>
-                <a class="btn btn-primary btn-sm" data-bs-toggle="modal" href="#filtros" role="button">
+                <!-- <a class="btn btn-primary btn-sm" data-bs-toggle="modal" href="#filtros" role="button">
                   <i class="fas fa-filter"></i>
-                </a>
+                </a> -->
                 <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-factura" role="button"
                   style="margin-left: 10px;">
                   + Agregar Factura
@@ -54,7 +54,8 @@
                   </td>
                   <td class="py-2">{{f.fecha | date: 'dd/MM/YYYY HH:mm'}}</td>
                   <td class="py-2">
-                    <span class="badge badge-success">
+                    <span class="badge"
+                      [ngClass]="{'badge-success': f.estado == 'Vigente', 'badge-danger': f.estado == 'Anulada'}">
                       {{f.estado}}<span class="ms-1 fa fa-check"></span>
                     </span>
                   </td>
@@ -65,7 +66,7 @@
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="setFactura(f, findex)">Editar</a>
+                        <a class="dropdown-item" (click)="anularFactura(f, findex)">Anular</a>
                         <a class="dropdown-item" (click)="deleteFactura(f, findex)">Eliminar</a>
                       </div>
                     </div>
@@ -94,138 +95,98 @@
           <div class="card">
             <div class="card-body">
               <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                   <h4 class="mb-3">Agregar Factura</h4>
                   <form [formGroup]="facturaForm" class="needs-validation">
                     <div class="row">
-                      <div class="col-md-6 mb-3">
+                      <div class="col-md-7 mb-3">
                         <label class="form-label">Fecha</label>
-                        <input formControlName="fecha" type="date" class="form-control">
+                        <input formControlName="fecha" type="datetime-local" class="form-control">
                       </div>
-                      <div class="col-md-6 mb-3">
+                      <div class="col-md-5 mb-3">
                         <label class="form-label">NIT</label>
                         <input formControlName="nit" type="text" class="form-control" placeholder="NIT">
                       </div>
                       <div class="col-md-12 mb-3">
                         <label class="form-label">Nombre</label>
-                        <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre" readonly>
+                        <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
                       </div>
                     </div>
 
                     <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">
+                    <button (click)="postFactura()" [ngClass]="{'disabled': facturaForm.invalid || getMonto() == 0}"
+                      class="btn btn-primary btn-lg btn-block" type="submit" data-bs-dismiss="offcanvas">
                       Generar Factura
                     </button>
                   </form>
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                   <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-black">Detalles</span>
-                    <span class="badge badge-primary badge-pill">{{facturas_detalles.length}}</span>
+                    <a (click)="nuevoDetalle()" class="badge badge-primary badge-pill">
+                      <i class="fas fa-plus"></i>
+                    </a>
                   </h4>
-
                   <div class="table-responsive">
                     <table class="table table-responsive-md">
                       <thead>
                         <tr>
-                          <th style="width:80px;"><strong>#</strong></th>
-                          <th><strong>PATIENT</strong></th>
-                          <th><strong>DR NAME</strong></th>
-                          <th><strong>DATE</strong></th>
-                          <th><strong>STATUS</strong></th>
-                          <th><strong>PRICE</strong></th>
-                          <th></th>
+                          <th style="width: 8%;">Cantidad</th>
+                          <th style="width: 10%;">Tipo</th>
+                          <th style="width: auto;">Descripcion</th>
+                          <th style="width: 10%;">Precio U.</th>
+                          <th style="width: 10%;">Descuentos</th>
+                          <th style="width: 10%;">Impuestos</th>
+                          <th style="width: 10%;" class="text-end">Sub Total</th>
+                          <th style="width: 10%;" class="text-end">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td><strong>01</strong></td>
-                          <td>Mr. Bobby</td>
-                          <td>Dr. Jackson</td>
-                          <td>01 August 2020</td>
-                          <td><span class="badge light badge-success">Successful</span></td>
-                          <td>$21.56</td>
-                          <td>
-                            <div class="dropdown">
-                              <button type="button" class="btn btn-success light sharp" data-bs-toggle="dropdown">
-                                <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
-                                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <circle fill="#000000" cx="5" cy="12" r="2" />
-                                    <circle fill="#000000" cx="12" cy="12" r="2" />
-                                    <circle fill="#000000" cx="19" cy="12" r="2" />
-                                  </g>
-                                </svg>
-                              </button>
-                              <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
-                              </div>
-                            </div>
+                        <tr *ngFor="let d of facturas_detalles; let dindex = index">
+                          <td class="text-end">
+                            <input (input)="calc(d)" type="text" class="form-control text-end" [(ngModel)]="d.cantidad">
                           </td>
-                        </tr>
-                        <tr>
-                          <td><strong>02</strong></td>
-                          <td>Mr. Bobby</td>
-                          <td>Dr. Jackson</td>
-                          <td>01 August 2020</td>
-                          <td><span class="badge light badge-danger">Canceled</span></td>
-                          <td>$21.56</td>
                           <td>
-                            <div class="dropdown">
-                              <button type="button" class="btn btn-danger light sharp" data-bs-toggle="dropdown">
-                                <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
-                                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <circle fill="#000000" cx="5" cy="12" r="2" />
-                                    <circle fill="#000000" cx="12" cy="12" r="2" />
-                                    <circle fill="#000000" cx="19" cy="12" r="2" />
-                                  </g>
-                                </svg>
-                              </button>
-                              <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
-                              </div>
-                            </div>
+                            <select class="form-control" [(ngModel)]="d.tipo">
+                              <option value="S">Servicio</option>
+                              <option value="B">Bien</option>
+                            </select>
                           </td>
-                        </tr>
-                        <tr>
-                          <td><strong>03</strong></td>
-                          <td>Mr. Bobby</td>
-                          <td>Dr. Jackson</td>
-                          <td>01 August 2020</td>
-                          <td><span class="badge light badge-warning">Pending</span></td>
-                          <td>$21.56</td>
                           <td>
-                            <div class="dropdown">
-                              <button type="button" class="btn btn-warning light sharp" data-bs-toggle="dropdown">
-                                <svg width="20px" height="20px" viewBox="0 0 24 24" version="1.1">
-                                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <circle fill="#000000" cx="5" cy="12" r="2" />
-                                    <circle fill="#000000" cx="12" cy="12" r="2" />
-                                    <circle fill="#000000" cx="19" cy="12" r="2" />
-                                  </g>
-                                </svg>
-                              </button>
-                              <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Edit</a>
-                                <a class="dropdown-item" href="#">Delete</a>
-                              </div>
-                            </div>
+                            <input type="text" class="form-control" [(ngModel)]="d.descripcion">
+                          </td>
+                          <td>
+                            <input (input)="calc(d)" type="text" class="form-control text-end"
+                              [(ngModel)]="d.precio_unitario">
+                          </td>
+                          <td>
+                            <input (input)="calc(d)" type="text" class="form-control text-end"
+                              [(ngModel)]="d.descuentos">
+                          </td>
+                          <td class="text-end">{{d.impuestos | number: '.2-2'}}</td>
+                          <td class="text-end">{{d.subtotal | number: '.2-2'}}</td>
+                          <td class="text-end">
+                            <button (click)="removerDetalle(dindex)" type="button" class="btn btn-primary light"
+                              data-bs-toggle="dropdown">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
                           </td>
                         </tr>
                       </tbody>
+                      <tfoot>
+                        <tr>
+                          <td class="text-end"></td>
+                          <td class="text-end"></td>
+                          <td class="text-end"></td>
+                          <td class="text-end"></td>
+                          <td class="text-end"></td>
+                          <td class="text-end"></td>
+                          <th class="text-end">{{getMonto() | number: '.2-2'}}</th>
+                          <td class="text-end"></td>
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
-
-                  <form>
-                    <div class="input-group">
-                      <input type="text" class="form-control" placeholder="Promo code">
-                      <button type="submit" class="input-group-text">Redeem</button>
-                    </div>
-                  </form>
                 </div>
               </div>
             </div>

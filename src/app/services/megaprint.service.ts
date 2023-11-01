@@ -21,7 +21,7 @@ export class MegaPrintService {
         <apikey>${this.apikey}</apikey>
     </SolicitaTokenRequest>`;
 
-    return await this.httpClient.post('/api/solicitarToken', body);
+    return this.httpClient.post('/api/solicitarToken', body);
   }
 
   async solicitaFirma(token: any) {

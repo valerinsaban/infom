@@ -187,8 +187,6 @@ export class CobrosComponent {
       estado: 'VIGENTE',
     });
 
-
-
     let recibo = await this.recibosService.postRecibo({
       numero: p.id,
       fecha: moment().format('YYYY-MM-DD HH:mm:ss'),

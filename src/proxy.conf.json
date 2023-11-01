@@ -1,5 +1,7 @@
 {
   "/api": {
-    "target": "https://dev2.api.ifacere-fel.com"
+    "target": "https://dev2.api.ifacere-fel.com",
+    "secure": true,
+    "changeOrigin": true
   }
 }

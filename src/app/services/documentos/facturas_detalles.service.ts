@@ -20,26 +20,17 @@ export class FacturasDetallesService {
   }
 
   async postFacturaDetalle(data: any): Promise<any> {
-    let factura = await this.rootService.post(this.route, data);
-    if (factura.resultado) {
-      await this.rootService.bitacora('factura', 'agregar', `creó la factura "${factura.data.codigo}"`, factura.data);
-    }
-    return factura;
+    let factura_detalle = await this.rootService.post(this.route, data);
+    return factura_detalle;
   }
 
   async putFacturaDetalle(id: number, data: any): Promise<any> {
-    let factura = await this.rootService.put(this.route + '/' + id, data);
-    if (factura.resultado) {
-      await this.rootService.bitacora('factura', 'editar', `editó la factura "${factura.data.codigo}"`, factura.data);
-    }
-    return factura;
+    let factura_detalle = await this.rootService.put(this.route + '/' + id, data);
+    return factura_detalle;
   }
 
   async deleteFacturaDetalle(id: number): Promise<any> {
-    let factura = await this.rootService.delete(this.route + '/' + id);
-    if (factura.resultado) {
-      await this.rootService.bitacora('factura', 'eliminar', `eliminó la factura "${factura.data.codigo}"`, factura.data);
-    }
-    return factura;
+    let factura_detalle = await this.rootService.delete(this.route + '/' + id);
+    return factura_detalle;
   }
 }

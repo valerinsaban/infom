@@ -35,6 +35,14 @@ export class FacturasService {
     return factura;
   }
 
+  async anularFactura(id: number, data: any): Promise<any> {
+    let factura = await this.rootService.put(this.route + '/anular/' + id, data);
+    if (factura.resultado) {
+      await this.rootService.bitacora('factura', 'anular', `anuló la factura "${factura.data.codigo}"`, factura.data);
+    }
+    return factura;
+  }
+
   async deleteFactura(id: number): Promise<any> {
     let factura = await this.rootService.delete(this.route + '/' + id);
     if (factura.resultado) {
