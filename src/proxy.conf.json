@@ -1,6 +1,21 @@
 {
-  "/api": {
-    "target": "https://dev2.api.ifacere-fel.com",
+  "/solicitarToken": {
+    "target": "https://dev2.api.ifacere-fel.com/api",
+    "secure": true,
+    "changeOrigin": true
+  },
+  "/solicitaFirma": {
+    "target": "https://dev.api.soluciones-mega.com/api",
+    "secure": true,
+    "changeOrigin": true
+  },
+  "/registrarDocumentoXML": {
+    "target": "https://dev2.api.ifacere-fel.com/api",
+    "secure": true,
+    "changeOrigin": true
+  },
+  "/retornarPDF": {
+    "target": "https://dev2.api.ifacere-fel.com/api",
     "secure": true,
     "changeOrigin": true
   }

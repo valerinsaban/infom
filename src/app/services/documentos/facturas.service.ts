@@ -11,8 +11,8 @@ export class FacturasService {
 
   route = '/facturas';
 
-  getFacturas(): Promise<any> {
-    return this.rootService.get(this.route);
+  getFacturas(fecha_inicio: any, fecha_fin: any): Promise<any> {
+    return this.rootService.get(this.route + '/' + fecha_inicio + '/' + fecha_fin);
   }
 
   getFactura(id: number): Promise<any> {

@@ -13,7 +13,6 @@ import { RolesComponent } from './seguridad/roles/roles.component';
 import { GarantiasComponent } from './catalogos/garantias/garantias.component';
 import { MunicipalidadesComponent } from './municipalidades/municipalidades.component';
 import { RegionalesComponent } from './catalogos/regionales/regionales.component';
-import { FuncionariosComponent } from './funcionarios/funcionarios.component';
 import { ProfesionesComponent } from './catalogos/profesiones/profesiones.component';
 import { BancosComponent } from './catalogos/bancos/bancos.component';
 import { BienvenidoComponent } from './bienvenido/bienvenido.component';
@@ -43,7 +42,6 @@ const routes: Routes = [
       { path: 'bienvenido', component: BienvenidoComponent },
 
       { path: 'municipalidades', component: MunicipalidadesComponent },
-      { path: 'funcionarios', component: FuncionariosComponent },
       { path: 'representantes', component: RepresentantesComponent },
       { path: 'prestamos', component: PrestamosComponent},
       { path: 'aportes', component: AportesComponent},
@@ -94,7 +92,6 @@ const routes: Routes = [
     GarantiasComponent,
     MunicipalidadesComponent,
     RegionalesComponent,
-    FuncionariosComponent,
     ProfesionesComponent,
     BancosComponent,
     BienvenidoComponent,
