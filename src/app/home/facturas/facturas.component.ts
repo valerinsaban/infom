@@ -82,7 +82,12 @@ export class FacturasComponent {
     if (data.resultado) {
       let token = data.res.token._text;
 
-      data = await this.megaprintService.certificar(token);
+      let info = {
+        factura: this.facturaForm.value,
+        detalles: this.facturas_detalles
+      }
+
+      data = await this.megaprintService.certificar(token, info);
       if (data.resultado) {
 
         this.facturaForm.controls['uuid'].setValue(data.res.uuid._text);
@@ -172,12 +177,11 @@ export class FacturasComponent {
   }
 
   calc(d: any) {
-    !d.cantidad ? d.cantidad = 0 : null;
-    !d.precio_unitario ? d.precio_unitario = 0 : null;
-    !d.descuentos ? d.descuentos = 0 : null;
-
-    d.subtotal = (d.cantidad * d.precio_unitario) - d.descuentos;
+    d.precio = d.cantidad * d.precio_unitario;
+    d.subtotal = d.precio - d.descuentos;
     d.impuestos = d.subtotal / 1.12 * 0.12;
+    d.impuestos = Math.round((d.impuestos + Number.EPSILON) * 100) / 100;
+    d.monto_gravable = d.subtotal - d.impuestos;
   }
 
   getMonto() {
@@ -194,7 +198,7 @@ export class FacturasComponent {
       tipo: 'S',
       descripcion: '',
       precio_unitario: '',
-      descuentos: '',
+      descuentos: 0,
       impuestos: '',
       subtotal: ''
     });

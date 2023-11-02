@@ -35,16 +35,16 @@ export class ReportesComponent {
 
   @Input()
   filtros: any = {
-    codigo_departamento: null,
-    codigo_municipio: null,
-    plazo_meses: null,
+    codigo_departamento: '05',
+    codigo_municipio: '07',
+    plazo_meses: 18,
     mes: null,
     mes_inicio: null,
     mes_fin: null
   }
 
   @Input()
-  slug_reporte: any;
+  slug_reporte: any = 'disponibilidad';
 
   @Input()
   view_reporte: boolean = true;
@@ -480,7 +480,9 @@ export class ReportesComponent {
         prestamos[i].prestamos_garantias = prestamos_garantias
       }
 
-      // let total_hojas = Math.ceil(this.filtros.plazo_meses / 12);
+      let total_hojas = Math.ceil(this.filtros.plazo_meses / 12);
+      console.log(total_hojas);
+      
       // let hojas: any = [];
       // let restantes = this.filtros.plazo_meses;
       // for (let t = 0; t < total_hojas; t++) {

@@ -33,13 +33,13 @@ export class MegaPrintService {
     var xml = convert.xml2json(res, { compact: true, spaces: 4 });
     let solicitud = JSON.parse(xml);
     if (solicitud.SolicitaTokenResponse.tipo_respuesta._text == '0') {
-      return {resultado: true, res: solicitud.SolicitaTokenResponse};
+      return { resultado: true, res: solicitud.SolicitaTokenResponse };
     } else {
-      return {resultado: false, res: solicitud.SolicitaTokenResponse};
+      return { resultado: false, res: solicitud.SolicitaTokenResponse };
     }
   }
 
-  async certificar(token: any) {    
+  async certificar(token: any, info: any) {
     let headers = new HttpHeaders({
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'GET',
@@ -48,12 +48,40 @@ export class MegaPrintService {
       'Authorization': `Bearer ${token}`
     });
 
+    let fecha_emision = moment(info.factura.fecha).format('YYYY-MM-DDTHH:mm:ss.000-06:00');
+
+    let items = '';
+    let total_impuestos = 0;
+    let total = 0;
+    for (let d = 0; d < info.detalles.length; d++) {
+      let item = info.detalles[d];
+      total_impuestos += item.impuestos;
+      total += item.subtotal;
+      items += `<dte:Item BienOServicio="${item.tipo}" NumeroLinea="${d + 1}">
+        <dte:Cantidad>${item.cantidad}</dte:Cantidad>
+        <dte:UnidadMedida>UNI</dte:UnidadMedida>
+        <dte:Descripcion>${item.descripcion}</dte:Descripcion>
+        <dte:PrecioUnitario>${item.precio_unitario}</dte:PrecioUnitario>
+        <dte:Precio>${item.precio}</dte:Precio>
+        <dte:Descuento>${item.descuentos}</dte:Descuento>
+        <dte:Impuestos>
+            <dte:Impuesto>
+                <dte:NombreCorto>IVA</dte:NombreCorto>
+                <dte:CodigoUnidadGravable>1</dte:CodigoUnidadGravable>
+                <dte:MontoGravable>${item.monto_gravable}</dte:MontoGravable>
+                <dte:MontoImpuesto>${item.impuestos}</dte:MontoImpuesto>
+            </dte:Impuesto>
+        </dte:Impuestos>
+        <dte:Total>${item.subtotal}</dte:Total>
+      </dte:Item>`
+    }
+
     let cont = `<?xml version="1.0" encoding="UTF-8"?>
     <dte:GTDocumento xmlns:dte="http://www.sat.gob.gt/dte/fel/0.2.0" Version="0.1">
       <dte:SAT ClaseDocumento="dte">
           <dte:DTE ID="DatosCertificados">
               <dte:DatosEmision ID="DatosEmision">
-                  <dte:DatosGenerales CodigoMoneda="GTQ" FechaHoraEmision="2023-11-01T00:00:00.000-06:00" Tipo="FACT" />
+                  <dte:DatosGenerales CodigoMoneda="GTQ" FechaHoraEmision="${fecha_emision}" Tipo="FACT" />
                   <dte:Emisor AfiliacionIVA="GEN" CodigoEstablecimiento="1" CorreoEmisor="desarrollo@infom.gob.gt" NITEmisor="974250" NombreComercial="INSTITUTO DE FOMENTO MUNICIPAL" NombreEmisor="INSTITUTO DE FOMENTO MUNICIPAL -INFOM-">
                       <dte:DireccionEmisor>
                           <dte:Direccion>CIUDAD</dte:Direccion>
@@ -63,7 +91,7 @@ export class MegaPrintService {
                           <dte:Pais>GT</dte:Pais>
                       </dte:DireccionEmisor>
                   </dte:Emisor>
-                  <dte:Receptor CorreoReceptor="" IDReceptor="3666527290101" NombreReceptor="VALERIN SABAN" TipoEspecial="CUI">
+                  <dte:Receptor CorreoReceptor="" IDReceptor="${info.factura.nit}" NombreReceptor="${info.factura.nombre}">
                       <dte:DireccionReceptor>
                           <dte:Direccion>CUIDAD</dte:Direccion>
                           <dte:CodigoPostal>0</dte:CodigoPostal>
@@ -77,31 +105,15 @@ export class MegaPrintService {
                       <dte:Frase CodigoEscenario="1" TipoFrase="2" />
                   </dte:Frases>
                   <dte:Items>
-                      <dte:Item BienOServicio="B" NumeroLinea="1">
-          <dte:Cantidad>1</dte:Cantidad>
-          <dte:UnidadMedida>UNI</dte:UnidadMedida>
-          <dte:Descripcion>Prueba fact en desarrollo</dte:Descripcion>
-          <dte:PrecioUnitario>0.1</dte:PrecioUnitario>
-          <dte:Precio>0.1</dte:Precio>
-          <dte:Descuento>0</dte:Descuento>
-          <dte:Impuestos>
-              <dte:Impuesto>
-                  <dte:NombreCorto>IVA</dte:NombreCorto>
-                  <dte:CodigoUnidadGravable>1</dte:CodigoUnidadGravable>
-                  <dte:MontoGravable>0.089286</dte:MontoGravable>
-                  <dte:MontoImpuesto>0.010714</dte:MontoImpuesto>
-              </dte:Impuesto>
-          </dte:Impuestos>
-          <dte:Total>0.1</dte:Total>
-      </dte:Item>
+                    ${items}    
                   </dte:Items>
                   <dte:Totales>
                       <dte:TotalImpuestos>
-                          <dte:TotalImpuesto NombreCorto="IVA" TotalMontoImpuesto="0.010714" />
+                          <dte:TotalImpuesto NombreCorto="IVA" TotalMontoImpuesto="${total_impuestos}" />
                       </dte:TotalImpuestos>
-                      <dte:GranTotal>0.1</dte:GranTotal>
+                      <dte:GranTotal>${total}</dte:GranTotal>
                   </dte:Totales>
-              </dte:DatosEmision>              
+              </dte:DatosEmision>
           </dte:DTE>
           <dte:Adenda>
               <dte:AdendaDetail>
@@ -158,17 +170,17 @@ export class MegaPrintService {
       let certificado = JSON.parse(xml);
 
       if (certificado.RegistraDocumentoXMLResponse.tipo_respuesta._text == '0') {
-        return {resultado: true, res: certificado.RegistraDocumentoXMLResponse};
+        return { resultado: true, res: certificado.RegistraDocumentoXMLResponse };
       } else {
-        return {resultado: false, res: certificado.RegistraDocumentoXMLResponse};
+        return { resultado: false, res: certificado.RegistraDocumentoXMLResponse };
       }
 
     } else {
-      return {resultado: false, res: firma.FirmaDocumentoResponse};
+      return { resultado: false, res: firma.FirmaDocumentoResponse };
     }
   }
 
-  async imprimir(token: any, uuid: any) {    
+  async imprimir(token: any, uuid: any) {
     let headers = new HttpHeaders({
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'GET',
@@ -184,11 +196,11 @@ export class MegaPrintService {
 
     let res: any = await this.httpClient.post('/retornarPDF', body, { headers, responseType: 'text' }).toPromise();
     var xml = convert.xml2json(res, { compact: true, spaces: 4 });
-    let pdf = JSON.parse(xml);    
+    let pdf = JSON.parse(xml);
     if (pdf.RetornaPDFResponse.tipo_respuesta._text == '0') {
-      return {resultado: true, res: pdf.RetornaPDFResponse};
+      return { resultado: true, res: pdf.RetornaPDFResponse };
     } else {
-      return {resultado: false, res: pdf.RetornaPDFResponse};
+      return { resultado: false, res: pdf.RetornaPDFResponse };
     }
   }
 

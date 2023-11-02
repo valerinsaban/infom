@@ -109,7 +109,6 @@ export class CobrosComponent {
   }
 
   async calcAmortizacion(p: any, amortizaciones: any) {
-    console.log(p);
     
     let monto_total = p.monto;
     let plazo_meses = parseFloat(p.plazo_meses);
@@ -184,7 +183,7 @@ export class CobrosComponent {
       serie_fel: null,
       numero_fel: null,
       monto: interes_iva,
-      estado: 'VIGENTE',
+      estado: 'Vigente',
     });
 
     let recibo = await this.recibosService.postRecibo({
@@ -193,7 +192,7 @@ export class CobrosComponent {
       nit: p.municipalidad.nit,
       nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
       monto: interes_iva,
-      estado: 'VIGENTE',
+      estado: 'Vigente',
     });
 
     this.alert.alertMax('Transaccion Correcta', 'Amortizaciones Generadas', 'success');

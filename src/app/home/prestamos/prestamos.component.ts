@@ -910,6 +910,8 @@ export class PrestamosComponent implements OnInit {
     this.ordenPagoForm.controls['punto_acta'].setValue(i.punto_acta);
     this.ordenPagoForm.controls['fecha_acta'].setValue(i.fecha_acta);
     this.ordenPagoForm.controls['id_prestamo'].setValue(i.id_prestamo);
+
+    this.orden_pago.fecha = moment(this.orden_pago.fecha).format('d [de] MMMM [de] YYYY')
   }
 
   async getAmortizaciones(i: any, index: number) {
