@@ -174,9 +174,8 @@
                               data-bs-toggle="offcanvas" data-bs-target="#desembolsos">
                               Desembolsos
                             </a>
-                            <a *ngIf="p.estado == 'Aprobado'" class="dropdown-item" (click)="setPrestamo(p, mindex)"
-                              (click)="getDestinosPrestamo()" (click)="getOrdenesPagos()" (click)="limpiar5()" data-bs-toggle="offcanvas"
-                              data-bs-target="#ordenes_pagos">
+                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDestinosPrestamo()"
+                              (click)="getOrdenesPagos()" data-bs-toggle="offcanvas" data-bs-target="#ordenes_pagos">
                               Ordenes de Pago
                             </a>
                             <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item"
@@ -388,7 +387,7 @@
                   <label class="form-label">Programa<span class="text-danger">*</span></label>
                   <select (change)="getProgramasGarantias($event)" formControlName="id_programa" class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
+                    <option *ngFor="let i of programas" [value]="i.id">{{i.siglas}} - {{i.nombre}}</option>
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">
@@ -481,7 +480,7 @@
           <div class="card-body p-0">
             <div class="table-responsive active-projects manage-client style-1">
               <div class="tbl-caption">
-                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{amortizaciones.length}})</h4>
+                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{proyecciones.length}})</h4>
               </div>
               <table id="empoloyees-tbl1" class="table">
                 <thead>
@@ -489,6 +488,7 @@
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Dias</th>
+                    <th style="text-align: right;">Saldo Inicial</th>
                     <th style="text-align: right;">Capital</th>
                     <th style="text-align: right;">Intereses</th>
                     <th style="text-align: right;">IVA</th>
@@ -498,30 +498,19 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let a of amortizaciones; let aindex = index">
-                    <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{a.dias}} dias</td>
-                    <!-- <td style="text-align: right;">
-                      <input class="form-control" type="text" [(ngModel)]="a.capital">
-                    </td>
+                  <tr *ngFor="let p of proyecciones; let aindex = index">
+                    <td>{{p.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{p.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{p.dias}} dias</td>
+                    <th style="text-align: right;">{{p.saldo_inicial | number: '.2-2'}}</th>
                     <td style="text-align: right;">
-                      <input class="form-control" type="text" [(ngModel)]="a.interes">
+                      <input class="form-control text-end" type="number" [(ngModel)]="p.capital"
+                        (input)="updateProyeccion()">
                     </td>
-                    <td style="text-align: right;">
-                      <input class="form-control" type="text" [(ngModel)]="a.iva">
-                    </td>
-                    <td style="text-align: right;">
-                      <input class="form-control" type="text" [(ngModel)]="a.cuota">
-                    </td>
-                    <td style="text-align: right;">
-                      <input class="form-control" type="text" [(ngModel)]="a.saldo">
-                    </td> -->
-                    <th style="text-align: right;">{{a.capital | number: '.2-2'}}</th>
-                    <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
-                    <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
-                    <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
-                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{p.interes | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{p.iva | number: '.2-2'}}</th>
+                    <th style="text-align: right;"><span class="text-primary">{{p.cuota | number: '.2-2'}}</span></th>
+                    <th style="text-align: right;">{{p.saldo_final | number: '.2-2'}}</th>
                     <td><i class="fas fa-check"></i></td>
                   </tr>
                 </tbody>
@@ -529,11 +518,12 @@
                   <tr>
                     <th></th>
                     <th></th>
-                    <th>{{getTotalDias()}} dias</th>
-                    <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalInteres() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalIva() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalCuota() | number: '.2-2'}}</th>
+                    <th>{{getDias()}} dias</th>
+                    <th></th>
+                    <th style="text-align: right;">Q{{getCapital() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getInteres() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getIva() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getCuota() | number: '.2-2'}}</th>
                     <th></th>
                     <th></th>
                   </tr>
@@ -711,7 +701,7 @@
                   <label class="form-label">Programa<span class="text-danger">*</span></label>
                   <select (change)="getProgramasGarantias($event)" formControlName="id_programa" class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
+                    <option *ngFor="let i of programas" [value]="i.id">{{i.siglas}} - {{i.nombre}}</option>
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">
@@ -818,11 +808,12 @@
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
                     <th>Dias</th>
+                    <th style="text-align: right;">Saldo Inicial</th>
                     <th style="text-align: right;">Capital</th>
                     <th style="text-align: right;">Intereses</th>
                     <th style="text-align: right;">IVA</th>
                     <th style="text-align: right;">Cuota</th>
-                    <th style="text-align: right;">Saldo</th>
+                    <th style="text-align: right;">Saldo Final</th>
                     <th style="text-align: right;"></th>
                   </tr>
                 </thead>
@@ -831,11 +822,12 @@
                     <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
                     <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
                     <td>{{a.dias}} dias</td>
+                    <th style="text-align: right;">{{a.saldo_inicial | number: '.2-2'}}</th>
                     <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
                     <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
                     <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
                     <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
-                    <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{a.saldo_final | number: '.2-2'}}</th>
                     <td><i class="fas fa-check"></i></td>
                   </tr>
                 </tbody>
@@ -843,11 +835,12 @@
                   <tr>
                     <th></th>
                     <th></th>
-                    <th>{{getTotalDias()}} dias</th>
-                    <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalInteres() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalIva() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getTotalCuota() | number: '.2-2'}}</th>
+                    <th>{{getDias()}} dias</th>
+                    <th></th>
+                    <th style="text-align: right;">Q{{getCapital() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getInteres() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getIva() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getCuota() | number: '.2-2'}}</th>
                     <th></th>
                     <th></th>
                   </tr>
@@ -1117,6 +1110,12 @@
             <div class="card-body">
               <form [formGroup]="ordenPagoForm" class="finance-hr">
                 <div class="form-group mb-3">
+                  <label class="text-secondary"> No. Desembolso <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="no_desembolso" type="number" class="form-control"
+                    placeholder="No. Desembolso">
+                </div>
+                <div class="form-group mb-3">
                   <label class="text-secondary"> Fecha <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha" type="date" class="form-control">
@@ -1296,11 +1295,12 @@
                       <th>Fecha Inicio</th>
                       <th>Fecha Fin</th>
                       <th>Dias</th>
+                      <th style="text-align: right;">Saldo Inicial</th>
                       <th style="text-align: right;">Capital</th>
                       <th style="text-align: right;">Intereses</th>
                       <th style="text-align: right;">IVA</th>
                       <th style="text-align: right;">Cuota</th>
-                      <th style="text-align: right;">Saldo</th>
+                      <th style="text-align: right;">Saldo Final</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1308,12 +1308,14 @@
                       <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
                       <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
                       <td>{{a.dias}} dias</td>
+                      <td style="text-align: right;">{{a.saldo_inicial | number: '.2-2'}}</td>
                       <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
                       <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
                       <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
-                      <th style="text-align: right;"><span class="text-primary" [ngClass]="{'real': a.id}">{{a.cuota |
-                          number: '.2-2'}}</span></th>
-                      <th style="text-align: right;">{{a.saldo | number: '.2-2'}}</th>
+                      <th style="text-align: right;">
+                        <span class="text-primary" [ngClass]="{'real': a.id}">{{a.cuota | number: '.2-2'}}</span>
+                      </th>
+                      <th style="text-align: right;">{{a.saldo_final | number: '.2-2'}}</th>
                     </tr>
                   </tbody>
                   <tfoot>
@@ -1321,6 +1323,7 @@
                       <th></th>
                       <th></th>
                       <th>{{getTotalDias()}} dias</th>
+                      <th></th>
                       <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
                       <th style="text-align: right;">Q{{getTotalInteres() | number: '.2-2'}}</th>
                       <th style="text-align: right;">Q{{getTotalIva() | number: '.2-2'}}</th>
@@ -1456,7 +1459,7 @@
             <label class="form-label">Programa<span class="text-danger">*</span></label>
             <select [(ngModel)]="filtros.id_programa" [ngModelOptions]="{standalone: true}" class="form-control">
               <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of programas" [value]="i.id">{{i.nombre}}</option>
+              <option *ngFor="let i of programas" [value]="i.id">{{i.siglas}} - {{i.nombre}}</option>
             </select>
           </div>
           <div class="col-xl-6 mb-3">

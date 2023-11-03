@@ -82,7 +82,7 @@ export class PrestamosService {
 
   getProyeccion(monto_total: number, plazo_meses: number, intereses: number, fecha: string, porcentaje_iva: number): Promise<any> {
     let proyeccion: any = [];
-    let saldo_actual = monto_total;
+    let saldo_inicial = monto_total;
     let fecha_i = moment(fecha).format('YYYY-MM-DD');
     let fecha_f = moment(fecha).endOf('month').format('YYYY-MM-DD');
     
@@ -94,14 +94,17 @@ export class PrestamosService {
       }
       let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days', true) + 1;
       let capital = monto_total / plazo_meses;
-      let interes = (saldo_actual * (intereses / 100) / 365) * dias;
+      let interes = (saldo_inicial * (intereses / 100) / 365) * dias;
+      interes = Math.round((interes + Number.EPSILON) * 100) / 100;
       let iva = interes * porcentaje_iva / 100;
+      iva = Math.round((iva + Number.EPSILON) * 100) / 100;
+
       let cuota = capital + interes + iva;
-      let saldo = saldo_actual - capital;
-      saldo_actual = saldo;
+      let saldo_final = saldo_inicial - capital;
+      saldo_inicial = saldo_final;
 
       proyeccion.push({
-        fecha_inicio, fecha_fin, dias, capital, interes, iva, cuota, saldo
+        fecha_inicio, fecha_fin, dias, saldo_inicial, capital, interes, iva, cuota, saldo_final
       });
     }
 

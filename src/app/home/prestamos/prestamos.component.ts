@@ -25,6 +25,7 @@ import { DesembolsosService } from 'src/app/services/desembolsos.service';
 import { ResolucionesService } from 'src/app/services/catalogos/resoluciones.service';
 import { ReporteService } from 'src/app/services/reportes.service';
 import { OrdenesPagosService } from 'src/app/services/ordenes_pagos.service';
+import { ProyeccionesService } from 'src/app/services/proyecciones.service';
 
 declare function numeroALetras(number: any): any;
 
@@ -62,6 +63,8 @@ export class PrestamosComponent implements OnInit {
 
   amortizaciones: any = [];
   amortizacion: any;
+  proyecciones: any = [];
+  proyeccion: any;
   destinos: any = [];
   destino: any = {
     codigo: null
@@ -114,6 +117,7 @@ export class PrestamosComponent implements OnInit {
     private regionalesService: RegionalesService,
     private usuariosService: UsuariosService,
     private amortizacionesService: AmortizacionesService,
+    private proyeccionesService: ProyeccionesService,
     private prestamos_garantiasService: PrestamosGarantiasService,
     private destinosService: DestinosService,
     private destinos_prestamosService: DestinoPrestamosService,
@@ -156,15 +160,16 @@ export class PrestamosComponent implements OnInit {
       fecha_inicio: new FormControl(null, [Validators.required]),
       fecha_fin: new FormControl(null, [Validators.required]),
       dias: new FormControl(null, [Validators.required]),
+      saldo_inicial: new FormControl(null, [Validators.required]),
       capital: new FormControl(null, [Validators.required]),
       interes: new FormControl(null, [Validators.required]),
       iva: new FormControl(null, [Validators.required]),
       cuota: new FormControl(null, [Validators.required]),
-      saldo: new FormControl(null, [Validators.required]),
+      saldo_final: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
     });
     this.destinoPrestamoForm = new FormGroup({
-      descripcion: new FormControl(null, [Validators.required]),
+      descripcion: new FormControl(null),
       monto: new FormControl(null, [Validators.required]),
       id_destino: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
@@ -177,6 +182,7 @@ export class PrestamosComponent implements OnInit {
     });
     this.ordenPagoForm = new FormGroup({
       numero: new FormControl(null),
+      no_desembolso: new FormControl(null, [Validators.required]),
       fecha: new FormControl(null, [Validators.required]),
       monto: new FormControl(null, [Validators.required]),
       no_recibo: new FormControl(null, [Validators.required]),
@@ -423,6 +429,7 @@ export class PrestamosComponent implements OnInit {
     let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamo(this.prestamo.id);
     if (ordenes_pagos) {
       this.ordenes_pagos = ordenes_pagos;
+      this.limpiar5()
     }
   }
 
@@ -504,10 +511,28 @@ export class PrestamosComponent implements OnInit {
     let periodo_gracia = parseFloat(this.prestamoForm.controls['periodo_gracia'].value);
     let fecha = moment(this.prestamoForm.controls['fecha_amortizacion'].value).add(periodo_gracia, 'month').format('YYYY-MM-DD');
 
-    this.amortizaciones = [];
-    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
+    this.proyecciones = [];
+    this.proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
 
     this.filtros.plazo_meses = plazo_meses;
+  }
+
+  async updateProyeccion() {
+    let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
+    let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
+    let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
+
+    let saldo = monto_total;
+
+    for (let i = 0; i < this.proyecciones.length; i++) {
+      let p = this.proyecciones[i];
+      p.saldo_inicial = saldo;
+      p.interes = (saldo * (intereses / 100) / 365) * p.dias;
+      p.iva = p.interes * porcentaje_iva / 100;
+      p.cuota = p.capital + p.interes + p.iva;
+      p.saldo_final = saldo - p.capital;
+      saldo = p.saldo_final;
+    }
   }
 
   get fecha_inicio() {
@@ -767,9 +792,9 @@ export class PrestamosComponent implements OnInit {
   async putPrestamo() {
     let estado = this.prestamoForm.controls['estado'].value;
     if (estado == 'Cancelado') {
-      let saldo = (this.amortizaciones.length ? parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo) : this.prestamo.monto).toFixed(2);
-      if (parseInt(saldo) != 0) {
-        this.alert.alertMax('Transaccion Incorrecta', `Prestamo con Q${saldo} de saldo pendiente`, 'error');
+      let saldo_final = (this.amortizaciones.length ? parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo_final) : this.prestamo.monto).toFixed(2);
+      if (parseInt(saldo_final) != 0) {
+        this.alert.alertMax('Transaccion Incorrecta', `Prestamo con Q${saldo_final} de saldo pendiente`, 'error');
         return;
       }
     }
@@ -903,6 +928,7 @@ export class PrestamosComponent implements OnInit {
     this.orden_pago = i;
 
     this.ordenPagoForm.controls['numero'].setValue(i.numero);
+    this.ordenPagoForm.controls['no_desembolso'].setValue(i.no_desembolso);
     this.ordenPagoForm.controls['fecha'].setValue(i.fecha);
     this.ordenPagoForm.controls['monto'].setValue(i.monto);
     this.ordenPagoForm.controls['no_recibo'].setValue(i.no_recibo);
@@ -937,30 +963,75 @@ export class PrestamosComponent implements OnInit {
     if (fecha_inicio && fecha_fin) {
       let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
       let capital = monto_total / plazo_meses;
-      let saldo_actual = monto_total;
+      let saldo_inicial = monto_total;
 
       if (!this.amortizacion || this.amortizacion.index == 0) {
         capital = monto_total / plazo_meses;
-        saldo_actual = monto_total;
+        saldo_inicial = monto_total;
       } else {
         capital = monto_total / plazo_meses;
         // capital = parseFloat(this.amortizaciones[this.amortizacion.index - 1].capital);
-        saldo_actual = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo);
+        saldo_inicial = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo_final);
       }
 
-      let interes = (saldo_actual * (intereses / 100) / 365) * dias;
+      let interes = (saldo_inicial * (intereses / 100) / 365) * dias;
       let iva = interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
       let cuota = capital + interes + iva;
-      let saldo = saldo_actual - capital;
+      let saldo_final = saldo_inicial - capital;
 
       this.amortizacionForm.controls['dias'].setValue(dias);
+      this.amortizacionForm.controls['saldo_inicial'].setValue(saldo_inicial.toFixed(8));
       this.amortizacionForm.controls['capital'].setValue(capital.toFixed(8));
-      this.amortizacionForm.controls['saldo'].setValue(saldo.toFixed(8));
       this.amortizacionForm.controls['interes'].setValue(interes.toFixed(8))
       this.amortizacionForm.controls['iva'].setValue(iva.toFixed(8))
       this.amortizacionForm.controls['cuota'].setValue(cuota.toFixed(8))
+      this.amortizacionForm.controls['saldo_final'].setValue(saldo_final.toFixed(8));
 
     }
+  }
+
+  getDias() {
+    let total = 0;
+    for (let a = 0; a < this.proyecciones.length; a++) {
+      total += this.proyecciones[a].dias;
+    }
+    return total;
+  }
+
+  getCapital() {
+    let total = 0;
+    for (let a = 0; a < this.proyecciones.length; a++) {
+      total += parseFloat(this.proyecciones[a].capital);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
+  }
+
+  getInteres() {
+    let total = 0;
+    for (let a = 0; a < this.proyecciones.length; a++) {
+      total += parseFloat(this.proyecciones[a].interes);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
+  }
+
+  getIva() {
+    let total = 0;
+    for (let a = 0; a < this.proyecciones.length; a++) {
+      total += parseFloat(this.proyecciones[a].iva);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
+  }
+
+  getCuota() {
+    let total = 0;
+    for (let a = 0; a < this.proyecciones.length; a++) {
+      total += parseFloat(this.proyecciones[a].cuota);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
   }
 
   getTotalDias() {
@@ -1075,7 +1146,7 @@ export class PrestamosComponent implements OnInit {
     }
     return false;
   }
-  
+
   limpiar() {
     this.prestamoForm.reset();
     // this.prestamoForm.controls['no_dictamen'].setValue(1);
@@ -1128,6 +1199,7 @@ export class PrestamosComponent implements OnInit {
 
   limpiar5() {
     this.ordenPagoForm.reset();
+    this.ordenPagoForm.controls['no_desembolso'].setValue(this.ordenes_pagos.length + 1);
     this.ordenPagoForm.controls['id_prestamo'].setValue(this.prestamo.id);
     this.orden_pago = null;
   }
@@ -1191,7 +1263,7 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.stop();
   }
 
-  letras(number: number) {    
+  letras(number: number) {
     return numeroALetras(number);
   }
 

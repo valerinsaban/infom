@@ -11,6 +11,9 @@ import * as moment from 'moment';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { FacturasService } from 'src/app/services/documentos/facturas.service';
 import { RecibosService } from 'src/app/services/documentos/recibos.service';
+import { OrdenesPagosService } from 'src/app/services/ordenes_pagos.service';
+import { FacturasDetallesService } from 'src/app/services/documentos/facturas_detalles.service';
+import { RecibosDetallesService } from 'src/app/services/documentos/recibos_detalles.service';
 
 @Component({
   selector: 'app-cobros',
@@ -25,6 +28,8 @@ export class CobrosComponent {
   cobro: any;
   id_cobro: number = 0;
 
+  amortizaciones: any = [];
+
   cobro_anterior: any;
 
   configuracion: any;
@@ -35,24 +40,28 @@ export class CobrosComponent {
     private cobrosService: CobrosService,
     private prestamosService: PrestamosService,
     private amortizacionesService: AmortizacionesService,
+    private ordenes_pagosService: OrdenesPagosService,
     private facturasService: FacturasService,
+    private factuas_detallesService: FacturasDetallesService,
     private recibosService: RecibosService,
+    private recibos_detallesService: RecibosDetallesService,
     private configuracionesService: ConfiguracionesService
   ) {
     this.cobroForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
-      fecha: new FormControl(null, [Validators.required]),
-      mes: new FormControl(null, [Validators.required]),
+      codigo: new FormControl('NOV-A', [Validators.required]),
+      fecha: new FormControl('2023-12-15', [Validators.required]),
+      mes: new FormControl('2023-11', [Validators.required]),
     });
     this.amortizacionForm = new FormGroup({
       fecha_inicio: new FormControl(null, [Validators.required]),
       fecha_fin: new FormControl(null, [Validators.required]),
       dias: new FormControl(null, [Validators.required]),
+      saldo_inicial: new FormControl(null, [Validators.required]),
       capital: new FormControl(null, [Validators.required]),
       interes: new FormControl(null, [Validators.required]),
       iva: new FormControl(null, [Validators.required]),
       cuota: new FormControl(null, [Validators.required]),
-      saldo: new FormControl(null, [Validators.required]),
+      saldo_final: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
     });
   }
@@ -98,35 +107,58 @@ export class CobrosComponent {
       let prestamos = await this.prestamosService.getPrestamosEstado('Acreditado');
       for (let p = 0; p < prestamos.length; p++) {
         let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(prestamos[p].id);
-        this.calcAmortizacion(prestamos[p], amortizaciones);
+
+        let fecha = this.cobro_anterior.fecha;
+        let cuotas: any = [
+          {
+            fecha_inicio: moment(fecha).startOf('month').format('YYYY-MM-DD'),
+            fecha_fin: moment(fecha).format('YYYY-MM-DD')
+          },
+          {
+            fecha_inicio: moment(fecha).add(1, 'day').format('YYYY-MM-DD'),
+            fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
+          }
+        ];
+
+        for (let c = 0; c < cuotas.length; c++) {
+          let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamoFecha(prestamos[p].id, cuotas[c].fecha_inicio, cuotas[c].fecha_fin);          
+          if (ordenes_pagos.length) {
+            for (let o = 0; o < ordenes_pagos.length; o++) {
+              if (ordenes_pagos[o].no_desembolso == 1) {
+                cuotas[0] = {
+                  fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
+                  fecha_fin: moment(fecha).format('YYYY-MM-DD')
+                }
+              } else {
+                cuotas.push({
+                  fecha_inicio: moment(cuotas[c].fecha_inicio).startOf('month').format('YYYY-MM-DD'),
+                  fecha_fin: moment(ordenes_pagos[o].fecha).subtract(1, 'day').format('YYYY-MM-DD')
+                });
+                cuotas.push({
+                  fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
+                  fecha_fin: moment(cuotas[c].fecha_fin).format('YYYY-MM-DD')
+                });
+              }
+            }
+          }
+        }
+
+        await this.calcAmortizacion(prestamos[p], amortizaciones, cuotas);
       }
 
       await this.getCobros();
+      this.limpiar();
       this.alert.alertMax('Transaccion Correcta', cobro.mensaje, 'success');
-      this.cobroForm.reset();
     }
     this.ngxService.stop();
   }
 
-  async calcAmortizacion(p: any, amortizaciones: any) {
+  async calcAmortizacion(p: any, amortizaciones: any, cuotas: any) {
     
     let monto_total = p.monto;
     let plazo_meses = parseFloat(p.plazo_meses);
     let intereses = parseFloat(p.intereses);
     let capital = monto_total / plazo_meses;
-
-    let fecha = this.cobro_anterior.fecha;
-
-    let cuotas: any = [
-      {
-        fecha_inicio: moment(fecha).startOf('month').format('YYYY-MM-DD'),
-        fecha_fin: moment(fecha).format('YYYY-MM-DD')
-      },
-      {
-        fecha_inicio: moment(fecha).add(1, 'day').format('YYYY-MM-DD'),
-        fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
-      }
-    ]
 
     let interes_iva = 0;
 
@@ -136,30 +168,30 @@ export class CobrosComponent {
 
       if (fecha_inicio && fecha_fin) {
         let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
-        let saldo_actual = monto_total;
+        cuotas[i].saldo_inicial = monto_total;
 
         if (amortizaciones.length == 0) {
           capital = monto_total / plazo_meses;
-          saldo_actual = monto_total;
+          cuotas[i].saldo_inicial = monto_total;
         } else {
           capital = monto_total / plazo_meses;
-          saldo_actual = parseFloat(amortizaciones[amortizaciones.length - 1].saldo);
+          cuotas[i].saldo_inicial = parseFloat(amortizaciones[amortizaciones.length - 1].saldo_final);
         }
 
         cuotas[i].dias = dias;
         cuotas[i].capital = capital
-        i == 1 ? cuotas[i].capital = cuotas[0].saldo : null;
+        i == 1 ? cuotas[i].capital = cuotas[0].saldo_final : null;
 
-        cuotas[i].interes = (saldo_actual * (intereses / 100) / 365) * dias;
-        i == 1 ? cuotas[i].interes = (cuotas[0].saldo * (intereses / 100) / 365) * dias : null;
+        cuotas[i].interes = (cuotas[i].saldo_inicial * (intereses / 100) / 365) * dias;
+        i == 1 ? cuotas[i].interes = (cuotas[0].saldo_final * (intereses / 100) / 365) * dias : null;
 
         cuotas[i].iva = cuotas[i].interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
 
         cuotas[i].cuota = cuotas[i].capital + cuotas[i].interes + cuotas[i].iva;
         i == 1 ? cuotas[i].cuota = cuotas[i].interes + cuotas[i].iva : null;
 
-        cuotas[i].saldo = saldo_actual - cuotas[i].capital;
-        i == 1 ? cuotas[i].saldo = cuotas[0].saldo : null;
+        cuotas[i].saldo_final = cuotas[i].saldo_inicial - cuotas[i].capital;
+        i == 1 ? cuotas[i].saldo_final = cuotas[0].saldo_final : null;
 
         i == 1 ? cuotas[i].capital = 0 : null;
 
@@ -174,38 +206,33 @@ export class CobrosComponent {
 
     }
         
-    let factura = await this.facturasService.postFactura({
-      numero: p.id,
-      fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
-      nit: p.municipalidad.nit,
-      nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
-      autorizacion: null,
-      serie_fel: null,
-      numero_fel: null,
-      monto: interes_iva,
-      estado: 'Vigente',
-    });
+    // let factura = await this.facturasService.postFactura({
+    //   numero: p.id,
+    //   fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+    //   nit: p.municipalidad.nit,
+    //   nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
+    //   autorizacion: null,
+    //   serie_fel: null,
+    //   numero_fel: null,
+    //   monto: interes_iva,
+    //   estado: 'Vigente',
+    // });
 
-    let recibo = await this.recibosService.postRecibo({
-      numero: p.id,
-      fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
-      nit: p.municipalidad.nit,
-      nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
-      monto: interes_iva,
-      estado: 'Vigente',
-    });
+    // let factura_detalle = await this.factuas_detallesService.postFacturaDetalle({
+    //   cantidad: 1,
+    //   tipo: 'S',
+    //   descripcion: ''
+    // })
 
-    this.alert.alertMax('Transaccion Correcta', 'Amortizaciones Generadas', 'success');
+    // let recibo = await this.recibosService.postRecibo({
+    //   numero: p.id,
+    //   fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+    //   nit: p.municipalidad.nit,
+    //   nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
+    //   monto: interes_iva,
+    //   estado: 'Vigente',
+    // });
 
-  }
-
-  async postAmortizacion() {
-    this.ngxService.start();
-    let amortizacion = await this.amortizacionesService.postAmortizacion(this.amortizacionForm.value);
-    if (amortizacion.resultado) {
-      this.alert.alertMax('Transaccion Correcta', amortizacion.mensaje, 'success');
-    }
-    this.ngxService.stop();
   }
 
   async putCobro() {
@@ -261,7 +288,12 @@ export class CobrosComponent {
     this.cobroForm.controls['mes'].setValue(i.mes);
   }
 
-  cancelarEdicion() {
+  async getAmortizaciones() {
+    let amortizaciones = await this.amortizacionesService.getAmortizacionesCobro(this.cobro.id);
+    this.amortizaciones = amortizaciones;
+  }
+
+  limpiar() {
     this.cobroForm.reset();
     this.cobro = null;
   }

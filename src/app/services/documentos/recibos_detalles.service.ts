@@ -4,42 +4,33 @@ import { RootService } from '../root.service';
 @Injectable({
   providedIn: 'root'
 })
-export class FacturasDetallesService {
+export class RecibosDetallesService {
 
   constructor(private rootService: RootService) {
   }
 
-  route = '/facturas_detalles';
+  route = '/recibos_detalles';
 
-  getFacturasDetalles(): Promise<any> {
+  getRecibosDetalles(): Promise<any> {
     return this.rootService.get(this.route);
   }
 
-  getFacturaDetalle(id: number): Promise<any> {
+  getReciboDetalle(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }
 
-  async postFacturaDetalle(data: any): Promise<any> {
-    let factura = await this.rootService.post(this.route, data);
-    if (factura.resultado) {
-      await this.rootService.bitacora('factura', 'agregar', `creó la factura "${factura.data.codigo}"`, factura.data);
-    }
-    return factura;
+  async postReciboDetalle(data: any): Promise<any> {
+    let recibo = await this.rootService.post(this.route, data);
+    return recibo;
   }
 
-  async putFacturaDetalle(id: number, data: any): Promise<any> {
-    let factura = await this.rootService.put(this.route + '/' + id, data);
-    if (factura.resultado) {
-      await this.rootService.bitacora('factura', 'editar', `editó la factura "${factura.data.codigo}"`, factura.data);
-    }
-    return factura;
+  async putReciboDetalle(id: number, data: any): Promise<any> {
+    let recibo = await this.rootService.put(this.route + '/' + id, data);
+    return recibo;
   }
 
-  async deleteFacturaDetalle(id: number): Promise<any> {
-    let factura = await this.rootService.delete(this.route + '/' + id);
-    if (factura.resultado) {
-      await this.rootService.bitacora('factura', 'eliminar', `eliminó la factura "${factura.data.codigo}"`, factura.data);
-    }
-    return factura;
+  async deleteReciboDetalle(id: number): Promise<any> {
+    let recibo = await this.rootService.delete(this.route + '/' + id);
+    return recibo;
   }
 }

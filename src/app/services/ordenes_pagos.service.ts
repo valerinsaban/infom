@@ -27,6 +27,10 @@ export class OrdenesPagosService {
     return this.rootService.get(this.route + '/prestamo/' + id);
   }
 
+  getOrdenesPagosPrestamoFecha(id: number, fecha_inicio: any, fecha_fin: any): Promise<any> {
+    return this.rootService.get(this.route + '/prestamo/' + id + '/fecha/' + fecha_inicio + '/' + fecha_fin);
+  }
+
   async postOrdenPago(data: any): Promise<any> {
     let orden_pago = await this.rootService.post(this.route, data);
     if (orden_pago.resultado) {
