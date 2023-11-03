@@ -103,7 +103,7 @@
             </div>
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
-                <table id="empoloyeestbl2" class="table" style="margin-bottom: 200px;">
+                <table id="empoloyeestbl2" class="table" style="margin-bottom: 250px;">
                   <thead>
                     <tr>
                       <th>Municipalidad</th>
@@ -224,7 +224,7 @@
   </div>
   <div class="offcanvas-body">
     <div class="row">
-      <div class="col-xl-7">
+      <div class="col-xl-8">
         <div class="card">
           <div class="card-body">
             <form [formGroup]="prestamoForm">
@@ -315,32 +315,6 @@
               </div>
               <hr>
               <div class="row" [hidden]="!disp">
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">No. Oficio A.J.
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_oficio_aj" type="number" class="form-control"
-                    placeholder="NO. Oficio A.J.">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Fecha Oficio A.J.
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_oficio_aj" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
-                  <label class="form-label">No. Oficio GER
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="no_oficio_ger" type="number" class="form-control"
-                    placeholder="NO. Oficio A.J.">
-                </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
-                  <label class="form-label">Fecha Oficio GER
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_oficio_ger" type="date" class="form-control">
-                </div>
                 <div class="col-xl-9 mb-3">
                   <label class="form-label">Destino Prestamo
                     <span class="text-danger">*</span>
@@ -362,13 +336,78 @@
                   data-bs-dismiss="offcanvas" type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Guardar
                 </button>
+                <button class="btn btn-success light me-1" (click)="getDisponibilidad(true)" type="button">
+                  <i class="fa-duotone fa-floppy-disk"></i> Validar
+                </button>
                 <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-xl-12 mb-3">
+                  <div class="table-responsive active-projects manage-client style-1">
+                    <div class="tbl-caption">
+                      <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{proyecciones.length}})</h4>
+                    </div>
+                    <table id="empoloyees-tbl1" class="table">
+                      <thead>
+                        <tr>
+                          <th>Fecha Inicio</th>
+                          <th>Fecha Fin</th>
+                          <th>Dias</th>
+                          <th style="text-align: right;">Saldo Inicial</th>
+                          <th style="text-align: right; width: 130px">Capital</th>
+                          <th style="text-align: right;">Intereses</th>
+                          <th style="text-align: right;">IVA</th>
+                          <th style="text-align: right;">Cuota</th>
+                          <th style="text-align: right;">Saldo</th>
+                          <th style="text-align: right;">Disponible</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let p of proyecciones; let aindex = index">
+                          <td>{{p.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                          <td>{{p.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                          <td>{{p.dias}} dias</td>
+                          <th style="text-align: right;">{{p.saldo_inicial | number: '.2-2'}}</th>
+                          <td style="text-align: right;">
+                            <input class="form-control text-end" [(ngModel)]="p.capital"
+                              [ngModelOptions]="{standalone: true}" (input)="updateProyeccion()">
+                          </td>
+                          <th style="text-align: right;">{{p.interes | number: '.2-2'}}</th>
+                          <th style="text-align: right;">{{p.iva | number: '.2-2'}}</th>
+                          <th style="text-align: right;"><span class="text-primary">{{p.cuota | number: '.2-2'}}</span>
+                          </th>
+                          <th style="text-align: right;">{{p.saldo_final | number: '.2-2'}}</th>
+                          <td>
+                            <i class="fas fa-check"></i> {{p.disponible | number: '.2-2'}}
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th></th>
+                          <th></th>
+                          <th>{{getDias()}} dias</th>
+                          <th></th>
+                          <th style="text-align: right;"
+                            [ngClass]="{'cuadrado': getCapital() == prestamoForm.value.monto}">Q{{getCapital() | number:
+                            '.2-2'}}</th>
+                          <th style="text-align: right;">Q{{getInteres() | number: '.2-2'}}</th>
+                          <th style="text-align: right;">Q{{getIva() | number: '.2-2'}}</th>
+                          <th style="text-align: right;">Q{{getCuota() | number: '.2-2'}}</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
         </div>
       </div>
-      <div class="col-xl-5">
+      <div class="col-xl-4">
         <div class="card">
           <div class="card-body">
             <form [formGroup]="prestamoForm">
@@ -470,66 +509,6 @@
                 </div>
               </div>
             </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body p-0">
-            <div class="table-responsive active-projects manage-client style-1">
-              <div class="tbl-caption">
-                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{proyecciones.length}})</h4>
-              </div>
-              <table id="empoloyees-tbl1" class="table">
-                <thead>
-                  <tr>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Dias</th>
-                    <th style="text-align: right;">Saldo Inicial</th>
-                    <th style="text-align: right;">Capital</th>
-                    <th style="text-align: right;">Intereses</th>
-                    <th style="text-align: right;">IVA</th>
-                    <th style="text-align: right;">Cuota</th>
-                    <th style="text-align: right;">Saldo</th>
-                    <th style="text-align: right;"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let p of proyecciones; let aindex = index">
-                    <td>{{p.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{p.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{p.dias}} dias</td>
-                    <th style="text-align: right;">{{p.saldo_inicial | number: '.2-2'}}</th>
-                    <td style="text-align: right;">
-                      <input class="form-control text-end" type="number" [(ngModel)]="p.capital"
-                        (input)="updateProyeccion()">
-                    </td>
-                    <th style="text-align: right;">{{p.interes | number: '.2-2'}}</th>
-                    <th style="text-align: right;">{{p.iva | number: '.2-2'}}</th>
-                    <th style="text-align: right;"><span class="text-primary">{{p.cuota | number: '.2-2'}}</span></th>
-                    <th style="text-align: right;">{{p.saldo_final | number: '.2-2'}}</th>
-                    <td><i class="fas fa-check"></i></td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th></th>
-                    <th></th>
-                    <th>{{getDias()}} dias</th>
-                    <th></th>
-                    <th style="text-align: right;">Q{{getCapital() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getInteres() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getIva() | number: '.2-2'}}</th>
-                    <th style="text-align: right;">Q{{getCuota() | number: '.2-2'}}</th>
-                    <th></th>
-                    <th></th>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
           </div>
         </div>
       </div>
@@ -1557,6 +1536,184 @@
 </div>
 
 <div *ngIf="prestamo" hidden>
+
+  <div id="disponibilidad" style="color: black; font-size: 8px;">
+
+    <ng-container *ngFor="let g of garantias">
+
+      <table style="width: 100%">
+        <thead>
+          <tr>
+            <td>
+              <h6 style="text-align: center; text-decoration: underline; font-weight: 700;">
+                {{g.nombre}} ({{g.porcentaje}}%)
+              </h6>
+            </td>
+          </tr>
+        </thead>
+      </table>
+
+      <table style="width: 100%">
+        <thead>
+          <tr>
+            <td style="width: 100px;"></td>
+            <td></td>
+            <td *ngFor="let d of disponibilidad" style="text-align: right; border-bottom: solid">
+              {{d.mes | date: 'MMM YYYY':'UTC'}}
+            </td>
+            <td style="text-align: right; font-weight: 700; border-bottom: solid">
+              Disponible <br> {{filtros.plazo_meses}} meses
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: right; text-transform: uppercase"></td>
+            <td style="text-align: center;">A</td>
+            <td *ngFor="let d of disponibilidad" style="text-align: right;">
+              {{g.aporte | number: '.2-2'}}
+            </td>
+            <td style="text-align: right;">
+              {{getTotalAportes(g.aporte) | number: '.2-2'}}
+            </td>
+          </tr>
+          <ng-container *ngFor="let p of g.prestamos">
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> C </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> I </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+        <tbody>
+          <tr>
+            <th style="text-align: right; width: 100px;">
+              Disponible
+            </th>
+            <th></th>
+            <th *ngFor="let d of disponibilidad" style="text-align: right; border-top: solid; border-bottom: solid;">
+              {{getMontoDispTotal(d.mes, g.prestamos, g.aporte) | number: '.2-2'}}
+            </th>
+            <th style="text-align: right; border-top: solid; border-bottom: solid;">
+              {{getTotalMontoDispTotal(g.prestamos, g.aporte) | number: '.2-2'}}
+            </th>
+          </tr>
+          <tr>
+            <th>
+              <span style="color: white;">.</span>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <table style="width: 100%">
+      <thead>
+        <tr>
+          <td>
+            <h6 style="text-align: center; text-decoration: underline; font-weight: 700;">
+              GARANTIAS UNIFICADAS
+            </h6>
+          </td>
+        </tr>
+      </thead>
+    </table>
+
+    <table style="width: 100%">
+      <thead>
+        <tr>
+          <td style="width: 100px;"></td>
+          <td></td>
+          <td *ngFor="let d of disponibilidad" style="text-align: right; border-bottom: solid">
+            {{d.mes | date: 'MMM YYYY':'UTC'}}
+          </td>
+          <td style="text-align: right; font-weight: 700; border-bottom: solid">
+            Disponible <br> {{filtros.plazo_meses}} meses
+          </td>
+          <td></td>
+        </tr>
+      </thead>
+      <ng-container *ngFor="let g of garantias">
+        <tbody>
+          <tr>
+            <td style="text-align: right; text-transform: uppercase;"></td>
+            <td style="text-align: center;"> A </td>
+            <td *ngFor="let d of disponibilidad" style="text-align: right;">
+              {{g.aporte | number: '.2-2'}}
+            </td>
+            <td style="text-align: right;">
+              {{getTotalAportes(g.aporte) | number: '.2-2'}}
+            </td>
+          </tr>
+          <ng-container *ngFor="let p of g.prestamos">
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> C </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> I </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </ng-container>
+      <tbody>
+        <tr>
+          <th style="text-align: right; width: 100px;">
+            Disponible
+          </th>
+          <th></th>
+          <th *ngFor="let d of disponibilidad" style="text-align: right; border-top: solid; border-bottom: solid;">
+            {{getMontoDispTotalDisponible(d.mes) | number: '.2-2'}}
+          </th>
+          <th style="text-align: right; border-top: solid; border-bottom: solid;">
+            {{getTotalMontoDispTotalDisponible() | number: '.2-2'}}
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <span style="color: white;">.</span>
+          </th>
+        <tr>
+      </tbody>
+    </table>
+
+  </div>
 
   <div id="pr-hoja-tecnica" style="color: black">
     <div style="margin: 0px 50px">

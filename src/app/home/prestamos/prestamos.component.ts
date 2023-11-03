@@ -26,6 +26,7 @@ import { ResolucionesService } from 'src/app/services/catalogos/resoluciones.ser
 import { ReporteService } from 'src/app/services/reportes.service';
 import { OrdenesPagosService } from 'src/app/services/ordenes_pagos.service';
 import { ProyeccionesService } from 'src/app/services/proyecciones.service';
+import { AportesService } from 'src/app/services/aportes.service';
 
 declare function numeroALetras(number: any): any;
 
@@ -61,6 +62,7 @@ export class PrestamosComponent implements OnInit {
   municipios: any = [];
   resoluciones: any = [];
 
+  aportes: any = [];
   amortizaciones: any = [];
   amortizacion: any;
   proyecciones: any = [];
@@ -124,7 +126,8 @@ export class PrestamosComponent implements OnInit {
     private desembolsosService: DesembolsosService,
     private ordenes_pagosService: OrdenesPagosService,
     private resolucionesService: ResolucionesService,
-    private reportesService: ReporteService
+    private reportesService: ReporteService,
+    private aportesService: AportesService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -201,16 +204,16 @@ export class PrestamosComponent implements OnInit {
     AppComponent.loadScript('assets/js/range.js');
     this.ngxService.start();
     await this.getDepartamentos();
-    await this.getFuncionarios();
-    await this.getRegionales();
-    await this.getTiposPrestamos();
-    await this.getProgramas();
-    await this.getGarantias();
     await this.getUsuarios();
-    this.getDestinos();
     await this.getResoluciones();
     await this.getPrestamos();
     await this.getCountPrestamos();
+    this.getFuncionarios();
+    this.getRegionales();
+    this.getTiposPrestamos();
+    this.getProgramas();
+    this.getGarantias();
+    this.getDestinos();
   }
 
   get configuracion() {
@@ -504,6 +507,8 @@ export class PrestamosComponent implements OnInit {
   }
 
   async getProyeccion2() {
+    this.disp = null;
+    
     let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
     let plazo_meses = parseFloat(this.prestamoForm.controls['plazo_meses'].value);
@@ -518,6 +523,7 @@ export class PrestamosComponent implements OnInit {
   }
 
   async updateProyeccion() {
+    this.disp = null;
     let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
     let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
@@ -1220,6 +1226,7 @@ export class PrestamosComponent implements OnInit {
 
   recibirDisp(event: any) {
     this.disponibilidad = event;
+    
     for (let c = 0; c < this.programas_garantias.length; c++) {
       let monto = this.programas_garantias[c].monto;
 
@@ -1265,6 +1272,218 @@ export class PrestamosComponent implements OnInit {
 
   letras(number: number) {
     return numeroALetras(number);
+  }
+
+
+  print(rep: any) {
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+  }
+
+  async catalogo(rep: any, slug: any, print: any) {
+    let contenido: any = document.getElementById(slug);
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    if (print) {
+      this.print(rep)
+    }
+  }
+
+  // Disponibilidad
+
+  public async getDisponibilidad(print: boolean = true) {
+    this.ngxService.start();
+
+    this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+    if (this.municipalidad) {
+      let aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+      this.garantias = await this.garantiasService.getGarantias();
+      let prestamos = await this.prestamosService.getPrestamosEstadoMunicipalidad('Acreditado', this.municipalidad.id);
+      for (let i = 0; i < prestamos.length; i++) {
+        let prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(prestamos[i].id);
+        prestamos[i].prestamos_garantias = prestamos_garantias
+      }
+
+      this.disponibilidad = [];
+      for (let i = 0; i < this.filtros.plazo_meses; i++) {
+        this.disponibilidad.push({
+          mes: moment(aporte.mes).add(i + 1, 'month').format('YYYY-MM'),
+        });
+      }
+
+      for (let g = 0; g < this.garantias.length; g++) {
+        this.garantias[g].prestamos = [];
+        if (this.garantias[g].id == 1) {
+          this.garantias[g].aporte = aporte.constitucional * this.garantias[g].porcentaje / 100;
+          this.garantias[g].aporte_total = aporte.constitucional;
+        }
+        if (this.garantias[g].id == 2) {
+          this.garantias[g].aporte = aporte.iva_paz * this.garantias[g].porcentaje / 100;
+          this.garantias[g].aporte_total = aporte.iva_paz
+        }
+        for (let p = 0; p < prestamos.length; p++) {
+          for (let pg = 0; pg < prestamos[p].prestamos_garantias.length; pg++) {
+            if (prestamos[p].prestamos_garantias[pg].id_garantia == this.garantias[g].id) {
+
+              let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
+              let monto_total = parseFloat(prestamos[p].prestamos_garantias[pg].monto);
+              let plazo_meses = parseFloat(prestamos[p].plazo_meses);
+              let intereses = parseFloat(prestamos[p].intereses);
+              let fecha = prestamos[p].fecha_amortizacion;
+
+              let proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
+              
+              this.garantias[g].prestamos.push({
+                no_prestamo: prestamos[p].no_prestamo,
+                monto: prestamos[p].prestamos_garantias[pg].monto,
+                proyecciones: proyecciones
+              })
+            }
+          }
+        }
+      }
+
+      let rep: any = await this.reportesService.get('disponibilidad');
+      rep = rep.replaceAll("{{codigo_municipalidad}}", `${this.municipalidad.departamento.codigo}.${this.municipalidad.municipio.codigo}`);
+      rep = rep.replaceAll("{{constitucional}}", parseFloat(aporte.constitucional).toLocaleString('en-US'));
+      rep = rep.replaceAll("{{iva_paz}}", parseFloat(aporte.iva_paz).toLocaleString('en-US'));
+      rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
+
+      this.catalogo(rep, 'disponibilidad', print)
+
+    } else {
+      this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
+    }
+    this.ngxService.stop();
+  }
+
+  getMontoDisp(mes: string, proyecciones: any, type: string) {
+    for (let a = 0; a < proyecciones.length; a++) {
+      let mes_inicio = moment(proyecciones[a].fecha_inicio).format('YYYY-MM');
+      let mes_fin = moment(proyecciones[a].fecha_fin).format('YYYY-MM');
+      if (mes_fin == mes) {
+        if (type == 'cuota') {
+          return proyecciones[a].cuota;
+        }
+        if (type == 'capital') {
+          return proyecciones[a].capital;
+        }
+        if (type == 'interes') {
+          return proyecciones[a].interes + proyecciones[a].iva;
+        }
+      }
+    }
+    return 0;
+  }
+
+  getMontoDispTotal(mes: string, prestamos: any, aporte: number) {
+    let total = aporte;
+
+    for (let p = 0; p < prestamos.length; p++) {
+      console.log(prestamos[p].proyecciones);
+
+      for (let a = 0; a < prestamos[p].proyecciones.length; a++) {
+        let mes_inicio = moment(prestamos[p].proyecciones[a].fecha_inicio).format('YYYY-MM');
+        let mes_fin = moment(prestamos[p].proyecciones[a].fecha_fin).format('YYYY-MM');
+        if (mes_fin == mes) {
+          total -= prestamos[p].proyecciones[a].cuota;
+        }
+      }
+    }
+    return total;
+  }
+
+  getMontoDispTotalAporte() {
+    let total = 0;
+    for (let g = 0; g < this.garantias.length; g++) {
+      total += this.garantias[g].aporte;
+    }
+    return total;
+  }
+
+  getMontoDispTotalDisponible(mes: string) {
+    let total = 0;
+    for (let g = 0; g < this.garantias.length; g++) {
+      total += this.getMontoDispTotal(mes, this.garantias[g].prestamos, this.garantias[g].aporte)
+    }
+    return total;
+  }
+
+  getTotalAportes(aporte: number) {
+    let total = 0;
+    for (let d = 0; d < this.disponibilidad.length; d++) {
+      let tot = aporte;
+      total += Math.round((tot + Number.EPSILON) * 100) / 100;
+    }
+    return total;
+  }
+
+  getTotalMontoDisp(proyecciones: any, type: string) {
+    let total = 0;
+    for (let d = 0; d < this.disponibilidad.length; d++) {
+      let tot = this.getMontoDisp(this.disponibilidad[d].mes, proyecciones, type);
+      total += Math.round((tot + Number.EPSILON) * 100) / 100;
+    }
+    return total;
+  }
+
+  getTotalMontoDispTotal(prestamos: any, aporte: number) {
+    let total = 0;
+    for (let d = 0; d < this.disponibilidad.length; d++) {
+      let tot = this.getMontoDispTotal(this.disponibilidad[d].mes, prestamos, aporte);
+      total += Math.round((tot + Number.EPSILON) * 100) / 100;
+    }
+    return total;
+  }
+
+  getTotalMontoDispTotalAporte() {
+    let total = 0;
+    for (let d = 0; d < this.disponibilidad.length; d++) {
+      let tot = this.getMontoDispTotalAporte();
+      total += Math.round((tot + Number.EPSILON) * 100) / 100;
+    }
+    return total;
+  }
+
+  getTotalMontoDispTotalDisponible() {
+    let total = 0;
+    for (let d = 0; d < this.disponibilidad.length; d++) {
+      let tot = this.getMontoDispTotalDisponible(this.disponibilidad[d].mes);
+      total += Math.round((tot + Number.EPSILON) * 100) / 100;
+    }
+    return total;
+  }
+
+  getTotalConstitucional(mes: string) {
+    let total = 0;
+    for (let a = 0; a < this.aportes.length; a++) {
+      if (this.aportes[a].mes == mes) {
+        for (let d = 0; d < this.aportes[a].data.length; d++) {
+          let tot = parseFloat(this.aportes[a].data[d].constitucional);
+          total += Math.round((tot + Number.EPSILON) * 100) / 100;
+        }
+      }
+    }
+    return total;
+  }
+
+  getTotalIvaPaz(mes: string) {
+    let total = 0;
+    for (let a = 0; a < this.aportes.length; a++) {
+      if (this.aportes[a].mes == mes) {
+        for (let d = 0; d < this.aportes[a].data.length; d++) {
+          let tot = parseFloat(this.aportes[a].data[d].iva_paz);
+          total += Math.round((tot + Number.EPSILON) * 100) / 100;
+        }
+      }
+    }
+    return total;
   }
 
 }
