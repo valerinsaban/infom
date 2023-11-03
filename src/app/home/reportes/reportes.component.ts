@@ -142,6 +142,8 @@ export class ReportesComponent {
       { slug: 'confirmacion-saldos', nombre: 'Confirmacion de Saldos', filtros: [] },
       { slug: 'asignaciones', nombre: 'Reporte de asignaciones, cobros y disponibilidad', filtros: [] },
       { slug: 'cur', nombre: 'Auxiliar para generacion de CUR de Ingresos', filtros: [] },
+      { slug: 'estados-de-cuenta', nombre: 'Estados de Cuenta', filtros: ['fecha'] },
+      { slug: 'balance-general', nombre: 'Balance General', filtros: ['fecha'] }
     ];
   }
 
@@ -295,6 +297,12 @@ export class ReportesComponent {
 
     if (this.slug_reporte == 'cur') {
       await this.reporteCUR(this.slug_reporte, print);
+    }
+    if (this.slug_reporte == 'estados-de-cuenta') {
+      await this.reporteEstadosDeCuenta(this.slug_reporte, print);
+    }
+    if (this.slug_reporte == 'balance-general') {
+      await this.reporteBalanceGeneral(this.slug_reporte, print);
     }
   }
 
@@ -695,6 +703,25 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
+  public async reporteEstadosDeCuenta(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD MMMM YYYY'));
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+  public async reporteBalanceGeneral(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD [de] MMMM [de] YYYY'));
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
   // Funciones
 
   getMontoDisp(mes: string, proyecciones: any, type: string) {
@@ -844,10 +871,7 @@ export class ReportesComponent {
     this.filtros = {
       codigo_departamento: null,
       codigo_municipio: null,
-      plazo_meses: null,
-      mes: null,
-      mes_inicio: null,
-      mes_fin: null
+      plazo_meses: null
     }
   }
 
