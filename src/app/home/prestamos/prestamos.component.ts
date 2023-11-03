@@ -102,6 +102,7 @@ export class PrestamosComponent implements OnInit {
   }
 
   disponibilidad: any;
+  totales_disp: any;
   disp: any;
 
   constructor(
@@ -206,14 +207,14 @@ export class PrestamosComponent implements OnInit {
     await this.getDepartamentos();
     await this.getUsuarios();
     await this.getResoluciones();
+    await this.getFuncionarios();
+    await this.getRegionales();
+    await this.getTiposPrestamos();
+    await this.getProgramas();
+    await this.getGarantias();
+    await this.getDestinos();
     await this.getPrestamos();
     await this.getCountPrestamos();
-    this.getFuncionarios();
-    this.getRegionales();
-    this.getTiposPrestamos();
-    this.getProgramas();
-    this.getGarantias();
-    this.getDestinos();
   }
 
   get configuracion() {
@@ -535,8 +536,8 @@ export class PrestamosComponent implements OnInit {
       p.saldo_inicial = saldo;
       p.interes = (saldo * (intereses / 100) / 365) * p.dias;
       p.iva = p.interes * porcentaje_iva / 100;
-      p.cuota = p.capital + p.interes + p.iva;
-      p.saldo_final = saldo - p.capital;
+      p.cuota = parseFloat(p.capital) + p.interes + p.iva;
+      p.saldo_final = saldo - parseFloat(p.capital);
       saldo = p.saldo_final;
     }
   }
@@ -787,6 +788,11 @@ export class PrestamosComponent implements OnInit {
         }
       }
 
+      for (let p = 0; p < this.proyecciones.length; p++) {
+        this.proyecciones[p].id_prestamo = prestamo.data.id;
+        await this.proyeccionesService.postProyeccion(this.proyecciones[p])
+      }
+
       await this.getPrestamos();
       await this.getCountPrestamos();
       this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
@@ -899,12 +905,12 @@ export class PrestamosComponent implements OnInit {
     this.ordenPagoForm.controls['id_prestamo'].setValue(i.id);
 
     this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
+    this.proyecciones = await this.proyeccionesService.getProyeccionesPrestamo(i.id)
 
     this.municipalidad = i.municipalidad;
     this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
     this.filtros.codigo_municipio = i.municipalidad.municipio.codigo;
 
-    await this.getProyeccion();
     this.calcAmortizacion();
   }
 
@@ -1274,6 +1280,9 @@ export class PrestamosComponent implements OnInit {
     return numeroALetras(number);
   }
 
+  formatoFecha(date: string, format: string) {
+    return moment(date).format(format)
+  }
 
   print(rep: any) {
     let popupWin: any = window.open("", "_blank");
@@ -1282,27 +1291,24 @@ export class PrestamosComponent implements OnInit {
     popupWin.document.close();
   }
 
-  async catalogo(rep: any, slug: any, print: any) {
-    let contenido: any = document.getElementById(slug);
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    if (print) {
-      this.print(rep)
-    }
-  }
-
   // Disponibilidad
 
   public async getDisponibilidad(print: boolean = true) {
     this.ngxService.start();
 
+    this.totales_disp = {
+      constitucional: 0,
+      iva_paz: 0,
+      total: 0
+    }
+
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
     if (this.municipalidad) {
-      let aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+      let mes = moment(this.prestamoForm.controls['fecha_amortizacion'].value).format('YYYY-MM')
+      let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.filtros.codigo_departamento, this.filtros.codigo_municipio, mes)      
+      if (!aporte) {
+        aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);        
+      }
       this.garantias = await this.garantiasService.getGarantias();
       let prestamos = await this.prestamosService.getPrestamosEstadoMunicipalidad('Acreditado', this.municipalidad.id);
       for (let i = 0; i < prestamos.length; i++) {
@@ -1313,20 +1319,22 @@ export class PrestamosComponent implements OnInit {
       this.disponibilidad = [];
       for (let i = 0; i < this.filtros.plazo_meses; i++) {
         this.disponibilidad.push({
-          mes: moment(aporte.mes).add(i + 1, 'month').format('YYYY-MM'),
+          mes: moment(aporte.mes).add(i, 'month').format('YYYY-MM'),
         });
       }
 
       for (let g = 0; g < this.garantias.length; g++) {
         this.garantias[g].prestamos = [];
         if (this.garantias[g].id == 1) {
-          this.garantias[g].aporte = aporte.constitucional * this.garantias[g].porcentaje / 100;
           this.garantias[g].aporte_total = aporte.constitucional;
+          this.garantias[g].aporte = aporte.constitucional * this.garantias[g].porcentaje / 100;
         }
         if (this.garantias[g].id == 2) {
-          this.garantias[g].aporte = aporte.iva_paz * this.garantias[g].porcentaje / 100;
           this.garantias[g].aporte_total = aporte.iva_paz
+          this.garantias[g].aporte = aporte.iva_paz * this.garantias[g].porcentaje / 100;
         }
+        this.garantias[g].aporte = Math.round((this.garantias[g].aporte + Number.EPSILON) * 100) / 100;
+
         for (let p = 0; p < prestamos.length; p++) {
           for (let pg = 0; pg < prestamos[p].prestamos_garantias.length; pg++) {
             if (prestamos[p].prestamos_garantias[pg].id_garantia == this.garantias[g].id) {
@@ -1347,6 +1355,50 @@ export class PrestamosComponent implements OnInit {
             }
           }
         }
+
+        for (let i = 0; i < this.disponibilidad.length; i++) {
+
+          let monto = this.getMontoDispTotal(this.disponibilidad[i].mes, this.garantias[g].prestamos, this.garantias[g].aporte);
+          if (this.prestamoForm.controls['id_programa'].value == 1 && this.garantias[g].id == 1) {
+            for (let p = 0; p < this.proyecciones.length; p++) {
+              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {                
+                this.proyecciones[p].disponible = monto;
+              }
+            }
+          }
+          if (this.prestamoForm.controls['id_programa'].value == 2 && this.garantias[g].id == 2) {
+            for (let p = 0; p < this.proyecciones.length; p++) {
+              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {
+                this.proyecciones[p].disponible = monto;         
+              }
+            }
+          }
+          if (this.prestamoForm.controls['id_programa'].value == '3') {
+            for (let p = 0; p < this.proyecciones.length; p++) {
+              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {                
+                this.proyecciones[p].disponible = this.getMontoDispTotalDisponible(this.disponibilidad[i].mes);                
+              }
+            }
+          }
+
+          this.disp = true;
+          for (let p = 0; p < this.proyecciones.length; p++) {
+            if (this.proyecciones[p].disponibilidad < this.proyecciones[p].cuota) {
+              this.disp = false;
+            }
+          }
+
+        }
+
+        let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);        
+        if (this.garantias[g].id == 1) {
+          this.totales_disp.constitucional = tot
+        }
+        if (this.garantias[g].id == 2) {
+          this.totales_disp.iva_paz = tot
+        }
+        this.totales_disp.total = this.getTotalMontoDispTotalDisponible();     
+           
       }
 
       let rep: any = await this.reportesService.get('disponibilidad');
@@ -1354,8 +1406,17 @@ export class PrestamosComponent implements OnInit {
       rep = rep.replaceAll("{{constitucional}}", parseFloat(aporte.constitucional).toLocaleString('en-US'));
       rep = rep.replaceAll("{{iva_paz}}", parseFloat(aporte.iva_paz).toLocaleString('en-US'));
       rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
-
-      this.catalogo(rep, 'disponibilidad', print)
+  
+      let contenido: any = document.getElementById('disponibilidad');
+      contenido = contenido.innerHTML.toString();
+      
+      rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+      rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+      rep = rep.replaceAll("{{contenido}}", contenido);
+  
+      if (print) {
+        this.print(rep)
+      }
 
     } else {
       this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
@@ -1385,16 +1446,16 @@ export class PrestamosComponent implements OnInit {
   getMontoDispTotal(mes: string, prestamos: any, aporte: number) {
     let total = aporte;
 
-    for (let p = 0; p < prestamos.length; p++) {
-      console.log(prestamos[p].proyecciones);
-
-      for (let a = 0; a < prestamos[p].proyecciones.length; a++) {
-        let mes_inicio = moment(prestamos[p].proyecciones[a].fecha_inicio).format('YYYY-MM');
-        let mes_fin = moment(prestamos[p].proyecciones[a].fecha_fin).format('YYYY-MM');
-        if (mes_fin == mes) {
-          total -= prestamos[p].proyecciones[a].cuota;
+    if (prestamos) {
+      for (let p = 0; p < prestamos.length; p++) {
+        for (let a = 0; a < prestamos[p].proyecciones.length; a++) {
+          let mes_inicio = moment(prestamos[p].proyecciones[a].fecha_inicio).format('YYYY-MM');
+          let mes_fin = moment(prestamos[p].proyecciones[a].fecha_fin).format('YYYY-MM');
+          if (mes_fin == mes) {
+            total -= prestamos[p].proyecciones[a].cuota;
+          }
         }
-      }
+      } 
     }
     return total;
   }
@@ -1456,32 +1517,6 @@ export class PrestamosComponent implements OnInit {
     for (let d = 0; d < this.disponibilidad.length; d++) {
       let tot = this.getMontoDispTotalDisponible(this.disponibilidad[d].mes);
       total += Math.round((tot + Number.EPSILON) * 100) / 100;
-    }
-    return total;
-  }
-
-  getTotalConstitucional(mes: string) {
-    let total = 0;
-    for (let a = 0; a < this.aportes.length; a++) {
-      if (this.aportes[a].mes == mes) {
-        for (let d = 0; d < this.aportes[a].data.length; d++) {
-          let tot = parseFloat(this.aportes[a].data[d].constitucional);
-          total += Math.round((tot + Number.EPSILON) * 100) / 100;
-        }
-      }
-    }
-    return total;
-  }
-
-  getTotalIvaPaz(mes: string) {
-    let total = 0;
-    for (let a = 0; a < this.aportes.length; a++) {
-      if (this.aportes[a].mes == mes) {
-        for (let d = 0; d < this.aportes[a].data.length; d++) {
-          let tot = parseFloat(this.aportes[a].data[d].iva_paz);
-          total += Math.round((tot + Number.EPSILON) * 100) / 100;
-        }
-      }
     }
     return total;
   }

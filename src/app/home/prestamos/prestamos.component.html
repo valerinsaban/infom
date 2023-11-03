@@ -228,6 +228,10 @@
         <div class="card">
           <div class="card-body">
             <form [formGroup]="prestamoForm">
+              <div class="row" *ngIf="municipalidad">
+                <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
+              </div>
+              <br>
               <div class="row">
                 <div class="col-xl-2 mb-3">
                   <label class="form-label">Departamento
@@ -252,16 +256,18 @@
                   </div>
                 </div>
                 <div class="col-xl-8 mb-3">
-                  <div class="row" *ngIf="disponibilidad">
+                  <div class="row" *ngIf="totales_disp">
                     <div class="col-4 pt-3 pb-3 border-end">
-                      <h6 class="mb-1">{{disponibilidad.constitucional | number: '.2-2'}}</h6><span>Aporte
-                        Constitucional</span>
+                      <h6 class="mb-1">{{totales_disp.constitucional | number: '.2-2'}}</h6>
+                      <span>Aporte Constitucional</span>
                     </div>
                     <div class="col-4 pt-3 pb-3 border-end">
-                      <h6 class="mb-1">{{disponibilidad.iva_paz | number: '.2-2'}}</h6><span>IVA Paz</span>
+                      <h6 class="mb-1">{{totales_disp.iva_paz | number: '.2-2'}}</h6>
+                      <span>IVA Paz</span>
                     </div>
                     <div class="col-4 pt-3 pb-3">
-                      <h6 class="mb-1">{{disponibilidad.total | number: '.2-2'}}</h6><span>Total Disponible</span>
+                      <h6 class="mb-1">{{totales_disp.total | number: '.2-2'}}</h6>
+                      <span>Total Disponible</span>
                     </div>
                   </div>
                 </div>
@@ -336,72 +342,14 @@
                   data-bs-dismiss="offcanvas" type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Guardar
                 </button>
-                <button class="btn btn-success light me-1" (click)="getDisponibilidad(true)" type="button">
+                <button [hidden]="!disp" class="btn btn-warning light me-1" (click)="getDisponibilidad()" type="button">
+                  <i class="fa-duotone fa-floppy-disk"></i> Imprimir Disponibilidad
+                </button>
+                <button [hidden]="disp" class="btn btn-success light me-1" (click)="getDisponibilidad(false)"
+                  type="button">
                   <i class="fa-duotone fa-floppy-disk"></i> Validar
                 </button>
                 <button class="btn btn-danger light ms-1" data-bs-dismiss="offcanvas" type="button">Cancelar</button>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-xl-12 mb-3">
-                  <div class="table-responsive active-projects manage-client style-1">
-                    <div class="tbl-caption">
-                      <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{proyecciones.length}})</h4>
-                    </div>
-                    <table id="empoloyees-tbl1" class="table">
-                      <thead>
-                        <tr>
-                          <th>Fecha Inicio</th>
-                          <th>Fecha Fin</th>
-                          <th>Dias</th>
-                          <th style="text-align: right;">Saldo Inicial</th>
-                          <th style="text-align: right; width: 130px">Capital</th>
-                          <th style="text-align: right;">Intereses</th>
-                          <th style="text-align: right;">IVA</th>
-                          <th style="text-align: right;">Cuota</th>
-                          <th style="text-align: right;">Saldo</th>
-                          <th style="text-align: right;">Disponible</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let p of proyecciones; let aindex = index">
-                          <td>{{p.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
-                          <td>{{p.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
-                          <td>{{p.dias}} dias</td>
-                          <th style="text-align: right;">{{p.saldo_inicial | number: '.2-2'}}</th>
-                          <td style="text-align: right;">
-                            <input class="form-control text-end" [(ngModel)]="p.capital"
-                              [ngModelOptions]="{standalone: true}" (input)="updateProyeccion()">
-                          </td>
-                          <th style="text-align: right;">{{p.interes | number: '.2-2'}}</th>
-                          <th style="text-align: right;">{{p.iva | number: '.2-2'}}</th>
-                          <th style="text-align: right;"><span class="text-primary">{{p.cuota | number: '.2-2'}}</span>
-                          </th>
-                          <th style="text-align: right;">{{p.saldo_final | number: '.2-2'}}</th>
-                          <td>
-                            <i class="fas fa-check"></i> {{p.disponible | number: '.2-2'}}
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <th></th>
-                          <th></th>
-                          <th>{{getDias()}} dias</th>
-                          <th></th>
-                          <th style="text-align: right;"
-                            [ngClass]="{'cuadrado': getCapital() == prestamoForm.value.monto}">Q{{getCapital() | number:
-                            '.2-2'}}</th>
-                          <th style="text-align: right;">Q{{getInteres() | number: '.2-2'}}</th>
-                          <th style="text-align: right;">Q{{getIva() | number: '.2-2'}}</th>
-                          <th style="text-align: right;">Q{{getCuota() | number: '.2-2'}}</th>
-                          <th></th>
-                          <th></th>
-                        </tr>
-                      </tfoot>
-                    </table>
-                  </div>
-                </div>
               </div>
             </form>
           </div>
@@ -411,10 +359,6 @@
         <div class="card">
           <div class="card-body">
             <form [formGroup]="prestamoForm">
-              <div class="row" *ngIf="municipalidad">
-                <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
-              </div>
-              <br>
               <div class="row">
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Fecha
@@ -437,7 +381,7 @@
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">
-                  <label class="form-label">Fecha Amortizacion
+                  <label class="form-label">Fecha Amort.
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha_amortizacion" type="date" class="form-control"
@@ -503,12 +447,79 @@
                     </table>
                   </div>
 
-                  <app-reportes [filtros]="filtros" [slug_reporte]="'disponibilidad'" [view_reporte]="false"
-                    (disp)="recibirDisp($event)"></app-reportes>
+                  <!-- <app-reportes [filtros]="filtros" [slug_reporte]="'disponibilidad'" [view_reporte]="false"
+                    (disp)="recibirDisp($event)"></app-reportes> -->
 
                 </div>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-12 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-responsive active-projects manage-client style-1">
+              <div class="tbl-caption">
+                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{proyecciones.length}})</h4>
+              </div>
+              <table id="empoloyees-tbl1" class="table">
+                <thead>
+                  <tr>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Dias</th>
+                    <th style="text-align: right;">Saldo Inicial</th>
+                    <th style="text-align: right;">Capital</th>
+                    <th style="text-align: right;">Intereses</th>
+                    <th style="text-align: right;">IVA</th>
+                    <th style="text-align: right;">Cuota</th>
+                    <th style="text-align: right;">Saldo</th>
+                    <th style="text-align: right;">Disponible</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of proyecciones; let aindex = index">
+                    <td>{{p.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{p.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{p.dias}} dias</td>
+                    <th style="text-align: right;">{{p.saldo_inicial | number: '.2-2'}}</th>
+                    <td style="text-align: right;">
+                      <input class="form-control text-end" [(ngModel)]="p.capital" [ngModelOptions]="{standalone: true}"
+                        (input)="updateProyeccion()">
+                    </td>
+                    <th style="text-align: right;">{{p.interes | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{p.iva | number: '.2-2'}}</th>
+                    <th style="text-align: right;"><span class="text-primary">{{p.cuota | number: '.2-2'}}</span>
+                    </th>
+                    <th style="text-align: right;">{{p.saldo_final | number: '.2-2'}}</th>
+                    <th style="text-align: right;">
+                      <span [ngClass]="{'cuadrado': p.disponible > p.cuota, 'nocuadrado': p.disponible < p.cuota}">
+                        {{p.disponible | number: '.2-2'}}
+                      </span>
+                    </th>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th>{{getDias()}} dias</th>
+                    <th></th>
+                    <th style="text-align: right;">
+                      <span [ngClass]="{'cuadrado': getCapital() == prestamoForm.value.monto}">
+                        Q{{getCapital() | number: '.2-2'}}
+                      </span>
+                    </th>
+                    <th style="text-align: right;">Q{{getInteres() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getIva() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">Q{{getCuota() | number: '.2-2'}}</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -779,7 +790,7 @@
           <div class="card-body p-0">
             <div class="table-responsive active-projects manage-client style-1">
               <div class="tbl-caption">
-                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{amortizaciones.length}})</h4>
+                <h4 class="heading mb-0">Proyeccion de Amortizaciones ({{proyecciones.length}})</h4>
               </div>
               <table id="empoloyees-tbl1" class="table">
                 <thead>
@@ -792,22 +803,30 @@
                     <th style="text-align: right;">Intereses</th>
                     <th style="text-align: right;">IVA</th>
                     <th style="text-align: right;">Cuota</th>
-                    <th style="text-align: right;">Saldo Final</th>
-                    <th style="text-align: right;"></th>
+                    <th style="text-align: right;">Saldo</th>
+                    <th style="text-align: right;">Disponible</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let a of amortizaciones; let aindex = index">
-                    <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
-                    <td>{{a.dias}} dias</td>
-                    <th style="text-align: right;">{{a.saldo_inicial | number: '.2-2'}}</th>
-                    <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
-                    <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
-                    <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
-                    <th style="text-align: right;"><span class="text-primary">{{a.cuota | number: '.2-2'}}</span></th>
-                    <th style="text-align: right;">{{a.saldo_final | number: '.2-2'}}</th>
-                    <td><i class="fas fa-check"></i></td>
+                  <tr *ngFor="let p of proyecciones; let aindex = index">
+                    <td>{{p.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{p.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                    <td>{{p.dias}} dias</td>
+                    <th style="text-align: right;">{{p.saldo_inicial | number: '.2-2'}}</th>
+                    <td style="text-align: right;">
+                      <input class="form-control text-end" [(ngModel)]="p.capital" [ngModelOptions]="{standalone: true}"
+                        (input)="updateProyeccion()">
+                    </td>
+                    <th style="text-align: right;">{{p.interes | number: '.2-2'}}</th>
+                    <th style="text-align: right;">{{p.iva | number: '.2-2'}}</th>
+                    <th style="text-align: right;"><span class="text-primary">{{p.cuota | number: '.2-2'}}</span>
+                    </th>
+                    <th style="text-align: right;">{{p.saldo_final | number: '.2-2'}}</th>
+                    <th style="text-align: right;">
+                      <span [ngClass]="{'cuadrado': p.disponible > p.cuota, 'nocuadrado': p.disponible < p.cuota}">
+                        {{p.disponible | number: '.2-2'}}
+                      </span>
+                    </th>
                   </tr>
                 </tbody>
                 <tfoot>
@@ -816,7 +835,11 @@
                     <th></th>
                     <th>{{getDias()}} dias</th>
                     <th></th>
-                    <th style="text-align: right;">Q{{getCapital() | number: '.2-2'}}</th>
+                    <th style="text-align: right;">
+                      <span [ngClass]="{'cuadrado': getCapital() == prestamoForm.value.monto}">
+                        Q{{getCapital() | number: '.2-2'}}
+                      </span>
+                    </th>
                     <th style="text-align: right;">Q{{getInteres() | number: '.2-2'}}</th>
                     <th style="text-align: right;">Q{{getIva() | number: '.2-2'}}</th>
                     <th style="text-align: right;">Q{{getCuota() | number: '.2-2'}}</th>
@@ -1537,184 +1560,6 @@
 
 <div *ngIf="prestamo" hidden>
 
-  <div id="disponibilidad" style="color: black; font-size: 8px;">
-
-    <ng-container *ngFor="let g of garantias">
-
-      <table style="width: 100%">
-        <thead>
-          <tr>
-            <td>
-              <h6 style="text-align: center; text-decoration: underline; font-weight: 700;">
-                {{g.nombre}} ({{g.porcentaje}}%)
-              </h6>
-            </td>
-          </tr>
-        </thead>
-      </table>
-
-      <table style="width: 100%">
-        <thead>
-          <tr>
-            <td style="width: 100px;"></td>
-            <td></td>
-            <td *ngFor="let d of disponibilidad" style="text-align: right; border-bottom: solid">
-              {{d.mes | date: 'MMM YYYY':'UTC'}}
-            </td>
-            <td style="text-align: right; font-weight: 700; border-bottom: solid">
-              Disponible <br> {{filtros.plazo_meses}} meses
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="text-align: right; text-transform: uppercase"></td>
-            <td style="text-align: center;">A</td>
-            <td *ngFor="let d of disponibilidad" style="text-align: right;">
-              {{g.aporte | number: '.2-2'}}
-            </td>
-            <td style="text-align: right;">
-              {{getTotalAportes(g.aporte) | number: '.2-2'}}
-            </td>
-          </tr>
-          <ng-container *ngFor="let p of g.prestamos">
-            <tr>
-              <td style="text-align: right;">
-                <b>{{p.no_prestamo}}</b>
-              </td>
-              <td style="text-align: center;"> C </td>
-              <td *ngFor="let d of disponibilidad" style="text-align: right;">
-                - {{getMontoDisp(d.mes, p.proyecciones, 'capital') | number: '.2-2'}}
-              </td>
-              <td style="text-align: right;">
-                - {{getTotalMontoDisp(p.proyecciones, 'capital') | number: '.2-2'}}
-              </td>
-            </tr>
-            <tr>
-              <td style="text-align: right;">
-                <b>{{p.no_prestamo}}</b>
-              </td>
-              <td style="text-align: center;"> I </td>
-              <td *ngFor="let d of disponibilidad" style="text-align: right;">
-                - {{getMontoDisp(d.mes, p.proyecciones, 'interes') | number: '.2-2'}}
-              </td>
-              <td style="text-align: right;">
-                - {{getTotalMontoDisp(p.proyecciones, 'interes') | number: '.2-2'}}
-              </td>
-            </tr>
-          </ng-container>
-        </tbody>
-        <tbody>
-          <tr>
-            <th style="text-align: right; width: 100px;">
-              Disponible
-            </th>
-            <th></th>
-            <th *ngFor="let d of disponibilidad" style="text-align: right; border-top: solid; border-bottom: solid;">
-              {{getMontoDispTotal(d.mes, g.prestamos, g.aporte) | number: '.2-2'}}
-            </th>
-            <th style="text-align: right; border-top: solid; border-bottom: solid;">
-              {{getTotalMontoDispTotal(g.prestamos, g.aporte) | number: '.2-2'}}
-            </th>
-          </tr>
-          <tr>
-            <th>
-              <span style="color: white;">.</span>
-            </th>
-          </tr>
-        </tbody>
-      </table>
-    </ng-container>
-
-    <table style="width: 100%">
-      <thead>
-        <tr>
-          <td>
-            <h6 style="text-align: center; text-decoration: underline; font-weight: 700;">
-              GARANTIAS UNIFICADAS
-            </h6>
-          </td>
-        </tr>
-      </thead>
-    </table>
-
-    <table style="width: 100%">
-      <thead>
-        <tr>
-          <td style="width: 100px;"></td>
-          <td></td>
-          <td *ngFor="let d of disponibilidad" style="text-align: right; border-bottom: solid">
-            {{d.mes | date: 'MMM YYYY':'UTC'}}
-          </td>
-          <td style="text-align: right; font-weight: 700; border-bottom: solid">
-            Disponible <br> {{filtros.plazo_meses}} meses
-          </td>
-          <td></td>
-        </tr>
-      </thead>
-      <ng-container *ngFor="let g of garantias">
-        <tbody>
-          <tr>
-            <td style="text-align: right; text-transform: uppercase;"></td>
-            <td style="text-align: center;"> A </td>
-            <td *ngFor="let d of disponibilidad" style="text-align: right;">
-              {{g.aporte | number: '.2-2'}}
-            </td>
-            <td style="text-align: right;">
-              {{getTotalAportes(g.aporte) | number: '.2-2'}}
-            </td>
-          </tr>
-          <ng-container *ngFor="let p of g.prestamos">
-            <tr>
-              <td style="text-align: right;">
-                <b>{{p.no_prestamo}}</b>
-              </td>
-              <td style="text-align: center;"> C </td>
-              <td *ngFor="let d of disponibilidad" style="text-align: right;">
-                - {{getMontoDisp(d.mes, p.proyecciones, 'capital') | number: '.2-2'}}
-              </td>
-              <td style="text-align: right;">
-                - {{getTotalMontoDisp(p.proyecciones, 'capital') | number: '.2-2'}}
-              </td>
-            </tr>
-            <tr>
-              <td style="text-align: right;">
-                <b>{{p.no_prestamo}}</b>
-              </td>
-              <td style="text-align: center;"> I </td>
-              <td *ngFor="let d of disponibilidad" style="text-align: right;">
-                - {{getMontoDisp(d.mes, p.proyecciones, 'interes') | number: '.2-2'}}
-              </td>
-              <td style="text-align: right;">
-                - {{getTotalMontoDisp(p.proyecciones, 'interes') | number: '.2-2'}}
-              </td>
-            </tr>
-          </ng-container>
-        </tbody>
-      </ng-container>
-      <tbody>
-        <tr>
-          <th style="text-align: right; width: 100px;">
-            Disponible
-          </th>
-          <th></th>
-          <th *ngFor="let d of disponibilidad" style="text-align: right; border-top: solid; border-bottom: solid;">
-            {{getMontoDispTotalDisponible(d.mes) | number: '.2-2'}}
-          </th>
-          <th style="text-align: right; border-top: solid; border-bottom: solid;">
-            {{getTotalMontoDispTotalDisponible() | number: '.2-2'}}
-          </th>
-        </tr>
-        <tr>
-          <th>
-            <span style="color: white;">.</span>
-          </th>
-        <tr>
-      </tbody>
-    </table>
-
-  </div>
-
   <div id="pr-hoja-tecnica" style="color: black">
     <div style="margin: 0px 50px">
       <p style="text-align: justify">
@@ -1724,7 +1569,7 @@
 
       <table class="table table-bordered" style="text-align: justify">
         <tbody>
-          <tr *ngIf="prestamo.id_tipo_prestamo == 2">
+          <tr *ngIf="prestamo.tipoPrestamo.id == 2">
             <td>SOLICITUD DE LA GERENCIA DE INFOM</td>
             <td>Oficio No. GER-{{prestamo.no_oficio_ger}}</td>
             <td>FOLIO</td>
@@ -1736,33 +1581,29 @@
                 <li>
                   Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la República de Guatemala, (artículos 4º,
                   numeral romano II, inciso 1) y articulos
-                  <span *ngIf="prestamo.id_tipo_prestamo == 1">
+                  <span *ngIf="prestamo.tipoPrestamo.id == 1">
                     23 inciso a) y b).
                   </span>
-                  <span *ngIf="prestamo.id_tipo_prestamo == 2">
+                  <span *ngIf="prestamo.tipoPrestamo.id == 2">
                     30 inciso g) y h).
                   </span>
                 </li>
                 <li>
                   Reglamento para la Asistencia Financiera a las Municipalidades de la República de Guatemala
-                  <span *ngIf="prestamo.id_tipo_prestamo == 2">Articulos del Variable</span>
-                  <span *ngIf="prestamo.resolucion">
-                    (Resolución No.
-                    {{prestamo.resolucion.numero}} J.D. de fecha {{prestamo.resolucion.fecha | date:
-                    'dd/MM/YYYY':'UTC'}}
-                    , artículos del
-                    VARIABLE)
-                  </span>
+                  <span *ngIf="prestamo.tipoPrestamo.id == 2">Articulos del Variable</span>
+                  (Resolución No. {{prestamo.resolucion.numero}} J.D. de fecha
+                  {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}} , artículos del
+                  {{prestamo.resolucion.articulos}})
                 </li>
                 <li>
                   Código Municipal. Artículos del 112 al 115 del DECRETO NÚMERO 12-2002 de fecha 13 de mayo del año
                   2002, y sus Reformas según Decreto Número 14--2012, de fecha 17 de Julio del año 2012.
                 </li>
                 <li>
-                  Convenio Interinstitucional, Administrativo y Financiero {{prestamo.no_convenio}}, de fecha
-                  {{prestamo.fecha | date: 'dd/MM/YYYY':'UTC'}}, suscrito
-                  entre el Instituto de Fomento Municipal, el VARIABLE y la Municipalidad de
-                  {{prestamo.municipalidad.nombre}}
+                  Convenio Interinstitucional, Administrativo y Financiero {{prestamo.municipalidad.no_convenio}}, de
+                  fecha {{formatoFecha(prestamo.municipalidad.fecha_convenio, 'DD MMMM YYYY')}}, suscrito
+                  entre el Instituto de Fomento Municipal, el {{prestamo.municipalidad.banco.nombre}} y la Municipalidad
+                  de {{prestamo.municipalidad.municipio.nombre}}, {{prestamo.municipalidad.departamento.nombre}}
                 </li>
               </ol>
             </td>
@@ -1770,30 +1611,34 @@
           </tr>
           <tr>
             <td>DICTAMEN ÁREA DE CRÉDITOS DE LA DIRECCIÓN FINANCIERA</td>
-            <td>Dictamen No. <span>FP-</span> - {{prestamo.no_dictamen}} del VARIABLE</td>
+            <td>Dictamen No. <span>FP-</span> - {{prestamo.no_dictamen}} del
+              {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}}**</td>
             <td>VARIABLE</td>
           </tr>
           <tr>
             <td>SOLICITUD DEL ALCALDE</td>
-            <td>Memorial de fecha VARIABLE, suscrito por el alcalde Municipal, solicitando un préstamo de Inversión para
-              la Municipalidad de VARIABLE</td>
+            <td>Memorial de fecha {{formatoFecha(prestamo.fecha_memorial, 'DD [de] MMMM [de] YYYY')}}, suscrito por el
+              alcalde Municipal, solicitando un préstamo de Inversión para la Municipalidad de
+              {{prestamo.municipalidad.municipio.nombre}}, {{prestamo.municipalidad.departamento.nombre}}</td>
             <td>VARIABLE</td>
           </tr>
           <tr>
             <td>CERTIFICACIÓN MUNICIPAL</td>
-            <td>Certificación del VARIABLE del punto VARIABLE del acta de Concejo Municipal No. VARIABLE de fecha
-              VARIABLE
+            <td>Certificación del {{formatoFecha(prestamo.certficacion, 'DD [de] MMMM [de] YYYY')}} del punto
+              {{prestamo.municipalidad.punto_acta}} del acta de Consejo Municipal No. VARIABLE de fecha
+              VARIABLE**
             </td>
             <td>VARIABLE</td>
           </tr>
           <tr>
             <td>DESTINO</td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.destino}}</td>
             <td></td>
           </tr>
           <tr>
             <td>MONTO</td>
-            <td>VARIABLE</td>
+            <td> <span style="font-weight: 600;">{{letras(prestamo.monto)}} ({{prestamo.monto | number: '.2-2'}})</span>
+            </td>
             <td></td>
           </tr>
           <tr>
@@ -1803,36 +1648,101 @@
           </tr>
           <tr>
             <td>PLAZO</td>
-            <td>VARIABLE</td>
+            <td>({{prestamo.plazo_meses}})MESES</td>
             <td></td>
           </tr>
           <tr>
             <td>AMORTIZACIÓN</td>
-            <td>VARIABLE pagos mensuales de VARIABLE , cada uno, más intereses e IVA sobre los intereses, comprometiendo
-              los recursos del VARIABLE y subsidiariamente VARIABLE - para Inversión, de acuerdo a las entregas de los
-              Aportes Constitucionales por parte del Gobierno Central, según cuadro adjunto.</td>
+            <td> ({{prestamo.plazo_meses}}) MESES pagos mensuales de VARIABLE** , cada uno,
+              más intereses e IVA sobre los intereses, comprometiendo los recursos del
+              <span *ngIf="prestamo.id_programa == 1">
+                Aporte Constitucional y subsidiariamente el Impuesto al Valor Agregado -IVAPAZ-
+              </span>
+              <span *ngIf="prestamo.id_programa == 2">
+                Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente el Aporte Constitucional
+              </span>
+              <span *ngIf="prestamo.id_programa == 3">
+                VARIABLE
+              </span>
+              - para Inversión, de acuerdo a las entregas de los
+              Aportes Constitucionales por parte del Gobierno Central, según cuadro adjunto.
+            </td>
             <td></td>
           </tr>
           <tr>
             <td>GARANTÍA </td>
             <td>Los ingresos que le corresponden a la municipalidad provenientes del VARIABLE y subsidiariamente
-              VARIABLE
-              - para inversión </td>
+              <span *ngIf="prestamo.id_programa == 1">
+                Aporte Constitucional y subsidiariamente el Impuesto al Valor Agregado -IVAPAZ-
+              </span>
+              <span *ngIf="prestamo.id_programa == 2">
+                Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente el Aporte Constitucional
+              </span>
+              <span *ngIf="prestamo.id_programa == 3">
+                VARIABLE**
+              </span>
+              - para inversión
+            </td>
             <td></td>
           </tr>
           <tr>
             <td>TASA DE INTERÉS</td>
-            <td>VARIABLE % anual sobre saldos deudores.</td>
+            <td>{{prestamo.intereses}} % anual sobre saldos deudores.</td>
             <td></td>
           </tr>
           <tr>
             <td>CAPACIDAD DE PAGO</td>
-            <td>De acuerdo con los Ingresos del VARIABLE para inversión, es aceptable.</td>
+            <td>De acuerdo con los Ingresos del
+              <span *ngIf="prestamo.id_programa == 1">Aporte constitucional</span>
+              <span *ngIf="prestamo.id_programa == 2">Impuesto al Valor Agregado -IVAPAZ-</span>
+              <span *ngIf="prestamo.id_programa == 3">VARIABLE-</span>
+              para inversión, es aceptable.
+            </td>
             <td>16</td>
           </tr>
           <tr>
             <td>PRÉSTAMOS VIGENTES </td>
-            <td>VARIABLE</td>
+            <td>
+              <div><span>A LA FECHA LA MUNICIPALIDAD NO REFLEJA COMPROMISOS FINANCIEROS ANTE INFOM NI CON NINGUNA
+                  INSTITUCION BANCARIA O FINANCIERA</span></div>
+              <div>
+                <table class="table table-bordered" style="font-size:8pt" width=100%>
+                  <div style="text-align: center; font-size:8pt">
+                    <p>DISPONIBILIDAD APORTE CONSTITUCIONAL</p>
+                    <p>(Quetzales)</p>
+                    <p>MUNICIPALIDAD DE: <span
+                        style="text-transform: uppercase">{{prestamo.municipalidad.municipio.nombre}}</span>
+                    </p>
+                  </div>
+                  <tbody>
+                    <tr>
+                      <td>Recursos</td>
+                      <td>Concesion</td>
+                      <td>Monto</td>
+                      <td>Destino</td>
+                      <td>Vencimiento</td>
+                      <td>Saldo</td>
+                    </tr>
+                    <tr>
+                      <td>VARIABLE</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>VARIABLE</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
             <td></td>
           </tr>
           <tr>
@@ -1842,31 +1752,30 @@
                 <div style="text-align: center; font-size:8pt">
                   <p>DISPONIBILIDAD APORTE CONSTITUCIONAL</p>
                   <p>(Quetzales)</p>
-                  <p>MUNICIPALIDAD DE: SAN JUAN TECUACO, DEPARTAMENTO DE SANTA ROSA
+                  <p>MUNICIPALIDAD DE: <span
+                      style="text-transform: uppercase">{{prestamo.municipalidad.municipio.nombre}}</span>
                   </p>
                 </div>
-                <thead>
-                  <tr>
-                    <th>Número Pago</th>
-                    <th>Disponibilidad</th>
-                    <th>Cuota</th>
-                    <th>Nueva Disponibilidad</th>
-                  </tr>
-                </thead>
                 <tbody>
                   <tr>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
+                    <td>Número Pago</td>
+                    <td>Disponibilidad</td>
+                    <td>Cuota</td>
+                    <td>Nueva Disponibilidad</td>
                   </tr>
                   <tr>
                     <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
-                  <caption align="bottom" style="text-align: left; font-size:5pt">
+                  <tr>
+                    <td>VARIABLE</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <caption style="text-align: left; font-size:5pt;  text-align: bottom">
                     *Capital, Intereses e IVA.
                   </caption>
                 </tbody>
@@ -1879,38 +1788,36 @@
                 <p style="text-align: center; font-size:8pt">
                   PROYECCIÓN DE RECUPERACIÓN DE PRÉSTAMO EN QUETZALES
                 </p>
-                <thead>
-                  <tr>
-                    <th>NÚMERO DE PAGO</th>
-                    <th>MES COMPROMETIDO</th>
-                    <th>INTERESES A COBRAR</th>
-                    <th>IVA SOBRE INTERESES</th>
-                    <th>INTERESES MAS IVA</th>
-                    <th>AMORTIZACION AL CREDITO</th>
-                    <th>PAGO A DESCONTAR</th>
-                    <th>SALDO A CAPITAL</th>
-                  </tr>
-                </thead>
                 <tbody>
                   <tr>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
+                    <td>NÚMERO DE PAGO</td>
+                    <td>MES COMPROMETIDO</td>
+                    <td>INTERESES A COBRAR</td>
+                    <td>IVA SOBRE INTERESES</td>
+                    <td>INTERESES MAS IVA</td>
+                    <td>AMORTIZACION AL CREDITO</td>
+                    <td>PAGO A DESCONTAR</td>
+                    <td>SALDO A CAPITAL</td>
                   </tr>
                   <tr>
                     <td>VARIABLE</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
                     <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
-                    <td>VARIABLE</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
@@ -1921,9 +1828,11 @@
             <td>DICTAMEN</td>
             <td>De acuerdo con la información que se tuvo a la vista, el área de Créditos de la Dirección Financiera
               emite
-              Dictamen favorable sobre la solicitud de préstamo planteada por la Municipalidad de VARIABLE por un monto
+              Dictamen favorable sobre la solicitud de préstamo planteada por la Municipalidad de <span
+                style="text-transform: uppercase;">{{prestamo.municipalidad.municipio.nombre}}</span> por un monto
               de
-              VARIABLE , tomando como referencia la capacidad de pago en el renglón de Inversión con recursos del
+              {{prestamo.monto}} , tomando como referencia la capacidad de pago en el renglón de Inversión con recursos
+              del
               VARIABLE
               y VARIABLE para Inversión, la cual es suficiente para cubrir adecuadamente el servicio de deuda del
               préstamo
@@ -1959,15 +1868,16 @@
           <tr>
             <td style="width: 50%">ASUNTO:</td>
             <td style="width: 50%; text-align: justify">
-              Municipalidad de VARIABLE, DEPARTAMENTO DE VARIABLE, solicita un
+              Municipalidad de {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+              {{prestamo.municipalidad.municipio.departamento.nombre}}, solicita un
               Préstamo con recursos propios del Fondo Patrimonial del INFOM por un
-              monto de VARIABLE, que será utilizado para la ejecución del proyecto
-              (s) VARIABLE.
+              monto de {{prestamo.monto}}, que será utilizado para la ejecución del proyecto
+              (s) {{prestamo.destino}}.
             </td>
           </tr>
           <tr>
             <td>FECHA:</td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.fecha}}</td>
           </tr>
           <tr>
             <td>
@@ -1988,31 +1898,31 @@
             <td>
               <p style="margin-left: 30%; font-weight: 700;">1.1. Memorial de Fecha:</p>
             </td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.fecha_memorial}}</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">1.2. Certificación de Acta de Fecha:</p>
             </td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.fecha_acta}}</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">1.3. Acta Número:</p>
             </td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.acta}}</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">1.4. Fecha de Acta:</p>
             </td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.fecha_acta}}</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">1.5. Punto de Acta:</p>
             </td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.punto}}</td>
           </tr>
           <tr>
             <td colspan="2">
@@ -2025,29 +1935,29 @@
             <td>
               <p style="margin-left: 30%; font-weight: 700">2.1. Monto:</p>
             </td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.monto}}</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">2.2. Destino:</p>
             </td>
-            <td>VARIABLE</td>
+            <td>{{prestamo.destino}}</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">2.3. Plazo:</p>
             </td>
             <td style="text-align: justify">
-              VARIABLE (VARIABLE números) MESES, contados a partir del mes de
+              {{prestamo.plazo_meses}} (VARIABLE números) MESES, contados a partir del mes de
               VARIABLE del año dos mil VARIABLE al mes de VARIABLE del año
               VARIABLE
-              <span>, (VARIABLE que incluyen VARIABLE meses de período de gracia
+              <span>, (VARIABLE que incluyen {{prestamo.periodo_gracia}} meses de período de gracia
               </span>
             </td>
           </tr>
           <tr>
             <td>
-              <p style="margin-left: 30%; font-weight: 700">2.4. Período de Gracia (variable)</p>
+              <p style="margin-left: 30%; font-weight: 700">2.4. Período de Gracia ({{prestamo.periodo_gracia}})</p>
             </td>
             <td>VARIABLE</td>
           </tr>
@@ -2065,7 +1975,7 @@
               <p style="margin-left: 30%; font-weight: 700">2.6. Tasa de Interés:</p>
             </td>
             <td style="text-align: justify">
-              La tasa de interés es del VARIABLE POR CIENTO (VARIABLE%) anual
+              La tasa de interés es del {{letras(prestamo.intereses)}} POR CIENTO ({{prestamo.intereses}}%) anual
               sobre saldos deudores.
             </td>
           </tr>
@@ -2084,9 +1994,13 @@
             </td>
             <td style="text-align: justify">
               El desembolso se realizará en VARIABLE entrega con acreditamiento a
-              la cuenta única del Tesoro a nombre de la Municipalidad de VARIABLE,
-              Departamento de VARIABLE, número VARIABLE (VARIABLE), del Banco
-              VARIABLE, por un monto de VARIABLE QUETZALES EXACTOS (Q. VARIABLE).
+              la cuenta única del Tesoro a nombre de la Municipalidad de <span
+                style="text-transform: uppercase; font-weight: 500;">{{prestamo.municipalidad.municipio.nombre}},
+                Departamento de {{prestamo.municipalidad.municipio.departamento.nombre}} </span>, número VARIABLE
+              (VARIABLE), del Banco
+              {{prestamo.banco.nombre}}, por un monto de <span
+                style="text-transform: uppercase; font-weight: 500;">{{letras(prestamo.monto)}}</span> QUETZALES EXACTOS
+              (Q. {{prestamo.monto}}).
             </td>
           </tr>
         </tbody>
@@ -2100,8 +2014,8 @@
           <br>
           <p>
             1.1 Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la
-            República de Guatemala), artículos 4º. numeral romano II, inciso 1) y
-            <span>30 inciso g) y h).</span>
+            República de Guatemala), artículos 4º. numeral romano II, inciso 1)
+            <span *ngIf="prestamo.id_tipo_prestamo == 2">30 inciso g) y h).</span>
           </p>
           <p>
             1.2 Código Municipal, Artículos del 112 al 115 del DECRETO NÚMERO
@@ -2110,14 +2024,16 @@
           </p>
           <p>
             1.3 Reglamento para la Asistencia Financiera a las Municipalidades de
-            la República de Guatemala (Resolución número VARIABLE J.D. de fecha
-            VARIABLE, artículos del VARIABLE.
+            la República de Guatemala (Resolución número {{prestamo.resolucion.numero}} J.D. de fecha
+            {{prestamo.resolucion.fecha}}, artículos del {{prestamo.resolucion.fecha}}.
           </p>
           <p>
             1.4 Convenio Interinstitucional, Administrativo y Financiero número
-            VARIABLE, de fecha VARIABLE, suscrito entre el Instituto de Fomento
-            Municipal, la Municipalidad de VARIABLE, Departamento de VARIABLE y el
-            Banco de VARIABLE.
+            {{prestamo.municipalidad.no_convenio}}, de fecha {{prestamo.municipalidad.fecha_convenio}}, suscrito entre
+            el Instituto de Fomento
+            Municipal, la Municipalidad de {{prestamo.municipalidad.municipio.nombre}} Departamento de
+            {{prestamo.municipalidad.municipio.departamento.nombre}} y el
+            Banco de {{prestamo.banco.nombre}}.
           </p>
         </div>
         <li>SITUACIÓN FINANCIERA MUNICIPAL</li>
@@ -2126,8 +2042,9 @@
           <p>2.1 ESTADO DE OBLIGACIONES CON INFOM:</p>
           <p>
             De conformidad con el balance general del área de cartera de INFOM, la
-            Municipalidad de VARIABLE, DEPARTAMENTO DE VARIABLE a la fecha
-            VARIABLE refleja los siguientes préstamos vigentes:
+            Municipalidad de {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+            {{prestamo.municipalidad.municipio.departamento.nombre}} a la fecha
+            {{prestamo.fecha}} refleja los siguientes préstamos vigentes:
           </p>
           <table class="table table-bordered" style="text-align: center; width:  100%;">
             <thead>
@@ -2164,7 +2081,8 @@
             De acuerdo a la distribución del VARIABLE para Inversión, la
             Municipalidad percibe aproximadamente Q. VARIABLE mensuales, monto que
             es suficiente para respaldar la cobertura del préstamo que solicita en
-            el plazo de VARIABLE (00) meses, incluyendo el pago de intereses e IVA
+            el plazo de {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) meses, incluyendo el pago de
+            intereses e IVA
             sobre intereses.
           </p>
         </div>
@@ -2183,8 +2101,9 @@
         <p style="margin-left: 10%; text-align: justify">
           Con base en lo expuesto, el área de Créditos de la Dirección Financiera
           emite dictamen favorable sobre la solicitud de préstamo presentada por
-          la Municipalidad de VARIABLE, Departamento de VARIABLE por un monto de
-          VARIABLE (Q.VARIABLE), la cual cumple con los requisitos establecidos en
+          la Municipalidad de {{prestamo.municipalidad.municipiov.nombre}}, Departamento de
+          {{prestamo.municipalidad.municipio.departamento.nombre}} por un monto de
+          {{letras(prestamo.monto)}} (Q.{{prestamo.monto}}), la cual cumple con los requisitos establecidos en
           el Reglamento de Asistencia Financiera a las Municipalidades de la
           República de Guatemala y tomando como referencia la capacidad financiera
           de la Municipalidad con los recursos del VARIABLE y subsidiariamente el
@@ -2229,10 +2148,11 @@
     <div style="margin: 0px 50px">
 
       <p style="text-align: justify">
-        LA <span *ngIf="prestamo.id_tipo_prestamo ==1">GERENCIA</span> <span
-          *ngIf="prestamo.id_tipo_prestamo == 2">JUNTA DIRECTIVA</span> DEL INSTITUTO DE
-        FOMENTO MUNICIPAL, <span>conoció</span> <span>deliberó</span> de forma y
-        de fondo el contenido del Dictamen No. VARIABLE, de fecha VARIABLE asunto
+        LA <span *ngIf="prestamo.tipoPrestamo.id ==1">GERENCIA</span> <span *ngIf="prestamo.tipoPrestamo.id == 2">JUNTA
+          DIRECTIVA</span> DEL INSTITUTO DE
+        FOMENTO MUNICIPAL, <span *ngIf="prestamo.tipoPrestamo.id ==1">conoció</span> <span
+          *ngIf="prestamo.tipoPrestamo.id ==2">deliberó</span> de forma y
+        de fondo el contenido del Dictamen No. {{prestamo.no_dictamen}}, de fecha {{prestamo.fecha}} asunto
         sometido a su conocimiento y,
       </p>
       <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
@@ -2244,8 +2164,9 @@
       </p>
       <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
       <p style="text-align: justify">
-        Municipalidad de VARIABLE, DEPARTAMENTO DE VARIABLE, presentó a este
-        Instituto Memorial de fecha VARIABLE de VARIABLE de VARIABLE y
+        Municipalidad de {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+        {{letras(prestamo.municipalidad.municipio.departamento.nombre)}}, presentó a este
+        Instituto Memorial de fecha {{prestamo.fecha_memorial}} de VARIABLE de VARIABLE y
         certificación del VARIABLE de VARIABLE del año VARIABLE, del punto
         VARIABLE del acta de Concejo Municipal No. VARIABLE del VARIABLE de
         VARIABLE del año VARIABLE, solicitando al INFOM un préstamo de por un
@@ -2291,12 +2212,12 @@
       </p>
       <p style="text-align: center; font-weight: 700">POR TANTO:</p>
       <p style="text-align: justify">
-        La <span *ngIf="prestamo.id_tipo_prestamo ==1">Gerencia</span>
-        <span *ngIf="prestamo.id_tipo_prestamo ==2">Junta Directiva</span> del Instituto de
+        La <span *ngIf="prestamo.tipoPrestamo.id ==1">Gerencia</span>
+        <span *ngIf="prestamo.tipoPrestamo.id ==2">Junta Directiva</span> del Instituto de
         Fomento Municipal, en ejercicio de las atribuciones que le confiere el
         artículo 4º. numeral romano II, inciso 1) y articulos
-        <span *ngIf="prestamo.id_tipo_prestamo ==1">30 inciso g) y h)</span>,
-        <span *ngIf="prestamo.id_tipo_prestamo ==2">23 inciso a) y b)</span> Ley
+        <span *ngIf="prestamo.tipoPrestamo.id ==1">30 inciso g) y h)</span>,
+        <span *ngIf="prestamo.tipoPrestamo.id ==2">23 inciso a) y b)</span> Ley
         Orgánica del INFOM (decreto número 1132 del Congreso de la República de
         Guatemala); artículos 112, 114 y 115 del Decreto número 12-2002 del
         Congreso de la República, Código Municipal; Artículos del VARIABLE al
@@ -2337,8 +2258,8 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              VARIABLE (00) MESES, <span *ngIf="prestamo.id_tipo_prestamo ==1">empezando</span>
-              <span *ngIf="prestamo.id_tipo_prestamo ==2">iniciando</span>a
+              VARIABLE (00) MESES, <span *ngIf="prestamo.tipoPrestamo.id ==1">empezando</span>
+              <span *ngIf="prestamo.tipoPrestamo.id ==2">iniciando</span>a
               contarse a partir del mes de VARIABLE del año VARIABLE ( ) al mes de
               VARIABLE del año VARIABLE ( )
             </td>
@@ -3123,6 +3044,188 @@
       <p>GENERADO POR (F)__________________________</p>
       <p style="font-size: 80%">EDWIN RENAN MORALES LOPEZ</p>
     </div>
+  </div>
+
+</div>
+
+<div *ngIf="disponibilidad">
+
+  <div id="disponibilidad" style="color: black; font-size: 8px;">
+
+    <ng-container *ngFor="let g of garantias">
+
+      <table style="width: 100%">
+        <thead>
+          <tr>
+            <td>
+              <h6 style="text-align: center; text-decoration: underline; font-weight: 700;">
+                {{g.nombre}} ({{g.porcentaje}}%)
+              </h6>
+            </td>
+          </tr>
+        </thead>
+      </table>
+
+      <table style="width: 100%">
+        <thead>
+          <tr>
+            <td style="width: 100px;"></td>
+            <td></td>
+            <td *ngFor="let d of disponibilidad" style="text-align: right; border-bottom: solid">
+              {{d.mes | date: 'MMM YYYY':'UTC'}}
+            </td>
+            <td style="text-align: right; font-weight: 700; border-bottom: solid">
+              Disponible <br> {{filtros.plazo_meses}} meses
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: right; text-transform: uppercase"></td>
+            <td style="text-align: center;">A</td>
+            <td *ngFor="let d of disponibilidad" style="text-align: right;">
+              {{g.aporte | number: '.2-2'}}
+            </td>
+            <td style="text-align: right;">
+              {{getTotalAportes(g.aporte) | number: '.2-2'}}
+            </td>
+          </tr>
+          <ng-container *ngFor="let p of g.prestamos">
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> C </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> I </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+        <tbody>
+          <tr>
+            <th style="text-align: right; width: 100px;">
+              Disponible
+            </th>
+            <th></th>
+            <th *ngFor="let d of disponibilidad" style="text-align: right; border-top: solid; border-bottom: solid;">
+              {{getMontoDispTotal(d.mes, g.prestamos, g.aporte) | number: '.2-2'}}
+            </th>
+            <th style="text-align: right; border-top: solid; border-bottom: solid;">
+              {{getTotalMontoDispTotal(g.prestamos, g.aporte) | number: '.2-2'}}
+            </th>
+          </tr>
+          <tr>
+            <th>
+              <span style="color: white;">.</span>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <table style="width: 100%">
+      <thead>
+        <tr>
+          <td>
+            <h6 style="text-align: center; text-decoration: underline; font-weight: 700;">
+              GARANTIAS UNIFICADAS
+            </h6>
+          </td>
+        </tr>
+      </thead>
+    </table>
+
+    <table style="width: 100%">
+      <thead>
+        <tr>
+          <td style="width: 100px;"></td>
+          <td></td>
+          <td *ngFor="let d of disponibilidad" style="text-align: right; border-bottom: solid">
+            {{d.mes | date: 'MMM YYYY':'UTC'}}
+          </td>
+          <td style="text-align: right; font-weight: 700; border-bottom: solid">
+            Disponible <br> {{filtros.plazo_meses}} meses
+          </td>
+          <td></td>
+        </tr>
+      </thead>
+      <ng-container *ngFor="let g of garantias">
+        <tbody>
+          <tr>
+            <td style="text-align: right; text-transform: uppercase;"></td>
+            <td style="text-align: center;"> A </td>
+            <td *ngFor="let d of disponibilidad" style="text-align: right;">
+              {{g.aporte | number: '.2-2'}}
+            </td>
+            <td style="text-align: right;">
+              {{getTotalAportes(g.aporte) | number: '.2-2'}}
+            </td>
+          </tr>
+          <ng-container *ngFor="let p of g.prestamos">
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> C </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'capital') | number: '.2-2'}}
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: right;">
+                <b>{{p.no_prestamo}}</b>
+              </td>
+              <td style="text-align: center;"> I </td>
+              <td *ngFor="let d of disponibilidad" style="text-align: right;">
+                - {{getMontoDisp(d.mes, p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+              <td style="text-align: right;">
+                - {{getTotalMontoDisp(p.proyecciones, 'interes') | number: '.2-2'}}
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </ng-container>
+      <tbody>
+        <tr>
+          <th style="text-align: right; width: 100px;">
+            Disponible
+          </th>
+          <th></th>
+          <th *ngFor="let d of disponibilidad" style="text-align: right; border-top: solid; border-bottom: solid;">
+            {{getMontoDispTotalDisponible(d.mes) | number: '.2-2'}}
+          </th>
+          <th style="text-align: right; border-top: solid; border-bottom: solid;">
+            {{getTotalMontoDispTotalDisponible() | number: '.2-2'}}
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <span style="color: white;">.</span>
+          </th>
+        <tr>
+      </tbody>
+    </table>
+
   </div>
 
 </div>
