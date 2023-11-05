@@ -823,6 +823,13 @@ export class PrestamosComponent implements OnInit {
         })
       }
 
+      await this.proyeccionesService.deleteProyeccionesPrestamo(this.prestamo.id)
+
+      for (let p = 0; p < this.proyecciones.length; p++) {
+        this.proyecciones[p].id_prestamo = prestamo.data.id;
+        await this.proyeccionesService.postProyeccion(this.proyecciones[p])
+      }
+
       await this.getPrestamos();
       await this.getCountPrestamos();
       this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
@@ -905,7 +912,10 @@ export class PrestamosComponent implements OnInit {
     this.ordenPagoForm.controls['id_prestamo'].setValue(i.id);
 
     this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
-    this.proyecciones = await this.proyeccionesService.getProyeccionesPrestamo(i.id)
+    this.proyecciones = await this.proyeccionesService.getProyeccionesPrestamo(i.id);
+
+    console.log(this.proyecciones);
+    
 
     this.municipalidad = i.municipalidad;
     this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
@@ -1037,6 +1047,15 @@ export class PrestamosComponent implements OnInit {
     return total;
   }
 
+  getInteresIva() {
+    let total = 0;
+    for (let a = 0; a < this.proyecciones.length; a++) {
+      total += parseFloat(this.proyecciones[a].iva) + parseFloat(this.proyecciones[a].interes);
+      total = Math.round((total + Number.EPSILON) * 100) / 100
+    }
+    return total;
+  }
+
   getCuota() {
     let total = 0;
     for (let a = 0; a < this.proyecciones.length; a++) {
@@ -1115,6 +1134,10 @@ export class PrestamosComponent implements OnInit {
       total = Math.round((total + Number.EPSILON) * 100) / 100
     }
     return total;
+  }
+
+  getInteresMasIva(interes: any, iva: any) {
+    return parseFloat(interes) + parseFloat(iva);
   }
 
   colorClass(p: any) {

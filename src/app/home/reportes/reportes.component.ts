@@ -69,6 +69,9 @@ export class ReportesComponent {
   bancos: any = [];
   destinos: any = [];
   programas: any = [];
+  amortizaciones: any = [];
+
+  cobro: any;
 
   aportes: any = [];
 
@@ -264,7 +267,7 @@ export class ReportesComponent {
     }
 
     if (this.slug_reporte == 'intereses-dev-no-percibios') {
-      await this.reporteAmortizaciones(this.slug_reporte, print);
+      await this.reporteInteresesDevengados(this.slug_reporte, print);
     }
 
     if (this.slug_reporte == 'prestamos-otorgados') {
@@ -488,22 +491,6 @@ export class ReportesComponent {
         prestamos[i].prestamos_garantias = prestamos_garantias
       }
 
-      let total_hojas = Math.ceil(this.filtros.plazo_meses / 12);
-      console.log(total_hojas);
-      
-      // let hojas: any = [];
-      // let restantes = this.filtros.plazo_meses;
-      // for (let t = 0; t < total_hojas; t++) {
-      //   hojas.push({ disponibilidad: [], garantias: this.garantias });
-      //   for (let i = 0; i < 12; i++) {
-      //     hojas[t].disponibilidad.push({
-      //       mes: moment(aporte.mes).add(i + 1, 'month').add(t, 'year').format('YYYY-MM'),
-      //     })
-      //   }
-      //   restantes = restantes - 12;
-      // }
-
-
       this.disponibilidad = [];
       for (let i = 0; i < this.filtros.plazo_meses; i++) {
         this.disponibilidad.push({
@@ -535,7 +522,7 @@ export class ReportesComponent {
               let proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva)
 
               this.garantias[g].prestamos.push({
-                no_prestamo: prestamos[p].no_prestamo,
+                no_dictamen: prestamos[p].no_dictamen,
                 monto: prestamos[p].prestamos_garantias[pg].monto,
                 proyecciones: proyecciones
               })
@@ -602,7 +589,7 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
-  public async reporteAmortizaciones(slug: any, print: boolean = true) {
+  public async reporteInteresesDevengados(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let programas = await this.programasService.getProgramas();
@@ -612,8 +599,19 @@ export class ReportesComponent {
 
     let cobro = await this.cobrosService.getCobroMes(this.filtros.mes);
     if (cobro) {
+      this.cobro = cobro;
       let amortizaciones = await this.amortizacionesService.getAmortizacionesCobro(cobro.id);
-      console.log(amortizaciones);
+      this.cobro.amortizaciones = amortizaciones;
+      this.cobro.dias = 0;
+      this.cobro.capital = 0;
+      this.cobro.interes = 0;
+
+      for (let a = 0; a < amortizaciones.length; a++) {
+        this.cobro.dias += amortizaciones[a].dias;
+        this.cobro.capital += amortizaciones[a].capital;
+        this.cobro.interes += amortizaciones[a].interes;
+      }
+      
     }
 
 
@@ -712,6 +710,7 @@ export class ReportesComponent {
 
     this.ngxService.stop();
   }
+
   public async reporteBalanceGeneral(slug: any, print: boolean = true) {
     this.ngxService.start();
 

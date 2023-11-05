@@ -67,3 +67,7 @@
   color: #FF5E5E !important;
   border-radius: 10px;
 }
+
+#t-hoja-tecnica tbody tr td:first {
+  width: 50% !important;
+}

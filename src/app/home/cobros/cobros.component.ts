@@ -162,27 +162,26 @@ export class CobrosComponent {
 
     let interes_iva = 0;
 
+    let saldo = monto_total;
+    
     for (let i = 0; i < cuotas.length; i++) {
       let fecha_inicio = cuotas[i].fecha_inicio;
       let fecha_fin = cuotas[i].fecha_fin;
 
       if (fecha_inicio && fecha_fin) {
         let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
-        cuotas[i].saldo_inicial = monto_total;
+        cuotas[i].saldo_inicial = saldo;
 
-        if (amortizaciones.length == 0) {
+        if (amortizaciones.length > 0) {
           capital = monto_total / plazo_meses;
-          cuotas[i].saldo_inicial = monto_total;
-        } else {
-          capital = monto_total / plazo_meses;
-          cuotas[i].saldo_inicial = parseFloat(amortizaciones[amortizaciones.length - 1].saldo_final);
+          saldo = parseFloat(amortizaciones[amortizaciones.length - 1].saldo_final);
         }
 
         cuotas[i].dias = dias;
         cuotas[i].capital = capital
         i == 1 ? cuotas[i].capital = cuotas[0].saldo_final : null;
 
-        cuotas[i].interes = (cuotas[i].saldo_inicial * (intereses / 100) / 365) * dias;
+        cuotas[i].interes = (saldo * (intereses / 100) / 365) * dias;
         i == 1 ? cuotas[i].interes = (cuotas[0].saldo_final * (intereses / 100) / 365) * dias : null;
 
         cuotas[i].iva = cuotas[i].interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
@@ -190,7 +189,7 @@ export class CobrosComponent {
         cuotas[i].cuota = cuotas[i].capital + cuotas[i].interes + cuotas[i].iva;
         i == 1 ? cuotas[i].cuota = cuotas[i].interes + cuotas[i].iva : null;
 
-        cuotas[i].saldo_final = cuotas[i].saldo_inicial - cuotas[i].capital;
+        cuotas[i].saldo_final = saldo - cuotas[i].capital;
         i == 1 ? cuotas[i].saldo_final = cuotas[0].saldo_final : null;
 
         i == 1 ? cuotas[i].capital = 0 : null;
@@ -199,6 +198,7 @@ export class CobrosComponent {
         cuotas[i].id_cobro = this.id_cobro;
 
         let amortizacion = await this.amortizacionesService.postAmortizacion(cuotas[i]);
+        this.amortizaciones.push(amortizacion)
 
         interes_iva += cuotas[i].interes + cuotas[i].iva;
 

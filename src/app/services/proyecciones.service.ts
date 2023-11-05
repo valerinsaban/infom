@@ -51,6 +51,14 @@ export class ProyeccionesService {
     return proyeccion;
   }
 
+  async deleteProyeccionesPrestamo(id_prestamo: number): Promise<any> {
+    let proyeccion = await this.rootService.delete(this.route + '/prestamo/' + id_prestamo);
+    if (proyeccion.resultado) {
+      await this.rootService.bitacora('proyeccion', 'eliminar', `eliminó las proyecciones "${proyeccion.data.prestamo.no_dictamen}"`, proyeccion.data);
+    }
+    return proyeccion;
+  }
+
 
 }
 
