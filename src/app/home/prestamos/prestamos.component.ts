@@ -12,7 +12,7 @@ import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AppComponent } from 'src/app/app.component';
-import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
+import { AmortizacionesDetallesService } from 'src/app/services/amortizaciones_detalles.service';
 import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
@@ -27,8 +27,11 @@ import { ReporteService } from 'src/app/services/reportes.service';
 import { OrdenesPagosService } from 'src/app/services/ordenes_pagos.service';
 import { ProyeccionesService } from 'src/app/services/proyecciones.service';
 import { AportesService } from 'src/app/services/aportes.service';
+import { MovimientosService } from 'src/app/services/movimientos.service';
+import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 
 declare function numeroALetras(number: any): any;
+declare function numeroALetrasMoneda(number: any): any;
 
 @Component({
   selector: 'app-prestamos',
@@ -49,7 +52,6 @@ export class PrestamosComponent implements OnInit {
   prestamos_garantias: any = [];
 
   file: any;
-  reales: number = 0;
 
   programas: any = [];
   tipos_prestamos: any = [];
@@ -120,6 +122,7 @@ export class PrestamosComponent implements OnInit {
     private regionalesService: RegionalesService,
     private usuariosService: UsuariosService,
     private amortizacionesService: AmortizacionesService,
+    private amortizaciones_detallesService: AmortizacionesDetallesService,
     private proyeccionesService: ProyeccionesService,
     private prestamos_garantiasService: PrestamosGarantiasService,
     private destinosService: DestinosService,
@@ -128,7 +131,8 @@ export class PrestamosComponent implements OnInit {
     private ordenes_pagosService: OrdenesPagosService,
     private resolucionesService: ResolucionesService,
     private reportesService: ReporteService,
-    private aportesService: AportesService
+    private aportesService: AportesService,
+    private movimientosService: MovimientosService
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -139,14 +143,14 @@ export class PrestamosComponent implements OnInit {
       monto: new FormControl(0, [Validators.required]),
       plazo_meses: new FormControl(null, [Validators.required]),
       fecha_acta: new FormControl(null),
-      intereses: new FormControl(null),
+      tasa: new FormControl(null),
       periodo_gracia: new FormControl(0),
       destino: new FormControl(null),
       no_destinos: new FormControl(null),
       acta: new FormControl(null),
       punto: new FormControl(null),
       fecha_memorial: new FormControl(null),
-      certficacion: new FormControl(null),
+      certificacion: new FormControl(null),
       no_oficio_aj: new FormControl(null),
       fecha_oficio_aj: new FormControl(null),
       no_oficio_ger: new FormControl(null),
@@ -197,6 +201,7 @@ export class PrestamosComponent implements OnInit {
     });
 
     AppComponent.loadScript('assets/js/letras.js');
+    AppComponent.loadScript('assets/js/letras-moneda.js');
   }
 
   async ngOnInit() {
@@ -500,25 +505,25 @@ export class PrestamosComponent implements OnInit {
     let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
     let plazo_meses = parseFloat(this.prestamoForm.controls['plazo_meses'].value);
-    let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
+    let tasa = parseFloat(this.prestamoForm.controls['tasa'].value);
     let periodo_gracia = parseFloat(this.prestamoForm.controls['periodo_gracia'].value);
     let fecha = moment(this.prestamoForm.controls['fecha_amortizacion'].value).add(periodo_gracia, 'month').format('YYYY-MM-DD');
 
-    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
+    this.amortizaciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, tasa, fecha, porcentaje_iva);
   }
 
   async getProyeccion2() {
     this.disp = null;
-    
+
     let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
     let plazo_meses = parseFloat(this.prestamoForm.controls['plazo_meses'].value);
-    let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
+    let tasa = parseFloat(this.prestamoForm.controls['tasa'].value);
     let periodo_gracia = parseFloat(this.prestamoForm.controls['periodo_gracia'].value);
     let fecha = moment(this.prestamoForm.controls['fecha_amortizacion'].value).add(periodo_gracia, 'month').format('YYYY-MM-DD');
 
     this.proyecciones = [];
-    this.proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
+    this.proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, tasa, fecha, porcentaje_iva);
 
     this.filtros.plazo_meses = plazo_meses;
   }
@@ -527,14 +532,14 @@ export class PrestamosComponent implements OnInit {
     this.disp = null;
     let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
-    let intereses = parseFloat(this.prestamoForm.controls['intereses'].value);
+    let tasa = parseFloat(this.prestamoForm.controls['tasa'].value);
 
     let saldo = monto_total;
 
     for (let i = 0; i < this.proyecciones.length; i++) {
       let p = this.proyecciones[i];
       p.saldo_inicial = saldo;
-      p.interes = (saldo * (intereses / 100) / 365) * p.dias;
+      p.interes = (saldo * (tasa / 100) / 365) * p.dias;
       p.iva = p.interes * porcentaje_iva / 100;
       p.cuota = parseFloat(p.capital) + p.interes + p.iva;
       p.saldo_final = saldo - parseFloat(p.capital);
@@ -718,6 +723,40 @@ export class PrestamosComponent implements OnInit {
 
     let orden_pago = await this.ordenes_pagosService.postOrdenPago(this.ordenPagoForm.value);
     if (orden_pago.resultado) {
+      let ultimo_mivimiento = await this.movimientosService.getMovimientosUltimo(this.prestamo.id);
+
+      if (ultimo_mivimiento) {
+        let saldo_inicial = ultimo_mivimiento.saldo_final;
+        await this.movimientosService.postMovimiento({
+          fecha: moment(this.ordenPagoForm.controls['fecha'].value).format('YYYY-MM-DD'),
+          saldo_inicial: saldo_inicial,
+          cargo: orden_pago.data.monto,
+          abono: 0,
+          saldo_final: parseFloat(saldo_inicial) + parseFloat(orden_pago.data.monto),
+          descripcion: `Retito de Desembolso No. ${orden_pago.data.no_desembolso} del prestamo ${this.prestamo.no_prestamo} S/Resol #${this.prestamo.resolucion.numero}.`,
+          capital: null,
+          interes: null,
+          iva: null,
+          id_prestamo: this.prestamo.id,
+          id_orden_pago: orden_pago.data.id,
+          id_recibo: null
+        });
+      } else {
+        await this.movimientosService.postMovimiento({
+          fecha: moment(this.ordenPagoForm.controls['fecha'].value).format('YYYY-MM-DD'),
+          saldo_inicial: 0,
+          cargo: orden_pago.data.monto,
+          abono: 0,
+          saldo_final: orden_pago.data.monto,
+          descripcion: `Retito de Desembolso No. ${orden_pago.data.no_desembolso} del prestamo ${this.prestamo.no_prestamo} S/Resol #${this.prestamo.resolucion.numero}.`,
+          capital: null,
+          interes: null,
+          iva: null,
+          id_prestamo: this.prestamo.id,
+          id_orden_pago: orden_pago.data.id,
+          id_recibo: null
+        });
+      }
       await this.getOrdenesPagos();
       this.alert.alertMax('Transaccion Correcta', orden_pago.mensaje, 'success');
       this.limpiar5();
@@ -823,12 +862,12 @@ export class PrestamosComponent implements OnInit {
         })
       }
 
-      await this.proyeccionesService.deleteProyeccionesPrestamo(this.prestamo.id)
+      // await this.proyeccionesService.deleteProyeccionesPrestamo(this.prestamo.id)
 
-      for (let p = 0; p < this.proyecciones.length; p++) {
-        this.proyecciones[p].id_prestamo = prestamo.data.id;
-        await this.proyeccionesService.postProyeccion(this.proyecciones[p])
-      }
+      // for (let p = 0; p < this.proyecciones.length; p++) {
+      //   this.proyecciones[p].id_prestamo = prestamo.data.id;
+      //   await this.proyeccionesService.postProyeccion(this.proyecciones[p])
+      // }
 
       await this.getPrestamos();
       await this.getCountPrestamos();
@@ -885,14 +924,14 @@ export class PrestamosComponent implements OnInit {
     this.prestamoForm.controls['monto'].setValue(i.monto);
     this.prestamoForm.controls['plazo_meses'].setValue(i.plazo_meses);
     this.prestamoForm.controls['fecha_acta'].setValue(i.fecha_acta ? moment.utc(i.fecha_acta).format('YYYY-MM-DD') : i.fecha_acta);
-    this.prestamoForm.controls['intereses'].setValue(i.intereses);
+    this.prestamoForm.controls['tasa'].setValue(i.tasa);
     this.prestamoForm.controls['periodo_gracia'].setValue(i.periodo_gracia);
     this.prestamoForm.controls['destino'].setValue(i.destino);
     this.prestamoForm.controls['no_destinos'].setValue(i.no_destinos);
     this.prestamoForm.controls['acta'].setValue(i.acta);
     this.prestamoForm.controls['punto'].setValue(i.punto);
     this.prestamoForm.controls['fecha_memorial'].setValue(i.fecha_memorial ? moment.utc(i.fecha_memorial).format('YYYY-MM-DD') : i.fecha_memorial);
-    this.prestamoForm.controls['certficacion'].setValue(i.certficacion);
+    this.prestamoForm.controls['certificacion'].setValue(i.certificacion);
     this.prestamoForm.controls['no_oficio_aj'].setValue(i.no_oficio_aj);
     this.prestamoForm.controls['fecha_oficio_aj'].setValue(i.fecha_oficio_aj);
     this.prestamoForm.controls['no_oficio_ger'].setValue(i.no_oficio_ger);
@@ -913,9 +952,6 @@ export class PrestamosComponent implements OnInit {
 
     this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
     this.proyecciones = await this.proyeccionesService.getProyeccionesPrestamo(i.id);
-
-    console.log(this.proyecciones);
-    
 
     this.municipalidad = i.municipalidad;
     this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
@@ -966,18 +1002,27 @@ export class PrestamosComponent implements OnInit {
     i.index = index;
     this.prestamo = i;
 
+    this.ngxService.start();
     this.amortizaciones = [];
     let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(this.prestamo.id);
     if (amortizaciones) {
       this.amortizaciones = amortizaciones;
-      this.reales = amortizaciones.length;
+
+      for (let a = 0; a < this.amortizaciones.length; a++) {
+        let detalles = await this.amortizaciones_detallesService.getAmortizacionesDetallesAmortizacion(this.amortizaciones[a].id);
+        if (detalles) {
+          this.amortizaciones[a].amortizaciones_detalles = detalles;
+        }
+      }
+
     }
+    this.ngxService.stop();
   }
 
   calcAmortizacion() {
     let monto_total = this.prestamo.monto;
     let plazo_meses = parseFloat(this.prestamo.plazo_meses);
-    let intereses = parseFloat(this.prestamo.intereses);
+    let tasa = parseFloat(this.prestamo.tasa);
 
     let fecha_inicio = this.amortizacionForm.controls['fecha_inicio'].value;
     let fecha_fin = this.amortizacionForm.controls['fecha_fin'].value;
@@ -996,7 +1041,7 @@ export class PrestamosComponent implements OnInit {
         saldo_inicial = parseFloat(this.amortizaciones[this.amortizacion.index - 1].saldo_final);
       }
 
-      let interes = (saldo_inicial * (intereses / 100) / 365) * dias;
+      let interes = (saldo_inicial * (tasa / 100) / 365) * dias;
       let iva = interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
       let cuota = capital + interes + iva;
       let saldo_final = saldo_inicial - capital;
@@ -1190,7 +1235,7 @@ export class PrestamosComponent implements OnInit {
 
     this.prestamoForm.controls['fecha'].setValue(moment.utc().format('YYYY-MM-DD'));
     this.prestamoForm.controls['monto'].setValue(0);
-    this.prestamoForm.controls['intereses'].setValue(this.configuracion.porcentaje_interes);
+    this.prestamoForm.controls['tasa'].setValue(this.configuracion.porcentaje_tasa);
     this.prestamoForm.controls['periodo_gracia'].setValue(0);
     this.prestamoForm.controls['estado'].setValue('Pendiente');
     this.prestamoForm.controls['id_usuario'].setValue(HomeComponent.id_usuario);
@@ -1255,7 +1300,7 @@ export class PrestamosComponent implements OnInit {
 
   recibirDisp(event: any) {
     this.disponibilidad = event;
-    
+
     for (let c = 0; c < this.programas_garantias.length; c++) {
       let monto = this.programas_garantias[c].monto;
 
@@ -1286,6 +1331,10 @@ export class PrestamosComponent implements OnInit {
 
     rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
     rep = rep.replaceAll("{{municipio}}", this.prestamo.municipalidad.municipio.nombre);
+    rep = rep.replaceAll("{{no_resolucion}}", `${this.prestamo.resolucion.numero}`);
+    rep = rep.replaceAll("{{no_dictamen}}", `${this.prestamo.no_dictamen}`);
+    rep = rep.replaceAll("{{no_convenio}}", `${this.prestamo.no_convenio}`);
+    rep = rep.replaceAll("{{no_convenio_i}}", `${this.prestamo.municipalidad.no_convenio}`);
 
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
@@ -1301,6 +1350,10 @@ export class PrestamosComponent implements OnInit {
 
   letras(number: number) {
     return numeroALetras(number);
+  }
+
+  letrasMoneda(number: number) {
+    return numeroALetrasMoneda(number);
   }
 
   formatoFecha(date: string, format: string) {
@@ -1328,9 +1381,9 @@ export class PrestamosComponent implements OnInit {
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
     if (this.municipalidad) {
       let mes = moment(this.prestamoForm.controls['fecha_amortizacion'].value).format('YYYY-MM')
-      let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.filtros.codigo_departamento, this.filtros.codigo_municipio, mes)      
+      let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.filtros.codigo_departamento, this.filtros.codigo_municipio, mes)
       if (!aporte) {
-        aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);        
+        aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
       }
       this.garantias = await this.garantiasService.getGarantias();
       let prestamos = await this.prestamosService.getPrestamosEstadoMunicipalidad('Acreditado', this.municipalidad.id);
@@ -1365,11 +1418,11 @@ export class PrestamosComponent implements OnInit {
               let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
               let monto_total = parseFloat(prestamos[p].prestamos_garantias[pg].monto);
               let plazo_meses = parseFloat(prestamos[p].plazo_meses);
-              let intereses = parseFloat(prestamos[p].intereses);
+              let tasa = parseFloat(prestamos[p].tasa);
               let fecha = prestamos[p].fecha_amortizacion;
 
-              let proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva);
-              
+              let proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, tasa, fecha, porcentaje_iva);
+
               this.garantias[g].prestamos.push({
                 no_prestamo: prestamos[p].no_prestamo,
                 monto: prestamos[p].prestamos_garantias[pg].monto,
@@ -1384,7 +1437,7 @@ export class PrestamosComponent implements OnInit {
           let monto = this.getMontoDispTotal(this.disponibilidad[i].mes, this.garantias[g].prestamos, this.garantias[g].aporte);
           if (this.prestamoForm.controls['id_programa'].value == 1 && this.garantias[g].id == 1) {
             for (let p = 0; p < this.proyecciones.length; p++) {
-              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {                
+              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {
                 this.proyecciones[p].disponible = monto;
               }
             }
@@ -1392,14 +1445,14 @@ export class PrestamosComponent implements OnInit {
           if (this.prestamoForm.controls['id_programa'].value == 2 && this.garantias[g].id == 2) {
             for (let p = 0; p < this.proyecciones.length; p++) {
               if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {
-                this.proyecciones[p].disponible = monto;         
+                this.proyecciones[p].disponible = monto;
               }
             }
           }
           if (this.prestamoForm.controls['id_programa'].value == '3') {
             for (let p = 0; p < this.proyecciones.length; p++) {
-              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {                
-                this.proyecciones[p].disponible = this.getMontoDispTotalDisponible(this.disponibilidad[i].mes);                
+              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {
+                this.proyecciones[p].disponible = this.getMontoDispTotalDisponible(this.disponibilidad[i].mes);
               }
             }
           }
@@ -1413,15 +1466,15 @@ export class PrestamosComponent implements OnInit {
 
         }
 
-        let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);        
+        let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
         if (this.garantias[g].id == 1) {
           this.totales_disp.constitucional = tot
         }
         if (this.garantias[g].id == 2) {
           this.totales_disp.iva_paz = tot
         }
-        this.totales_disp.total = this.getTotalMontoDispTotalDisponible();     
-           
+        this.totales_disp.total = this.getTotalMontoDispTotalDisponible();
+
       }
 
       let rep: any = await this.reportesService.get('disponibilidad');
@@ -1429,14 +1482,14 @@ export class PrestamosComponent implements OnInit {
       rep = rep.replaceAll("{{constitucional}}", parseFloat(aporte.constitucional).toLocaleString('en-US'));
       rep = rep.replaceAll("{{iva_paz}}", parseFloat(aporte.iva_paz).toLocaleString('en-US'));
       rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
-  
+
       let contenido: any = document.getElementById('disponibilidad');
       contenido = contenido.innerHTML.toString();
-      
+
       rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
       rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
       rep = rep.replaceAll("{{contenido}}", contenido);
-  
+
       if (print) {
         this.print(rep)
       }
@@ -1478,7 +1531,7 @@ export class PrestamosComponent implements OnInit {
             total -= prestamos[p].proyecciones[a].cuota;
           }
         }
-      } 
+      }
     }
     return total;
   }

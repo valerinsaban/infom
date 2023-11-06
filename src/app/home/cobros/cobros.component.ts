@@ -6,7 +6,6 @@ import { CobrosService } from 'src/app/services/cobros.service';
 import Swal from 'sweetalert2';
 import { HomeComponent } from '../home.component';
 import { PrestamosService } from 'src/app/services/prestamos.service';
-import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import * as moment from 'moment';
 import { ConfiguracionesService } from 'src/app/services/configuraciones.service';
 import { FacturasService } from 'src/app/services/documentos/facturas.service';
@@ -14,6 +13,10 @@ import { RecibosService } from 'src/app/services/documentos/recibos.service';
 import { OrdenesPagosService } from 'src/app/services/ordenes_pagos.service';
 import { FacturasDetallesService } from 'src/app/services/documentos/facturas_detalles.service';
 import { RecibosDetallesService } from 'src/app/services/documentos/recibos_detalles.service';
+import { ProyeccionesService } from 'src/app/services/proyecciones.service';
+import { MovimientosService } from 'src/app/services/movimientos.service';
+import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
+import { AmortizacionesDetallesService } from 'src/app/services/amortizaciones_detalles.service';
 
 @Component({
   selector: 'app-cobros',
@@ -26,7 +29,6 @@ export class CobrosComponent {
   cobroForm: FormGroup;
   cobros: any = [];
   cobro: any;
-  id_cobro: number = 0;
 
   amortizaciones: any = [];
 
@@ -40,7 +42,10 @@ export class CobrosComponent {
     private cobrosService: CobrosService,
     private prestamosService: PrestamosService,
     private amortizacionesService: AmortizacionesService,
+    private amortizaciones_detallesService: AmortizacionesDetallesService,
+    private proyeccionesService: ProyeccionesService,
     private ordenes_pagosService: OrdenesPagosService,
+    private movimientosService: MovimientosService,
     private facturasService: FacturasService,
     private factuas_detallesService: FacturasDetallesService,
     private recibosService: RecibosService,
@@ -48,9 +53,9 @@ export class CobrosComponent {
     private configuracionesService: ConfiguracionesService
   ) {
     this.cobroForm = new FormGroup({
-      codigo: new FormControl('NOV-A', [Validators.required]),
-      fecha: new FormControl('2023-12-15', [Validators.required]),
-      mes: new FormControl('2023-11', [Validators.required]),
+      codigo: new FormControl('SEP-A', [Validators.required]),
+      fecha: new FormControl('2023-10-14', [Validators.required]),
+      mes: new FormControl('2023-09', [Validators.required]),
     });
     this.amortizacionForm = new FormGroup({
       fecha_inicio: new FormControl(null, [Validators.required]),
@@ -102,11 +107,12 @@ export class CobrosComponent {
     let cobro = await this.cobrosService.postCobro(this.cobroForm.value);
     if (cobro.resultado) {
 
-      this.id_cobro = cobro.data.id;
+      this.cobro = cobro.data;
 
       let prestamos = await this.prestamosService.getPrestamosEstado('Acreditado');
       for (let p = 0; p < prestamos.length; p++) {
-        let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(prestamos[p].id);
+
+        let proyeccion = await this.proyeccionesService.getProyeccionesPrestamoMes(prestamos[p].id, this.cobro.mes);
 
         let fecha = this.cobro_anterior.fecha;
         let cuotas: any = [
@@ -121,7 +127,7 @@ export class CobrosComponent {
         ];
 
         for (let c = 0; c < cuotas.length; c++) {
-          let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamoFecha(prestamos[p].id, cuotas[c].fecha_inicio, cuotas[c].fecha_fin);          
+          let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamoFecha(prestamos[p].id, cuotas[c].fecha_inicio, cuotas[c].fecha_fin);
           if (ordenes_pagos.length) {
             for (let o = 0; o < ordenes_pagos.length; o++) {
               if (ordenes_pagos[o].no_desembolso == 1) {
@@ -143,7 +149,8 @@ export class CobrosComponent {
           }
         }
 
-        await this.calcAmortizacion(prestamos[p], amortizaciones, cuotas);
+        await this.calcAmortizacion(prestamos[p], cuotas, proyeccion);
+
       }
 
       await this.getCobros();
@@ -153,36 +160,49 @@ export class CobrosComponent {
     this.ngxService.stop();
   }
 
-  async calcAmortizacion(p: any, amortizaciones: any, cuotas: any) {
-    
-    let monto_total = p.monto;
-    let plazo_meses = parseFloat(p.plazo_meses);
-    let intereses = parseFloat(p.intereses);
-    let capital = monto_total / plazo_meses;
-
+  async calcAmortizacion(p: any, cuotas: any, proyeccion: any) {
+    let tasa = parseFloat(p.tasa);
+    let dias = 0;
+    let capital = parseFloat(proyeccion.capital);
+    let interes = 0;
+    let iva = 0;
     let interes_iva = 0;
 
-    let saldo = monto_total;
-    
+    let ultimo_mivimiento = await this.movimientosService.getMovimientosUltimo(p.id);
+    let saldo = ultimo_mivimiento ? ultimo_mivimiento.saldo_final : 0;
+
+    let amortizacion = await this.amortizacionesService.postAmortizacion({
+      mes: moment(this.cobro.mes).format('YYYY-MM'),
+      fecha_inicio: null,
+      fecha_fin: null,
+      dias,
+      capital,
+      interes,
+      iva,
+      cuota: capital + interes + iva,
+      saldo_inicial: saldo,
+      saldo_final: saldo,
+      tasa: p.tasa,
+      id_cobro: this.cobro.id,
+      id_prestamo: p.id,
+      id_programa: p.id_programa
+    });
+
     for (let i = 0; i < cuotas.length; i++) {
       let fecha_inicio = cuotas[i].fecha_inicio;
       let fecha_fin = cuotas[i].fecha_fin;
 
       if (fecha_inicio && fecha_fin) {
-        let dias = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
+        let dias_cuota = moment(fecha_fin).diff(moment(fecha_inicio), 'days') + 1;
+
         cuotas[i].saldo_inicial = saldo;
 
-        if (amortizaciones.length > 0) {
-          capital = monto_total / plazo_meses;
-          saldo = parseFloat(amortizaciones[amortizaciones.length - 1].saldo_final);
-        }
-
-        cuotas[i].dias = dias;
+        cuotas[i].dias = dias_cuota;
         cuotas[i].capital = capital
         i == 1 ? cuotas[i].capital = cuotas[0].saldo_final : null;
 
-        cuotas[i].interes = (saldo * (intereses / 100) / 365) * dias;
-        i == 1 ? cuotas[i].interes = (cuotas[0].saldo_final * (intereses / 100) / 365) * dias : null;
+        cuotas[i].interes = (saldo * (tasa / 100) / 365) * dias_cuota;
+        i == 1 ? cuotas[i].interes = (cuotas[0].saldo_final * (tasa / 100) / 365) * dias_cuota : null;
 
         cuotas[i].iva = cuotas[i].interes * parseFloat(this.configuracion.porcentaje_iva) / 100;
 
@@ -194,45 +214,127 @@ export class CobrosComponent {
 
         i == 1 ? cuotas[i].capital = 0 : null;
 
-        cuotas[i].id_prestamo = p.id;
-        cuotas[i].id_cobro = this.id_cobro;
+        cuotas[i].id_amortizacion = amortizacion.data.id;
+        cuotas[i].mes = moment(fecha_fin).format('YYYY-MM');
+        cuotas[i].tasa = p.tasa;
 
-        let amortizacion = await this.amortizacionesService.postAmortizacion(cuotas[i]);
-        this.amortizaciones.push(amortizacion)
+        await this.amortizaciones_detallesService.postAmortizacionDetalle(cuotas[i]);
 
+        saldo = cuotas[i].saldo_final;
+        dias += cuotas[i].dias;
+        interes += cuotas[i].interes;
+        iva += cuotas[i].iva;
         interes_iva += cuotas[i].interes + cuotas[i].iva;
 
       }
 
     }
-        
-    // let factura = await this.facturasService.postFactura({
-    //   numero: p.id,
-    //   fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
-    //   nit: p.municipalidad.nit,
-    //   nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
-    //   autorizacion: null,
-    //   serie_fel: null,
-    //   numero_fel: null,
-    //   monto: interes_iva,
-    //   estado: 'Vigente',
-    // });
 
-    // let factura_detalle = await this.factuas_detallesService.postFacturaDetalle({
-    //   cantidad: 1,
-    //   tipo: 'S',
-    //   descripcion: ''
-    // })
+    await this.amortizacionesService.putAmortizacion(amortizacion.data.id, {
+      mes: moment(this.cobro.mes).format('YYYY-MM'),
+      fecha_inicio: moment(cuotas[0].fecha_inicio).format('YYYY-MM-DD'),
+      fecha_fin: moment(cuotas[cuotas.length - 1].fecha_fin).format('YYYY-MM-DD'),
+      dias,
+      capital,
+      interes,
+      iva,
+      cuota: capital + interes + iva,
+      saldo_inicial: ultimo_mivimiento ? ultimo_mivimiento.saldo_final : 0,
+      saldo_final: saldo,
+      tasa: p.tasa,
+      id_cobro: this.cobro.id,
+      id_prestamo: p.id,
+      id_programa: p.id_programa
+    });
 
-    // let recibo = await this.recibosService.postRecibo({
-    //   numero: p.id,
-    //   fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
-    //   nit: p.municipalidad.nit,
-    //   nombre: p.municipalidad.municipio.nombre + ', ' + p.municipalidad.departamento.nombre,
-    //   monto: interes_iva,
-    //   estado: 'Vigente',
-    // });
+  }
 
+  async generarDocumentos() {
+
+    this.ngxService.start();
+
+    for (let a = 0; a < this.amortizaciones.length; a++) {
+
+      let amortizacion = this.amortizaciones[a];
+      let interes_iva = parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva);
+      interes_iva = Math.round((interes_iva + Number.EPSILON) * 100) / 100;
+      let impuestos = Math.round(((interes_iva / 1.12 * 0.12) + Number.EPSILON) * 100) / 100;
+
+      let factura = await this.facturasService.postFactura({
+        numero: 0,
+        fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+        nit: amortizacion.prestamo.municipalidad.nit,
+        nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
+        autorizacion: null,
+        serie_fel: null,
+        numero_fel: null,
+        monto: parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva),
+        estado: 'Vigente',
+      });
+
+      if (factura.resultado) {
+
+        await this.factuas_detallesService.postFacturaDetalle({
+          cantidad: 1,
+          tipo: 'S',
+          descripcion: `Cobro de intereses e IVA correspondiente al mes de ${moment(amortizacion.mes).format('MMMM YYYY')}. 
+          Prestamo ${amortizacion.prestamo.no_prestamo}.
+          Resolucion ${amortizacion.prestamo.resolucion.numero}.`,
+          precio_unitario: interes_iva,
+          descuentos: 0,
+          impuestos: impuestos,
+          subtotal: interes_iva,
+          id_factura: factura.data.id
+        });
+
+        let recibo = await this.recibosService.postRecibo({
+          numero: 0,
+          fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+          nit: amortizacion.prestamo.municipalidad.nit,
+          nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
+          monto: interes_iva,
+          estado: 'Vigente',
+          id_factura: factura.data.id
+        });
+
+        if (recibo.resultado) {
+
+          await this.recibos_detallesService.postReciboDetalle({
+            cantidad: 1,
+            tipo: 'S',
+            descripcion: `Cobro de intereses e IVA correspondiente al mes de ${moment(amortizacion.mes).format('MMMM YYYY')}.
+            Capital: ${amortizacion.capital}.
+            Interes: ${amortizacion.interes}. IVA ${amortizacion.iva}.
+            Prestamo ${amortizacion.prestamo.no_prestamo}.
+            Resolucion ${amortizacion.prestamo.resolucion.numero}.`,
+            precio_unitario: interes_iva,
+            descuentos: 0,
+            impuestos: impuestos,
+            subtotal: interes_iva,
+            id_recibo: recibo.data.id
+          });
+
+          await this.movimientosService.postMovimiento({
+            fecha: moment(this.cobro.fecha).format('YYYY-MM-DD'),
+            saldo_inicial: amortizacion.saldo_inicial,
+            cargo: 0,
+            abono: amortizacion.capital,
+            saldo_final: amortizacion.saldo_final,
+            descripcion: `V/Amortizacion Capital. ${amortizacion.capital} Interes ${amortizacion.interes}. IVA ${amortizacion.iva}.`,
+            capital: amortizacion.capital,
+            interes: amortizacion.interes,
+            iva: amortizacion.iva,
+            id_prestamo: amortizacion.prestamo.id,
+            id_orden_pago: null,
+            id_recibo: recibo.data.id
+          });
+        }
+
+      }
+
+    }
+
+    this.ngxService.stop();
   }
 
   async putCobro() {
@@ -289,8 +391,16 @@ export class CobrosComponent {
   }
 
   async getAmortizaciones() {
+    this.ngxService.start();
     let amortizaciones = await this.amortizacionesService.getAmortizacionesCobro(this.cobro.id);
     this.amortizaciones = amortizaciones;
+    for (let a = 0; a < this.amortizaciones.length; a++) {
+      let detalles = await this.amortizaciones_detallesService.getAmortizacionesDetallesAmortizacion(this.amortizaciones[a].id);
+      if (detalles) {
+        this.amortizaciones[a].amortizaciones_detalles = detalles;
+      }
+    }
+    this.ngxService.stop();
   }
 
   limpiar() {

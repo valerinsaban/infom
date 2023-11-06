@@ -27,6 +27,10 @@ export class ProyeccionesService {
     return this.rootService.get(this.route + '/prestamo/' + id);
   }
 
+  getProyeccionesPrestamoMes(id: number, mes: string): Promise<any> {
+    return this.rootService.get(this.route + '/prestamo/' + id + '/' + mes);
+  }
+
   async postProyeccion(data: any): Promise<any> {
     let proyeccion = await this.rootService.post(this.route, data);
     if (proyeccion.resultado) {

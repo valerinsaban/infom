@@ -38,6 +38,14 @@ export class PrestamosService {
     return this.rootService.get(this.route + '/municipalidad/' + estado + '/' + id_municipalidad);
   }
 
+  getPrestamosEstadoPrograma(estado: string, id_programa: number): Promise<any> {
+    return this.rootService.get(this.route + '/programa/' + estado + '/' + id_programa);
+  }
+
+  getPrestamosEstadoMunicipalidadPrograma(estado: string, id_municipalidad: number, id_programa: number): Promise<any> {
+    return this.rootService.get(this.route + '/municipalidad/programa/' + estado + '/' + id_municipalidad + '/' + id_programa);
+  }
+
   getCountPrestamosTipoPrestamoPrograma(id_tipo_prestamo: number, id_programa: number, fecha_inicio: string , fecha_fin: string): Promise<any> {
     return this.rootService.get(this.route + '/tipo_prestamo/' + id_tipo_prestamo + '/programa/' + id_programa + '/rango/' + fecha_inicio + '/' + fecha_fin);
   }
@@ -52,6 +60,10 @@ export class PrestamosService {
 
   getPrestamo(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
+  }
+
+  getPrestamoNoPrestamo(no_prestamo: number): Promise<any> {
+    return this.rootService.get(this.route + '/no_prestamo/' + no_prestamo);
   }
 
   async postPrestamo(data: any): Promise<any> {
@@ -87,6 +99,8 @@ export class PrestamosService {
     let fecha_f = moment(fecha).endOf('month').format('YYYY-MM-DD');
     
     for (let p = 0; p < (plazo_meses); p++) {
+      let mes = moment(fecha).add(p, 'month').format('YYYY-MM');
+
       let saldo_inicial = saldo;
       let fecha_inicio = moment(fecha_i).add(p, 'month').format('YYYY-MM-DD');
       let fecha_fin = moment(fecha_f).add(p, 'month').endOf('month').format('YYYY-MM-DD');
@@ -105,7 +119,7 @@ export class PrestamosService {
       saldo = saldo_final;
 
       proyeccion.push({
-        fecha_inicio, fecha_fin, dias, saldo_inicial, capital, interes, iva, cuota, saldo_final
+        mes, fecha_inicio, fecha_fin, dias, saldo_inicial, capital, interes, iva, cuota, saldo_final
       });
     }
 

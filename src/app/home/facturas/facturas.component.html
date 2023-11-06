@@ -55,7 +55,7 @@
                   <td class="py-2">{{f.fecha | date: 'dd/MM/YYYY HH:mm'}}</td>
                   <td class="py-2">
                     <span class="badge"
-                      [ngClass]="{'badge-success': f.estado == 'Vigente', 'badge-danger': f.estado == 'Anulada'}">
+                      [ngClass]="{'badge-success': f.estado == 'Vigente', 'badge-warning': f.estado == 'Pendiente', 'badge-danger': f.estado == 'Anulada'}">
                       {{f.estado}}<span class="ms-1 fa fa-check"></span>
                     </span>
                   </td>

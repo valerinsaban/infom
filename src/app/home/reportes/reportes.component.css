@@ -3,3 +3,7 @@ hr {
   margin-right: -21px;
   margin-bottom: 10px
 }
+
+ng-container tr:last-child {
+  display: none !important;
+}

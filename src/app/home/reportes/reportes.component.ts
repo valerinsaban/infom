@@ -7,10 +7,9 @@ import { PrestamosService } from 'src/app/services/prestamos.service';
 import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AportesService } from 'src/app/services/aportes.service';
-import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
+import { AmortizacionesDetallesService } from 'src/app/services/amortizaciones_detalles.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import { AlertService } from 'src/app/services/alert.service';
-import { CobrosService } from 'src/app/services/cobros.service';
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { PuestosService } from 'src/app/services/catalogos/puestos.service';
 import { PartidosPoliticosService } from 'src/app/services/catalogos/partidos-politicos.service';
@@ -23,6 +22,8 @@ import { ProfesionesService } from 'src/app/services/catalogos/profesiones.servi
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { BancosService } from 'src/app/services/catalogos/bancos.service';
 import { DestinosService } from 'src/app/services/catalogos/destinos.service';
+import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
+import { MovimientosService } from 'src/app/services/movimientos.service';
 
 @Component({
   selector: 'app-reportes',
@@ -35,16 +36,17 @@ export class ReportesComponent {
 
   @Input()
   filtros: any = {
-    codigo_departamento: '05',
-    codigo_municipio: '07',
-    plazo_meses: 18,
-    mes: null,
+    codigo_departamento: '',
+    codigo_municipio: '',
+    plazo_meses: '',
+    mes: '',
     mes_inicio: null,
-    mes_fin: null
+    mes_fin: null,
+    no_prestamo: null
   }
 
   @Input()
-  slug_reporte: any = 'disponibilidad';
+  slug_reporte: any = 'estados-de-cuenta';
 
   @Input()
   view_reporte: boolean = true;
@@ -70,6 +72,9 @@ export class ReportesComponent {
   destinos: any = [];
   programas: any = [];
   amortizaciones: any = [];
+  municipalidades: any = [];
+  prestamos: any = [];
+  movimientos: any = [];
 
   cobro: any;
 
@@ -93,7 +98,7 @@ export class ReportesComponent {
     private prestamosService: PrestamosService,
     private prestamos_garantiasService: PrestamosGarantiasService,
     private amortizacionesService: AmortizacionesService,
-    private cobrosService: CobrosService,
+    private amortizaciones_detallesService: AmortizacionesDetallesService,
     private programasService: ProgramasService,
     private puestosService: PuestosService,
     private partidosService: PartidosPoliticosService,
@@ -105,9 +110,17 @@ export class ReportesComponent {
     private profesionesService: ProfesionesService,
     private departamentosService: DepartamentosService,
     private bancosService: BancosService,
-    private destinosService: DestinosService
+    private destinosService: DestinosService,
+    private movimientosService: MovimientosService
   ) {
     this.getReportes();
+  }
+
+  async ngOnInit() {
+    let prestamos = await this.prestamosService.getPrestamosEstado('Acreditado')
+    if (prestamos) {
+      this.prestamos = prestamos;
+    }
   }
 
   get configuracion() {
@@ -136,7 +149,7 @@ export class ReportesComponent {
       { slug: 'situado-constitucional', nombre: 'Reporte Situado Constitucional', filtros: ['mes_inicio', 'mes_fin'] },
       { slug: 'datos-bancarios', nombre: 'Reporte Datos Bancarios', filtros: ['codigo_departamento', 'codigo_municipio'] },
       { slug: 'creditos-analizados', nombre: 'Reporte Creditos Analizados', filtros: [] },
-      { slug: 'intereses-dev-no-percibios', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] },
+      { slug: 'intereses-dev-no-percibidos', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] },
       { slug: 'prestamos-otorgados', nombre: 'Prestamos Otorgados', filtros: [] },
       { slug: 'recibo', nombre: 'Recibo', filtros: [] },
       { slug: 'recibos-emitidos', nombre: 'Recibos Emitidos', filtros: ['fecha_inicio', 'fecha_fin'] },
@@ -145,7 +158,7 @@ export class ReportesComponent {
       { slug: 'confirmacion-saldos', nombre: 'Confirmacion de Saldos', filtros: [] },
       { slug: 'asignaciones', nombre: 'Reporte de asignaciones, cobros y disponibilidad', filtros: [] },
       { slug: 'cur', nombre: 'Auxiliar para generacion de CUR de Ingresos', filtros: [] },
-      { slug: 'estados-de-cuenta', nombre: 'Estados de Cuenta', filtros: ['fecha'] },
+      { slug: 'estados-de-cuenta', nombre: 'Estados de Cuenta', filtros: ['fecha', 'no_prestamo'] },
       { slug: 'balance-general', nombre: 'Balance General', filtros: ['fecha'] }
     ];
   }
@@ -249,7 +262,7 @@ export class ReportesComponent {
       this.totales.total = this.getTotalMontoDispTotalDisponible();
       this.disp.emit(this.totales)
     }
-    
+
     if (this.slug_reporte == 'disponibilidad-general') {
       await this.reporteDisponibilidadGeneral(this.slug_reporte, print);
     }
@@ -266,7 +279,7 @@ export class ReportesComponent {
       await this.reporteDatosBancarios(this.slug_reporte, print);
     }
 
-    if (this.slug_reporte == 'intereses-dev-no-percibios') {
+    if (this.slug_reporte == 'intereses-dev-no-percibidos') {
       await this.reporteInteresesDevengados(this.slug_reporte, print);
     }
 
@@ -277,7 +290,7 @@ export class ReportesComponent {
     if (this.slug_reporte == 'recibo') {
       await this.reporteRecibo(this.slug_reporte, print);
     }
-    
+
     if (this.slug_reporte == 'recibos-emitidos') {
       await this.reporteRecibosEmitidos(this.slug_reporte, print);
     }
@@ -301,9 +314,11 @@ export class ReportesComponent {
     if (this.slug_reporte == 'cur') {
       await this.reporteCUR(this.slug_reporte, print);
     }
+
     if (this.slug_reporte == 'estados-de-cuenta') {
       await this.reporteEstadosDeCuenta(this.slug_reporte, print);
     }
+
     if (this.slug_reporte == 'balance-general') {
       await this.reporteBalanceGeneral(this.slug_reporte, print);
     }
@@ -516,10 +531,10 @@ export class ReportesComponent {
               let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
               let monto_total = parseFloat(prestamos[p].prestamos_garantias[pg].monto);
               let plazo_meses = parseFloat(prestamos[p].plazo_meses);
-              let intereses = parseFloat(prestamos[p].intereses);
+              let tasa = parseFloat(prestamos[p].tasa);
               let fecha = prestamos[p].fecha_amortizacion;
 
-              let proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, intereses, fecha, porcentaje_iva)
+              let proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, tasa, fecha, porcentaje_iva)
 
               this.garantias[g].prestamos.push({
                 no_dictamen: prestamos[p].no_dictamen,
@@ -595,32 +610,78 @@ export class ReportesComponent {
     let programas = await this.programasService.getProgramas();
     this.programas = programas;
 
-    // let municipalidades = await this.municipalidadesService.getMunicipalidades();
+    for (let p = 0; p < this.programas.length; p++) {
+      let amortizaciones = await this.amortizacionesService.getAmortizacionesProgramaMes(this.programas[p].id, this.filtros.mes);
+      if (amortizaciones.length == 0) {
+        this.programas.splice(p, 1);
+        p--;
+      } else {
+        this.programas[p].amortizaciones = amortizaciones;
+        this.programas[p].municipalidades = [];
 
-    let cobro = await this.cobrosService.getCobroMes(this.filtros.mes);
-    if (cobro) {
-      this.cobro = cobro;
-      let amortizaciones = await this.amortizacionesService.getAmortizacionesCobro(cobro.id);
-      this.cobro.amortizaciones = amortizaciones;
-      this.cobro.dias = 0;
-      this.cobro.capital = 0;
-      this.cobro.interes = 0;
+        // Agrupando municipalidades
+        for (let i = 0; i < this.programas[p].amortizaciones.length; i++) {
+          this.programas[p].municipalidades.push(this.programas[p].amortizaciones[i].prestamo.municipalidad);
+        }
+        var hash: any = {};
+        this.programas[p].municipalidades = this.programas[p].municipalidades.filter(function (current: any) {
+          var exists = !hash[current.id];
+          hash[current.id] = true;
+          return exists;
+        });
 
-      for (let a = 0; a < amortizaciones.length; a++) {
-        this.cobro.dias += amortizaciones[a].dias;
-        this.cobro.capital += amortizaciones[a].capital;
-        this.cobro.interes += amortizaciones[a].interes;
+        // Inyectando prestamos
+        for (let m = 0; m < this.programas[p].municipalidades.length; m++) {
+          this.programas[p].municipalidades[m].amortizaciones = [];
+
+          for (let i = 0; i < this.programas[p].amortizaciones.length; i++) {
+            let amortizaciones_detalles = await this.amortizaciones_detallesService.getAmortizacionesDetallesAmortizacion(this.programas[p].amortizaciones[i].id);
+            this.programas[p].amortizaciones[i].amortizaciones_detalles = amortizaciones_detalles;
+
+            if (this.programas[p].municipalidades[m].id == this.programas[p].amortizaciones[i].prestamo.id_municipalidad) {
+              this.programas[p].municipalidades[m].amortizaciones.push(this.programas[p].amortizaciones[i])
+            }
+
+          }
+
+        }
+
       }
-      
     }
 
+    // Totalizando
+    for (let p = 0; p < this.programas.length; p++) {
+      this.programas[p].dias = 0;
+      this.programas[p].capital = 0;
+      this.programas[p].interes = 0;
+      for (let m = 0; m < this.programas[p].municipalidades.length; m++) {
+        this.programas[p].municipalidades[m].dias = 0;
+        this.programas[p].municipalidades[m].capital = 0;
+        this.programas[p].municipalidades[m].interes = 0;
+        for (let a = 0; a < this.programas[p].municipalidades[m].amortizaciones.length; a++) {
+          for (let d = 0; d < this.programas[p].municipalidades[m].amortizaciones[a].amortizaciones_detalles.length; d++) {
+            let amortizacion = this.programas[p].municipalidades[m].amortizaciones[a].amortizaciones_detalles[d];
+
+            this.programas[p].municipalidades[m].dias += parseInt(amortizacion.dias);
+            this.programas[p].municipalidades[m].capital += parseFloat(amortizacion.capital);
+            this.programas[p].municipalidades[m].interes += parseFloat(amortizacion.interes);
+
+            this.programas[p].dias += parseInt(amortizacion.dias);
+            this.programas[p].capital += parseFloat(amortizacion.capital);
+            this.programas[p].interes += parseFloat(amortizacion.interes);
+
+          }
+        }
+      }
+    }
+
+    this.ngxService.stop();
 
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.mes).startOf('month').format('DD/MM/YYYY'));
     rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.mes).endOf('month').format('DD/MM/YYYY'));
     this.catalogo(rep, slug, print)
 
-    this.ngxService.stop();
   }
 
   public async reportePrestamosOtorgados(slug: any, print: boolean = true) {
@@ -646,7 +707,7 @@ export class ReportesComponent {
 
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD/MM/YYYY'));
-    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD/MM/YYYY'));    
+    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD/MM/YYYY'));
     this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
@@ -657,7 +718,7 @@ export class ReportesComponent {
 
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD/MM/YYYY'));
-    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD/MM/YYYY'));    
+    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD/MM/YYYY'));
     this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
@@ -668,7 +729,7 @@ export class ReportesComponent {
 
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{mes}}", moment(this.filtros.mes).format('MMMM YYYY'));
-    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD/MM/YYYY'));    
+    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD/MM/YYYY'));
     this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
@@ -704,7 +765,18 @@ export class ReportesComponent {
   public async reporteEstadosDeCuenta(slug: any, print: boolean = true) {
     this.ngxService.start();
 
+    let prestamo = await this.prestamosService.getPrestamo(this.filtros.id_prestamo);
+    let movimientos = await this.movimientosService.getMovimientosPrestamo(this.filtros.id_prestamo);
+    this.movimientos = movimientos;
+
     let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD MMMM YYYY'));
+    rep = rep.replaceAll("{{no_prestamo}}", prestamo.no_prestamo);
+    rep = rep.replaceAll("{{programa}}", prestamo.programa.nombre);
+    rep = rep.replaceAll("{{municipalidad}}", `${prestamo.municipalidad.municipio.nombre}, ${prestamo.municipalidad.departamento.nombre}`);
+    rep = rep.replaceAll("{{monto}}", prestamo.monto);
+    rep = rep.replaceAll("{{monto_entregado}}", 0);
+
     rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD MMMM YYYY'));
     this.catalogo(rep, slug, print)
 
@@ -746,7 +818,6 @@ export class ReportesComponent {
     let total = aporte;
 
     for (let p = 0; p < prestamos.length; p++) {
-      console.log(prestamos[p].proyecciones);
 
       for (let a = 0; a < prestamos[p].proyecciones.length; a++) {
         let mes_inicio = moment(prestamos[p].proyecciones[a].fecha_inicio).format('YYYY-MM');
@@ -840,6 +911,26 @@ export class ReportesComponent {
         for (let d = 0; d < this.aportes[a].data.length; d++) {
           let tot = parseFloat(this.aportes[a].data[d].iva_paz);
           total += Math.round((tot + Number.EPSILON) * 100) / 100;
+        }
+      }
+    }
+    return total;
+  }
+
+  getTotalDevengados(campo: string) {
+    let total = 0;
+    for (let p = 0; p < this.programas.length; p++) {
+      for (let i = 0; i < this.programas[p].amortizaciones.length; i++) {
+        for (let a = 0; a < this.programas[p].amortizaciones[i].amortizaciones_detalles.length; a++) {
+          if (campo == 'dias') {
+            total += parseInt(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].dias);
+          }
+          if (campo == 'capital') {
+            total += parseFloat(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].capital);
+          }
+          if (campo == 'interes') {
+            total += parseFloat(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].interes);
+          }
         }
       }
     }

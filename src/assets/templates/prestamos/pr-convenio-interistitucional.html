@@ -16,7 +16,7 @@
       }
   
       @page {
-        margin: 25mm 5mm 10mm 5mm;
+        margin: 35mm 5mm 10mm 5mm;
   
         @top-left {
           content: element(header);
@@ -56,7 +56,7 @@
 
 <body>
 
-  <nav id="header" class="navbar">
+  <div id="header">
     <div class="row">
       <div class="col-3">
         <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
@@ -67,7 +67,7 @@
         </span>
         <br>
         <span style="font-size: 11px;">
-          CONVENIO INTERINSTITUCIONAL ADMINISTRATIVO Y FINANCIERO No. {{VARIABLE}} <br>
+          CONVENIO INTERINSTITUCIONAL ADMINISTRATIVO Y FINANCIERO No. {{no_convenio_i}} <br>
         </span>
       </div>
       <div class="col-3" style="text-align: right;">
@@ -75,8 +75,10 @@
         Usuario: <b>{{usuario}}</b>
       </div>
     </div>
-  </nav>
-  <hr>
+    <hr>
+    <br>
+  </div>
+  
 
   {{contenido}}
 

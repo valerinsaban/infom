@@ -15,42 +15,42 @@ export class AmortizacionesService {
     return this.rootService.get(this.route);
   }
 
-  getAmortizacion(id: number): Promise<any> {
-    return this.rootService.get(this.route + '/' + id);
-  }
-
   getAmortizacionesCobro(id_cobro: number): Promise<any> {
     return this.rootService.get(this.route + '/cobro/' + id_cobro);
   }
 
-  getAmortizacionesPrestamo(id: number): Promise<any> {
-    return this.rootService.get(this.route + '/prestamo/' + id);
+  getAmortizacionesPrograma(id_programa: number): Promise<any> {
+    return this.rootService.get(this.route + '/programa/' + id_programa);
+  }
+
+  getAmortizacionesProgramaMes(id_programa: number, mes: string): Promise<any> {
+    return this.rootService.get(this.route + '/programa/mes/' + id_programa + '/' + mes);
+  }
+
+  getAmortizacionesPrestamo(id_prestamo: number): Promise<any> {
+    return this.rootService.get(this.route + '/prestamo/' + id_prestamo);
+  }
+
+  getAmortizacionesPrestamoMes(id_prestamo: number, mes: string): Promise<any> {
+    return this.rootService.get(this.route + '/prestamo/mes/' + id_prestamo + '/' + mes);
+  }
+
+  getAmortizacion(id: number): Promise<any> {
+    return this.rootService.get(this.route + '/' + id);
   }
 
   async postAmortizacion(data: any): Promise<any> {
-    let amortizacion = await this.rootService.post(this.route, data);
-    if (amortizacion.resultado) {
-      await this.rootService.bitacora('amortizacion', 'agregar', `creó la amortizacion "${amortizacion.data.id}"`, amortizacion.data);
-    }
-    return amortizacion;
+    let cobro_detalle = await this.rootService.post(this.route, data);
+    return cobro_detalle;
   }
 
   async putAmortizacion(id: number, data: any): Promise<any> {
-    let amortizacion = await this.rootService.put(this.route + '/' + id, data);
-    if (amortizacion.resultado) {
-      await this.rootService.bitacora('amortizacion', 'editar', `editó la amortizacion "${amortizacion.data.id}"`, amortizacion.data);
-    }
-    return amortizacion;
+    let cobro_detalle = await this.rootService.put(this.route + '/' + id, data);
+    return cobro_detalle;
   }
 
   async deleteAmortizacion(id: number): Promise<any> {
-    let amortizacion = await this.rootService.delete(this.route + '/' + id);
-    if (amortizacion.resultado) {
-      await this.rootService.bitacora('amortizacion', 'eliminar', `eliminó la amortizacion "${amortizacion.data.id}"`, amortizacion.data);
-    }
-    return amortizacion;
+    let cobro_detalle = await this.rootService.delete(this.route + '/' + id);
+    return cobro_detalle;
   }
-
-
 }
-

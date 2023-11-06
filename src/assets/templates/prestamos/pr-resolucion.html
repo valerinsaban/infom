@@ -16,11 +16,11 @@
       }
   
       @page {
-        margin: 25mm 5mm 10mm 5mm;
+        margin: 35mm 5mm 10mm 5mm;
   
         @top-left {
           content: element(header);
-          padding-top: 15mm;
+          padding-top: 20mm;
           margin-bottom: 70px;
         }
   
@@ -56,19 +56,19 @@
 
 <body>
 
-  <nav id="header" class="navbar">
+  <div id="header">
     <div class="row">
       <div class="col-3">
         <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
       </div>
       <div class="col-6" style="text-align: center;">
-        <span style="font-size: 14px;">
+        <span style="font-size: 12px; font-weight: 500;">
           <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b> <br>
           PRESTAMO CON RECURSOS PROPIOS DEL FONDO PATRIMONIAL DE INFOM
         </span>
         <br>
         <span style="font-size: 11px;">
-          RESOLUCION DE GERENCIA No. {{VARIABLE}}
+          RESOLUCION DE GERENCIA No. {{no_resolucion}}
         </span>
       </div>
       <div class="col-3" style="text-align: right;">
@@ -76,8 +76,10 @@
         Usuario: <b>{{usuario}}</b>
       </div>
     </div>
-  </nav>
-  <hr>
+    <hr>
+    <br>
+  </div>
+
 
   {{contenido}}
 

@@ -61,7 +61,7 @@
             <div class="tbl-caption">
               <h4 class="heading mb-0">Cobros</h4>
             </div>
-            <table id="empoloyees-tbl1" class="table">
+            <table id="empoloyees-tbl1" class="table" style="margin-bottom: 250px;">
               <thead>
                 <tr>
                   <th>Codigo</th>
@@ -115,6 +115,12 @@
               <div class="table-responsive active-projects manage-client style-1">
                 <div class="tbl-caption">
                   <h4 class="heading mb-0">Amortizaciones ({{amortizaciones.length}})</h4>
+                  <div>
+                    <a class="btn btn-primary btn-sm" role="button" (click)="generarDocumentos()"
+                      style="margin-left: 10px;">
+                      <i class="fas fa-check"></i> Generar Documentos
+                    </a>
+                  </div>
                 </div>
                 <table class="table">
                   <thead>
@@ -132,33 +138,48 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let a of amortizaciones; let aindex = index">
-                      <th>{{a.prestamo.no_prestamo}}</th>
-                      <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
-                      <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
-                      <td>{{a.dias}} dias</td>
-                      <th style="text-align: right;">{{a.saldo_inicial | number: '.2-2'}}</th>
-                      <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
-                      <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
-                      <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
-                      <th style="text-align: right;"><span class="text-primary" [ngClass]="{'real': a.id}">{{a.cuota |
-                          number: '.2-2'}}</span></th>
-                      <th style="text-align: right;">{{a.saldo_final | number: '.2-2'}}</th>
-                    </tr>
+                    <ng-container *ngFor="let a of amortizaciones">
+                      <tr>
+                        <th>{{a.prestamo.municipalidad.municipio.nombre}},
+                          {{a.prestamo.municipalidad.departamento.nombre}}</th>
+                        <th>{{a.prestamo.no_prestamo}}</th>
+                      </tr>
+                      <tr *ngFor="let d of a.amortizaciones_detalles">
+                        <th></th>
+                        <td style="background-color: #eaeaea;">{{d.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                        <td style="background-color: #eaeaea;">{{d.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                        <td style="background-color: #eaeaea;">{{d.dias}} dias</td>
+                        <th style="background-color: #eaeaea; text-align: right;">{{d.saldo_inicial | number: '.2-2'}}
+                        </th>
+                        <td style="background-color: #eaeaea; text-align: right;">{{d.capital | number: '.2-2'}}</td>
+                        <th style="background-color: #eaeaea; text-align: right;">{{d.interes | number: '.2-2'}}</th>
+                        <th style="background-color: #eaeaea; text-align: right;">{{d.iva | number: '.2-2'}}</th>
+                        <th style="background-color: #eaeaea; text-align: right;">
+                          <span class="text-primary" [ngClass]="{'real': d.id}">{{d.cuota | number: '.2-2'}}</span>
+                        </th>
+                        <th style="background-color: #eaeaea; text-align: right;"
+                          [ngClass]="{'sobregiro': d.saldo_final < 0}">
+                          {{d.saldo_final | number: '.2-2'}}
+                        </th>
+                      </tr>
+                      <tr style="border-top: 2px solid; border-bottom: 4px double;">
+                        <th></th>
+                        <td>{{a.fecha_inicio | date: 'dd/MM/yyyy':'UTC'}}</td>
+                        <td>{{a.fecha_fin | date: 'dd/MM/yyyy':'UTC'}}</td>
+                        <td>{{a.dias}} dias</td>
+                        <th style="text-align: right;">{{a.saldo_inicial | number: '.2-2'}}</th>
+                        <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
+                        <th style="text-align: right;">{{a.interes | number: '.2-2'}}</th>
+                        <th style="text-align: right;">{{a.iva | number: '.2-2'}}</th>
+                        <th style="text-align: right;">
+                          <span class="text-primary" [ngClass]="{'real': a.id}">{{a.cuota | number: '.2-2'}}</span>
+                        </th>
+                        <th style="text-align: right;" [ngClass]="{'sobregiro': a.saldo_final < 0}">
+                          {{a.saldo_final | number: '.2-2'}}
+                        </th>
+                      </tr>
+                    </ng-container>
                   </tbody>
-                  <!-- <tfoot>
-                    <tr>
-                      <th></th>
-                      <th></th>
-                      <th>{{getTotalDias()}} dias</th>
-                      <th style="text-align: right;">Q{{getTotalCapital() | number: '.2-2'}}</th>
-                      <th style="text-align: right;">Q{{getTotalInteres() | number: '.2-2'}}</th>
-                      <th style="text-align: right;">Q{{getTotalIva() | number: '.2-2'}}</th>
-                      <th style="text-align: right;">Q{{getTotalCuota() | number: '.2-2'}}</th>
-                      <th></th>
-                      <th></th>
-                    </tr>
-                  </tfoot> -->
                 </table>
 
               </div>
