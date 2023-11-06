@@ -11,8 +11,8 @@ export class RecibosService {
 
   route = '/recibos';
 
-  getRecibos(): Promise<any> {
-    return this.rootService.get(this.route);
+  getRecibos(fecha_inicio: any, fecha_fin: any): Promise<any> {
+    return this.rootService.get(this.route + '/' + fecha_inicio + '/' + fecha_fin);
   }
 
   getRecibo(id: number): Promise<any> {
@@ -31,6 +31,14 @@ export class RecibosService {
     let recibo = await this.rootService.put(this.route + '/' + id, data);
     if (recibo.resultado) {
       await this.rootService.bitacora('recibo', 'editar', `editó el recibo "${recibo.data.codigo}"`, recibo.data);
+    }
+    return recibo;
+  }
+
+  async anularRecibo(id: number, data: any): Promise<any> {
+    let recibo = await this.rootService.put(this.route + '/anular/' + id, data);
+    if (recibo.resultado) {
+      await this.rootService.bitacora('recibo', 'anular', `anuló el recibo "${recibo.data.codigo}"`, recibo.data);
     }
     return recibo;
   }

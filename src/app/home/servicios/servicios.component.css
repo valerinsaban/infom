@@ -1,0 +1,73 @@
+#agregar-prestamo {
+  width: 100% !important;
+}
+
+#editar-prestamo {
+  width: 100% !important;
+}
+
+#amortizaciones {
+  width: 100% !important;
+}
+
+#destinos_prestamos {
+  width: 100% !important;
+}
+
+#desembolsos {
+  width: 100% !important;
+}
+
+#ordenes_pagos {
+  width: 100% !important;
+}
+
+.count {
+  background-color: transparent !important;
+}
+
+.real {
+  color: #BB6BD9 !important;
+}
+
+.cuadrado {
+  color: #3AC977 !important;
+}
+
+.nocuadrado {
+  color: #FF5E5E !important;
+}
+
+.pendiente {
+  background-color: #ffeccc;
+  color: #FF9F00 !important;
+  border-radius: 10px;
+}
+
+.aprobado {
+  background-color: #cce2ff;
+  color: #0D99FF !important;
+  border-radius: 10px;
+}
+
+.acreditado {
+  background-color: #f9e8ff;
+  color: #BB6BD9 !important;
+  border-radius: 10px;
+}
+
+.cancelado {
+  background-color: #daf5e6;
+  color: #3AC977 !important;
+  border-radius: 10px;
+}
+
+.anulado {
+  background-color: #ffdede;
+  color: #FF5E5E !important;
+  border-radius: 10px;
+}
+
+#t-hoja-tecnica tbody tr td:first {
+  width: 50% !important;
+}

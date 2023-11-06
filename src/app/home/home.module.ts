@@ -34,6 +34,8 @@ import { DestinosComponent } from './catalogos/destinos/destinos.component';
 import { ResolucionesComponent } from './catalogos/resoluciones/resoluciones.component';
 import { FacturasComponent } from './facturas/facturas.component';
 import { RecibosComponent } from './recibos/recibos.component';
+import { ServiciosComponent } from './servicios/servicios.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 const routes: Routes = [
   {
@@ -44,6 +46,7 @@ const routes: Routes = [
       { path: 'municipalidades', component: MunicipalidadesComponent },
       { path: 'representantes', component: RepresentantesComponent },
       { path: 'prestamos', component: PrestamosComponent},
+      { path: 'servicios', component: ServiciosComponent},
       { path: 'aportes', component: AportesComponent},
       { path: 'dashboard', component: DashboardComponent},
       { path: 'bitacoras', component: BitacorasComponent},
@@ -52,6 +55,7 @@ const routes: Routes = [
       { path: 'facturas', component: FacturasComponent},
       { path: 'recibos', component: RecibosComponent},
       { path: 'configuraciones', component: ConfiguracionesComponent},
+      { path: 'perfil', component: PerfilComponent},
 
       // Catalogos
       { path: 'departamentos', component: DepartamentosComponent },
@@ -110,7 +114,9 @@ const routes: Routes = [
     DestinosComponent,
     ResolucionesComponent,
     FacturasComponent,
-    RecibosComponent
+    RecibosComponent,
+    ServiciosComponent,
+    PerfilComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,128 @@
+<div class="page-titles">
+  <ol class="breadcrumb">
+    <li>
+      <h5 class="bc-title">Perfil </h5>
+    </li>
+    <li class="breadcrumb-item"><a href="javascript:void(0)">
+        <i class="fa-solid fa-house-chimney"></i>
+        Inicio </a>
+    </li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Perfil</a></li>
+  </ol>
+</div>
+<div class="container-fluid">
+  <!-- row -->
+  <div class="row">
+    <div class="col-xl-4 col-lg-4">
+      <div class="clearfix">
+        <div class="card card-bx profile-card author-profile m-b30">
+          <div class="card-body" *ngIf="usuario">
+            <div class="p-5">
+              <div class="author-profile">
+                <div class="author-media">
+                  <img
+                    [src]="'assets/images/no-img-avatar.png'"
+                    style="border-radius: 0;">
+                  <div class="upload-link" title="" data-toggle="tooltip" data-placement="right"
+                    data-original-title="update">
+                    <input type="file" class="update-flie" (change)="setImage($event, 'logo')">
+                    <i class="fa fa-camera"></i>
+                  </div>
+                </div>
+                <div class="author-info">
+                  <h6 class="title">{{usuario.nombre}} {{usuario.apellido}}</h6>
+                  <span>{{usuario.dpi}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="info-list">
+              <ul>
+                <li><a>Rol</a><span>{{usuario.rol.nombre}}</span></li>
+                <li><a>Acceso</a><span>{{usuario.acceso}}</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8 col-lg-8">
+      <div class="card profile-card card-bx m-b30">
+        <form [formGroup]="usuarioForm" class="profile-form">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <h6>General</h6>
+              </div>
+              <hr>
+              <div class="col-sm-3">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Nombre <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Apellido <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="apellido" type="text" class="form-control" placeholder="Apellido">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> DPI <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="dpi" type="text" class="form-control" placeholder="DPI">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Usuario <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="usuario" type="text" class="form-control" placeholder="Usuario">
+                </div>
+              </div>
+
+              <div class="col-sm-12">
+                <button (click)="putPerfil()" class="btn btn-primary">Actualizar</button>
+              </div>
+
+              <br><br><br><br><br>
+              <div class="col-sm-12">
+                <h6>Credenciales</h6>
+              </div>
+              <hr>
+
+              <div class="col-sm-4">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Clave <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="clave" type="text" class="form-control" placeholder="Clave">
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group mb-3">
+                  <label class="text-secondary"> Repetir Clave <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="clave2" type="text" class="form-control" placeholder="Repetir Clave">
+                </div>
+              </div>
+              
+              <div class="col-sm-4">
+
+              </div>
+
+              <div class="col-sm-12">
+                <button (click)="putClave()" class="btn btn-primary">Actualizar</button>
+              </div>
+
+              <br><br><br><br>
+
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

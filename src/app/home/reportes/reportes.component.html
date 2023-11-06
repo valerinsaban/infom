@@ -1656,7 +1656,7 @@
               <table class="table table-borderless">
                 <thead>
                   <tr>
-                    <td style="border: 1px solid">Fecha</td>
+                    <td style="border: 1px solid;">Fecha</td>
                     <td style="border: 1px solid">Documento</td>
                     <td style="border: 1px solid">No.</td>
                     <td style="border: 1px solid" colspan="2">Concepto</td>
@@ -1664,7 +1664,7 @@
                     <td style="border: 1px solid">Abonos</td>
                   </tr>
                 </thead>
-                <tbody style="font-size: 12px">
+                <tbody>
                   <ng-container *ngFor="let m of movimientos">
                     <tr>
                       <td>{{m.fecha}}</td>
@@ -1673,7 +1673,7 @@
                         <span *ngIf="m.id_orden_pago">Orden Pago No.</span>
                       </td>
                       <td>
-                        <span *ngIf="m.id_recibo">{{m.recibo.numero}}</span>
+                        <span *ngIf="m.id_recibo">{{m.recibo.id}}</span>
                         <span *ngIf="m.id_orden_pago">{{m.ordenPago.numero}}</span>
                       </td>
                       <td colspan="2">{{m.descripcion}}</td>

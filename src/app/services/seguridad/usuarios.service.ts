@@ -43,6 +43,14 @@ export class UsuariosService {
     return usuario;
   }
 
+  async putPerfil(id: number, data: any): Promise<any> {
+    let usuario = await this.rootService.put(this.route + '/perfil/' + id, data);
+    if (usuario.resultado) {
+      await this.rootService.bitacora('usuario', 'editar', `editó el usuario "${usuario.data.nombre}"`, usuario.data);
+    }
+    return usuario;
+  }
+
   async putClave(id: number, data: any): Promise<any> {
     let usuario = await this.rootService.put(this.route + '/clave/' + id, data);
     if (usuario.resultado) {
