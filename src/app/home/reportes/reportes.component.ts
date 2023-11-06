@@ -159,7 +159,11 @@ export class ReportesComponent {
       { slug: 'asignaciones', nombre: 'Reporte de asignaciones, cobros y disponibilidad', filtros: [] },
       { slug: 'cur', nombre: 'Auxiliar para generacion de CUR de Ingresos', filtros: [] },
       { slug: 'estados-de-cuenta', nombre: 'Estados de Cuenta', filtros: ['fecha', 'no_prestamo'] },
-      { slug: 'balance-general', nombre: 'Balance General', filtros: ['fecha'] }
+      { slug: 'balance-general', nombre: 'Balance General', filtros: ['fecha'] },
+      { slug: 'creditos-otorgados', nombre: 'Creditos Otorgados', filtros: ['fecha_inicio', 'fecha_fin']},
+      { slug: 'amortizaciones-prestamos-detalles', nombre: 'Amortizaciones a Prestamos Detalles', filtros: ['mes', 'fecha'] },
+      { slug: 'balance-general-mora', nombre: 'Balance General de Prestamos en Mora', filtros: ['fecha'] },
+
     ];
   }
 
@@ -321,6 +325,18 @@ export class ReportesComponent {
 
     if (this.slug_reporte == 'balance-general') {
       await this.reporteBalanceGeneral(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'creditos-otorgados') {
+      await this.reporteCreditosOtorgados(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'amortizaciones-prestamos-detalles') {
+      await this.reporteAmortizacionesPrestamosD(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'balance-general-mora') {
+      await this.reporteBalanceGeneralMora(this.slug_reporte, print);
     }
   }
 
@@ -784,6 +800,38 @@ export class ReportesComponent {
   }
 
   public async reporteBalanceGeneral(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD [de] MMMM [de] YYYY'));
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCreditosOtorgados(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD [de] MMMM [de] YYYY'));
+    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD [de] MMMM [de] YYYY'));
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+
+  public async reporteAmortizacionesPrestamosD(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{mes}}", moment(this.filtros.mes).format('MMMM YYYY'));
+    rep = rep.replaceAll("{{fecha}}", moment(this.filtros.fecha).format('DD [de] MMMM [de] YYYY'));
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
+  
+  public async reporteBalanceGeneralMora(slug: any, print: boolean = true) {
     this.ngxService.start();
 
     let rep: any = await this.reporteService.get(slug);
