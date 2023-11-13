@@ -1,13 +1,13 @@
 <div class="page-titles">
   <ol class="breadcrumb">
     <li>
-      <h5 class="bc-title">Servicio </h5>
+      <h5 class="bc-title">Prestamos </h5>
     </li>
     <li class="breadcrumb-item"><a href="javascript:void(0)">
         <i class="fa-solid fa-house-chimney"></i>
         Inicio </a>
     </li>
-    <li class="breadcrumb-item active"><a href="javascript:void(0)">Servicio</a></li>
+    <li class="breadcrumb-item active"><a href="javascript:void(0)">Prestamos</a></li>
   </ol>
 </div>
 <div class="container-fluid">
@@ -33,15 +33,74 @@
                       (click)="limpiar()">
                       <i class="fas fa-filter"></i>
                     </a>
-                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-prestamo" role="button"
+                    <a class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" href="#agregar-servicio" role="button"
                       (click)="limpiar()" style="margin-left: 10px;">
-                      + Agregar Servicio
+                      + Agregar Prestamo
                     </a>
                   </div>
                 </div>
               </div>
             </div>
-
+            <div class="card-body">
+              <div class="row task">
+                <a (click)="estado = 'Pendiente'" (click)="getPrestamos()" routerLink="./" class="col-xl pendiente"
+                  [ngClass]="{'pendiente': estado == 'Pendiente'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="pendiente count">{{counts.pendientes}}</h2>
+                      <h2 *ngIf="!counts.pendientes  == null"><i class="fa-solid fa-spinner fa-spin pendiente"></i></h2>
+                      <span>Pendientes</span>
+                    </div>
+                    <p class="pendiente count">Prestamos pendientes</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Aprobado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'aprobado': estado == 'Aprobado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="aprobado count">{{counts.aprobados}}</h2>
+                      <h2 *ngIf="!counts.aprobados  == null"><i class="fa-solid fa-spinner fa-spin aprobado"></i></h2>
+                      <span>Aprobados</span>
+                    </div>
+                    <p class="aprobado count">Prestamos aprobados</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Acreditado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'acreditado': estado == 'Acreditado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="acreditado count">{{counts.acreditados}}</h2>
+                      <h2 *ngIf="counts.acreditados == null"><i class="fa-solid fa-spinner fa-spin acreditado"></i></h2>
+                      <span>Acreditados</span>
+                    </div>
+                    <p class="acreditado count">Prestamos acreditados</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Cancelado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'cancelado': estado == 'Cancelado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="cancelado count">{{counts.cancelados}}</h2>
+                      <h2 *ngIf="!counts.cancelados  == null"><i class="fa-solid fa-spinner fa-spin cancelado"></i>
+                      </h2>
+                      <span>Cancelados</span>
+                    </div>
+                    <p class="cancelado count">Prestamos cancelados</p>
+                  </div>
+                </a>
+                <a (click)="estado = 'Anulado'" (click)="getPrestamos()" routerLink="./" class="col-xl"
+                  [ngClass]="{'anulado': estado == 'Anulado'}">
+                  <div class="task-summary">
+                    <div class="d-flex align-items-center">
+                      <h2 class="anulado count">{{counts.anulados}}</h2>
+                      <h2 *ngIf="!counts.anulados  == null"><i class="fa-solid fa-spinner fa-spin anulado"></i></h2>
+                      <span>Anulados</span>
+                    </div>
+                    <p class="anulado count">Prestamos anulados</p>
+                  </div>
+                </a>
+              </div>
+            </div>
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
                 <table id="empoloyeestbl2" class="table" style="margin-bottom: 250px;">
@@ -59,7 +118,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr *ngFor="let p of prestamos; let mindex = index">
+                    <tr *ngFor="let p of servicios; let mindex = index">
                       <td>
                         <div class="products">
                           <div>
@@ -100,7 +159,7 @@
                           </button>
                           <div class="dropdown-menu dropdown-menu-end">
                             <a class="dropdown-item" (click)="setPrestamo(p, mindex)" data-bs-toggle="offcanvas"
-                              href="#editar-prestamo">
+                              href="#editar-servicio">
                               Editar
                             </a>
                             <a class="dropdown-item" (click)="setPrestamo(p, mindex)" data-bs-toggle="modal"
@@ -108,7 +167,7 @@
                               Cambiar Estado
                             </a>
                             <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDestinosPrestamo()"
-                              data-bs-toggle="offcanvas" data-bs-target="#destinos_prestamos">
+                              data-bs-toggle="offcanvas" data-bs-target="#destinos_servicios">
                               Destinos
                             </a>
                             <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDesembolsos()"
@@ -136,7 +195,7 @@
                   <tbody>
                     <tr>
                       <td colspan="8">
-                        <div *ngIf="!prestamos.length" style="text-align: center;">
+                        <div *ngIf="!servicios.length" style="text-align: center;">
                           <h3>No se encontraron registros</h3>
                         </div>
                       </td>
@@ -152,7 +211,7 @@
   </div>
 </div>
 
-<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-prestamo">
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-servicio">
   <div class="offcanvas-header">
     <h5 class="modal-title">Creacion de Servicio</h5>
     <div *ngIf="getTipoPrestamo()">
@@ -169,7 +228,7 @@
       <div class="col-xl-8">
         <div class="card">
           <div class="card-body">
-            <form [formGroup]="prestamoForm">
+            <form [formGroup]="servicioForm">
               <div class="row" *ngIf="municipalidad">
                 <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
               </div>
@@ -300,7 +359,7 @@
       <div class="col-xl-4">
         <div class="card">
           <div class="card-body">
-            <form [formGroup]="prestamoForm">
+            <form [formGroup]="servicioForm">
               <div class="row">
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Fecha
@@ -309,25 +368,24 @@
                   <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-4 mb-3">
-                  <label class="form-label">Programa<span class="text-danger">*</span></label>
-                  <select (change)="getProgramasGarantias($event)" formControlName="id_programa" class="form-control">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of programas" [value]="i.id">{{i.siglas}} - {{i.nombre}}</option>
-                  </select>
-                </div>
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
-                  <select formControlName="id_tipo_prestamo" class="form-control disabled">
-                    <option value="null">--- Seleccione un registro ---</option>
-                    <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
-                  </select>
-                </div>
-                <div class="col-xl-4 mb-3">
                   <label class="form-label">Fecha Amort.
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha_amortizacion" type="date" class="form-control"
                     (input)="getProyeccion2()">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Fecha Venc.
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_vencimiento" type="date" class="form-control disabled">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Tipo Servicio<span class="text-danger">*</span></label>
+                  <select formControlName="id_tipo_servicio" class="form-control">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of tipos_servicios" [value]="i.id">{{i.nombre}}</option>
+                  </select>
                 </div>
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Plazo Meses
@@ -351,7 +409,7 @@
                 </div>
                 <div class="col-xl-8 mb-3">
                   <label class="form-label"></label>
-                  <h2>Q. {{prestamoForm.value.monto | number: '.2-2'}}</h2>
+                  <h2>Q. {{servicioForm.value.monto | number: '.2-2'}}</h2>
                 </div>
                 <div class="col-xl-12 mb-3">
                   <div class="table-responsive active-projects manage-client">
@@ -380,7 +438,7 @@
                             <b>{{getPorcentaje() | number: '.2-2'}}%</b>
                           </td>
                           <td style="text-align: right;"
-                            [ngClass]="{'cuadrado': getTotal() == prestamoForm.value.monto && getPorcentaje() == 100}">
+                            [ngClass]="{'cuadrado': getTotal() == servicioForm.value.monto && getPorcentaje() == 100}">
                             <b>Q. {{getTotal() | number: '.2-2'}}</b>
                           </td>
                         </tr>
@@ -448,7 +506,7 @@
                     <th>{{getDias()}} dias</th>
                     <th></th>
                     <th style="text-align: right;">
-                      <span [ngClass]="{'cuadrado': getCapital() == prestamoForm.value.monto}">
+                      <span [ngClass]="{'cuadrado': getCapital() == servicioForm.value.monto}">
                         Q{{getCapital() | number: '.2-2'}}
                       </span>
                     </th>
@@ -470,7 +528,7 @@
 
 <div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="editar-prestamo">
   <div class="offcanvas-header">
-    <h5 class="modal-title">Editar Prestamo</h5>
+    <h5 class="modal-title">Editar Servicio</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
       <i class="fa-solid fa-xmark"></i>
     </button>
@@ -480,7 +538,7 @@
       <div class="col-xl-7">
         <div class="card">
           <div class="card-body">
-            <form [formGroup]="prestamoForm">
+            <form [formGroup]="servicioForm">
               <div class="row">
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Departamento
@@ -507,10 +565,10 @@
                 <div class="col-xl-6 mb-3">
                   <div class="row">
                     <div class="col-6 pt-3 pb-3">
-                      <h3 class="mb-1">{{prestamoForm.controls['no_prestamo'].value}}</h3><span>No. Prestamo</span>
+                      <h3 class="mb-1">{{servicioForm.controls['no_prestamo'].value}}</h3><span>No. Prestamo</span>
                     </div>
                     <div class="col-6 pt-3 pb-3 border-end">
-                      <h3 class="mb-1">{{prestamoForm.controls['no_dictamen'].value}}</h3><span>No. Dictamen</span>
+                      <h3 class="mb-1">{{servicioForm.controls['no_dictamen'].value}}</h3><span>No. Dictamen</span>
                     </div>
                   </div>
                 </div>
@@ -577,14 +635,14 @@
                   </label>
                   <input formControlName="fecha_oficio_aj" type="date" class="form-control">
                 </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
+                <div class="col-xl-3 mb-3" *ngIf="servicioForm.controls['id_tipo_prestamo'].value == 2">
                   <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="no_oficio_ger" type="number" class="form-control"
                     placeholder="NO. Oficio A.J.">
                 </div>
-                <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
+                <div class="col-xl-3 mb-3" *ngIf="servicioForm.controls['id_tipo_prestamo'].value == 2">
                   <label class="form-label">Fecha Oficio GER
                     <span class="text-danger">*</span>
                   </label>
@@ -616,7 +674,7 @@
       <div class="col-xl-5">
         <div class="card">
           <div class="card-body">
-            <form [formGroup]="prestamoForm">
+            <form [formGroup]="servicioForm">
               <div class="row" *ngIf="municipalidad">
                 <h3>{{municipalidad.departamento.nombre}} / {{municipalidad.municipio.nombre}}</h3>
               </div>
@@ -640,6 +698,13 @@
                   <select formControlName="id_tipo_prestamo" class="form-control disabled">
                     <option value="null">--- Seleccione un registro ---</option>
                     <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
+                  </select>
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Tipo Servicio<span class="text-danger">*</span></label>
+                  <select formControlName="id_tipo_servicio" class="form-control">
+                    <option value="null">--- Seleccione un registro ---</option>
+                    <option *ngFor="let i of tipos_servicios" [value]="i.id">{{i.nombre}}</option>
                   </select>
                 </div>
                 <div class="col-xl-4 mb-3">
@@ -671,7 +736,7 @@
                 </div>
                 <div class="col-xl-8 mb-3">
                   <label class="form-label"></label>
-                  <h2>{{prestamoForm.value.monto | number: '.2-2'}}</h2>
+                  <h2>{{servicioForm.value.monto | number: '.2-2'}}</h2>
                 </div>
                 <div class="col-xl-12 mb-3">
                   <div class="table-responsive active-projects manage-client">
@@ -706,7 +771,7 @@
                             <b>{{getPorcentaje(true) | number: '.2-2'}}%</b>
                           </td>
                           <td style="text-align: right;"
-                            [ngClass]="{'cuadrado': getTotal(true) == prestamoForm.value.monto && getPorcentaje(true) == 100}">
+                            [ngClass]="{'cuadrado': getTotal(true) == servicioForm.value.monto && getPorcentaje(true) == 100}">
                             <b>{{getTotal(true) | number: '.2-2'}}</b>
                           </td>
                         </tr>
@@ -716,7 +781,7 @@
                 </div>
                 <div class="col-xl-12 mb-3">
                   <label class="form-label">Monto Total</label>
-                  <h2>{{prestamoForm.value.monto | number: '.2-2'}}</h2>
+                  <h2>{{servicioForm.value.monto | number: '.2-2'}}</h2>
                 </div>
               </div>
             </form>
@@ -776,7 +841,7 @@
                     <th>{{getDias()}} dias</th>
                     <th></th>
                     <th style="text-align: right;">
-                      <span [ngClass]="{'cuadrado': getCapital() == prestamoForm.value.monto}">
+                      <span [ngClass]="{'cuadrado': getCapital() == servicioForm.value.monto}">
                         Q{{getCapital() | number: '.2-2'}}
                       </span>
                     </th>
@@ -788,132 +853,6 @@
                   </tr>
                 </tfoot>
               </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="destinos_prestamos">
-  <div class="offcanvas-header">
-    <h5 class="modal-title">Destinos Servicio</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-xl-3 col-xxl-3">
-          <div class="card h-auto">
-            <div class="card-header">
-              <h4 class="heading mb-0">Agregar Destino</h4>
-            </div>
-            <div class="card-body">
-              <form [formGroup]="destinoPrestamoForm" class="finance-hr">
-                <div class="form-group mb-3">
-                  <label class="text-secondary"> Codigo <span class="text-danger">*</span></label>
-                  <div class="input-group mb-3">
-                    <input [(ngModel)]="destino.codigo" [ngModelOptions]="{'standalone': true}" type="text"
-                      class="form-control" (input)="setDestino($event)" placeholder="Codigo">
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#destinos">
-                      <i class="fad fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="form-group mb-3">
-                  <label class="text-secondary"> Nombre <span class="text-danger">*</span>
-                  </label>
-                  <input [(ngModel)]="destino.nombre" [ngModelOptions]="{'standalone': true}" type="text"
-                    class="form-control" placeholder="Nombre" [disabled]="true">
-                </div>
-                <div class="form-group mb-3">
-                  <label class="text-secondary"> Monto <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="monto" type="number" class="form-control" placeholder="Monto">
-                </div>
-                <div class="form-group mb-3">
-                  <label class="text-secondary"> Descripcion <span class="text-danger">*</span>
-                  </label>
-                  <textarea formControlName="descripcion" class="form-control"></textarea>
-                </div>
-                <div *ngIf="!destino_prestamo">
-                  <button (click)="postDestinoPrestamo()" type="button" class="btn btn-primary mb-3"
-                    [ngClass]="{'disabled': destinoPrestamoForm.invalid}">
-                    Guardar
-                  </button>
-                </div>
-                <div *ngIf="destino_prestamo">
-                  <button (click)="putDestinoPrestamo()" type="button" class="btn btn-primary mb-3"
-                    [ngClass]="{'disabled': destinoPrestamoForm.invalid}">
-                    Guardar
-                  </button>
-                  <button style="margin-left: 10px;" (click)="limpiar3()" type="button" class="btn btn-primary mb-3">
-                    Cancelar
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-9 col-xxl-9" *ngIf="prestamo">
-          <div class="card">
-            <div class="card-body p-0">
-              <div class="table-responsive active-projects task-table">
-                <div class="tbl-caption">
-                  <h4 class="heading mb-0">Destinos {{destinos_prestamos.length}} / {{prestamo.no_destinos}}</h4>
-                </div>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Codigo</th>
-                      <th>Nombre</th>
-                      <th>Descripcion</th>
-                      <th style="text-align: right;">Monto</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let d of destinos_prestamos; let dindex = index">
-                      <td>{{d.destino.codigo}}</td>
-                      <td>{{d.destino.nombre}}</td>
-                      <td>{{d.descripcion}}</td>
-                      <td style="text-align: right;">{{d.monto | number: '.2-2'}}</td>
-                      <td class="text-end">
-                        <div class="dropdown">
-                          <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-list"></i>
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" (click)="setDestinoPrestamo(d, dindex)">
-                              Editar
-                            </a>
-                            <a class="dropdown-item" (click)="deleteDestinoPrestamo(d, dindex)">
-                              Eliminar
-                            </a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                  <tbody>
-                    <tr>
-                      <th></th>
-                      <th></th>
-                      <th style="text-align: right;">TOTALES</th>
-                      <th style="text-align: right;">
-                        <span [ngClass]="{'cuadrado': destinosCompletos()}">
-                          {{getTotalDestinosPrestamos() | number: '.2-2'}}
-                        </span>
-                      </th>
-                      <th style="text-align: right;">{{prestamo.monto | number: '.2-2'}}</th>
-                    </tr>
-                  </tbody>
-                </table>
-
-              </div>
             </div>
           </div>
         </div>
@@ -973,7 +912,7 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-9 col-xxl-9" *ngIf="prestamo">
+        <div class="col-xl-9 col-xxl-9" *ngIf="servicio">
           <div class="card">
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
@@ -1018,7 +957,7 @@
                       <th style="text-align: right;">
                         <span [ngClass]="{'cuadrado': desembolsosCompletos()}">
                           {{getTotalDesembolsos() | number: '.2-2'}}
-                        </span> / {{prestamo.monto | number: '.2-2'}}
+                        </span> / {{servicio.monto | number: '.2-2'}}
                       </th>
                       <th style="text-align: right;"></th>
                     </tr>
@@ -1123,7 +1062,7 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-4 col-xxl-3" *ngIf="prestamo">
+        <div class="col-xl-4 col-xxl-3" *ngIf="servicio">
           <div class="card">
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
@@ -1160,7 +1099,7 @@
                       <th style="text-align: right;">
                         <span [ngClass]="{'cuadrado': desembolsosCompletos()}">
                           {{getTotalDesembolsos() | number: '.2-2'}}
-                        </span> / {{prestamo.monto | number: '.2-2'}}
+                        </span> / {{servicio.monto | number: '.2-2'}}
                       </th>
                       <th></th>
                     </tr>
@@ -1171,7 +1110,7 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-8 col-xxl-9" *ngIf="prestamo">
+        <div class="col-xl-8 col-xxl-9" *ngIf="servicio">
           <div class="card">
             <div class="card-body p-0">
               <div class="table-responsive active-projects task-table">
@@ -1204,7 +1143,7 @@
                       <td style="text-align: right;">{{o.monto | number: '.2-2'}}</td>
                       <td class="text-end">
                         <div class="dropdown">
-                          <a (click)="setOrdenPago(o, dindex)" (click)="reportePrestamo('pr-orden-pago')"
+                          <a (click)="setOrdenPago(o, dindex)" (click)="reporteOrdenPago()"
                             class="btn btn-primary btn-sm light" style="margin-right: 10px;">
                             <i class="fa-solid fa-print"></i>
                           </a>
@@ -1234,7 +1173,7 @@
                       <th style="text-align: right;">
                         <span [ngClass]="{'cuadrado': ordenesPagosCompletos()}">
                           {{getTotalOrdenesPagos() | number: '.2-2'}}
-                        </span> / {{prestamo.monto | number: '.2-2'}}
+                        </span> / {{servicio.monto | number: '.2-2'}}
                       </th>
                       <th style="text-align: right;"></th>
                     </tr>
@@ -1265,20 +1204,20 @@
             <div class="card-header">
               <h4 class="heading mb-0">Prestamo</h4>
             </div>
-            <div class="card-body" *ngIf="prestamo">
+            <div class="card-body" *ngIf="servicio">
               <div class="card-body pb-0">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item d-flex px-0 justify-content-between">
                     <strong>Monto Prestamo</strong>
-                    <span class="mb-0 text-primary">Q{{prestamo.monto | number: '.2'}}</span>
+                    <span class="mb-0 text-primary">Q{{servicio.monto | number: '.2'}}</span>
                   </li>
                   <li class="list-group-item d-flex px-0 justify-content-between">
                     <strong>Porcentaje de Interes</strong>
-                    <span class="mb-0 text-primary">{{prestamo.tasa}}%</span>
+                    <span class="mb-0 text-primary">{{servicio.tasa}}%</span>
                   </li>
                   <li class="list-group-item d-flex px-0 justify-content-between">
                     <strong>Plazo</strong>
-                    <span class="mb-0 text-primary">{{prestamo.plazo_meses}} meses</span>
+                    <span class="mb-0 text-primary">{{servicio.plazo_meses}} meses</span>
                   </li>
                   <!-- <li class="list-group-item d-flex px-0 justify-content-between">
                     <strong>Saldo Actual</strong>
@@ -1316,9 +1255,9 @@
                   <tbody>
                     <ng-container *ngFor="let a of amortizaciones">
                       <tr>
-                        <th>{{a.prestamo.municipalidad.municipio.nombre}},
-                          {{a.prestamo.municipalidad.departamento.nombre}}</th>
-                        <th>{{a.prestamo.no_prestamo}}</th>
+                        <th>{{a.servicio.municipalidad.municipio.nombre}},
+                          {{a.servicio.municipalidad.departamento.nombre}}</th>
+                        <th>{{a.servicio.no_prestamo}}</th>
                       </tr>
                       <tr *ngFor="let d of a.amortizaciones_detalles">
                         <th></th>
@@ -1398,7 +1337,7 @@
 
 <div class="modal fade" id="estado" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" [formGroup]="prestamoForm">
+    <div class="modal-content" [formGroup]="servicioForm">
       <div class="modal-header">
         <h1 class="modal-title fs-5">Estado de Prestamo</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1414,6 +1353,10 @@
               <option value="Cancelado">Cancelado</option>
               <option value="Anulado">Anulado</option>
             </select>
+          </div>
+          <div class="col-xl-12 mb-3" *ngIf="servicioForm.controls['estado'].value == 'Anulado'">
+            <label class="form-label">Motivo de anulacion<span class="text-danger">*</span></label>
+            <textarea formControlName="motivo_anulacion" class="form-control" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -1476,7 +1419,7 @@
             <label class="form-label">Tipo Prestamo<span class="text-danger">*</span></label>
             <select [(ngModel)]="filtros.id_tipo_prestamo" [ngModelOptions]="{standalone: true}" class="form-control">
               <option value="null">--- Seleccione un registro ---</option>
-              <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
+              <option *ngFor="let i of tipos_servicios" [value]="i.id">{{i.nombre}}</option>
             </select>
           </div>
           <div class="col-xl-6 mb-3">
@@ -1541,31 +1484,31 @@
         <div class="row">
           <ul class="setting-list" style="font-size: 16px;">
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-hoja-tecnica')">
+              <a routerLink="./" (click)="reporteHojaTecnica()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">HOJA TECNICA</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-dictamen')">
+              <a routerLink="./" (click)="reporteDictamen()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">DICTAMEN</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-resolucion')">
+              <a routerLink="./" (click)="reporteResolucion()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">RESOLUCION</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-convenio-asistencia-fi')">
+              <a routerLink="./" (click)="reporteConvenioAsistencia()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">CONVENIO DE ASISTENCIA FINANCIERA</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-convenio-interistitucional')">
+              <a routerLink="./" (click)="reporteConvenioInter()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">CONVENIO INTERINSTITUCIONAL</span>
               </a>
@@ -1580,20 +1523,20 @@
   </div>
 </div>
 
-<div *ngIf="prestamo" hidden>
+<div *ngIf="servicio" hidden>
 
   <div id="pr-hoja-tecnica" style="color: black">
     <div style="margin: 0px 50px">
       <p style="text-align: justify">
         SOLICITUD PARA PRÉSTAMO DE INVERSIÓN CON RECURSOS PROPIOS DEL FONDO
-        PATRIMONIAL DEL INFOM, POR Q. {{prestamo.monto | number: '.2-2'}}
+        PATRIMONIAL DEL INFOM, POR Q. {{servicio.monto | number: '.2-2'}}
       </p>
 
       <table class="table table-bordered" style="text-align: justify">
         <tbody>
-          <tr *ngIf="prestamo.id_tipo_prestamo == 2">
+          <tr *ngIf="servicio.id_tipo_prestamo == 2">
             <td>SOLICITUD DE LA GERENCIA DE INFOM</td>
-            <td>Oficio No. GER-{{prestamo.no_oficio_ger}}</td>
+            <td>Oficio No. GER-{{servicio.no_oficio_ger}}</td>
             <td>FOLIO</td>
           </tr>
 
@@ -1604,23 +1547,23 @@
                 <li>
                   Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la República de Guatemala, (artículos 4º,
                   numeral romano II, inciso 1) y articulos
-                  <span *ngIf="prestamo.id_tipo_prestamo == 1">
+                  <span *ngIf="servicio.id_tipo_prestamo == 1">
                     23 inciso a) y b).
                   </span>
-                  <span *ngIf="prestamo.id_tipo_prestamo == 2">
+                  <span *ngIf="servicio.id_tipo_prestamo == 2">
                     30 inciso g) y h).
                   </span>
                 </li>
                 <li>
                   Reglamento para la Asistencia Financiera a las Municipalidades de la República de Guatemala
-                  <span *ngIf="prestamo.id_tipo_prestamo == 2">
-                    Articulos del {{prestamo.resolucion.articulos}}
+                  <span *ngIf="servicio.id_tipo_prestamo == 2">
+                    Articulos del {{servicio.resolucion.articulos}}
                   </span>
-                  <span *ngIf="prestamo.resolucion">
+                  <span *ngIf="servicio.resolucion">
                     (Resolución No.
-                    {{prestamo.resolucion.numero}} J.D. de fecha
-                    {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}
-                    , artículos del {{prestamo.resolucion.articulos}})
+                    {{servicio.resolucion.numero}} J.D. de fecha
+                    {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}
+                    , artículos del {{servicio.resolucion.articulos}})
                   </span>
                 </li>
                 <li>
@@ -1629,54 +1572,54 @@
                 </li>
                 <li>
                   Convenio Interinstitucional, Administrativo y Financiero
-                  {{prestamo.no_convenio}}, de fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}},
-                  suscrito entre el Instituto de Fomento Municipal, el {{prestamo.municipalidad.banco.nombre}} y
-                  la Municipalidad de {{prestamo.municipalidad.municipio.nombre}}
+                  {{servicio.no_convenio}}, de fecha {{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}},
+                  suscrito entre el Instituto de Fomento Municipal, el {{servicio.municipalidad.banco.nombre}} y
+                  la Municipalidad de {{servicio.municipalidad.municipio.nombre}}
                 </li>
               </ol>
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
 
           <tr>
             <td>DICTAMEN ÁREA DE CRÉDITOS DE LA DIRECCIÓN FINANCIERA</td>
             <td>Dictamen No.
               <span>FP-</span>
-              - {{prestamo.no_dictamen}} del {{formatoFecha(prestamo.fecha,'DD [de] MMMM [de] YYYY' )}}
+              - {{servicio.no_dictamen}} del {{formatoFecha(servicio.fecha,'DD [de] MMMM [de] YYYY' )}}
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
 
           <tr>
             <td>SOLICITUD DEL ALCALDE</td>
             <td>
-              Memorial de fecha {{formatoFecha(prestamo.fecha_memorial,'DD [de] MMMM [de] YYYY')}},
+              Memorial de fecha {{formatoFecha(servicio.fecha_memorial,'DD [de] MMMM [de] YYYY')}},
               suscrito por el alcalde Municipal, solicitando un préstamo de Inversión para la
-              Municipalidad de {{prestamo.municipalidad.municipio.nombre}},
+              Municipalidad de {{servicio.municipalidad.municipio.nombre}},
               <span style="text-transform:capitalize;">
-                {{prestamo.municipalidad.departamento.nombre}}
+                {{servicio.municipalidad.departamento.nombre}}
               </span>
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
           <tr>
             <td>CERTIFICACIÓN MUNICIPAL</td>
             <td>
-              Certificación del {{formatoFecha(prestamo.certificacion, 'DD [de] MMMM [de] YYYY')}} del punto
-              {{prestamo.punto}}
-              del acta de Consejo Municipal No. {{prestamo.acta}}
-              de fecha {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
+              Certificación del {{formatoFecha(servicio.certificacion, 'DD [de] MMMM [de] YYYY')}} del punto
+              {{servicio.punto}}
+              del acta de Consejo Municipal No. {{servicio.acta}}
+              de fecha {{formatoFecha(servicio.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
           <tr>
             <td>DESTINO</td>
-            <td>{{prestamo.destino}}</td>
+            <td>{{servicio.destino}}</td>
             <td></td>
           </tr>
           <tr>
             <td>MONTO</td>
-            <td>{{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}})</td>
+            <td>{{letrasMoneda(servicio.monto)}} (Q. {{servicio.monto | number: '.2-2'}})</td>
             <td></td>
           </tr>
           <tr>
@@ -1686,20 +1629,22 @@
           </tr>
           <tr>
             <td>PLAZO</td>
-            <td>{{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) MESES</td>
+            <td>{{letras(servicio.plazo_meses)}} ({{servicio.plazo_meses}}) MESES</td>
             <td></td>
           </tr>
           <tr>
             <td>AMORTIZACIÓN</td>
-            <td>{{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) pagos mensuales de VARIABLE ,
+            <td>{{letras(servicio.plazo_meses)}} ({{servicio.plazo_meses}}) pagos mensuales de
+              {{letrasMoneda(servicio.monto / servicio.plazo_meses)}}
+              (Q.{{(servicio.monto / servicio.plazo_meses) | number: '.2-2'}}),
               cada uno, más intereses e IVA sobre los intereses, comprometiendo los recursos
-              <span *ngIf="prestamo.programa.id == 1">
+              <span *ngIf="servicio.programa.id == 1">
                 del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
               </span>
-              <span *ngIf="prestamo.programa.id == 2">
+              <span *ngIf="servicio.programa.id == 2">
                 del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
-              <span *ngIf="prestamo.programa.id == 3">
+              <span *ngIf="servicio.programa.id == 3">
                 del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
               </span>
               - para Inversión, de acuerdo a las entregas de los Aportes Constitucionales
@@ -1710,13 +1655,13 @@
           <tr>
             <td>GARANTÍA </td>
             <td>Los ingresos que le corresponden a la municipalidad provenientes del
-              <span *ngIf="prestamo.programa.id == 1">
+              <span *ngIf="servicio.programa.id == 1">
                 del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
               </span>
-              <span *ngIf="prestamo.programa.id == 2">
+              <span *ngIf="servicio.programa.id == 2">
                 del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
-              <span *ngIf="prestamo.programa.id == 3">
+              <span *ngIf="servicio.programa.id == 3">
                 del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
               </span>
               - para inversión
@@ -1725,50 +1670,50 @@
           </tr>
           <tr>
             <td>TASA DE INTERÉS</td>
-            <td>{{prestamo.tasa}} % anual sobre saldos deudores.</td>
+            <td>{{servicio.tasa}} % anual sobre saldos deudores.</td>
             <td></td>
           </tr>
           <tr>
             <td>CAPACIDAD DE PAGO</td>
             <td>De acuerdo con los Ingresos
-              <span *ngIf="prestamo.programa.id == 1">
+              <span *ngIf="servicio.programa.id == 1">
                 del Aporte Constitucional
               </span>
-              <span *ngIf="prestamo.programa.id == 2">
+              <span *ngIf="servicio.programa.id == 2">
                 del El Impuesto de Valor Agregado -IVAPAZ-
               </span>
-              <span *ngIf="prestamo.programa.id == 3">
+              <span *ngIf="servicio.programa.id == 3">
                 del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
               </span>
               para inversión, es aceptable.
             </td>
-            <td>16</td>
+            <td>--</td>
           </tr>
           <tr>
             <td>PRÉSTAMOS VIGENTES </td>
             <td>
-              <div *ngIf="true">
+              <div *ngIf="vigentes.length == 0">
                 A LA FECHA LA MUNICIPALIDAD NO REFLEJA COMPROMISOS FINANCIEROS ANTE INFOM NI CON NINGUNA
                 INSTITUCION BANCARIA O FINANCIERA
               </div>
-              <div *ngIf="false">
+              <div *ngIf="vigentes.length > 0">
                 <table class="table table-bordered" style="font-size:8pt" width=100%>
                   <div style="text-align: center; font-size:8pt">
                     <p>DISPONIBILIDAD
-                      <span *ngIf="prestamo.id_programa == 1">
+                      <span *ngIf="servicio.id_programa == 1">
                         Aporte constitucional
                       </span>
-                      <span *ngIf="prestamo.id_programa == 2">
+                      <span *ngIf="servicio.id_programa == 2">
                         Impuesto al Valor Agregado -IVAPAZ-
                       </span>
-                      <span *ngIf="prestamo.id_programa == 3">
+                      <span *ngIf="servicio.id_programa == 3">
                         Aporte Contitucional e Impuesto al Valor Agregado -IVAPAZ-
                       </span>
                     </p>
                     <p>(Quetzales)</p>
                     <p>MUNICIPALIDAD DE:
                       <span style="text-transform: uppercase">
-                        {{prestamo.municipalidad.municipio.nombre}}, {{prestamo.municipalidad.departamento.nombre}}
+                        {{servicio.municipalidad.municipio.nombre}}, {{servicio.municipalidad.departamento.nombre}}
                       </span>
                     </p>
                   </div>
@@ -1781,27 +1726,19 @@
                       <td>Vencimiento</td>
                       <td>Saldo</td>
                     </tr>
-                    <tr>
-                      <td>VARIABLE</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td>VARIABLE</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                    <tr *ngFor="let v of vigentes">
+                      <td>FP</td>
+                      <td>{{formatoFecha(v.fecha, 'DD/MM/YYYY')}}</td>
+                      <td>{{v.monto | number: '.2-2'}}</td>
+                      <td style="text-align: left">{{v.destinos.length ? v.destinos[0].destino.nombre : '-'}}</td>
+                      <td>{{formatoFecha(v.fecha_vencimiento, 'DD/MM/YYYY')}}</td>
+                      <td>{{v.saldo | number: '.2-2'}}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </td>
-            <td></td>
+            <td>--</td>
           </tr>
           <tr>
             <td>PROYECCIÓN</td>
@@ -1812,7 +1749,7 @@
                   <p>(Quetzales)</p>
                   <p>MUNICIPALIDAD DE:
                     <span style="text-transform: uppercase">
-                      {{prestamo.municipalidad.municipio.nombre}}
+                      {{servicio.municipalidad.municipio.nombre}}
                     </span>
                   </p>
                 </div>
@@ -1823,17 +1760,11 @@
                     <td>Cuota</td>
                     <td>Nueva Disponibilidad</td>
                   </tr>
-                  <tr>
-                    <td>VARIABLE</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>VARIABLE</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                  <tr *ngFor="let p of proyecciones; let pindex = index">
+                    <td>{{pindex+1}}</td>
+                    <td>{{p.disponible | number: '.2-2'}}</td>
+                    <td>{{p.cuota | number: '.2-2'}}</td>
+                    <td>{{(p.disponible - p.cuota) | number: '.2-2'}}</td>
                   </tr>
                   <caption style="text-align: left; font-size:5pt;  text-align: bottom">
                     *Capital, Intereses e IVA.
@@ -1862,11 +1793,11 @@
                   </tr>
                   <tr *ngFor="let p of proyecciones; let pindex = index">
                     <td>{{pindex+1}}</td>
-                    <td>{{p.fecha_fin}}</td>
+                    <td>{{formatoFecha(p.fecha_fin, 'DD/MM/YYYY')}}</td>
                     <td>{{p.interes | number: '.2-2'}}</td>
                     <td>{{p.iva | number: '.2-2'}}</td>
                     <td>
-                      <!-- {{getInteresMasIva(p.interes, p.iva) | number: '.2-2'}} -->
+                      {{getInteresMasIva(p.interes, p.iva) | number: '.2-2'}}
                     </td>
                     <td>{{p.capital | number: '.2-2'}}</td>
                     <td>{{p.cuota | number: '.2-2'}}</td>
@@ -1877,7 +1808,7 @@
                     <td></td>
                     <td>{{getInteres() | number: '.2-2'}}</td>
                     <td>{{getIva() | number: '.2-2'}}</td>
-                    <td>{{getInteres() | number: '.2-2'}}</td>
+                    <td>{{getInteresMasIva(getInteres(), getIva()) | number: '.2-2'}}</td>
                     <td>
                       <!-- {{getInteresIva() | number: '.2-2'}} -->
                     </td>
@@ -1894,25 +1825,25 @@
             <td>
               De acuerdo con la información que se tuvo a la vista, el área de Créditos de la Dirección Financiera
               emite Dictamen favorable sobre la solicitud de préstamo planteada por la Municipalidad de
-              <span style="text-transform: uppercase;">{{prestamo.municipalidad.municipio.nombre}}
+              <span style="text-transform: uppercase;">{{servicio.municipalidad.municipio.nombre}}
               </span>
-              por un monto de {{letrasMoneda(prestamo.monto)}}, (Q. {{prestamo.monto | number: '.2-2'}})
+              por un monto de {{letrasMoneda(servicio.monto)}}, (Q. {{servicio.monto | number: '.2-2'}})
               tomando como referencia la capacidad de pago en el renglón de Inversión con recursos del
-              <span *ngIf="prestamo.programa.id == 1">
+              <span *ngIf="servicio.programa.id == 1">
                 del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
               </span>
-              <span *ngIf="prestamo.programa.id == 2">
+              <span *ngIf="servicio.programa.id == 2">
                 del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
-              <span *ngIf="prestamo.programa.id == 3">
+              <span *ngIf="servicio.programa.id == 3">
                 del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
               </span>
               para Inversión, la cual es suficiente para cubrir adecuadamente el servicio de deuda del
               préstamo que solicita, por lo que se recomienda a la Gerencia
-              <span *ngIf="prestamo.id_tipo_prestamo == 1">
+              <span *ngIf="servicio.id_tipo_prestamo == 1">
                 su aprobación.
               </span>
-              <span *ngIf="prestamo.id_tipo_prestamo == 2">
+              <span *ngIf="servicio.id_tipo_prestamo == 2">
                 elevarlo a conocimiento de la Junta Directiva para su aprobación.
               </span>
             </td>
@@ -1948,21 +1879,21 @@
             <td style="width: 50%; text-align: justify">
               Municipalidad de
               <span style="text-transform: uppercase; font-weight: 500;">
-                {{prestamo.municipalidad.municipio.nombre}},
-                DEPARTAMENTO DE {{prestamo.municipalidad.municipio.departamento.nombre}}
+                {{servicio.municipalidad.municipio.nombre}},
+                DEPARTAMENTO DE {{servicio.municipalidad.municipio.departamento.nombre}}
               </span>,
               solicita un Préstamo con recursos propios del Fondo Patrimonial del INFOM por un
               monto de
               <span style="text-transform: uppercase; font-weight: 500;">
-                {{letrasMoneda(prestamo.monto)}} (Q.{{prestamo.monto | number: '.2-2'}}),
+                {{letrasMoneda(servicio.monto)}} (Q.{{servicio.monto | number: '.2-2'}}),
               </span>
-              que será utilizado para la ejecución del proyecto(s) de {{prestamo.destino}}.
+              que será utilizado para la ejecución del proyecto(s) de {{servicio.destino}}.
             </td>
           </tr>
           <tr>
             <td>FECHA:</td>
             <td>
-              {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}}
+              {{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}}
             </td>
           </tr>
           <tr>
@@ -1987,7 +1918,7 @@
               </p>
             </td>
             <td>
-              {{formatoFecha(prestamo.fecha_memorial, 'DD [de] MMMM [de] YYYY')}}
+              {{formatoFecha(servicio.fecha_memorial, 'DD [de] MMMM [de] YYYY')}}
             </td>
           </tr>
           <tr>
@@ -1997,7 +1928,7 @@
               </p>
             </td>
             <td>
-              {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
+              {{formatoFecha(servicio.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
             </td>
           </tr>
           <tr>
@@ -2006,7 +1937,7 @@
                 1.3. Acta Número:
               </p>
             </td>
-            <td>{{prestamo.acta}}</td>
+            <td>{{servicio.acta}}</td>
           </tr>
           <tr>
             <td>
@@ -2014,7 +1945,7 @@
                 1.4. Fecha de Acta:
               </p>
             </td>
-            <td>{{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}}</td>
+            <td>{{formatoFecha(servicio.fecha_acta, 'DD [de] MMMM [de] YYYY')}}</td>
           </tr>
           <tr>
             <td>
@@ -2022,7 +1953,7 @@
                 1.5. Punto de Acta:
               </p>
             </td>
-            <td>{{letras(prestamo.punto)}}</td>
+            <td>{{servicio.punto}}</td>
           </tr>
           <tr>
             <td colspan="2">
@@ -2036,7 +1967,7 @@
               <p style="margin-left: 30%; font-weight: 700">2.1. Monto:</p>
             </td>
             <td>
-              {{letrasMoneda(prestamo.monto)}}, (Q.{{prestamo.monto | number: '.2-2'}})
+              {{letrasMoneda(servicio.monto)}}, (Q.{{servicio.monto | number: '.2-2'}})
             </td>
           </tr>
           <tr>
@@ -2045,7 +1976,7 @@
                 2.2. Destino:
               </p>
             </td>
-            <td style="text-align: justify">{{prestamo.destino}}</td>
+            <td style="text-align: justify">{{servicio.destino}}</td>
           </tr>
           <tr>
             <td>
@@ -2054,13 +1985,11 @@
               </p>
             </td>
             <td style="text-align: justify">
-              {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) MESES,
+              {{letras(servicio.plazo_meses)}} ({{servicio.plazo_meses}}) MESES,
               contados a partir del
-              {{formatoFecha(prestamo.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
-              al mes de VARIABLE del año VARIABLE
-              <span>
-                (VARIABLE que incluyen {{prestamo.periodo_gracia}}
-                meses de período de gracia
+              {{formatoFecha(servicio.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
+              al mes de {{formatoFecha(servicio.fecha_vencimiento, 'MMMM [del año] YYYY')}}
+              <span> que incluyen {{servicio.periodo_gracia}} meses de período de gracia
               </span>
             </td>
           </tr>
@@ -2070,17 +1999,16 @@
                 2.4. Período de Gracia
               </p>
             </td>
-            <td>{{letras(prestamo.periodo_gracia)}},
-              ({{prestamo.periodo_gracia}}) MESES</td>
+            <td>{{letras(servicio.periodo_gracia)}} ({{servicio.periodo_gracia}}) MESES</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">2.5. Amortizaciones:</p>
             </td>
             <td style="text-align: justify">
-              {{letras(prestamo.plazo_meses)}},({{prestamo.plazo_meses}})
-              pagos mensuales de VARIABLE QUETZALES EXACTOS (Q.VARIABLE)
-              cada uno, más intereses e IVA.
+              {{letras(servicio.plazo_meses)}},({{servicio.plazo_meses}}) pagos mensuales de
+              {{letrasMoneda(servicio.monto / servicio.plazo_meses)}}
+              (Q.{{(servicio.monto / servicio.plazo_meses) | number: '.2-2'}}) cada uno, más intereses e IVA.
             </td>
           </tr>
           <tr>
@@ -2090,8 +2018,8 @@
               </p>
             </td>
             <td style="text-align: justify">
-              La tasa de interés es del {{letras(prestamo.tasa)}}
-              POR CIENTO ({{prestamo.tasa | number: '.2-2'}}%) anual sobre saldos deudores.
+              La tasa de interés es del {{letras(servicio.tasa)}}
+              POR CIENTO ({{servicio.tasa | number: '.2-2'}}%) anual sobre saldos deudores.
             </td>
           </tr>
           <tr>
@@ -2102,13 +2030,13 @@
             </td>
             <td style="text-align: justify;">
               Los ingresos que le corresponden a la municipalidad provenientes
-              <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
+              <span *ngIf="servicio.programa.id == 1" style="font-weight: 500;">
                 del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
               </span>
-              <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
+              <span *ngIf="servicio.programa.id == 2" style="font-weight: 500;">
                 del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
-              <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
+              <span *ngIf="servicio.programa.id == 3" style="font-weight: 500;">
                 del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
               </span>
             </td>
@@ -2120,15 +2048,15 @@
               </p>
             </td>
             <td style="text-align: justify">
-              El desembolso se realizará en VARIABLE entrega con acreditamiento a
-              la cuenta única del Tesoro a nombre de la Municipalidad de
+              El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ? 's' : ''}} con
+              acreditamiento a la cuenta única del Tesoro a nombre de la Municipalidad de
               <span style="text-transform: uppercase; font-weight: 500;">
-                {{prestamo.municipalidad.municipio.nombre}},
-                Departamento de {{prestamo.municipalidad.departamento.nombre}},
-              </span>
-              número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
-              del Banco {{prestamo.municipalidad.banco.nombre}},
-              por un monto de VARIABLE (Q. VARIABLE).
+                {{servicio.municipalidad.municipio.nombre}},
+                Departamento de {{servicio.municipalidad.departamento.nombre}},
+              </span> número {{letras(servicio.municipalidad.no_cuenta)}} ({{servicio.municipalidad.no_cuenta}}),
+              del Banco {{servicio.municipalidad.banco.nombre}},
+              por un monto de
+              <span *ngFor="let d of desembolsos">{{letrasMoneda(d.monto)}} (Q. {{d.monto | number: '.2-2'}}) </span>
             </td>
           </tr>
         </tbody>
@@ -2143,10 +2071,10 @@
           <p>
             1.1 Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la
             República de Guatemala), artículos 4º. numeral romano II, inciso 1) y
-            <span *ngIf="prestamo.id_tipo_prestamo == 1">
+            <span *ngIf="servicio.id_tipo_prestamo == 1">
               23 inciso a) y b).
             </span>
-            <span *ngIf="prestamo.id_tipo_prestamo == 2">
+            <span *ngIf="servicio.id_tipo_prestamo == 2">
               30 inciso g) y h).
             </span>
           </p>
@@ -2158,21 +2086,21 @@
           <p>
             1.3 Reglamento para la Asistencia Financiera a las Municipalidades de
             la República de Guatemala
-            <span *ngIf="prestamo.id_tipo_prestamo == 2">
-              Articulos del {{prestamo.resolucion.articulos}}
+            <span *ngIf="servicio.id_tipo_prestamo == 2">
+              Articulos del {{servicio.resolucion.articulos}}
             </span>
-            (Resolución número {{prestamo.resolucion.numero}} J.D. de fecha
-            {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
-            artículos del {{prestamo.resolucion.articulos}})
+            (Resolución número {{servicio.resolucion.numero}} J.D. de fecha
+            {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
+            artículos del {{servicio.resolucion.articulos}})
           </p>
           <p>
             1.4 Convenio Interinstitucional, Administrativo y Financiero número
-            {{prestamo.no_convenio}}, de fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}},
+            {{servicio.no_convenio}}, de fecha {{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}},
             suscrito entre el Instituto de Fomento Municipal, la Municipalidad de
             <span style="text-transform: uppercase; font-weight: 500;">
-              {{prestamo.municipalidad.municipio.nombre}},
-              Departamento de {{prestamo.municipalidad.departamento.nombre}},
-              y el Banco de {{prestamo.municipalidad.banco.nombre}}.
+              {{servicio.municipalidad.municipio.nombre}},
+              Departamento de {{servicio.municipalidad.departamento.nombre}},
+              y el Banco de {{servicio.municipalidad.banco.nombre}}.
             </span>
           </p>
         </div>
@@ -2184,11 +2112,11 @@
             De conformidad con el balance general del área de cartera de INFOM, la
             Municipalidad de
             <span style="text-transform: uppercase; font-weight: 500;">
-              {{prestamo.municipalidad.municipio.nombre}},
-              Departamento de {{prestamo.municipalidad.departamento.nombre}},
-              y el Banco de {{prestamo.municipalidad.banco.nombre}}.
+              {{servicio.municipalidad.municipio.nombre}},
+              Departamento de {{servicio.municipalidad.departamento.nombre}},
+              y el Banco de {{servicio.municipalidad.banco.nombre}}.
             </span>
-            a la fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}}
+            a la fecha {{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}}
             refleja los siguientes préstamos vigentes:
           </p>
           <table class="table table-bordered" style="text-align: center; width:  100%;">
@@ -2203,39 +2131,42 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-              </tr>
-              <tr>
-                <td>Totales</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
+              <tr *ngFor="let v of vigentes">
+                <td>{{v.no_dictamen}}</td>
+                <td>{{v.monto | number: '.2-2'}}</td>
+                <td>{{v.programa.nombre}}</td>
+                <td style="text-align: left">{{v.destinos.length ? v.destinos[0].destino.nombre : '-'}}</td>
+                <td>{{formatoFecha(v.fecha_vencimiento, 'DD/MM/YYYY')}}</td>
+                <td>{{v.saldo | number: '.2-2'}}</td>
               </tr>
             </tbody>
           </table>
           <p>2.2 CAPACIDAD DE PAGO MUNICIPAL:</p>
           <p>
             De acuerdo a la distribución del
-            <span *ngIf="prestamo.id_programa == 1">
+            <span *ngIf="servicio.id_programa == 1">
               Aporte constitucional
             </span>
-            <span *ngIf="prestamo.id_programa == 2">
+            <span *ngIf="servicio.id_programa == 2">
               Impuesto al Valor Agregado -IVAPAZ-
             </span>
-            <span *ngIf="prestamo.id_programa == 3">
+            <span *ngIf="servicio.id_programa == 3">
               Aporte Contitucional e Impuesto al Valor Agregado -IVAPAZ-
             </span>
-            para Inversión, la Municipalidad percibe aproximadamente Q. VARIABLE mensuales,
-            monto que es suficiente para respaldar la cobertura del préstamo que solicita en
-            el plazo de {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) meses,
+            para Inversión, la Municipalidad percibe aproximadamente
+            <span *ngIf="aporte">
+              <span *ngIf="servicio.id_programa == 1">
+                Q. {{aporte.constitucional | number: '.2-2'}}
+              </span>
+              <span *ngIf="servicio.id_programa == 2">
+                Q. {{aporte.iva_paz | number: '.2-2'}}
+              </span>
+              <span *ngIf="servicio.id_programa == 3">
+                Q. {{getSumaAportes(aporte.constitucional, aporte.iva_paz) | number: '.2-2'}}
+              </span>
+            </span>
+            mensuales, monto que es suficiente para respaldar la cobertura del préstamo que solicita en
+            el plazo de {{letras(servicio.plazo_meses)}} ({{servicio.plazo_meses}}) meses,
             incluyendo el pago de intereses e IVA sobre intereses.
           </p>
         </div>
@@ -2246,9 +2177,9 @@
         <p style="margin-left: 10%; text-align: justify">
           El presente dictamen fue elaborado de acuerdo a las normas establecidas
           en el Reglamento para la Asistencia Financiera a las Municipalidades de
-          la República de Guatemala (Resolución número {{prestamo.resolucion.numero}}
-          J.D. de fecha {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
-          artículos del {{prestamo.resolucion.articulos}})
+          la República de Guatemala (Resolución número {{servicio.resolucion.numero}}
+          J.D. de fecha {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
+          artículos del {{servicio.resolucion.articulos}})
         </p>
         <li>DICTAMEN:</li>
         <br>
@@ -2257,23 +2188,23 @@
           emite dictamen favorable sobre la solicitud de préstamo presentada por
           la Municipalidad de
           <span style="text-transform: uppercase; font-weight: 500;">
-            {{prestamo.municipalidad.municipio.nombre}},
-            Departamento de {{prestamo.municipalidad.departamento.nombre}}
+            {{servicio.municipalidad.municipio.nombre}},
+            Departamento de {{servicio.municipalidad.departamento.nombre}}
           </span>
           por un monto de
           <span style="text-transform: uppercase; font-weight: 500;">
-            {{letrasMoneda(prestamo.monto)}} (Q.{{prestamo.monto | number: '.2-2'}}),
+            {{letrasMoneda(servicio.monto)}} (Q.{{servicio.monto | number: '.2-2'}}),
           </span>
           la cual cumple con los requisitos establecidos en el Reglamento de Asistencia
           Financiera a las Municipalidades de la República de Guatemala y tomando como
           referencia la capacidad financiera de la Municipalidad con los recursos
-          <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
+          <span *ngIf="servicio.programa.id == 1" style="font-weight: 500;">
             del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
           </span>
-          <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
+          <span *ngIf="servicio.programa.id == 2" style="font-weight: 500;">
             del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
           </span>
-          <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
+          <span *ngIf="servicio.programa.id == 3" style="font-weight: 500;">
             del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
           </span>
           la cual se determina que suficiente para cubrir adecuadamente
@@ -2318,15 +2249,15 @@
 
       <p style="text-align: justify">
         LA
-        <span *ngIf="prestamo.tipoPrestamo.id == 1">GERENCIA</span>
-        <span *ngIf="prestamo.tipoPrestamo.id == 2">
+        <span *ngIf="servicio.tipoPrestamo.id == 1">GERENCIA</span>
+        <span *ngIf="servicio.tipoPrestamo.id == 2">
           JUNTA DIRECTIVA
         </span>
         DEL INSTITUTO DE FOMENTO MUNICIPAL,
-        <span *ngIf="prestamo.tipoPrestamo.id ==1">conoció</span>
-        <span *ngIf="prestamo.tipoPrestamo.id ==2">deliberó</span>
-        de forma y de fondo el contenido del Dictamen No.{{prestamo.no_dictamen}},
-        de fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} asunto sometido a su conocimiento y,
+        <span *ngIf="servicio.tipoPrestamo.id ==1">conoció</span>
+        <span *ngIf="servicio.tipoPrestamo.id ==2">deliberó</span>
+        de forma y de fondo el contenido del Dictamen No. {{servicio.no_dictamen}},
+        de fecha {{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}} asunto sometido a su conocimiento y,
       </p>
       <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
       <p style="text-align: justify">
@@ -2339,76 +2270,76 @@
       <p style="text-align: justify">
         Que la Municipalidad de
         <span style="text-transform: uppercase; font-weight: 500">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}},
+          {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{servicio.municipalidad.departamento.nombre}},
         </span>
         presentó a este Instituto Memorial de fecha
-        {{formatoFecha(prestamo.fecha_memorial, 'DD [de] MMMM [de] YYYY')}}
-        y certificación del {{formatoFecha(prestamo.certificacion, 'DD [de] MMMM [de] YYYY' )}}, del punto
-        {{prestamo.punto}} del acta de Consejo Municipal No. {{prestamo.acta}} del
-        {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
+        {{formatoFecha(servicio.fecha_memorial, 'DD [de] MMMM [de] YYYY')}}
+        y certificación del {{formatoFecha(servicio.certificacion, 'DD [de] MMMM [de] YYYY' )}}, del punto
+        {{servicio.punto}} del acta de Consejo Municipal No. {{servicio.acta}} del
+        {{formatoFecha(servicio.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
         solicitando al INFOM un préstamo de por un monto de
-        {{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}}), que será utilizado para
-        la ejecución del proyecto(s) {{prestamo.destino}} ofreciendo como garantía los recursos
+        {{letrasMoneda(servicio.monto)}} (Q. {{servicio.monto | number: '.2-2'}}), que será utilizado para
+        la ejecución del proyecto(s) {{servicio.destino}} ofreciendo como garantía los recursos
         provenientes del
-        <span *ngIf="prestamo.programa.id == 1">
+        <span *ngIf="servicio.programa.id == 1">
           APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
-        <span *ngIf="prestamo.programa.id == 2">
+        <span *ngIf="servicio.programa.id == 2">
           IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
           CONSTITUCIONAL
         </span>
-        <span *ngIf="prestamo.programa.id == 3">
+        <span *ngIf="servicio.programa.id == 3">
           APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ
         </span>
       </p>
       <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
       <p style="text-align: justify">
-        Que a través del Dictamen número {{prestamo.no_dictamen}} del
-        {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}}, el Analista de
+        Que a través del Dictamen número {{servicio.no_dictamen}} del
+        {{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}}, el Analista de
         Créditos, la Supervisora de Créditos y el Subdirector de Asistencia
         Financiera Municipal, con el visto bueno del Director Financiero, y del
         Gerente Administrativo Financiero, dictaminaron que la Municipalidad de
         <span style="text-transform: uppercase; font-weight: 500;">
-          {{prestamo.municipalidad.municipio.nombre}}, Departamento de {{prestamo.municipalidad.departamento.nombre}}
+          {{servicio.municipalidad.municipio.nombre}}, Departamento de {{servicio.municipalidad.departamento.nombre}}
         </span>,
         cumple con los requisitos establecidos
         en el Reglamento de Asistencia Financiera a las Municipalidades de la
         República de Guatemala y cuenta con capacidad de pago en el renglón de
         Inversión con recursos provenientes del
-        <span *ngIf="prestamo.programa.id == 1">
+        <span *ngIf="servicio.programa.id == 1">
           APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
-        <span *ngIf="prestamo.programa.id == 2">
+        <span *ngIf="servicio.programa.id == 2">
           IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
           CONSTITUCIONAL
         </span>
-        <span *ngIf="prestamo.programa.id == 3">
+        <span *ngIf="servicio.programa.id == 3">
           APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ
         </span>
         para cubrir adecuadamente el servicio de deuda el préstamo
         solicitado.
       </p>
-      <div>
+      <div *ngIf="servicio.tipoPrestamo.id == 2">
         <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
         <p style="text-align: justify">
-          Que el Gerente del Instituto a través del oficio GER {{prestamo.no_oficio_ger}},
-          {{formatoFecha(prestamo.fecha_oficio_ger,'DD [de] MMMM [de] YYYY')}}, trasladó
+          Que el Gerente del Instituto a través del oficio GER {{servicio.no_oficio_ger}},
+          {{formatoFecha(servicio.fecha_oficio_ger,'DD [de] MMMM [de] YYYY')}}, trasladó
           para aprobación de la junta directiva, la solicitud de préstamo de la municipalidad de
           <span style="text-transform: uppercase; font-weight: 500;">
-            {{prestamo.municipalidad.municipio.nombre}}, {{prestamo.municipalidad.departamento.nombre}} por un monto de
-            {{letrasMoneda(prestamo.monto)}} (Q.{{prestamo.monto | number: '.2-2'}})
+            {{servicio.municipalidad.municipio.nombre}}, {{servicio.municipalidad.departamento.nombre}} por un monto de
+            {{letrasMoneda(servicio.monto)}} (Q.{{servicio.monto | number: '.2-2'}})
           </span>
-          para la ejecución del proyecto(s) de {{prestamo.destino}} a un plazo de {{letras(prestamo.plazo_meses)}}
-          ({{prestamo.plazo_meses}}) MESES ofreciendo como garantía los recursos de
+          para la ejecución del proyecto(s) de {{servicio.destino}} a un plazo de {{letras(servicio.plazo_meses)}}
+          ({{servicio.plazo_meses}}) MESES ofreciendo como garantía los recursos de
 
-          <span *ngIf="prestamo.programa.id == 1">
+          <span *ngIf="servicio.programa.id == 1">
             APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
           </span>
-          <span *ngIf="prestamo.programa.id == 2">
+          <span *ngIf="servicio.programa.id == 2">
             IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
             CONSTITUCIONAL
           </span>
-          <span *ngIf="prestamo.programa.id == 3">
+          <span *ngIf="servicio.programa.id == 3">
             APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ
           </span>
         </p>
@@ -2416,11 +2347,11 @@
       <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
       <p style="text-align: justify">
         Que mediante
-        <span *ngIf="prestamo.tipoPrestamo.id == 1">Dictamen</span>
-        <span *ngIf="prestamo.tipoPrestamo.id == 2">Opinion Juridica en Oficio</span>
+        <span *ngIf="servicio.tipoPrestamo.id == 1">Dictamen</span>
+        <span *ngIf="servicio.tipoPrestamo.id == 2">Opinion Juridica en Oficio</span>
         <span style="text-transform: uppercase; font-weight: 500;">
-          AJ guion {{letras(prestamo.no_oficio_aj)}} (AJ-{{prestamo.no_oficio_aj}}) del
-          {{formatoFecha(prestamo.fecha_oficio_aj,'DD [de] MMMM [de] YYYY')}}
+          AJ guion {{letras(servicio.no_oficio_aj)}} (AJ-{{servicio.no_oficio_aj}}) del
+          {{formatoFecha(servicio.fecha_oficio_aj,'DD [de] MMMM [de] YYYY')}}
         </span>
         ,la Dirección de Asesoría Jurídica del Instituto dictaminó que el préstamo solicitado
         cumple con los requisitos establecidos en el Reglamento para la Asistencia
@@ -2430,17 +2361,17 @@
       <p style="text-align: center; font-weight: 700">POR TANTO:</p>
       <p style="text-align: justify">
         La
-        <span *ngIf="prestamo.tipoPrestamo.id ==1">Gerencia</span>
-        <span *ngIf="prestamo.tipoPrestamo.id ==2">Junta Directiva</span>
+        <span *ngIf="servicio.tipoPrestamo.id ==1">Gerencia</span>
+        <span *ngIf="servicio.tipoPrestamo.id ==2">Junta Directiva</span>
 
         del Instituto de Fomento Municipal, en ejercicio de las atribuciones que le confiere el
         artículo 4º. ((numeral romano II, inciso 1) y articulos
-        <span *ngIf="prestamo.tipoPrestamo.id ==1">(30 inciso g) y h)</span>,
-        <span *ngIf="prestamo.tipoPrestamo.id ==2">(23 inciso a) y b)</span>
+        <span *ngIf="servicio.tipoPrestamo.id ==1">(30 inciso g) y h)</span>,
+        <span *ngIf="servicio.tipoPrestamo.id ==2">(23 inciso a) y b)</span>
 
         Ley Orgánica del INFOM (decreto número 1132 del Congreso de la República de
         Guatemala); artículos 112, 114 y 115 del Decreto número 12-2002 del
-        Congreso de la República, Código Municipal; Artículos del {{prestamo.resolucion.articulos}}
+        Congreso de la República, Código Municipal; Artículos del {{servicio.resolucion.articulos}}
         del Reglamento para la Asistencia Financiera a las
         Municipalidades de la República de Guatemala, por unanimidad
       </p>
@@ -2449,17 +2380,17 @@
         <li style="text-align: justify">
           CONCEDER A LA MUNICIPALIDAD DEL MUNICIPIO DE
           <span style="text-transform: uppercase; font-weight: 500;">
-            {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
-            {{prestamo.municipalidad.departamento.nombre}}
+            {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+            {{servicio.municipalidad.departamento.nombre}}
           </span>,
           un préstamo con Garantía del
-          <span *ngIf="prestamo.programa.id == 1">
+          <span *ngIf="servicio.programa.id == 1">
             APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
           </span>
-          <span *ngIf="prestamo.programa.id == 2">
+          <span *ngIf="servicio.programa.id == 2">
             IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
           </span>
-          <span *ngIf="prestamo.programa.id == 3">
+          <span *ngIf="servicio.programa.id == 3">
             APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
           </span>
           para Inversión, con recursos propios del Fondo Patrimonial,
@@ -2476,7 +2407,7 @@
             </td>
             <td style="width: 40%">
               <span style="text-transform: uppercase; font-weight: 500;">
-                {{letras(prestamo.monto)}} ({{prestamo.monto | number: '.2-2'}})
+                {{letrasMoneda(servicio.monto)}} ({{servicio.monto | number: '.2-2'}})
               </span>
             </td>
           </tr>
@@ -2486,7 +2417,7 @@
                 <li style="margin-left: 40%">DESTINO:</li>
               </ol>
             </td>
-            <td style="width: 40%">{{prestamo.destino}}</td>
+            <td style="width: 40%">{{servicio.destino}}</td>
           </tr>
           <tr>
             <td style="width: 60%">
@@ -2495,11 +2426,11 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) MESES,
-              <span *ngIf="prestamo.tipoPrestamo.id ==1">empezando</span>
-              <span *ngIf="prestamo.tipoPrestamo.id ==2">iniciando</span>
-              {{formatoFecha(prestamo.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
-              al mes de VARIABLE del año VARIABLE ( )
+              {{letras(servicio.plazo_meses)}} ({{servicio.plazo_meses}}) MESES,
+              <span *ngIf="servicio.tipoPrestamo.id ==1">empezando</span>
+              <span *ngIf="servicio.tipoPrestamo.id ==2">iniciando</span>
+              {{formatoFecha(servicio.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
+              al {{formatoFecha(servicio.fecha_vencimiento, '[mes de] MMMM [del año] YYYY')}}
             </td>
           </tr>
           <tr>
@@ -2509,7 +2440,7 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              {{letras(prestamo.periodo_gracia)}}, ({{prestamo.periodo_gracia}}) MESES
+              {{letras(servicio.periodo_gracia)}} ({{servicio.periodo_gracia}}) MESES
             </td>
           </tr>
           <tr>
@@ -2519,8 +2450,10 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) pagos mensuales de la siguiente forma:
-              VARIABLE (Q.VARIABLE), más intereses y el Impuesto al Valor Agregado -IVA-,
+              {{letras(servicio.plazo_meses)}} ({{servicio.plazo_meses}}) pagos mensuales de la siguiente forma:
+              {{letrasMoneda(servicio.monto / servicio.plazo_meses)}}
+              (Q.{{(servicio.monto / servicio.plazo_meses) | number: '.2-2'}}), más intereses y el Impuesto al Valor
+              Agregado -IVA-,
               sobre intereses.
             </td>
           </tr>
@@ -2531,8 +2464,8 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              La tasa de interés es del {{letras(prestamo.tasa)}}
-              POR CIENTO ({{prestamo.tasa | number: '.2-2'}}%) anual sobre saldos deudores.
+              La tasa de interés es del {{letras(servicio.tasa)}}
+              POR CIENTO ({{servicio.tasa}}%) anual sobre saldos deudores.
             </td>
           </tr>
           <tr>
@@ -2543,13 +2476,13 @@
             </td>
             <td style="width: 40%; text-align: justify">
               Los ingresos que le corresponden a la municipalidad provenientes
-              <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
+              <span *ngIf="servicio.programa.id == 1" style="font-weight: 500;">
                 del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
               </span>
-              <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
+              <span *ngIf="servicio.programa.id == 2" style="font-weight: 500;">
                 del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
-              <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
+              <span *ngIf="servicio.programa.id == 3" style="font-weight: 500;">
                 del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
               </span>
             </td>
@@ -2561,14 +2494,15 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              El desembolso se realizará en VARIABLE con acreditamiento a
-              la cuenta Única del Tesoro, a nombre de la Municipalidad de
+              El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ? 's' : ''}} con
+              acreditamiento a la cuenta Única del Tesoro, a nombre de la Municipalidad de
               <span style="text-transform: uppercase; font-weight: 500;">
-                {{prestamo.municipalidad.municipio.nombre}},
-                Departamento de {{prestamo.municipalidad.departamento.nombre}},
+                {{servicio.municipalidad.municipio.nombre}},
+                Departamento de {{servicio.municipalidad.departamento.nombre}},
               </span>
-              número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
-              del Banco {{prestamo.municipalidad.banco.nombre}}, por un monto de VARIABLE (Q. VARIABLE).
+              número {{letras(servicio.municipalidad.no_cuenta)}} ({{servicio.municipalidad.no_cuenta}}),
+              del Banco {{servicio.municipalidad.banco.nombre}}, por un monto de
+              <span *ngFor="let d of desembolsos">{{letrasMoneda(d.monto)}} (Q. {{d.monto | number: '.2-2'}}) </span>.
             </td>
           </tr>
         </tbody>
@@ -2579,24 +2513,24 @@
           CONDICIONES ADICIONALES: A) La municipalidad no caerá en mora, en caso
           que el Gobierno Central no sitúe oportunamente los fondos
           correspondientes
-          <span *ngIf="prestamo.programa.id == 1">
+          <span *ngIf="servicio.programa.id == 1">
             del APORTE CONSTITUCIONAL
           </span>
-          <span *ngIf="prestamo.programa.id == 2">
+          <span *ngIf="servicio.programa.id == 2">
             del EL IMPUESTO DE VALOR AGREGADO -IVAPAZ-
           </span>
-          <span *ngIf="prestamo.programa.id == 3">
+          <span *ngIf="servicio.programa.id == 3">
             del APORTE CONSTITUCIONAL y EL IMPUESTO DE VALOR AGREGADO -IVAPAZ-
           </span>
           ; B) Para el otorgamiento de este préstamo, la municipalidad se compromete a:
           B1) Efectuar el pago correspondiente con los recursos provenientes del
-          <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
+          <span *ngIf="servicio.programa.id == 1" style="font-weight: 500;">
             del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
           </span>
-          <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
+          <span *ngIf="servicio.programa.id == 2" style="font-weight: 500;">
             del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
           </span>
-          <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
+          <span *ngIf="servicio.programa.id == 3" style="font-weight: 500;">
             del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
           </span>
           para inversión. Si el Ministerio de Finanzas Públicas traslada directamente a
@@ -2628,11 +2562,11 @@
           municipalidad, de conformidad con el Reglamento de Tarifas por Servicios
           Prestados por el Instituto de Fomento Municipal. IV. Esta resolución
           surte efectos inmediatos. V. Se instruye a la Gerencia
-          <span *ngIf="prestamo.tipoPrestamo.id == 1">
+          <span *ngIf="servicio.tipoPrestamo.id == 1">
             Administrativa para que a través de la Subdirecicón de Asistencia
             Financiera del Instituto de Fomento Municipal proceda a realizar las notificaciones correspondientes.
           </span>
-          <span *ngIf="prestamo.tipoPrestamo.id == 2">
+          <span *ngIf="servicio.tipoPrestamo.id == 2">
             proceda a realizar las notificaciones correspondientes.
           </span>
         </li>
@@ -2644,8 +2578,16 @@
         <p style="margin-left: 25%">GERENTE</p>
       </div>
       <br />
+
+      <div class="break"></div>
+
       <br />
-      <p>TABLA DE AMORTIZACION A CAPITAL</p>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <p style="text-align: center;">TABLA DE AMORTIZACION A CAPITAL</p>
       <table class="table table-bordered width=100%">
         <thead>
           <tr>
@@ -2653,26 +2595,16 @@
             <th>MES</th>
             <th>AÑO</th>
             <th>AMORTIZACIÓN</th>
+            <th>SALDO</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-          </tr>
-          <tr>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-          </tr>
-          <tr>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
+          <tr *ngFor="let p of proyecciones; let pindex = index">
+            <td>{{pindex + 1}}</td>
+            <td>{{formatoFecha(p.mes, 'MM')}}</td>
+            <td>{{formatoFecha(p.mes, 'YYYY')}}</td>
+            <td>{{p.capital | number: '.2-2'}}</td>
+            <td>{{p.saldo_final | number: '.2-2'}}</td>
           </tr>
         </tbody>
       </table>
@@ -2696,8 +2628,8 @@
         año dos mil VARIABLE (VARIABLE) del Presidente de la República de
         Guatemala, acuerdo donde consta mi nombramiento;
 
-        <b>B)</b> Certificación de la resolución No. {{prestamo.resolucion.numero}}*
-        de fecha {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*
+        <b>B)</b> Certificación de la resolución No. {{servicio.resolucion.numero}}*
+        de fecha {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*
         emitida por la Junta Directiva del Instituto de Fomento Municipal, a través de la
         cual se me nombra como Gerente del Instituto de Fomento Municipal y
 
@@ -2720,130 +2652,131 @@
         Electoral de VARIABLE, de fecha VARIABLE (VARIABLE) de VARIABLE de dos mil
         VARIABLE (VARIABLE)
         <b>B)</b>Certificación del Acta de Toma de Posesión del
-        cargo número {{letras(prestamo.municipalidad.no_acta)}}** ({{prestamo.municipalidad.no_acta}}),
-        de fecha {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**
+        cargo número {{letras(servicio.municipalidad.no_acta)}}** ({{servicio.municipalidad.no_acta}}),
+        de fecha {{formatoFecha(servicio.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**
         extendida por la Secretaría Municipal de
         <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+          {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{servicio.municipalidad.departamento.nombre}}
         </span>,
         Debidamente autorizado para la celebración del presente convenio según certificación
-        del punto <b>{{prestamo.municipalidad.punto_acta}}</b> del acta número
-        {{letras(prestamo.municipalidad.no_acta)}} ({{prestamo.municipalidad.no_acta}}) de fecha
-        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}};
+        del punto <b>{{servicio.municipalidad.punto_acta}}</b> del acta número
+        {{letras(servicio.municipalidad.no_acta)}} ({{servicio.municipalidad.no_acta}}) de fecha
+        {{formatoFecha(servicio.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}};
         señalo como lugar para recibir notificaciones la sede de la Alcaldía Municipal de
         <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+          {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{servicio.municipalidad.departamento.nombre}}
         </span>,
-        ubicada en <b>{{prestamo.municipalidad.direccion}}</b>,en adelante denominada
+        ubicada en <b>{{servicio.municipalidad.direccion}}</b>,en adelante denominada
         indistintamente como la “MUNICIPALIDAD” o la “DEUDORA". Por este acto
         celebramos <b>CONVENIO DE ASISTENCIA FINANCIERA</b> de conformidad con las
         siguientes Cláusulas: <b><u>PRIMERA: BASE LEGAL:</u></b>
         Artículo cuatro (4) numeral dos (II) de la Ley Orgánica del Instituto de Fomento Municipal,
         Decreto mil ciento treinta y dos (1132) del Congreso de la República de Guatemala y
         Reglamento para la Asistencia Financiera a las Municipalidades de la
-        República de Guatemala (Resolución No. {{prestamo.resolucion.numero}} de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},*
-        artículos del {{prestamo.resolucion.articulos}}
+        República de Guatemala (Resolución No. {{servicio.resolucion.numero}} de fecha
+        {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},*
+        artículos del {{servicio.resolucion.articulos}}
         <b><u>SEGUNDA: ANTECEDENTES: </u></b> Mediante solicitud de fecha
-        <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{prestamo.fecha}})</b>, suscrita
+        <b>{{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}} ({{servicio.fecha}})</b>, suscrita
         por el señor Alcalde Municipal, la Municipalidad solicitó préstamo por la
-        cantidad de <b>{{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}})</b>,
-        autorizado según punto <b>{{prestamo.punto}}</b> del acta de Concejo Municipal número {{prestamo.acta}}
-        de fecha <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{prestamo.fecha}})</b>,
-        del Concejo Municipal, que será utilizado para la {{prestamo.destino}}.
+        cantidad de <b>{{letrasMoneda(servicio.monto)}} (Q. {{servicio.monto | number: '.2-2'}})</b>,
+        autorizado según punto <b>{{servicio.punto}}</b> del acta de Concejo Municipal número {{servicio.acta}}
+        de fecha <b>{{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}} ({{servicio.fecha}})</b>,
+        del Concejo Municipal, que será utilizado para la {{servicio.destino}}.
 
         <b><u>TERCERA: DE LA ASISTENCIA FINANCIERA:</u></b> El INFOM por este acto
         otorga a la Municipalidad, en calidad de préstamo, la cantidad de
-        <b>{{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}})</b>
+        <b>{{letrasMoneda(servicio.monto)}} (Q. {{servicio.monto | number: '.2-2'}})</b>
         con recursos del Fondo Patrimonial del Instituto de Fomento
         Municipal, de acuerdo a los términos y condiciones estipuladas en la
-        Resolución {{prestamo.resolucion.numero}} de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
+        Resolución {{servicio.resolucion.numero}} de fecha
+        {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
         emitida por la
-        <span *ngIf="prestamos.id_tipo_prestamo == 2"><b>Gerencia</b></span>
-        <span *ngIf="prestamos.id_tipo_prestamo == 1"><b>Junta Directiva</b></span>
+        <span *ngIf="servicios.id_tipo_prestamo == 2"><b>Gerencia</b></span>
+        <span *ngIf="servicios.id_tipo_prestamo == 1"><b>Junta Directiva</b></span>
         del Instituto de Fomento Municipal, misma que
         en su parte conducente literalmente cita lo siguiente: <b>“…RESUELVE¨: I.</b>
 
         CONCEDER A LA MUNICIPALIDAD DEL MUNICIPIO DE
         <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+          {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{servicio.municipalidad.departamento.nombre}}
         </span>,
         un préstamo con garantía del
-        <span *ngIf="prestamo.programa.id == 1" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 1" style="font-weight: 600">
           APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
-        <span *ngIf="prestamo.programa.id == 2" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 2" style="font-weight: 600">
           IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
         </span>
-        <span *ngIf="prestamo.programa.id == 3" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 3" style="font-weight: 600">
           APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
         para Inversión, con recursos propios del Fondo Patrimonial, bajo las siguientes condiciones:
         <b>
-          a) MONTO: {{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}});
-          b) DESTINO: {{prestamo.destino}}; c) PLAZO: {{letras(prestamo.plazo_meses)}}
-          ({{prestamo.plazo_meses}}) MESES,
+          a) MONTO: {{letrasMoneda(servicio.monto)}} (Q. {{servicio.monto | number: '.2-2'}});
+          b) DESTINO: {{servicio.destino}}; c) PLAZO: {{letras(servicio.plazo_meses)}}
+          ({{servicio.plazo_meses}}) MESES,
         </b>
-        empezando a contarse a partir del mes de {{prestamo.fecha_amortizacion}} al mes
-        de VARIABLE ---------------- ; <b>d)</b> PERÍODO DE GRACIA: {{letras(prestamo.periodo_gracia)}}
-        ({{prestamo.periodo_gracia}}) meses;
-        <b>e) AMORTIZACIONES: {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) MESES</b>
+        empezando a contarse a partir del mes de {{servicio.fecha_amortizacion}} al mes
+        de VARIABLE ---------------- ; <b>d)</b> PERÍODO DE GRACIA: {{letras(servicio.periodo_gracia)}}
+        ({{servicio.periodo_gracia}}) meses;
+        <b>e) AMORTIZACIONES: {{letras(servicio.plazo_meses)}} ({{servicio.plazo_meses}}) MESES</b>
         pago(s) mensuales de la siguiente forma: VARIABLE (Q. VARIABLE), más intereses y el Impuesto al Valor
         Agregado -IVA-, sobre intereses, comprometiendo los recursos del
-        <span *ngIf="prestamo.programa.id == 1" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 1" style="font-weight: 600">
           APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
-        <span *ngIf="prestamo.programa.id == 2" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 2" style="font-weight: 600">
           IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
         </span>
-        <span *ngIf="prestamo.programa.id == 3" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 3" style="font-weight: 600">
           APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
         para Inversión, de acuerdo a las entregas de los Aportes Constitucionales por parte del Gobierno Central;
         <b>f) GARANTÍA:</b>Los ingresos que le corresponden a la municipalidad provenientes
-        <span *ngIf="prestamo.programa.id == 1">
+        <span *ngIf="servicio.programa.id == 1">
           del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
         </span>
-        <span *ngIf="prestamo.programa.id == 2">
+        <span *ngIf="servicio.programa.id == 2">
           del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
         </span>
-        <span *ngIf="prestamo.programa.id == 3">
+        <span *ngIf="servicio.programa.id == 3">
           del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
         </span>
         <b>g) TASA DE INTERÉS:</b> La tasa de interés es del
-        <b>{{letras(prestamo.tasa)}} POR CIENTO ({{prestamo.tasa | number: '.2-2'}}%)</b>
+        <b>{{letras(servicio.tasa)}} POR CIENTO ({{servicio.tasa | number: '.2-2'}}%)</b>
         anual sobre saldos deudores. Los intereses y el Impuesto al Valor Agregado -IVA- sobre los
         intereses correspondientes serán pagados por la deudora con los recursos
         provenientes del Aporte Constitucional y el Impuesto al Valor Agregado
         -IVAPAZ-, conjuntamente con las amortizaciones de capital de este
         préstamo;
-        <b>h) FORMA DE ENTREGA: </b>El desembolso se realizará en VARIABLE
-        entrega con acreditamiento a la cuenta Única del Tesoro Municipal, de la
+        <b>h) FORMA DE ENTREGA: </b>El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ?
+        's' : ''}} con acreditamiento a la cuenta Única del Tesoro Municipal, de la
         Municipalidad de
         <span style="text-transform: uppercase; font-weight: 500;">
-          {{prestamo.municipalidad.municipio.nombre}},
-          Departamento de {{prestamo.municipalidad.departamento.nombre}},
+          {{servicio.municipalidad.municipio.nombre}},
+          Departamento de {{servicio.municipalidad.departamento.nombre}},
         </span>
-        número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
-        de la entidad bancaria {{prestamo.municipalidad.banco.nombre}}, por un monto de dos VARIABLE (Q. VARIABLE).
+        número {{letras(servicio.municipalidad.no_cuenta)}} ({{servicio.municipalidad.no_cuenta}}),
+        de la entidad bancaria {{servicio.municipalidad.banco.nombre}}, por un monto de
+        <span *ngFor="let d of desembolsos">{{letrasMoneda(d.monto)}} (Q. {{d.monto | number: '.2-2'}}) </span>
 
         <b>II. CONDICIONES ADICIONALES: A)</b> Para la cancelación de este préstamo y para
         cubrir otras obligaciones adquiridas por la Municipalidad con el Instituto
         de Fomento Municipal, la Municipalidad del municipio de
         <span style="text-transform: uppercase; font-weight: 500;">
-          {{prestamo.municipalidad.municipio.nombre}},
-          Departamento de {{prestamo.municipalidad.departamento.nombre}}, el
-          {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{prestamo.fecha}})
+          {{servicio.municipalidad.municipio.nombre}},
+          Departamento de {{servicio.municipalidad.departamento.nombre}}, el
+          {{formatoFecha(servicio.fecha, 'DD [de] MMMM [de] YYYY')}} ({{servicio.fecha}})
         </span>
         suscribió el Convenio Interinstitucional, Administrativo y Financiero
-        No. {{prestamo.no_convenio}} conjuntamente con el
+        No. {{servicio.no_convenio}} conjuntamente con el
         <span style="text-transform: uppercase; font-weight: 500;">
-          banco {{prestamo.municipalidad.banco.nombre}} -y el Instituto de Fomento Municipal
+          banco {{servicio.municipalidad.banco.nombre}} -y el Instituto de Fomento Municipal
         </span>
         y, para que, de la cuenta número
         <b>
-          {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
+          {{letras(servicio.municipalidad.no_cuenta)}} ({{servicio.municipalidad.no_cuenta}}),
         </b>
         en la que el Ministerio de Finanzas Públicas depositará el Aporte Constitucional,
         el Impuesto al Valor Agregado (IVA-PAZ) y otros aportes legales, efectúe los
@@ -2854,13 +2787,13 @@
         Aporte Constitucional y el Impuesto al Valor Agregado -IVAPAZ-. <b>C).</b>
         Para el otorgamiento de este préstamo, la municipalidad se compromete a:
         <b>C1)</b> Efectuar el pago correspondiente, con los recursos provenientes
-        <span *ngIf="prestamo.programa.id == 1" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 1" style="font-weight: 600">
           APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
-        <span *ngIf="prestamo.programa.id == 2" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 2" style="font-weight: 600">
           IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
         </span>
-        <span *ngIf="prestamo.programa.id == 3" style="font-weight: 600">
+        <span *ngIf="servicio.programa.id == 3" style="font-weight: 600">
           APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
         </span>
         para inversión. Si el Ministerio de Finanzas Públicas traslada
@@ -2901,7 +2834,7 @@
         autoridad competente de dicho Instituto, a reconocer la obligación que mi
         representada contrae por este instrumento, en forma lisa, llana, pura e
         incondicional, por la cantidad de
-        <b>{{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}})</b>
+        <b>{{letrasMoneda(servicio.monto)}} (Q. {{servicio.monto | number: '.2-2'}})</b>
         que tengo recibidos a entera satisfacción en calidad de préstamo, en los términos y
         condiciones expuestas en el presente convenio.
         <b><u>QUINTA: INCUMPLIMIENTO DE PAGO:</u></b> Si la MUNICIPALIDAD
@@ -2949,12 +2882,12 @@
   <div id="pr-convenio-interistitucional" style="color: black">
     <div style="margin: 0px 50px">
       <h6 style="text-align: justify">
-        CONVENIO INTERINSTITUCIONAL, ADMINISTRATIVO Y FINANCIERO No. {{prestamo.municipalidad.no_convenio}}.
+        CONVENIO INTERINSTITUCIONAL, ADMINISTRATIVO Y FINANCIERO No. {{servicio.municipalidad.no_convenio}}.
         CELEBRADO ENTRE EL INSTITUTO DE FOMENTO MUNICIPAL -INFOM-, LA MUNICIPALIDAD DE
         <span style="text-transform: uppercase">
-          {{prestamo.municipalidad.municipio.nombre}},
-          Departamento de {{prestamo.municipalidad.departamento.nombre}}, Y EL
-          {{prestamo.municipalidad.banco.nombre}}.
+          {{servicio.municipalidad.municipio.nombre}},
+          Departamento de {{servicio.municipalidad.departamento.nombre}}, Y EL
+          {{servicio.municipalidad.banco.nombre}}.
         </span>
       </h6>
       <p style="text-align: justify">
@@ -2971,8 +2904,8 @@
         de fecha VARIABLE (VARIABLE) de VARIABLE del año VARIABLE (VARIABLE) del Presidente de la
         República de Guatemala;
 
-        <b>b)</b> Certificación de la resolución número {{prestamo.resolucion.numero}}*
-        de fecha {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*,
+        <b>b)</b> Certificación de la resolución número {{servicio.resolucion.numero}}*
+        de fecha {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*,
         emitida por la Junta Directiva del Instituto de Fomento Municipal, a través de la cual
         se me nombra como Gerente del Instituto de Fomento Municipal;
 
@@ -2983,8 +2916,8 @@
 
         <b>d)</b> Me encuentro debidamente facultado para suscribir el presente convenio con
         base a la autorización de la Junta Directiva del Instituto contenida en la
-        resolución {{prestamo.resolucion.numero}}* de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*;
+        resolución {{servicio.resolucion.numero}}* de fecha
+        {{formatoFecha(servicio.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*;
         señalo como lugar para notificaciones la octava (8va.) calle uno guion sesenta
         y seis (1-66) de la zona nueve (09), de la ciudad y departamento de Guatemala, en lo
         sucesivo podrá ser denominado como <b>“EL INFOM”;</b>
@@ -2997,8 +2930,8 @@
         República de Guatemala; actúo en mi calidad de
         <span style="text-transform: uppercase; font-weight: 600;">
           ALCALDE MUNICIPAL Y EN REPRESENTACION LEGAL DE LA MUNICIPALIDAD DE
-          {{prestamo.municipalidad.municipio.nombre}},
-          Departamento de {{prestamo.municipalidad.departamento.nombre}}
+          {{servicio.municipalidad.municipio.nombre}},
+          Departamento de {{servicio.municipalidad.departamento.nombre}}
         </span>
         calidad que acredito con:
 
@@ -3008,21 +2941,21 @@
         Supremo Electoral, en el cual se hace la adjudicación del cargo;
 
         <b>b)</b> Certificación del Acta de Toma de Posesión
-        del cargo número {{letras(prestamo.municipalidad.no_acta)}}** ({{prestamo.municipalidad.no_acta}}),
-        de fecha {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**
-        , en la cual en el punto {{prestamo.municipalidad.punto_acta}}*, se da posesión al cargo como
+        del cargo número {{letras(servicio.municipalidad.no_acta)}}** ({{servicio.municipalidad.no_acta}}),
+        de fecha {{formatoFecha(servicio.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**
+        , en la cual en el punto {{servicio.municipalidad.punto_acta}}*, se da posesión al cargo como
         Alcalde Municipal; extendida por el Secretario Municipal, de conformidad con el Artículo 84,
         literal b del Decreto Número doce guion dos mil dos (12-2002) del Congreso de la
         República de Guatemala; y,
 
-        <b>c)</b> Certificación del punto {{prestamo.municipalidad.punto_acta}}* del Acta
-        número {{letras(prestamo.municipalidad.no_acta)}}** ({{prestamo.municipalidad.no_acta}}) de fecha
-        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**,
+        <b>c)</b> Certificación del punto {{servicio.municipalidad.punto_acta}}* del Acta
+        número {{letras(servicio.municipalidad.no_acta)}}** ({{servicio.municipalidad.no_acta}}) de fecha
+        {{formatoFecha(servicio.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**,
         donde el Concejo Municipal me autoriza para la suscripción del presente convenio;
         señalo como lugar para recibir notificaciones y citaciones el Edificio Municipal, ubicado en
-        {{prestamo.municipalidad.direccion}}
+        {{servicio.municipalidad.direccion}}
         <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+          {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{servicio.municipalidad.departamento.nombre}}
         </span>
         en lo sucesivo podrá ser denominada como <b>“LA MUNICIPALIDAD”</b>, y
         VARIABLE de VARIABLE años de edad, VARIABLE ESTADO CIVIL, guatemalteco, VARIABLE PROFESIÓN,
@@ -3030,7 +2963,7 @@
         Identificación (DPI), con Código Único de Identificación (CUI) VARIABLE
         (VARIABLE) extendido por el Registro Nacional de las Personas de la
         República de Guatemala, actúo en mi calidad de
-        <b>VARIABLE DEL BANCO DE {{prestamo.municipalidad.banco.nombre}}</b>
+        <b>VARIABLE DEL BANCO DE {{servicio.municipalidad.banco.nombre}}</b>
         personería que acredito con mi nombramiento contenido en acta
         notarial autorizada en esta ciudad por el Notario VARIABLE, con fecha
         VARIABLE de VARIABLE de dos mil VARIABLE, inscrita en el Registro
@@ -3046,14 +2979,14 @@
         establece en las cláusulas siguientes:
 
         <b><u>PRIMERA: A) ANTECEDENTES: I)</u></b> El día
-        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
+        {{formatoFecha(servicio.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
         EL MINISTERIO DE FINANZAS PÚBLICAS, EL INSTITUTO DE FOMENTO MUNICIPAL
         -INFOM-, LA MUNICIPALIDAD DE
         <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
-          {{prestamo.municipalidad.banco.nombre}}
+          {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{servicio.municipalidad.departamento.nombre}}
+          {{servicio.municipalidad.banco.nombre}}
         </span>
-        SUSCRIBIERON EL CONVENIO INTERINSTITUCIONAL No. {{prestamo.municipalidad.no_convenio}},
+        SUSCRIBIERON EL CONVENIO INTERINSTITUCIONAL No. {{servicio.municipalidad.no_convenio}},
         y II) Opinión Conjunta número seiscientos cincuenta y tres guion dos mil
         nueve guion AJ guion TN (653-2009-AJ-TN), expediente número veinte
         millones noventa mil doscientos noventa y seis (20090296) emitido por el
@@ -3096,11 +3029,11 @@
         <b><u>
             CUENTA ÚNICA DEL TESORO MUNICIPALIDAD
             <span style="text-transform: uppercase">
-              {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
-              {{prestamo.municipalidad.departamento.nombre}}
+              {{servicio.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+              {{servicio.municipalidad.departamento.nombre}}
             </span>
-            (Cuenta Única Pagadora) monetaria número {{letras(prestamo.municipalidad.no_cuenta)}}
-            ({{prestamo.municipalidad.no_cuenta}}),
+            (Cuenta Única Pagadora) monetaria número {{letras(servicio.municipalidad.no_cuenta)}}
+            ({{servicio.municipalidad.no_cuenta}}),
           </u></b>
         aperturada por <b>“LA MUNICIPALIDAD” en “EL BANCO DE DESARROLLO
           RURAL, SOCIEDAD ANÓNIMA”; b)</b> establecer el procedimiento para el
@@ -3143,9 +3076,9 @@
         Intermediación Financiera, Plan de Prestaciones del Empleado Municipal,
         Convenios de Pago u otros que hubiere emitido legalmente
         <b> “LA MUNICIPALIDAD”. V) “LA MUNICIPALIDAD”</b> se compromete, de conformidad con lo
-        estipulado en el punto {{prestamo.municipalidad.punto_acta}}* del acta número
-        {{prestamo.municipalidad.no_acta}}* del Libro de Actas del Concejo Municipal donde se
-        encuentra dicha acta, de fecha {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
+        estipulado en el punto {{servicio.municipalidad.punto_acta}}* del acta número
+        {{servicio.municipalidad.no_acta}}* del Libro de Actas del Concejo Municipal donde se
+        encuentra dicha acta, de fecha {{formatoFecha(servicio.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
         a no cancelar la cuenta monetaria aperturada en <b> “EL BANCO”</b>; así como
         mantener los fondos suficientes referentes al aporte constitucional y
         demás aportes provenientes de disposiciones legales, durante la vigencia
@@ -3246,11 +3179,11 @@
       <br>
       <p>
         Sírvase entregar a: <b style="text-transform: uppercase;">TESORERIA MUNICIPAL DE
-          {{prestamo.municipalidad.municipio.nombre}}, {{prestamo.municipalidad.departamento.nombre}}</b>
+          {{servicio.municipalidad.municipio.nombre}}, {{servicio.municipalidad.departamento.nombre}}</b>
         <br>
         Por cuenta de la Municipalidad de: <b
-          style="text-transform: uppercase;">{{prestamo.municipalidad.municipio.nombre}},
-          {{prestamo.municipalidad.departamento.nombre}}</b> <br>
+          style="text-transform: uppercase;">{{servicio.municipalidad.municipio.nombre}},
+          {{servicio.municipalidad.departamento.nombre}}</b> <br>
       </p>
       <div class="row">
         <div class="col-10">
@@ -3271,19 +3204,18 @@
         Punto. Acta: <b>{{orden_pago.punto_acta}}</b><br>
         Fecha. Acta: <b>{{orden_pago.fecha_acta}}</b><br>
         Recibo No: <b>{{orden_pago.no_recibo}}</b><br>
-        Destino: <b>{{destinos_prestamos[0].destino.nombre}}</b>
       </p>
       <br />
       <p style="margin-left: 20%">*** OTROS DOCUMENTOS ***</p>
       <div class="row">
         <div class="col-10">
           <p style="margin-left: 10%">
-            <b>PRESTAMO No. {{prestamo.no_prestamo}}</b><br />
-            <span *ngIf="prestamo.resolucion">
-              SEG/RES. DE CRED. # {{prestamo.resolucion.numero}}
+            <b>PRESTAMO No. {{servicio.no_prestamo}}</b><br />
+            <span *ngIf="servicio.resolucion">
+              SEG/RES. DE CRED. # {{servicio.resolucion.numero}}
             </span> <br>
-            <span *ngIf="prestamo.programa">
-              PROGRAMA: {{prestamo.programa.nombre}}
+            <span *ngIf="servicio.programa">
+              PROGRAMA: {{servicio.programa.nombre}}
             </span>
           </p>
         </div>
@@ -3297,8 +3229,8 @@
       <br />
       <p style="font-weight: 700">
         FONDO PATRIMONIAL<br />
-        N.I.T. Municipalidad: {{prestamo.municipalidad.nit}} <br />
-        Convenio No.: {{prestamo.no_convenio}}
+        N.I.T. Municipalidad: {{servicio.municipalidad.nit}} <br />
+        Convenio No.: {{servicio.no_convenio}}
       </p>
       <br />
       <p style="text-align: right">_________________________</p>
@@ -3310,10 +3242,10 @@
       <div class="row">
         <div class="col-6">
           <p>Vo.Bo._______________________</p>
-          <p *ngIf="prestamo.tipoPrestamo">
-            Centro de Costo: {{prestamo.tipoPrestamo.centro_costo}} <br>
-            Producto: {{prestamo.tipoPrestamo.producto}} <br>
-            Subproducto: {{prestamo.tipoPrestamo.subproducto}}
+          <p *ngIf="servicio.tipoPrestamo">
+            Centro de Costo: {{servicio.tipoPrestamo.centro_costo}} <br>
+            Producto: {{servicio.tipoPrestamo.producto}} <br>
+            Subproducto: {{servicio.tipoPrestamo.subproducto}}
           </p>
         </div>
         <div class="col-6" style="text-align: right;">
@@ -3490,7 +3422,7 @@
               {{getTotalAportes(g.aporte) | number: '.2-2'}}
             </td>
           </tr>
-          <ng-container *ngFor="let p of g.prestamos">
+          <ng-container *ngFor="let p of g.servicios">
             <tr>
               <td style="text-align: right;">
                 <b>{{p.no_prestamo}}</b>
@@ -3524,10 +3456,10 @@
             </th>
             <th></th>
             <th *ngFor="let d of disponibilidad" style="text-align: right; border-top: solid; border-bottom: solid;">
-              {{getMontoDispTotal(d.mes, g.prestamos, g.aporte) | number: '.2-2'}}
+              {{getMontoDispTotal(d.mes, g.servicios, g.aporte) | number: '.2-2'}}
             </th>
             <th style="text-align: right; border-top: solid; border-bottom: solid;">
-              {{getTotalMontoDispTotal(g.prestamos, g.aporte) | number: '.2-2'}}
+              {{getTotalMontoDispTotal(g.servicios, g.aporte) | number: '.2-2'}}
             </th>
           </tr>
           <tr>
@@ -3577,7 +3509,7 @@
               {{getTotalAportes(g.aporte) | number: '.2-2'}}
             </td>
           </tr>
-          <ng-container *ngFor="let p of g.prestamos">
+          <ng-container *ngFor="let p of g.servicios">
             <tr>
               <td style="text-align: right;">
                 <b>{{p.no_prestamo}}</b>

@@ -35,6 +35,7 @@
                       <th>DPI</th>
                       <th>Fecha Nacimiento</th>
                       <th>Regional</th>
+                      <th>Activo</th>
                       <th>Acciones</th>
                     </tr>
                   </thead>
@@ -45,6 +46,11 @@
                       <td>{{r.dpi}}</td>
                       <td>{{r.fecha_nacimiento | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td>{{r.regional.nombre}}</td>
+                      <td>
+                        <span class="badge light border-0 me-1" [ngClass]="{'badge-success': r.estado == 'Activo', 'badge-danger': r.estado == 'Inactivo'}">
+                          {{r.estado}}
+                        </span>
+                      </td>
                       <td>
                         <div class="dropdown">
                           <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">

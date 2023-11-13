@@ -29,6 +29,8 @@ import { ProyeccionesService } from 'src/app/services/proyecciones.service';
 import { AportesService } from 'src/app/services/aportes.service';
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RepresentantesService } from 'src/app/services/representantes.service';
 
 declare function numeroALetras(number: any): any;
 declare function numeroALetrasMoneda(number: any): any;
@@ -49,6 +51,8 @@ export class PrestamosComponent implements OnInit {
   prestamos: any = [];
   prestamo: any;
   municipalidad: any;
+  representante: any;
+  banco: any;
   prestamos_garantias: any = [];
 
   file: any;
@@ -79,6 +83,10 @@ export class PrestamosComponent implements OnInit {
   desembolso: any;
   ordenes_pagos: any = [];
   orden_pago: any;
+  vigentes: any = [];
+
+  reporte_view: any;
+  aporte: any;
 
   estado: string = 'Pendiente';
 
@@ -107,6 +115,8 @@ export class PrestamosComponent implements OnInit {
   totales_disp: any;
   disp: any;
 
+  folios: any = []
+
   constructor(
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,
@@ -132,7 +142,9 @@ export class PrestamosComponent implements OnInit {
     private resolucionesService: ResolucionesService,
     private reportesService: ReporteService,
     private aportesService: AportesService,
-    private movimientosService: MovimientosService
+    private movimientosService: MovimientosService,
+    private representantesService: RepresentantesService,
+    private sanitizer: DomSanitizer
   ) {
     this.prestamoForm = new FormGroup({
       no_dictamen: new FormControl(null),
@@ -140,6 +152,7 @@ export class PrestamosComponent implements OnInit {
       no_prestamo: new FormControl(null),
       fecha: new FormControl(moment.utc().format('YYYY-MM-DD'), [Validators.required]),
       fecha_amortizacion: new FormControl(null, [Validators.required]),
+      fecha_vencimiento: new FormControl(null, [Validators.required]),
       monto: new FormControl(0, [Validators.required]),
       plazo_meses: new FormControl(null, [Validators.required]),
       fecha_acta: new FormControl(null),
@@ -155,6 +168,7 @@ export class PrestamosComponent implements OnInit {
       fecha_oficio_aj: new FormControl(null),
       no_oficio_ger: new FormControl(null),
       fecha_oficio_ger: new FormControl(null),
+      motivo_anulacion: new FormControl(null, [Validators.required]),
       estado: new FormControl(null, [Validators.required]),
       id_tipo_prestamo: new FormControl(null, [Validators.required]),
       id_programa: new FormControl(null, [Validators.required]),
@@ -518,6 +532,7 @@ export class PrestamosComponent implements OnInit {
     let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
     let monto_total = parseFloat(this.prestamoForm.controls['monto'].value);
     let plazo_meses = parseFloat(this.prestamoForm.controls['plazo_meses'].value);
+    let fecha_amortizacion = this.prestamoForm.controls['fecha_amortizacion'].value;
     let tasa = parseFloat(this.prestamoForm.controls['tasa'].value);
     let periodo_gracia = parseFloat(this.prestamoForm.controls['periodo_gracia'].value);
     let fecha = moment(this.prestamoForm.controls['fecha_amortizacion'].value).add(periodo_gracia, 'month').format('YYYY-MM-DD');
@@ -526,6 +541,7 @@ export class PrestamosComponent implements OnInit {
     this.proyecciones = await this.prestamosService.getProyeccion(monto_total, plazo_meses, tasa, fecha, porcentaje_iva);
 
     this.filtros.plazo_meses = plazo_meses;
+    this.prestamoForm.controls['fecha_vencimiento'].setValue(moment(fecha_amortizacion).add(plazo_meses - 1, 'months').endOf('month').format('YYYY-MM-DD'));
   }
 
   async updateProyeccion() {
@@ -921,6 +937,7 @@ export class PrestamosComponent implements OnInit {
     this.prestamoForm.controls['no_prestamo'].setValue(i.no_prestamo);
     this.prestamoForm.controls['fecha'].setValue(i.fecha ? moment.utc(i.fecha).format('YYYY-MM-DD') : i.fecha);
     this.prestamoForm.controls['fecha_amortizacion'].setValue(i.fecha_amortizacion ? moment.utc(i.fecha_amortizacion).format('YYYY-MM-DD') : i.fecha_amortizacion);
+    this.prestamoForm.controls['fecha_vencimiento'].setValue(i.fecha_vencimiento ? moment.utc(i.fecha_vencimiento).format('YYYY-MM-DD') : i.fecha_vencimiento);
     this.prestamoForm.controls['monto'].setValue(i.monto);
     this.prestamoForm.controls['plazo_meses'].setValue(i.plazo_meses);
     this.prestamoForm.controls['fecha_acta'].setValue(i.fecha_acta ? moment.utc(i.fecha_acta).format('YYYY-MM-DD') : i.fecha_acta);
@@ -936,6 +953,7 @@ export class PrestamosComponent implements OnInit {
     this.prestamoForm.controls['fecha_oficio_aj'].setValue(i.fecha_oficio_aj);
     this.prestamoForm.controls['no_oficio_ger'].setValue(i.no_oficio_ger);
     this.prestamoForm.controls['fecha_oficio_ger'].setValue(i.fecha_oficio_ger);
+    this.prestamoForm.controls['motivo_anulacion'].setValue(i.motivo_anulacion);
     this.prestamoForm.controls['estado'].setValue(i.estado);
     this.prestamoForm.controls['id_tipo_prestamo'].setValue(i.id_tipo_prestamo);
     this.prestamoForm.controls['id_programa'].setValue(i.id_programa);
@@ -1322,11 +1340,81 @@ export class PrestamosComponent implements OnInit {
 
   }
 
-  public async reportePrestamo(slug: any) {
+  public async reporteHojaTecnica() {
     this.ngxService.start();
 
-    let rep: any = await this.reportesService.get('prestamos/' + slug);
-    let contenido: any = document.getElementById(slug);
+    let vigentes = await this.prestamosService.getPrestamosEstadoMunicipalidad('Acreditado', this.prestamo.id_municipalidad);
+    if (vigentes) {
+      this.vigentes = vigentes;
+      for (let v = 0; v < this.vigentes.length; v++) {
+        let destinos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.vigentes[v].id);
+        if (destinos) {
+          this.vigentes[v].destinos = destinos;
+        }
+
+        let movimiento = await this.movimientosService.getMovimientosUltimo(this.prestamo.id);
+        if (movimiento) {
+          this.vigentes[v].saldo = movimiento.saldo_final;
+        }
+      }
+    }
+
+    let rep: any = await this.reportesService.get('prestamos/pr-hoja-tecnica');
+    let contenido: any = document.getElementById('pr-hoja-tecnica');
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
+    rep = rep.replaceAll("{{municipio}}", this.prestamo.municipalidad.municipio.nombre);
+    rep = rep.replaceAll("{{no_resolucion}}", `${this.prestamo.resolucion.numero}`);
+    rep = rep.replaceAll("{{no_dictamen}}", `${this.prestamo.no_dictamen}`);
+    rep = rep.replaceAll("{{no_convenio}}", `${this.prestamo.no_convenio}`);
+    rep = rep.replaceAll("{{no_convenio_i}}", `${this.prestamo.municipalidad.no_convenio}`);
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    let popupWin: any = window.open('', '_blank');
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+    
+    this.reporte_view = this.sanitizer.bypassSecurityTrustResourceUrl(popupWin);
+
+    this.ngxService.stop();
+  }
+
+  public async reporteDictamen() {
+    this.ngxService.start();
+
+    let desembolsos = await this.desembolsosService.getDesembolsosPrestamo(this.prestamo.id);
+    if (desembolsos) {
+
+    }
+    this.desembolsos = desembolsos;
+
+    let vigentes = await this.prestamosService.getPrestamosEstadoMunicipalidad('Acreditado', this.prestamo.id_municipalidad);
+    if (vigentes) {
+      this.vigentes = vigentes;
+      for (let v = 0; v < this.vigentes.length; v++) {
+        let destinos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.vigentes[v].id);
+        if (destinos) {
+          this.vigentes[v].destinos = destinos;
+        }
+
+        let movimiento = await this.movimientosService.getMovimientosUltimo(this.prestamo.id);
+        if (movimiento) {
+          this.vigentes[v].saldo = movimiento.saldo_final;
+        }
+      }
+    }
+
+    let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.prestamo.municipalidad.departamento.codigo, this.prestamo.municipalidad.municipio.codigo, moment(this.prestamo.fecha_amortizacion).format('YYYY-MM'))
+    if (aporte) {
+      this.aporte = aporte;
+    }
+    let rep: any = await this.reportesService.get('prestamos/pr-dictamen');
+    let contenido: any = document.getElementById('pr-dictamen');
     contenido = contenido.innerHTML.toString();
 
     rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
@@ -1348,11 +1436,165 @@ export class PrestamosComponent implements OnInit {
     this.ngxService.stop();
   }
 
-  letras(number: number) {
+  public async reporteResolucion() {
+    this.ngxService.start();
+
+    let desembolsos = await this.desembolsosService.getDesembolsosPrestamo(this.prestamo.id);
+    if (desembolsos) {
+
+    }
+    this.desembolsos = desembolsos;
+
+    let vigentes = await this.prestamosService.getPrestamosEstadoMunicipalidad('Acreditado', this.prestamo.id_municipalidad);
+    if (vigentes) {
+      this.vigentes = vigentes;
+      for (let v = 0; v < this.vigentes.length; v++) {
+        let destinos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.vigentes[v].id);
+        if (destinos) {
+          this.vigentes[v].destinos = destinos;
+        }
+
+        let movimiento = await this.movimientosService.getMovimientosUltimo(this.prestamo.id);
+        if (movimiento) {
+          this.vigentes[v].saldo = movimiento.saldo_final;
+        }
+      }
+    }
+
+    let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.prestamo.municipalidad.departamento.codigo, this.prestamo.municipalidad.municipio.codigo, moment(this.prestamo.fecha_amortizacion).format('YYYY-MM'))
+    if (aporte) {
+      this.aporte = aporte;
+    }
+    let rep: any = await this.reportesService.get('prestamos/pr-resolucion');
+    let contenido: any = document.getElementById('pr-resolucion');
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
+    rep = rep.replaceAll("{{municipio}}", this.prestamo.municipalidad.municipio.nombre);
+    rep = rep.replaceAll("{{no_resolucion}}", `${this.prestamo.resolucion.numero}`);
+    rep = rep.replaceAll("{{no_dictamen}}", `${this.prestamo.no_dictamen}`);
+    rep = rep.replaceAll("{{no_convenio}}", `${this.prestamo.no_convenio}`);
+    rep = rep.replaceAll("{{no_convenio_i}}", `${this.prestamo.municipalidad.no_convenio}`);
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+
+    this.ngxService.stop();
+  }
+
+  public async reporteConvenioAsistencia() {
+    this.ngxService.start();
+
+    let representante = await this.representantesService.getRepresentanteUltimo('Activo');
+    if (representante) {
+      this.representante = representante;
+    }
+
+    let rep: any = await this.reportesService.get('prestamos/pr-convenio-asistencia-fi');
+    let contenido: any = document.getElementById('pr-convenio-asistencia-fi');
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
+    rep = rep.replaceAll("{{municipio}}", this.prestamo.municipalidad.municipio.nombre);
+    rep = rep.replaceAll("{{no_resolucion}}", `${this.prestamo.resolucion.numero}`);
+    rep = rep.replaceAll("{{no_dictamen}}", `${this.prestamo.no_dictamen}`);
+    rep = rep.replaceAll("{{no_convenio}}", `${this.prestamo.no_convenio}`);
+    rep = rep.replaceAll("{{no_convenio_i}}", `${this.prestamo.municipalidad.no_convenio}`);
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+
+    this.ngxService.stop();
+  }
+
+  public async reporteConvenioInter() {
+    this.ngxService.start();
+
+    let rep: any = await this.reportesService.get('prestamos/pr-convenio-interistitucional');
+    let contenido: any = document.getElementById('pr-convenio-interistitucional');
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
+    rep = rep.replaceAll("{{municipio}}", this.prestamo.municipalidad.municipio.nombre);
+    rep = rep.replaceAll("{{no_resolucion}}", `${this.prestamo.resolucion.numero}`);
+    rep = rep.replaceAll("{{no_dictamen}}", `${this.prestamo.no_dictamen}`);
+    rep = rep.replaceAll("{{no_convenio}}", `${this.prestamo.no_convenio}`);
+    rep = rep.replaceAll("{{no_convenio_i}}", `${this.prestamo.municipalidad.no_convenio}`);
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+
+    this.ngxService.stop();
+  }
+
+  public async reporteOrdenPago() {
+    this.ngxService.start();
+
+    let rep: any = await this.reportesService.get('prestamos/pr-orden-pago');
+    let contenido: any = document.getElementById('pr-orden-pago');
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{departamento}}", this.prestamo.municipalidad.departamento.nombre);
+    rep = rep.replaceAll("{{municipio}}", this.prestamo.municipalidad.municipio.nombre);
+    rep = rep.replaceAll("{{no_resolucion}}", `${this.prestamo.resolucion.numero}`);
+    rep = rep.replaceAll("{{no_dictamen}}", `${this.prestamo.no_dictamen}`);
+    rep = rep.replaceAll("{{no_convenio}}", `${this.prestamo.no_convenio}`);
+    rep = rep.replaceAll("{{no_convenio_i}}", `${this.prestamo.municipalidad.no_convenio}`);
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+
+    this.ngxService.stop();
+  }
+
+  public async reporteCedula() {
+    this.ngxService.start();
+
+    let rep: any = await this.reportesService.get('prestamos/pr-cedula-prestamo');
+    let contenido: any = document.getElementById('pr-cedula-prestamo');
+    contenido = contenido.innerHTML.toString();
+
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
+
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+
+    this.ngxService.stop();
+  }
+
+  letras(number: any) {
     return numeroALetras(number);
   }
 
-  letrasMoneda(number: number) {
+  letrasMoneda(number: any) {
     return numeroALetrasMoneda(number);
   }
 
@@ -1595,6 +1837,10 @@ export class PrestamosComponent implements OnInit {
       total += Math.round((tot + Number.EPSILON) * 100) / 100;
     }
     return total;
+  }
+
+  getSumaAportes(constitucional: any, iva_paz: any) {
+    return parseFloat(constitucional) + parseFloat(iva_paz);
   }
 
 }

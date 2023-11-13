@@ -19,6 +19,10 @@ export class RepresentantesService {
     return this.rootService.get(this.route + '/' + id);
   }
 
+  getRepresentanteUltimo(estado: string): Promise<any> {
+    return this.rootService.get(this.route + '/ultimo/' + estado);
+  }
+
   async postRepresentante(data: any): Promise<any> {
     let representante = await this.rootService.post(this.route, data);
     if (representante.resultado) {

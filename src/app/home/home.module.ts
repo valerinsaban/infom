@@ -36,6 +36,7 @@ import { FacturasComponent } from './facturas/facturas.component';
 import { RecibosComponent } from './recibos/recibos.component';
 import { ServiciosComponent } from './servicios/servicios.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { TiposServiciosComponent } from './catalogos/tipos-servicios/tipos-servicios.component';
 
 const routes: Routes = [
   {
@@ -43,12 +44,12 @@ const routes: Routes = [
     children: [
       { path: 'bienvenido', component: BienvenidoComponent },
 
+      { path: 'dashboard', component: DashboardComponent},
       { path: 'municipalidades', component: MunicipalidadesComponent },
       { path: 'representantes', component: RepresentantesComponent },
       { path: 'prestamos', component: PrestamosComponent},
       { path: 'servicios', component: ServiciosComponent},
       { path: 'aportes', component: AportesComponent},
-      { path: 'dashboard', component: DashboardComponent},
       { path: 'bitacoras', component: BitacorasComponent},
       { path: 'reportes', component: ReportesComponent},
       { path: 'cobros', component: CobrosComponent},
@@ -65,6 +66,7 @@ const routes: Routes = [
       { path: 'regiones', component: RegionesComponent},
       { path: 'garantias', component: GarantiasComponent},
       { path: 'tipos-prestamos', component: TiposPrestamosComponent},
+      { path: 'tipos-servicios', component: TiposServiciosComponent},
       { path: 'programas', component: ProgramasComponent},
       { path: 'profesiones', component: ProfesionesComponent},
       { path: 'bancos', component: BancosComponent},
@@ -116,7 +118,8 @@ const routes: Routes = [
     FacturasComponent,
     RecibosComponent,
     ServiciosComponent,
-    PerfilComponent
+    PerfilComponent,
+    TiposServiciosComponent
   ],
   imports: [
     CommonModule,

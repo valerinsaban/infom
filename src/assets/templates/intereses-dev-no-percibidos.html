@@ -60,29 +60,36 @@
 
 <body>
 
-  <div id="header">
-    <div class="row">
-      <div class="col-3">
-        <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
+  <div id="preview">
+    <div id="header">
+      <div class="row">
+        <div class="col-3">
+          <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
+        </div>
+        <div class="col-6" style="text-align: center;">
+          <span style="font-size: 12px;">
+            <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b> <br>
+          </span>
+          <span style="font-size: 11px; text-transform: uppercase">
+            INTERESES DEVENGADOS NO PERCIBIDOS POR PROGRAMA <br>
+            DEL {{fecha_inicio}} AL {{fecha_fin}}
+          </span>
+        </div>
+        <div class="col-3" style="text-align: right;">
+          Generado: <b>{{generado}}</b> <br>
+          Usuario: <b>{{usuario}}</b>
+        </div>
       </div>
-      <div class="col-6" style="text-align: center;">
-        <span style="font-size: 12px;">
-          <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b> <br>
-        </span>
-        <span style="font-size: 11px; text-transform: uppercase">
-          INTERESES DEVENGADOS NO PERCIBIDOS POR PROGRAMA <br>
-          DEL {{fecha_inicio}} AL {{fecha_fin}}
-        </span>
-      </div>
-      <div class="col-3" style="text-align: right;">
-        Generado: <b>{{generado}}</b> <br>
-        Usuario: <b>{{usuario}}</b>
-      </div>
+      <hr>
     </div>
-    <hr>
+  
+    {{contenido}}
   </div>
 
-  {{contenido}}
+  <div id="buttons">
+    <button class="btn btn-danger" onclick="pdf()" style="margin-left: 5px;">PDF</button>
+    <button class="btn btn-success" onclick="excel()" style="margin-left: 5px;">EXCEL</button>
+  </div>
 
   <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
   <script>
@@ -252,6 +259,33 @@
 
     Paged.registerHandlers(RepeatingTableHeadersHandler);
   </script>
+    <script>
+      function pdf() {
+        document.getElementById("buttons").style.display = 'none';
+        window.print();
+        document.getElementById("buttons").style.display = 'block';
+      }
+  
+      function excel(filename = '') {
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById('preview');
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        filename = filename ? filename + '.xls' : 'Intereses.xls';
+        downloadLink = document.createElement("a");
+        document.body.appendChild(downloadLink);
+        if (navigator.msSaveOrOpenBlob) {
+          var blob = new Blob(['\ufeff', tableHTML], {
+            type: dataType
+          });
+          navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+          downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+          downloadLink.download = filename;
+          downloadLink.click();
+        }
+      }
+    </script>
   <script>
     setTimeout(() => {
       var r = document.querySelector(':root');

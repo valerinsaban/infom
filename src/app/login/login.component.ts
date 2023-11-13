@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { AlertService } from '../services/alert.service';
 import { AuthService } from '../services/auth.service';
 import { NgxUiLoaderService } from "ngx-ui-loader";
-import { AppComponent } from '../app.component';
 import { ConfiguracionesService } from '../services/configuraciones.service';
+import decode from 'jwt-decode';
+import { UsuariosService } from '../services/seguridad/usuarios.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent {
     private router: Router,
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,
-    private configuracionesService: ConfiguracionesService
+    private configuracionesService: ConfiguracionesService,
+    private usuariosService: UsuariosService
   ) {
     this.loginForm = new FormGroup({
       usuario: new FormControl('', [Validators.required]),
@@ -42,6 +44,13 @@ export class LoginComponent {
     this.ngxService.start();
     let login = await this.authService.login(this.loginForm.value);
     if (login.token) {
+      let usuario: any = decode(login.token);
+      let u = await this.usuariosService.getUsuariosByUsuario(usuario.sub);           
+      if (!u.acceso) {
+        this.alert.alertMax('Transaccion Incorrecta', 'Acceso Denegado', 'warning');
+        this.ngxService.stop();
+        return;
+      } 
       sessionStorage.setItem('token', login.token);
       this.alert.alertMax('Transaccion Exitosa', login.mensaje, 'success');
       this.router.navigate(['home']);

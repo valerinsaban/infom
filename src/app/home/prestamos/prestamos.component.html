@@ -368,6 +368,19 @@
                   <input formControlName="fecha" type="date" class="form-control" (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-4 mb-3">
+                  <label class="form-label">Fecha Amort.
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_amortizacion" type="date" class="form-control"
+                    (input)="getProyeccion2()">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Fecha Venc.
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="fecha_vencimiento" type="date" class="form-control disabled">
+                </div>
+                <div class="col-xl-4 mb-3">
                   <label class="form-label">Programa<span class="text-danger">*</span></label>
                   <select (change)="getProgramasGarantias($event)" formControlName="id_programa" class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
@@ -380,13 +393,6 @@
                     <option value="null">--- Seleccione un registro ---</option>
                     <option *ngFor="let i of tipos_prestamos" [value]="i.id">{{i.nombre}}</option>
                   </select>
-                </div>
-                <div class="col-xl-4 mb-3">
-                  <label class="form-label">Fecha Amort.
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="fecha_amortizacion" type="date" class="form-control"
-                    (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-4 mb-3">
                   <label class="form-label">Plazo Meses
@@ -1263,7 +1269,7 @@
                       <td style="text-align: right;">{{o.monto | number: '.2-2'}}</td>
                       <td class="text-end">
                         <div class="dropdown">
-                          <a (click)="setOrdenPago(o, dindex)" (click)="reportePrestamo('pr-orden-pago')"
+                          <a (click)="setOrdenPago(o, dindex)" (click)="reporteOrdenPago()"
                             class="btn btn-primary btn-sm light" style="margin-right: 10px;">
                             <i class="fa-solid fa-print"></i>
                           </a>
@@ -1474,6 +1480,10 @@
               <option value="Anulado">Anulado</option>
             </select>
           </div>
+          <div class="col-xl-12 mb-3" *ngIf="prestamoForm.controls['estado'].value == 'Anulado'">
+            <label class="form-label">Motivo de anulacion<span class="text-danger">*</span></label>
+            <textarea formControlName="motivo_anulacion" class="form-control" cols="30" rows="10"></textarea>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -1600,33 +1610,44 @@
         <div class="row">
           <ul class="setting-list" style="font-size: 16px;">
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-hoja-tecnica')">
+              <a data-bs-toggle="offcanvas" href="#reporte_view" (click)="reporteHojaTecnica()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">HOJA TECNICA</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-dictamen')">
+              <a routerLink="./" (click)="reporteDictamen()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">DICTAMEN</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-resolucion')">
+              <a routerLink="./" (click)="reporteResolucion()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">RESOLUCION</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-convenio-asistencia-fi')">
+              <a routerLink="./" (click)="reporteConvenioAsistencia()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">CONVENIO DE ASISTENCIA FINANCIERA</span>
               </a>
             </li>
             <li class="mb-2">
-              <a routerLink="./" (click)="reportePrestamo('pr-convenio-interistitucional')">
+              <a routerLink="./" (click)="reporteConvenioInter()">
                 <i class="fa-solid fa-download"></i>
                 <span class="text-primary ms-2">CONVENIO INTERINSTITUCIONAL</span>
+              </a>
+            </li>
+          </ul>
+
+          <hr>
+
+          <ul class="setting-list" style="font-size: 16px;">
+            <li class="mb-2">
+              <a routerLink="./" (click)="reporteCedula()">
+                <i class="fa-solid fa-download"></i>
+                <span class="text-primary ms-2">CEDULA PRESTAMO</span>
               </a>
             </li>
           </ul>
@@ -1634,6 +1655,25 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn light" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="reporte_view">
+  <div class="offcanvas-header">
+    <h5 class="modal-title">Reporte</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <!-- <div [innerHTML]="reporte_view"></div> -->
+          <iframe [src]="reporte_view" frameborder="0"></iframe>
+        </div>
       </div>
     </div>
   </div>
@@ -1694,7 +1734,7 @@
                 </li>
               </ol>
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
 
           <tr>
@@ -1703,7 +1743,7 @@
               <span>FP-</span>
               - {{prestamo.no_dictamen}} del {{formatoFecha(prestamo.fecha,'DD [de] MMMM [de] YYYY' )}}
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
 
           <tr>
@@ -1716,7 +1756,7 @@
                 {{prestamo.municipalidad.departamento.nombre}}
               </span>
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
           <tr>
             <td>CERTIFICACIÓN MUNICIPAL</td>
@@ -1726,7 +1766,7 @@
               del acta de Consejo Municipal No. {{prestamo.acta}}
               de fecha {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
             </td>
-            <td>VARIABLE</td>
+            <td>--</td>
           </tr>
           <tr>
             <td>DESTINO</td>
@@ -1750,7 +1790,9 @@
           </tr>
           <tr>
             <td>AMORTIZACIÓN</td>
-            <td>{{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) pagos mensuales de VARIABLE ,
+            <td>{{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) pagos mensuales de
+              {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
+              (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}),
               cada uno, más intereses e IVA sobre los intereses, comprometiendo los recursos
               <span *ngIf="prestamo.programa.id == 1">
                 del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
@@ -1801,16 +1843,16 @@
               </span>
               para inversión, es aceptable.
             </td>
-            <td>16</td>
+            <td>--</td>
           </tr>
           <tr>
             <td>PRÉSTAMOS VIGENTES </td>
             <td>
-              <div *ngIf="true">
+              <div *ngIf="vigentes.length == 0">
                 A LA FECHA LA MUNICIPALIDAD NO REFLEJA COMPROMISOS FINANCIEROS ANTE INFOM NI CON NINGUNA
                 INSTITUCION BANCARIA O FINANCIERA
               </div>
-              <div *ngIf="false">
+              <div *ngIf="vigentes.length > 0">
                 <table class="table table-bordered" style="font-size:8pt" width=100%>
                   <div style="text-align: center; font-size:8pt">
                     <p>DISPONIBILIDAD
@@ -1840,27 +1882,19 @@
                       <td>Vencimiento</td>
                       <td>Saldo</td>
                     </tr>
-                    <tr>
-                      <td>VARIABLE</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td>VARIABLE</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                    <tr *ngFor="let v of vigentes">
+                      <td>FP</td>
+                      <td>{{formatoFecha(v.fecha, 'DD/MM/YYYY')}}</td>
+                      <td>{{v.monto | number: '.2-2'}}</td>
+                      <td style="text-align: left">{{v.destinos.length ? v.destinos[0].destino.nombre : '-'}}</td>
+                      <td>{{formatoFecha(v.fecha_vencimiento, 'DD/MM/YYYY')}}</td>
+                      <td>{{v.saldo | number: '.2-2'}}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </td>
-            <td></td>
+            <td>--</td>
           </tr>
           <tr>
             <td>PROYECCIÓN</td>
@@ -1882,17 +1916,11 @@
                     <td>Cuota</td>
                     <td>Nueva Disponibilidad</td>
                   </tr>
-                  <tr>
-                    <td>VARIABLE</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>VARIABLE</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                  <tr *ngFor="let p of proyecciones; let pindex = index">
+                    <td>{{pindex+1}}</td>
+                    <td>{{p.disponible | number: '.2-2'}}</td>
+                    <td>{{p.cuota | number: '.2-2'}}</td>
+                    <td>{{(p.disponible - p.cuota) | number: '.2-2'}}</td>
                   </tr>
                   <caption style="text-align: left; font-size:5pt;  text-align: bottom">
                     *Capital, Intereses e IVA.
@@ -1921,11 +1949,11 @@
                   </tr>
                   <tr *ngFor="let p of proyecciones; let pindex = index">
                     <td>{{pindex+1}}</td>
-                    <td>{{p.fecha_fin}}</td>
+                    <td>{{formatoFecha(p.fecha_fin, 'DD/MM/YYYY')}}</td>
                     <td>{{p.interes | number: '.2-2'}}</td>
                     <td>{{p.iva | number: '.2-2'}}</td>
                     <td>
-                      <!-- {{getInteresMasIva(p.interes, p.iva) | number: '.2-2'}} -->
+                      {{getInteresMasIva(p.interes, p.iva) | number: '.2-2'}}
                     </td>
                     <td>{{p.capital | number: '.2-2'}}</td>
                     <td>{{p.cuota | number: '.2-2'}}</td>
@@ -1936,7 +1964,7 @@
                     <td></td>
                     <td>{{getInteres() | number: '.2-2'}}</td>
                     <td>{{getIva() | number: '.2-2'}}</td>
-                    <td>{{getInteres() | number: '.2-2'}}</td>
+                    <td>{{getInteresMasIva(getInteres(), getIva()) | number: '.2-2'}}</td>
                     <td>
                       <!-- {{getInteresIva() | number: '.2-2'}} -->
                     </td>
@@ -2081,7 +2109,7 @@
                 1.5. Punto de Acta:
               </p>
             </td>
-            <td>{{letras(prestamo.punto)}}</td>
+            <td>{{prestamo.punto}}</td>
           </tr>
           <tr>
             <td colspan="2">
@@ -2116,10 +2144,8 @@
               {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) MESES,
               contados a partir del
               {{formatoFecha(prestamo.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
-              al mes de VARIABLE del año VARIABLE
-              <span>
-                (VARIABLE que incluyen {{prestamo.periodo_gracia}}
-                meses de período de gracia
+              al mes de {{formatoFecha(prestamo.fecha_vencimiento, 'MMMM [del año] YYYY')}}
+              <span> que incluyen {{prestamo.periodo_gracia}} meses de período de gracia
               </span>
             </td>
           </tr>
@@ -2129,17 +2155,16 @@
                 2.4. Período de Gracia
               </p>
             </td>
-            <td>{{letras(prestamo.periodo_gracia)}},
-              ({{prestamo.periodo_gracia}}) MESES</td>
+            <td>{{letras(prestamo.periodo_gracia)}} ({{prestamo.periodo_gracia}}) MESES</td>
           </tr>
           <tr>
             <td>
               <p style="margin-left: 30%; font-weight: 700">2.5. Amortizaciones:</p>
             </td>
             <td style="text-align: justify">
-              {{letras(prestamo.plazo_meses)}},({{prestamo.plazo_meses}})
-              pagos mensuales de VARIABLE QUETZALES EXACTOS (Q.VARIABLE)
-              cada uno, más intereses e IVA.
+              {{letras(prestamo.plazo_meses)}},({{prestamo.plazo_meses}}) pagos mensuales de
+              {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
+              (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}) cada uno, más intereses e IVA.
             </td>
           </tr>
           <tr>
@@ -2179,15 +2204,15 @@
               </p>
             </td>
             <td style="text-align: justify">
-              El desembolso se realizará en VARIABLE entrega con acreditamiento a
-              la cuenta única del Tesoro a nombre de la Municipalidad de
+              El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ? 's' : ''}} con
+              acreditamiento a la cuenta única del Tesoro a nombre de la Municipalidad de
               <span style="text-transform: uppercase; font-weight: 500;">
                 {{prestamo.municipalidad.municipio.nombre}},
                 Departamento de {{prestamo.municipalidad.departamento.nombre}},
-              </span>
-              número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
+              </span> número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
               del Banco {{prestamo.municipalidad.banco.nombre}},
-              por un monto de VARIABLE (Q. VARIABLE).
+              por un monto de
+              <span *ngFor="let d of desembolsos">{{letrasMoneda(d.monto)}} (Q. {{d.monto | number: '.2-2'}}) </span>
             </td>
           </tr>
         </tbody>
@@ -2262,21 +2287,13 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-              </tr>
-              <tr>
-                <td>Totales</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
-                <td>.</td>
+              <tr *ngFor="let v of vigentes">
+                <td>{{v.no_dictamen}}</td>
+                <td>{{v.monto | number: '.2-2'}}</td>
+                <td>{{v.programa.nombre}}</td>
+                <td style="text-align: left">{{v.destinos.length ? v.destinos[0].destino.nombre : '-'}}</td>
+                <td>{{formatoFecha(v.fecha_vencimiento, 'DD/MM/YYYY')}}</td>
+                <td>{{v.saldo | number: '.2-2'}}</td>
               </tr>
             </tbody>
           </table>
@@ -2292,8 +2309,19 @@
             <span *ngIf="prestamo.id_programa == 3">
               Aporte Contitucional e Impuesto al Valor Agregado -IVAPAZ-
             </span>
-            para Inversión, la Municipalidad percibe aproximadamente Q. VARIABLE mensuales,
-            monto que es suficiente para respaldar la cobertura del préstamo que solicita en
+            para Inversión, la Municipalidad percibe aproximadamente
+            <span *ngIf="aporte">
+              <span *ngIf="prestamo.id_programa == 1">
+                Q. {{aporte.constitucional | number: '.2-2'}}
+              </span>
+              <span *ngIf="prestamo.id_programa == 2">
+                Q. {{aporte.iva_paz | number: '.2-2'}}
+              </span>
+              <span *ngIf="prestamo.id_programa == 3">
+                Q. {{getSumaAportes(aporte.constitucional, aporte.iva_paz) | number: '.2-2'}}
+              </span>
+            </span>
+            mensuales, monto que es suficiente para respaldar la cobertura del préstamo que solicita en
             el plazo de {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) meses,
             incluyendo el pago de intereses e IVA sobre intereses.
           </p>
@@ -2384,7 +2412,7 @@
         DEL INSTITUTO DE FOMENTO MUNICIPAL,
         <span *ngIf="prestamo.tipoPrestamo.id ==1">conoció</span>
         <span *ngIf="prestamo.tipoPrestamo.id ==2">deliberó</span>
-        de forma y de fondo el contenido del Dictamen No.{{prestamo.no_dictamen}},
+        de forma y de fondo el contenido del Dictamen No. {{prestamo.no_dictamen}},
         de fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} asunto sometido a su conocimiento y,
       </p>
       <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
@@ -2447,7 +2475,7 @@
         para cubrir adecuadamente el servicio de deuda el préstamo
         solicitado.
       </p>
-      <div>
+      <div *ngIf="prestamo.tipoPrestamo.id == 2">
         <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
         <p style="text-align: justify">
           Que el Gerente del Instituto a través del oficio GER {{prestamo.no_oficio_ger}},
@@ -2535,7 +2563,7 @@
             </td>
             <td style="width: 40%">
               <span style="text-transform: uppercase; font-weight: 500;">
-                {{letras(prestamo.monto)}} ({{prestamo.monto | number: '.2-2'}})
+                {{letrasMoneda(prestamo.monto)}} ({{prestamo.monto | number: '.2-2'}})
               </span>
             </td>
           </tr>
@@ -2558,7 +2586,7 @@
               <span *ngIf="prestamo.tipoPrestamo.id ==1">empezando</span>
               <span *ngIf="prestamo.tipoPrestamo.id ==2">iniciando</span>
               {{formatoFecha(prestamo.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
-              al mes de VARIABLE del año VARIABLE ( )
+              al {{formatoFecha(prestamo.fecha_vencimiento, '[mes de] MMMM [del año] YYYY')}}
             </td>
           </tr>
           <tr>
@@ -2568,7 +2596,7 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              {{letras(prestamo.periodo_gracia)}}, ({{prestamo.periodo_gracia}}) MESES
+              {{letras(prestamo.periodo_gracia)}} ({{prestamo.periodo_gracia}}) MESES
             </td>
           </tr>
           <tr>
@@ -2579,7 +2607,9 @@
             </td>
             <td style="width: 40%; text-align: justify">
               {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) pagos mensuales de la siguiente forma:
-              VARIABLE (Q.VARIABLE), más intereses y el Impuesto al Valor Agregado -IVA-,
+              {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
+              (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}), más intereses y el Impuesto al Valor
+              Agregado -IVA-,
               sobre intereses.
             </td>
           </tr>
@@ -2591,7 +2621,7 @@
             </td>
             <td style="width: 40%; text-align: justify">
               La tasa de interés es del {{letras(prestamo.tasa)}}
-              POR CIENTO ({{prestamo.tasa | number: '.2-2'}}%) anual sobre saldos deudores.
+              POR CIENTO ({{prestamo.tasa}}%) anual sobre saldos deudores.
             </td>
           </tr>
           <tr>
@@ -2620,14 +2650,15 @@
               </ol>
             </td>
             <td style="width: 40%; text-align: justify">
-              El desembolso se realizará en VARIABLE con acreditamiento a
-              la cuenta Única del Tesoro, a nombre de la Municipalidad de
+              El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ? 's' : ''}} con
+              acreditamiento a la cuenta Única del Tesoro, a nombre de la Municipalidad de
               <span style="text-transform: uppercase; font-weight: 500;">
                 {{prestamo.municipalidad.municipio.nombre}},
                 Departamento de {{prestamo.municipalidad.departamento.nombre}},
               </span>
               número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
-              del Banco {{prestamo.municipalidad.banco.nombre}}, por un monto de VARIABLE (Q. VARIABLE).
+              del Banco {{prestamo.municipalidad.banco.nombre}}, por un monto de
+              <span *ngFor="let d of desembolsos">{{letrasMoneda(d.monto)}} (Q. {{d.monto | number: '.2-2'}}) </span>.
             </td>
           </tr>
         </tbody>
@@ -2703,8 +2734,16 @@
         <p style="margin-left: 25%">GERENTE</p>
       </div>
       <br />
+
+      <div class="break"></div>
+
       <br />
-      <p>TABLA DE AMORTIZACION A CAPITAL</p>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <p style="text-align: center;">TABLA DE AMORTIZACION A CAPITAL</p>
       <table class="table table-bordered width=100%">
         <thead>
           <tr>
@@ -2712,26 +2751,16 @@
             <th>MES</th>
             <th>AÑO</th>
             <th>AMORTIZACIÓN</th>
+            <th>SALDO</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-          </tr>
-          <tr>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-          </tr>
-          <tr>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
-            <td>.</td>
+          <tr *ngFor="let p of proyecciones; let pindex = index">
+            <td>{{pindex + 1}}</td>
+            <td>{{formatoFecha(p.mes, 'MM')}}</td>
+            <td>{{formatoFecha(p.mes, 'YYYY')}}</td>
+            <td>{{p.capital | number: '.2-2'}}</td>
+            <td>{{p.saldo_final | number: '.2-2'}}</td>
           </tr>
         </tbody>
       </table>
@@ -2741,7 +2770,7 @@
   <div id="pr-convenio-asistencia-fi" style="color: black">
     <div style="margin: 0px 50px">
       <p style="text-align: justify">
-        En la ciudad de Guatemala, el de VARIABLE de dos mil VARIABLE,
+        En la ciudad de Guatemala, {{formatoFecha('', 'MMMM')}} de {{letras(formatoFecha('', 'YYYY'))}},
         NOSOTROS: Por una parte VARIABLE, de VARIABLE años de edad, (ESTADO
         CIVIL), (NACIONALIDAD), (PROFESIÓN), con domicilio en el departamento de
         VARIABLE, me identifico con el Documento Personal de Identificación con
@@ -2877,15 +2906,16 @@
         provenientes del Aporte Constitucional y el Impuesto al Valor Agregado
         -IVAPAZ-, conjuntamente con las amortizaciones de capital de este
         préstamo;
-        <b>h) FORMA DE ENTREGA: </b>El desembolso se realizará en VARIABLE
-        entrega con acreditamiento a la cuenta Única del Tesoro Municipal, de la
+        <b>h) FORMA DE ENTREGA: </b>El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ?
+        's' : ''}} con acreditamiento a la cuenta Única del Tesoro Municipal, de la
         Municipalidad de
         <span style="text-transform: uppercase; font-weight: 500;">
           {{prestamo.municipalidad.municipio.nombre}},
           Departamento de {{prestamo.municipalidad.departamento.nombre}},
         </span>
         número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
-        de la entidad bancaria {{prestamo.municipalidad.banco.nombre}}, por un monto de dos VARIABLE (Q. VARIABLE).
+        de la entidad bancaria {{prestamo.municipalidad.banco.nombre}}, por un monto de
+        <span *ngFor="let d of desembolsos">{{letrasMoneda(d.monto)}} (Q. {{d.monto | number: '.2-2'}}) </span>
 
         <b>II. CONDICIONES ADICIONALES: A)</b> Para la cancelación de este préstamo y para
         cubrir otras obligaciones adquiridas por la Municipalidad con el Instituto
@@ -3316,7 +3346,7 @@
           <p style="margin-left: 5%">
             La cantidad de:
             <b>
-              {{letras(orden_pago.monto)}}
+              {{letrasMoneda(orden_pago.monto)}}
             </b>
           </p>
           <br>
