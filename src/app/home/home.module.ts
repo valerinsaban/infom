@@ -37,6 +37,7 @@ import { RecibosComponent } from './recibos/recibos.component';
 import { ServiciosComponent } from './servicios/servicios.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { TiposServiciosComponent } from './catalogos/tipos-servicios/tipos-servicios.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 const routes: Routes = [
   {
@@ -127,7 +128,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     NgxUiLoaderModule,
-    NgxJsonViewerModule
+    NgxJsonViewerModule,
+    NgApexchartsModule
   ],
   providers: [
     DecimalPipe

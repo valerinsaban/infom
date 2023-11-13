@@ -1,0 +1,49 @@
+.pendiente {
+  background-color: #ffeccc;
+  color: #FF9F00 !important;
+  border-radius: 10px;
+}
+
+.aprobado {
+  background-color: #cce2ff;
+  color: #0D99FF !important;
+  border-radius: 10px;
+}
+
+.acreditado {
+  background-color: #f9e8ff;
+  color: #BB6BD9 !important;
+  border-radius: 10px;
+}
+
+.cancelado {
+  background-color: #daf5e6;
+  color: #3AC977 !important;
+  border-radius: 10px;
+}
+
+.anulado {
+  background-color: #ffdede;
+  color: #FF5E5E !important;
+  border-radius: 10px;
+}
+
+.pendiente-text {
+  color: #FF9F00 !important;
+}
+
+.aprobado-text {
+  color: #0D99FF !important;
+}
+
+.acreditado-text {
+  color: #BB6BD9 !important;
+}
+
+.cancelado-text {
+  color: #3AC977 !important;
+}
+
+.anulado-text {
+  color: #FF5E5E !important;
+}
