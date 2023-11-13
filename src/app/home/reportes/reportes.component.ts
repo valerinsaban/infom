@@ -163,7 +163,7 @@ export class ReportesComponent {
       { slug: 'creditos-otorgados', nombre: 'Creditos Otorgados', filtros: ['fecha_inicio', 'fecha_fin']},
       { slug: 'amortizaciones-prestamos-detalles', nombre: 'Amortizaciones a Prestamos Detalles', filtros: ['mes', 'fecha'] },
       { slug: 'balance-general-mora', nombre: 'Balance General de Prestamos en Mora', filtros: ['fecha'] },
-
+      { slug: 'asignaciones-municipalidad', nombre: 'Reporte de Asignaciones por Municipalidad', filtros: ['codigo_departamento', 'codigo_municipio', 'ano'] }
     ];
   }
 
@@ -337,6 +337,10 @@ export class ReportesComponent {
 
     if (this.slug_reporte == 'balance-general-mora') {
       await this.reporteBalanceGeneralMora(this.slug_reporte, print);
+    }
+
+    if (this.slug_reporte == 'asignaciones-municipalidad') {
+      await this.reporteAsignacionesMunicipalidad(this.slug_reporte, print);
     }
   }
 
@@ -841,6 +845,17 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
+  public async reporteAsignacionesMunicipalidad(slug: any, print: boolean = true) {
+    this.ngxService.start();
+
+    this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
+
+    let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);    
+    this.catalogo(rep, slug, print)
+
+    this.ngxService.stop();
+  }
   // Funciones
 
   getMontoDisp(mes: string, proyecciones: any, type: string) {

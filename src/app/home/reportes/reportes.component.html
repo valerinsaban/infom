@@ -15,6 +15,13 @@
                   <option *ngFor="let r of reportes" [value]="r.slug">{{r.nombre}}</option>
                 </select>
               </div>
+              <div *ngIf="filtro('ano')">
+                <label class="form-label">Año</label>
+                <div class="input-group mb-3">
+                  <input [(ngModel)]="filtros.mes" [ngModelOptions]="{standalone: true}" type="number"
+                    class="form-control">
+                </div>
+              </div>
               <div *ngIf="filtro('mes')">
                 <label class="form-label">Mes</label>
                 <div class="input-group mb-3">
@@ -2113,6 +2120,103 @@
               </table>
             </div>
 
+            <div id="asignaciones-municipalidad" style="color: black; font-size: 8px;">
+              <table class="table table-borderless" style="font-size: 80%; text-align: center; width: 100%">
+                <thead>
+                  <p style="text-align: center;">AÑO 2023</p>
+
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="9" style="font-weight: 600; text-align: left">
+                      012 - Aporte Constitucional
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid">ENERO</td>
+                    <td style="border: 1px solid">FEBRERO</td>
+                    <td style="border: 1px solid">MARZO</td>
+                    <td style="border: 1px solid">ABRIL</td>
+                    <td style="border: 1px solid">MAYO</td>
+                    <td style="border: 1px solid">JUNIO</td>
+                    <td style="border: 1px solid">JULIO</td>
+                    <td style="border: 1px solid">AGOSTO</td>
+                    <td style="border: 1px solid">SEPTIEMBRE</td>
+                    <td style="border: 1px solid">TOTAL</td>
+                  </tr>
+                  <tr>
+                    <td>9,473,290.84</td>
+                    <td>9,473,290.84</td>
+                    <td>9,473,290.84</td>
+                    <td>9,847,079.00</td>
+                    <td>9,847,079.00</td>
+                    <td>9,847,079.00</td>
+                    <td>9,847,079.00</td>
+                    <td>9,847,078.99</td>
+                    <td>9,847,078.99</td>
+                    <td><b>87,502,346.50</b></td>
+                  </tr>
+                  <tr>
+                    <td colspan="9" style="font-weight: 600; text-align: left">
+                      013 - IVA-PAZ
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid">ENERO</td>
+                    <td style="border: 1px solid">FEBRERO</td>
+                    <td style="border: 1px solid">MARZO</td>
+                    <td style="border: 1px solid">ABRIL</td>
+                    <td style="border: 1px solid">MAYO</td>
+                    <td style="border: 1px solid">JUNIO</td>
+                    <td style="border: 1px solid">JULIO</td>
+                    <td style="border: 1px solid">AGOSTO</td>
+                    <td style="border: 1px solid">SEPTIEMBRE</td>
+                    <td style="border: 1px solid"><b>TOTAL</b></td>
+                  </tr>
+                  <tr>
+                    <td>11,472,710.05</td>
+                    <td>11,472,710.05</td>
+                    <td>11,472,710.05</td>
+                    <td>11,098,921.88</td>
+                    <td>11,098,921.88</td>
+                    <td>11,098,921.88</td>
+                    <td>11,098,921.88</td>
+                    <td>11,142,923.09</td>
+                    <td>11,155,699.82</td>
+                    <td><b>101,112,440.58</b></td>
+                  </tr>
+                  <tr>
+                    <td colspan="9" style="font-weight: 600; text-align: left">
+                      018 - Impuesto Sobre Vehiculos
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid">ENERO</td>
+                    <td style="border: 1px solid">FEBRERO</td>
+                    <td style="border: 1px solid">MARZO</td>
+                    <td style="border: 1px solid">ABRIL</td>
+                    <td style="border: 1px solid">MAYO</td>
+                    <td style="border: 1px solid">JUNIO</td>
+                    <td style="border: 1px solid">JULIO</td>
+                    <td style="border: 1px solid">AGOSTO</td>
+                    <td style="border: 1px solid">SEPTIEMBRE</td>
+                    <td style="border: 1px solid">TOTAL</td>
+                  </tr>
+                  <tr>
+                    <td>1,014,936.92</td>
+                    <td>1,014,936.92</td>
+                    <td>1,014,936.92</td>
+                    <td>1,014,936.92</td>
+                    <td>1,014,936.92</td>
+                    <td>1,014,936.92</td>
+                    <td>1,014,936.92</td>
+                    <td>1,014,936.89</td>
+                    <td>1,014,936.88</td>
+                    <td><b>9,134,432.21</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
