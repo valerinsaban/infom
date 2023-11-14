@@ -1517,6 +1517,11 @@ export class PrestamosComponent implements OnInit {
   public async reporteConvenioInter() {
     this.ngxService.start();
 
+    let representante = await this.representantesService.getRepresentanteUltimo('Activo');
+    if (representante) {
+      this.representante = representante;
+    }
+    
     let rep: any = await this.reportesService.get('prestamos/pr-convenio-interistitucional');
     let contenido: any = document.getElementById('pr-convenio-interistitucional');
     contenido = contenido.innerHTML.toString();
