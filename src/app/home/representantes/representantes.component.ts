@@ -42,7 +42,6 @@ export class RepresentantesComponent {
     private estados_civilesService: EstadosCivilesService
   ) {
     this.representanteForm = new FormGroup({
-      codigo: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
       apellido: new FormControl(null, [Validators.required]),
       fecha_nacimiento: new FormControl(null, [Validators.required]),
@@ -187,7 +186,6 @@ export class RepresentantesComponent {
   setRepresentante(i: any, index: number) {
     i.index = index;
     this.representante = i;
-    this.representanteForm.controls['codigo'].setValue(i.codigo);
     this.representanteForm.controls['nombre'].setValue(i.nombre);
     this.representanteForm.controls['apellido'].setValue(i.apellido);
     this.representanteForm.controls['fecha_nacimiento'].setValue(moment.utc(i.fecha_nacimiento).format('YYYY-MM-DD'));

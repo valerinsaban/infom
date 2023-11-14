@@ -42,7 +42,7 @@
                   <tbody>
                     <tr *ngFor="let r of representantes; let mindex = index">
                       <td><span class="text-primary">{{r.nombre}}</span></td>
-                      <td>{{r.apellido}}</td>
+                      <td><span class="text-primary">{{r.apellido}}</span></td>
                       <td>{{r.dpi}}</td>
                       <td>{{r.fecha_nacimiento | date: 'dd/MM/YYYY':'UTC'}}</td>
                       <td>{{r.regional.nombre}}</td>

@@ -1356,8 +1356,6 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
-    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
-    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
 
@@ -1365,7 +1363,7 @@ export class PrestamosComponent implements OnInit {
     popupWin.document.open();
     popupWin.document.write(rep);
     popupWin.document.close();
-    
+
     this.reporte_view = this.sanitizer.bypassSecurityTrustResourceUrl(popupWin);
 
     this.ngxService.stop();
@@ -1414,8 +1412,6 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
-    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
-    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
 
@@ -1470,11 +1466,9 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
-    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
-    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
-    
+
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
     popupWin.document.write(rep);
@@ -1505,6 +1499,8 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
+    rep = rep.replaceAll("{{letra}}", this.conf.letra);
+    rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -1521,7 +1517,7 @@ export class PrestamosComponent implements OnInit {
     if (representante) {
       this.representante = representante;
     }
-    
+
     let rep: any = await this.reportesService.get('prestamos/pr-convenio-interistitucional');
     let contenido: any = document.getElementById('pr-convenio-interistitucional');
     contenido = contenido.innerHTML.toString();
@@ -1536,11 +1532,9 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
-    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
-    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
-    
+
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
     popupWin.document.write(rep);
@@ -1570,7 +1564,7 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
-    
+
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
     popupWin.document.write(rep);
@@ -1608,7 +1602,7 @@ export class PrestamosComponent implements OnInit {
 
   formatoFecha(date: any, format: string) {
     if (date) {
-      return moment(date).format(format)      
+      return moment(date).format(format)
     }
     return moment().format(format)
   }
@@ -1733,7 +1727,7 @@ export class PrestamosComponent implements OnInit {
         if (this.proyecciones[p].cuota > this.proyecciones[p].disponible) {
           this.disp = false;
         }
-      }      
+      }
 
       let rep: any = await this.reportesService.get('disponibilidad');
       rep = rep.replaceAll("{{codigo_municipalidad}}", `${this.municipalidad.departamento.codigo}.${this.municipalidad.municipio.codigo}`);
@@ -1867,6 +1861,13 @@ export class PrestamosComponent implements OnInit {
       }
     }
     return true;
+  }
+
+  getEdad(fecha_nacimiento: any) {
+    let nacimiento = moment(fecha_nacimiento);
+    let hoy = moment();
+    let anios = hoy.diff(nacimiento, "years");
+    return anios;
   }
 
 }

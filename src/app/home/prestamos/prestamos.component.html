@@ -2762,30 +2762,32 @@
   <div id="pr-convenio-asistencia-fi" style="color: black">
     <div style="margin: 0px 50px">
       <p style="text-align: justify">
-        En la ciudad de Guatemala, el 
+        En la ciudad de Guatemala, el
         <span style="text-transform: lowercase;">
-          {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de 
+          {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
           {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, NOSOTROS: Por una parte {{representante.nombre}} {{representante.apellido}}, de VARIABLE años de edad, (ESTADO
-        CIVIL), (NACIONALIDAD), (PROFESIÓN), con domicilio en el departamento de
-        VARIABLE, me identifico con el Documento Personal de Identificación con
-        Código Único de Identificación número VARIABLE (VARIABLE), extendido por
-        el Registro Nacional de las Personas -RENAP- de la República de VARIABLE
-        actúo en representación del Instituto de Fomento Municipal, en mi calidad
+        </span>, NOSOTROS: Por una parte {{representante.nombre}} {{representante.apellido}},
+        de {{getEdad(representante.fecha_nacimiento)}} años de edad, {{representante.estado_civil.nombre}},
+        guatemalteco, {{representante.profesion.nombre}}, con domicilio en el departamento de
+        GUATEMALA, me identifico con el Documento Personal de Identificación con Código Único de Identificación número
+        {{letras(representante.cui)}} ({{representante.cui}}), extendido por el Registro Nacional de las Personas
+        -RENAP- de la República de Guatemala; actúo en representación del Instituto de Fomento Municipal, en mi calidad
         de Gerente, que acredito con:
 
         <b>A)</b> Certificación del Acuerdo Gubernativo
-        número VARIABLE (VARIABLE) de fecha VARIABLE (VARIABLE) de VARIABLE del
-        año dos mil VARIABLE (VARIABLE) del Presidente de la República de
-        Guatemala, acuerdo donde consta mi nombramiento;
+        número {{letras(representante.acuerdo)}} ({{representante.acuerdo}}) de fecha
+        {{letras(formatoFecha(representante.fecha_acuerdo, 'DD'))}} ({{formatoFecha(representante.fecha_acuerdo,
+        'DD')}}) de {{formatoFecha(representante.fecha_acuerdo, 'MMMM')}} del
+        año {{letras(formatoFecha(representante.fecha_acuerdo, 'YYYY'))}} ({{formatoFecha(representante.fecha_acuerdo,
+        'YYYY')}}) del Presidente de la República de Guatemala, acuerdo donde consta mi nombramiento;
 
         <b>B)</b> Certificación de la resolución No. {{prestamo.resolucion.numero}}*
         de fecha {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*
         emitida por la Junta Directiva del Instituto de Fomento Municipal, a través de la
         cual se me nombra como Gerente del Instituto de Fomento Municipal y
 
-        <b>C)</b> Certificación del acta número VARIABLE (VARIABLE)
-        de fecha VARIABLE, en la que consta la toma de posesión del cargo, emitida por
+        <b>C)</b> Certificación del acta número ({{representante.acta_toma_posecion}})
+        de fecha {{representante.fecha_acta_toma_posecion}}, en la que consta la toma de posesión del cargo, emitida por
         la Secretaría General del Instituto de Fomento Municipal –INFOM; señalo como lugar
         para recibir notificaciones la octava calle (8ª) uno guion sesenta y seis (1-66) zona
         nueve (9) del municipio y departamento de Guatemala; en el transcurso del
@@ -3042,33 +3044,38 @@
         </span>
       </h6>
       <p style="text-align: justify">
-        En la ciudad de Guatemala, el VARIABLE de VARIABLE de dos mil VARIABLE,
-        Nosotros: (VARIABLE GERENTE), de VARIABLE años de edad, (VARIABLE-ESTADO
-        CIVIL, (VARIABLE-NACIONALIDAD), (VARIABLE-PROFESIÓN), de este domicilio,
-        me identifico con Documento Personal de Identificación (DPI), con Código
-        Único de Identificación (CUI) VARIABLE (VARIABLE) extendido por el
+        En la ciudad de Guatemala, <span style="text-transform: lowercase;">
+          {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
+          {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
+        </span>, Nosotros: Por una parte ({{representante.nombre}} {{representante.apellido}}),
+        de {{getEdad(representante.fecha_nacimiento)}} años de edad,
+        {{representante.estado_civil.nombre}},
+        guatemalteco, {{representante.profesion.nombre}} de este domicilio,
+        me identifico con Documento Personal de Identificación, con Código
+        Único de Identificación (CUI) {{letras(representante.cui)}} ({{representante.cui}}) extendido por el
         Registro Nacional de las Personas (RENAP) de la República de Guatemala;
         actúo en mi calidad de
         <b>GERENTE Y REPRESENTANTE LEGAL DEL INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b>,
         lo que acredito con:
-        <b>a)</b> Nombramiento contenido en Acuerdo Gubernativo número VARIABLE (VARIABLE )
-        de fecha VARIABLE (VARIABLE) de VARIABLE del año VARIABLE (VARIABLE) del Presidente de la
-        República de Guatemala;
+        <b>a)</b> Nombramiento contenido en Acuerdo Gubernativo número {{letras(representante.acuerdo)}}
+        ({{representante.acuerdo}}) de fecha {{formatoFecha(representante.fecha_acuerdo, 'DD [de] MMMM [de] YYYY')}}
+        ({{formatoFecha(representante.fecha_acuerdo, 'DD/MM/YYYY')}}) del Presidente de la República de Guatemala;
 
-        <b>b)</b> Certificación de la resolución número {{prestamo.resolucion.numero}}*
-        de fecha {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*,
+        <b>b)</b> Certificación de la resolución número {{representante.resolucion}}
+        de fecha {{formatoFecha(representante.fecha_resolucion, 'DD [de] MMMM [de] YYYY')}},
         emitida por la Junta Directiva del Instituto de Fomento Municipal, a través de la cual
         se me nombra como Gerente del Instituto de Fomento Municipal;
 
-        <b>c)</b> Certificación del acta número VARIABLE
-        guion dos mil VARIABLE (VARIABLE) del libro de actas de la Secretaría
-        General, de fecha VARIABLE (VARIABLE) de VARIABLE de dos mil VARIABLE
-        (VARIABLE), en la que consta la toma de posesión del cargo; y
+        <b>c)</b> Certificación del acta número {{representante.acta_toma_posecion}}
+        del libro de actas de la Secretaría
+        General, de fecha {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
+        ({{formatoFecha(representante.fecha_acta_toma_posecion, 'DD/MM/YYYY')}}),
+        en la que consta la toma de posesión del cargo; y
 
         <b>d)</b> Me encuentro debidamente facultado para suscribir el presente convenio con
         base a la autorización de la Junta Directiva del Instituto contenida en la
-        resolución {{prestamo.resolucion.numero}}* de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*;
+        resolución {{prestamo.resolucion.numero}} de fecha
+        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}};
         señalo como lugar para notificaciones la octava (8va.) calle uno guion sesenta
         y seis (1-66) de la zona nueve (09), de la ciudad y departamento de Guatemala, en lo
         sucesivo podrá ser denominado como <b>“EL INFOM”;</b>
