@@ -12,7 +12,8 @@
       --color-background: #303030;
       --color-pageSheet: #cfcfcf;
       --color-paper: white;
-      --bs-body-line-height: 1.5;
+      --bs-body-line-height: {{interlineado}}px !important;
+      --bs-body-font-size: {{letra}}px !important;
       --bs-border-color: #000 !important;
     }
 
@@ -44,7 +45,6 @@
 
     body {
       background-color: var(--color-background);
-      font-size: 12px !important;
     }
 
     td:first-child {
@@ -254,12 +254,6 @@
     }
 
     Paged.registerHandlers(RepeatingTableHeadersHandler);
-  </script>
-  <script>
-    setTimeout(() => {
-      var r = document.querySelector(':root');
-      r.style.setProperty('--bs-body-line-height', '1.4');
-    }, "1000");
   </script>
 </body>
 

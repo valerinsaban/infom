@@ -117,6 +117,11 @@ export class PrestamosComponent implements OnInit {
 
   folios: any = []
 
+  conf: any = {
+    letra: 12,
+    interlineado: 15
+  }
+
   constructor(
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,
@@ -930,6 +935,7 @@ export class PrestamosComponent implements OnInit {
 
   // Metodos para obtener data y id de registro seleccionado
   async setPrestamo(i: any, index: number) {
+    this.ngxService.start();
     i.index = index;
     this.prestamo = i;
     this.prestamoForm.controls['no_dictamen'].setValue(i.no_dictamen);
@@ -976,6 +982,7 @@ export class PrestamosComponent implements OnInit {
     this.filtros.codigo_municipio = i.municipalidad.municipio.codigo;
 
     this.calcAmortizacion();
+    this.ngxService.stop();
   }
 
   async setDestinoPrestamo(i: any, index: number) {
@@ -1316,30 +1323,6 @@ export class PrestamosComponent implements OnInit {
     }
   }
 
-  recibirDisp(event: any) {
-    this.disponibilidad = event;
-
-    for (let c = 0; c < this.programas_garantias.length; c++) {
-      let monto = this.programas_garantias[c].monto;
-
-      if (this.programas_garantias[c].garantia.id == 1) {
-        if (monto <= this.disponibilidad.constitucional) {
-          this.disp = true;
-          return;
-        }
-      }
-      if (this.programas_garantias[c].garantia.id == 2) {
-        if (monto <= this.disponibilidad.iva_paz) {
-          this.disp = true;
-          return;
-        }
-      }
-    }
-
-    this.disp = false;
-
-  }
-
   public async reporteHojaTecnica() {
     this.ngxService.start();
 
@@ -1373,6 +1356,10 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
+    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
+    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
+    rep = rep.replaceAll("{{letra}}", this.conf.letra);
+    rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
 
     let popupWin: any = window.open('', '_blank');
     popupWin.document.open();
@@ -1427,6 +1414,10 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
+    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
+    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
+    rep = rep.replaceAll("{{letra}}", this.conf.letra);
+    rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -1479,7 +1470,11 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
-
+    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
+    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
+    rep = rep.replaceAll("{{letra}}", this.conf.letra);
+    rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
     popupWin.document.write(rep);
@@ -1536,7 +1531,11 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
-
+    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
+    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
+    rep = rep.replaceAll("{{letra}}", this.conf.letra);
+    rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
     popupWin.document.write(rep);
@@ -1562,7 +1561,11 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
     rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
     rep = rep.replaceAll("{{contenido}}", contenido);
-
+    rep = rep.replaceAll("{{letraD}}", this.conf.letra + 1);
+    rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
+    rep = rep.replaceAll("{{letra}}", this.conf.letra);
+    rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
     popupWin.document.write(rep);
@@ -1598,8 +1601,11 @@ export class PrestamosComponent implements OnInit {
     return numeroALetrasMoneda(number);
   }
 
-  formatoFecha(date: string, format: string) {
-    return moment(date).format(format)
+  formatoFecha(date: any, format: string) {
+    if (date) {
+      return moment(date).format(format)      
+    }
+    return moment().format(format)
   }
 
   print(rep: any) {
@@ -1622,9 +1628,13 @@ export class PrestamosComponent implements OnInit {
 
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
     if (this.municipalidad) {
-      let mes = moment(this.prestamoForm.controls['fecha_amortizacion'].value).format('YYYY-MM')
-      let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.filtros.codigo_departamento, this.filtros.codigo_municipio, mes)
+      let periodo_gracia = parseInt(this.prestamoForm.controls['periodo_gracia'].value);
+      let mes = moment(this.prestamoForm.controls['fecha_amortizacion'].value).format('YYYY-MM');
+      let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.filtros.codigo_departamento, this.filtros.codigo_municipio, mes);
       if (!aporte) {
+        // this.alert.alertMax('Transaccion Incorrecta', `Aporte de ${mes} no encontrado`, 'error');
+        // this.ngxService.stop();
+        // return;
         aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
       }
       this.garantias = await this.garantiasService.getGarantias();
@@ -1634,6 +1644,7 @@ export class PrestamosComponent implements OnInit {
         prestamos[i].prestamos_garantias = prestamos_garantias
       }
 
+      aporte.mes = moment(aporte.mes).add(periodo_gracia, 'months');
       this.disponibilidad = [];
       for (let i = 0; i < this.filtros.plazo_meses; i++) {
         this.disponibilidad.push({
@@ -1699,13 +1710,6 @@ export class PrestamosComponent implements OnInit {
             }
           }
 
-          this.disp = true;
-          for (let p = 0; p < this.proyecciones.length; p++) {
-            if (this.proyecciones[p].disponibilidad < this.proyecciones[p].cuota) {
-              this.disp = false;
-            }
-          }
-
         }
 
         let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
@@ -1718,6 +1722,13 @@ export class PrestamosComponent implements OnInit {
         this.totales_disp.total = this.getTotalMontoDispTotalDisponible();
 
       }
+
+      this.disp = true;
+      for (let p = 0; p < this.proyecciones.length; p++) {
+        if (this.proyecciones[p].cuota > this.proyecciones[p].disponible) {
+          this.disp = false;
+        }
+      }      
 
       let rep: any = await this.reportesService.get('disponibilidad');
       rep = rep.replaceAll("{{codigo_municipalidad}}", `${this.municipalidad.departamento.codigo}.${this.municipalidad.municipio.codigo}`);
@@ -1841,6 +1852,16 @@ export class PrestamosComponent implements OnInit {
 
   getSumaAportes(constitucional: any, iva_paz: any) {
     return parseFloat(constitucional) + parseFloat(iva_paz);
+  }
+
+  getAmortizacionIguales() {
+    let monto = this.prestamo.monto / this.prestamo.plazo_meses;
+    for (let p = 0; p < this.proyecciones.length; p++) {
+      if (monto != this.proyecciones[p].capital) {
+        return false;
+      }
+    }
+    return true;
   }
 
 }

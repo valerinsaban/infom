@@ -213,7 +213,7 @@
 
 <div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="agregar-prestamo">
   <div class="offcanvas-header">
-    <h5 class="modal-title">Creacion de Prestamo</h5>
+    <h5 class="modal-title">Agregar Prestamo</h5>
     <div *ngIf="getTipoPrestamo()">
       <h5 class="modal-title" style="text-transform: uppercase; font-size: 20px;">
         {{getTipoPrestamo().nombre}}
@@ -304,13 +304,6 @@
                     <span class="text-danger">*</span>
                   </label>
                   <input formControlName="fecha_memorial" type="date" class="form-control">
-                </div>
-                <div class="col-xl-3 mb-3">
-                  <label class="form-label">Periodo Gracia
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="periodo_gracia" type="number" class="form-control"
-                    placeholder="Periodo Gracia" (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-3 mb-3">
                   <label class="form-label">Resolucion<span class="text-danger">*</span></label>
@@ -414,6 +407,13 @@
                   <input (input)="setMontoTotal()" formControlName="monto" type="number" class="form-control"
                     placeholder="Monto Total">
                 </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Periodo Gracia
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="periodo_gracia" type="number" class="form-control"
+                    placeholder="Periodo Gracia" (input)="getProyeccion2()">
+                </div>
                 <div class="col-xl-8 mb-3">
                   <label class="form-label"></label>
                   <h2>Q. {{prestamoForm.value.monto | number: '.2-2'}}</h2>
@@ -452,9 +452,6 @@
                       </tbody>
                     </table>
                   </div>
-
-                  <!-- <app-reportes [filtros]="filtros" [slug_reporte]="'disponibilidad'" [view_reporte]="false"
-                    (disp)="recibirDisp($event)"></app-reportes> -->
 
                 </div>
               </div>
@@ -613,13 +610,6 @@
                   <input formControlName="fecha_memorial" type="date" class="form-control">
                 </div>
                 <div class="col-xl-3 mb-3">
-                  <label class="form-label">Periodo Gracia
-                    <span class="text-danger">*</span>
-                  </label>
-                  <input formControlName="periodo_gracia" type="number" class="form-control"
-                    placeholder="Periodo Gracia" (input)="getProyeccion2()">
-                </div>
-                <div class="col-xl-3 mb-3">
                   <label class="form-label">Resolucion<span class="text-danger">*</span></label>
                   <select formControlName="id_resolucion" class="form-control">
                     <option value="null">--- Seleccione un registro ---</option>
@@ -733,6 +723,13 @@
                   </label>
                   <input (input)="setMonto(true)" formControlName="monto" type="number" class="form-control"
                     placeholder="Monto Total">
+                </div>
+                <div class="col-xl-4 mb-3">
+                  <label class="form-label">Periodo Gracia
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input formControlName="periodo_gracia" type="number" class="form-control"
+                    placeholder="Periodo Gracia" (input)="getProyeccion2()">
                 </div>
                 <div class="col-xl-8 mb-3">
                   <label class="form-label"></label>
@@ -1608,38 +1605,52 @@
       </div>
       <div class="modal-body">
         <div class="row">
-          <ul class="setting-list" style="font-size: 16px;">
-            <li class="mb-2">
-              <a data-bs-toggle="offcanvas" href="#reporte_view" (click)="reporteHojaTecnica()">
-                <i class="fa-solid fa-download"></i>
-                <span class="text-primary ms-2">HOJA TECNICA</span>
-              </a>
-            </li>
-            <li class="mb-2">
-              <a routerLink="./" (click)="reporteDictamen()">
-                <i class="fa-solid fa-download"></i>
-                <span class="text-primary ms-2">DICTAMEN</span>
-              </a>
-            </li>
-            <li class="mb-2">
-              <a routerLink="./" (click)="reporteResolucion()">
-                <i class="fa-solid fa-download"></i>
-                <span class="text-primary ms-2">RESOLUCION</span>
-              </a>
-            </li>
-            <li class="mb-2">
-              <a routerLink="./" (click)="reporteConvenioAsistencia()">
-                <i class="fa-solid fa-download"></i>
-                <span class="text-primary ms-2">CONVENIO DE ASISTENCIA FINANCIERA</span>
-              </a>
-            </li>
-            <li class="mb-2">
-              <a routerLink="./" (click)="reporteConvenioInter()">
-                <i class="fa-solid fa-download"></i>
-                <span class="text-primary ms-2">CONVENIO INTERINSTITUCIONAL</span>
-              </a>
-            </li>
-          </ul>
+          <div class="col-6">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Tamaño de Letra </label>
+              <input [(ngModel)]="conf.letra" type="number" class="form-control" placeholder="Tamaño de Letra">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Interlineado </label>
+              <input [(ngModel)]="conf.interlineado" type="number" class="form-control" placeholder="Interlineado">
+            </div>
+          </div>
+          <div class="col-12">
+            <ul class="setting-list" style="font-size: 16px;">
+              <li class="mb-2">
+                <a routerLink="./" (click)="reporteHojaTecnica()">
+                  <i class="fa-solid fa-download"></i>
+                  <span class="text-primary ms-2">HOJA TECNICA</span>
+                </a>
+              </li>
+              <li class="mb-2">
+                <a routerLink="./" (click)="reporteDictamen()">
+                  <i class="fa-solid fa-download"></i>
+                  <span class="text-primary ms-2">DICTAMEN</span>
+                </a>
+              </li>
+              <li class="mb-2">
+                <a routerLink="./" (click)="reporteResolucion()">
+                  <i class="fa-solid fa-download"></i>
+                  <span class="text-primary ms-2">RESOLUCION</span>
+                </a>
+              </li>
+              <li class="mb-2">
+                <a routerLink="./" (click)="reporteConvenioAsistencia()">
+                  <i class="fa-solid fa-download"></i>
+                  <span class="text-primary ms-2">CONVENIO DE ASISTENCIA FINANCIERA</span>
+                </a>
+              </li>
+              <li class="mb-2">
+                <a routerLink="./" (click)="reporteConvenioInter()">
+                  <i class="fa-solid fa-download"></i>
+                  <span class="text-primary ms-2">CONVENIO INTERINSTITUCIONAL</span>
+                </a>
+              </li>
+            </ul>
+          </div>
 
           <hr>
 
@@ -1655,25 +1666,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn light" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="offcanvas offcanvas-end customeoff" tabindex="-1" id="reporte_view">
-  <div class="offcanvas-header">
-    <h5 class="modal-title">Reporte</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col">
-          <!-- <div [innerHTML]="reporte_view"></div> -->
-          <iframe [src]="reporte_view" frameborder="0"></iframe>
-        </div>
       </div>
     </div>
   </div>
@@ -1703,23 +1695,15 @@
                 <li>
                   Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la República de Guatemala, (artículos 4º,
                   numeral romano II, inciso 1) y articulos
-                  <span *ngIf="prestamo.id_tipo_prestamo == 1">
-                    23 inciso a) y b).
-                  </span>
-                  <span *ngIf="prestamo.id_tipo_prestamo == 2">
-                    30 inciso g) y h).
-                  </span>
+                  <span *ngIf="prestamo.id_tipo_prestamo == 1"> 23 inciso a) y b). </span>
+                  <span *ngIf="prestamo.id_tipo_prestamo == 2"> 30 inciso g) y h). </span>
                 </li>
                 <li>
                   Reglamento para la Asistencia Financiera a las Municipalidades de la República de Guatemala
-                  <span *ngIf="prestamo.id_tipo_prestamo == 2">
-                    Articulos del {{prestamo.resolucion.articulos}}
-                  </span>
                   <span *ngIf="prestamo.resolucion">
-                    (Resolución No.
-                    {{prestamo.resolucion.numero}} J.D. de fecha
-                    {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}
-                    , artículos del {{prestamo.resolucion.articulos}})
+                    (Resolución No. {{prestamo.resolucion.numero}} J.D. de fecha
+                    {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
+                    artículos del {{prestamo.resolucion.articulos}})
                   </span>
                 </li>
                 <li>
@@ -1791,9 +1775,17 @@
           <tr>
             <td>AMORTIZACIÓN</td>
             <td>{{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) pagos mensuales de
-              {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
-              (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}),
-              cada uno, más intereses e IVA sobre los intereses, comprometiendo los recursos
+              <span *ngIf="getAmortizacionIguales()">
+                {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
+                (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}),
+                cada uno,
+              </span>
+              <span *ngIf="!getAmortizacionIguales()">
+                <span *ngFor="let p of proyecciones">
+                  {{letrasMoneda(p.capital)}} (Q.{{(p.capital) | number: '.2-2'}}),
+                </span>
+                respectivamente,
+              </span> más intereses e IVA sobre los intereses, comprometiendo los recursos
               <span *ngIf="prestamo.programa.id == 1">
                 del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
               </span>
@@ -2770,8 +2762,10 @@
   <div id="pr-convenio-asistencia-fi" style="color: black">
     <div style="margin: 0px 50px">
       <p style="text-align: justify">
-        En la ciudad de Guatemala, {{formatoFecha('', 'MMMM')}} de {{letras(formatoFecha('', 'YYYY'))}},
-        NOSOTROS: Por una parte VARIABLE, de VARIABLE años de edad, (ESTADO
+        En la ciudad de Guatemala,
+        <span style="text-transform: lowercase;">
+          {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
+        </span>, NOSOTROS: Por una parte VARIABLE, de VARIABLE años de edad, (ESTADO
         CIVIL), (NACIONALIDAD), (PROFESIÓN), con domicilio en el departamento de
         VARIABLE, me identifico con el Documento Personal de Identificación con
         Código Único de Identificación número VARIABLE (VARIABLE), extendido por
