@@ -2766,11 +2766,11 @@
         <span style="text-transform: lowercase;">
           {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
           {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, NOSOTROS: Por una parte {{representante.nombre}} {{representante.apellido}},
+        </span>, NOSOTROS: Por una parte <b>{{representante.nombre}} {{representante.apellido}}</b>,
         de {{getEdad(representante.fecha_nacimiento)}} años de edad, {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}}, con domicilio en el departamento de
         GUATEMALA, me identifico con el Documento Personal de Identificación con Código Único de Identificación número
-        {{letras(representante.cui)}} ({{representante.cui}}), extendido por el Registro Nacional de las Personas
+        {{letras(representante.dpi)}} ({{representante.dpi}}), extendido por el Registro Nacional de las Personas
         -RENAP- de la República de Guatemala; actúo en representación del Instituto de Fomento Municipal, en mi calidad
         de Gerente, que acredito con:
 
@@ -2781,32 +2781,37 @@
         año {{letras(formatoFecha(representante.fecha_acuerdo, 'YYYY'))}} ({{formatoFecha(representante.fecha_acuerdo,
         'YYYY')}}) del Presidente de la República de Guatemala, acuerdo donde consta mi nombramiento;
 
-        <b>B)</b> Certificación de la resolución No. {{prestamo.resolucion.numero}}*
-        de fecha {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}}*
+        <b>B)</b> Certificación de la resolución No. {{representante.resolucion}}
+        de fecha {{formatoFecha(representante.fecha_resolucion, 'DD [de] MMMM [de] YYYY')}}
         emitida por la Junta Directiva del Instituto de Fomento Municipal, a través de la
         cual se me nombra como Gerente del Instituto de Fomento Municipal y
 
         <b>C)</b> Certificación del acta número ({{representante.acta_toma_posecion}})
-        de fecha {{representante.fecha_acta_toma_posecion}}, en la que consta la toma de posesión del cargo, emitida por
+        de fecha {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}},
+        en la que consta la toma de posesión del cargo, emitida por
         la Secretaría General del Instituto de Fomento Municipal –INFOM; señalo como lugar
         para recibir notificaciones la octava calle (8ª) uno guion sesenta y seis (1-66) zona
         nueve (9) del municipio y departamento de Guatemala; en el transcurso del
         presente instrumento el Instituto de Fomento Municipal podrá ser
-        denominado como “INFOM” o el “ACREEDOR” indistintamente; y, VARIABLE
-        (ALCALDE), de VARIABLE (VARIABLE) años de edad, (ESTADO CIVIL),
-        (NACIONALIDAD), (PROFESIÓN, con domicilio en el municipio de VARIABLE,
-        departamento de VARIABLE, me identifico con el Documento Personal de
-        Identificación con Código Único de Identificación número VARIABLE
-        (VARIABLE), extendido por el Registro Nacional de las Personas -RENAP- de
-        la República de Guatemala, actúo en mi calidad de ALCALDE MUNICIPAL del
-        municipio de VARIABLE, departamento de VARIABLE, lo cual acredito con:
-        <b>A)</b> Certificación del Acuerdo de Adjudicación del cargo número VARIABLE
-        (VARIABLE), extendido por la Junta Electoral del Tribunal Supremo
+        denominado como “INFOM” o el “ACREEDOR” indistintamente; y,
+
+        <b>{{funcionario.nombre}} {{funcionario.apellido}}</b>,
+        de {{getEdad(representante.fecha_nacimiento)}} años de edad,
+        {{funcionario.estado_civil.nombre}},
+        guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
+        {{prestamo.municipalidad.municipio.nombre}}, departamento de {{prestamo.municipalidad.departamento.nombre}},
+        me identifico con el Documento Personal de Identificación con Código Único de Identificación número
+        {{letras(funcionario.dpi)}} ({{funcionario.dpi}}),
+        extendido por el Registro Nacional de las Personas -RENAP- de
+        la República de Guatemala, actúo en mi calidad de {{funcionario.puesto.nombre}} del
+        municipio de {{prestamo.municipalidad.municipio.nombre}}, departamento de
+        {{prestamo.municipalidad.departamento.nombre}}, lo cual acredito con: <b>A)</b> Certificación del Acuerdo de
+        Adjudicación del cargo número VARIABLE (VARIABLE), extendido por la Junta Electoral del Tribunal Supremo
         Electoral de VARIABLE, de fecha VARIABLE (VARIABLE) de VARIABLE de dos mil
         VARIABLE (VARIABLE)
         <b>B)</b>Certificación del Acta de Toma de Posesión del
-        cargo número {{letras(prestamo.municipalidad.no_acta)}}** ({{prestamo.municipalidad.no_acta}}),
-        de fecha {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**
+        cargo número ({{funcionario.acta_toma_posecion}})
+        de fecha {{formatoFecha(funcionario.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
         extendida por la Secretaría Municipal de
         <span style="text-transform: uppercase; font-weight: 600;">
           {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
@@ -3052,7 +3057,7 @@
         {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}} de este domicilio,
         me identifico con Documento Personal de Identificación, con Código
-        Único de Identificación (CUI) {{letras(representante.cui)}} ({{representante.cui}}) extendido por el
+        Único de Identificación (CUI) {{letras(representante.dpi)}} ({{representante.dpi}}) extendido por el
         Registro Nacional de las Personas (RENAP) de la República de Guatemala;
         actúo en mi calidad de
         <b>GERENTE Y REPRESENTANTE LEGAL DEL INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b>,

@@ -52,6 +52,7 @@ export class PrestamosComponent implements OnInit {
   prestamo: any;
   municipalidad: any;
   representante: any;
+  funcionario: any;
   banco: any;
   prestamos_garantias: any = [];
 
@@ -1485,6 +1486,14 @@ export class PrestamosComponent implements OnInit {
       this.representante = representante;
     }
 
+    let funcionario = await this.funcionariosService.getFuncionarioUltimo(this.municipalidad.id, 'Activo');
+    if (funcionario) {
+      this.funcionario = funcionario;
+    }
+
+    this.banco = this.prestamo.municipalidad.banco;
+    
+
     let rep: any = await this.reportesService.get('prestamos/pr-convenio-asistencia-fi');
     let contenido: any = document.getElementById('pr-convenio-asistencia-fi');
     contenido = contenido.innerHTML.toString();
@@ -1517,6 +1526,13 @@ export class PrestamosComponent implements OnInit {
     if (representante) {
       this.representante = representante;
     }
+
+    let funcionario = await this.funcionariosService.getFuncionarioUltimo(this.municipalidad.id, 'Activo');
+    if (funcionario) {
+      this.funcionario = funcionario;
+    }
+
+    this.banco = this.prestamo.municipalidad.banco;
 
     let rep: any = await this.reportesService.get('prestamos/pr-convenio-interistitucional');
     let contenido: any = document.getElementById('pr-convenio-interistitucional');
