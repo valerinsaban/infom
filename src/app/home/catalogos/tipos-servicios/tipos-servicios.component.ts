@@ -27,10 +27,7 @@ export class TiposServiciosComponent {
   ) {
     this.tipo_servicioForm = new FormGroup({
       nombre: new FormControl(null, [Validators.required]),
-      siglas: new FormControl(null, [Validators.required]),
-      centro_costo: new FormControl(null),
-      producto: new FormControl(null),
-      subproducto: new FormControl(null)
+      iva: new FormControl(null)
     });
   }
 
@@ -121,10 +118,7 @@ export class TiposServiciosComponent {
     i.index = index;
     this.tipo_servicio = i;
     this.tipo_servicioForm.controls['nombre'].setValue(i.nombre);
-    this.tipo_servicioForm.controls['siglas'].setValue(i.siglas);
-    this.tipo_servicioForm.controls['centro_costo'].setValue(i.centro_costo);
-    this.tipo_servicioForm.controls['producto'].setValue(i.producto);
-    this.tipo_servicioForm.controls['subproducto'].setValue(i.subproducto);
+    this.tipo_servicioForm.controls['iva'].setValue(i.iva);
 
     this.ngxService.stop();
   }
