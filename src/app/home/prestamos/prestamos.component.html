@@ -2147,7 +2147,7 @@
               contados a partir del mes de
               {{formatoFecha(prestamo.fecha_amortizacion, 'MMMM [del año] YYYY')}}
               al mes de {{formatoFecha(prestamo.fecha_vencimiento, 'MMMM [del año] YYYY')}}
-              <span *ngIf="prestamo.periodo_gracia > 0"> 
+              <span *ngIf="prestamo.periodo_gracia > 0">
                 que incluyen {{prestamo.periodo_gracia}} meses de período de gracia
               </span>
             </td>
@@ -2601,7 +2601,7 @@
               <span *ngIf="prestamo.tipoPrestamo.id ==2">iniciando</span>
               {{formatoFecha(prestamo.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
               al {{formatoFecha(prestamo.fecha_vencimiento, '[mes de] MMMM [del año] YYYY')}}
-              <span *ngIf="prestamo.periodo_gracia > 0"> 
+              <span *ngIf="prestamo.periodo_gracia > 0">
                 que incluyen {{prestamo.periodo_gracia}} meses de período de gracia
               </span>
             </td>
@@ -2751,7 +2751,7 @@
         <div *ngIf="prestamo.tipoPrestamo.id == 1" class="col-12">
           <p>GERENTE</p>
         </div>
-        <div *ngIf="prestamo.tipoPrestamo.id == 2"  class="col-6">
+        <div *ngIf="prestamo.tipoPrestamo.id == 2" class="col-6">
           <p>SECRETARIA JUNTA DIRECTIVA</p>
         </div>
         <div *ngIf="prestamo.tipoPrestamo.id == 2" class="col-6">
@@ -3174,17 +3174,18 @@
         </span>
         en lo sucesivo podrá ser denominada como <b>“LA MUNICIPALIDAD”</b>,
 
-        y {{banco.r_nombre}} {{banco.r_apellido}} de {{getEdad(banco.fecha_nacimiento)}} años de edad, VARIABLE ESTADO CIVIL, guatemalteco, VARIABLE PROFESIÓN,
-        con domicilio en el departamento de VARIABLE, me identifico con Documento Personal de
-        Identificación (DPI), con Código Único de Identificación (CUI) VARIABLE
-        (VARIABLE) extendido por el Registro Nacional de las Personas de la
+        y {{banco.r_nombre}} {{banco.r_apellido}} de {{getEdad(banco.fecha_nacimiento)}} años de edad,
+        {{banco.estado_civil.nombre}}, guatemalteco, {{banco.profesion.nombre}},
+        con domicilio en el departamento de Guatemala, me identifico con Documento Personal de
+        Identificación (DPI), con Código Único de Identificación (CUI) ({{banco.dpi}}) extendido por el Registro
+        Nacional de las Personas de la
         República de Guatemala, actúo en mi calidad de
-        <b>VARIABLE DEL BANCO DE {{prestamo.municipalidad.banco.nombre}}</b>
+        <b style="text-transform: uppercase;">REPRESENTANTE DEL {{prestamo.municipalidad.banco.nombre}}</b>
         personería que acredito con mi nombramiento contenido en acta
-        notarial autorizada en esta ciudad por el Notario VARIABLE, con fecha
-        VARIABLE de VARIABLE de dos mil VARIABLE, inscrita en el Registro
-        Mercantil General de la República con el número VARIABLE (VARIABLE), folio
-        VARIABLE (VARIABLE), del libro VARIABLE (VARIABLE) de Auxiliares de
+        notarial autorizada en esta ciudad por el Notario {{banco.notario_autoriza}}, con fecha
+        {{formatoFecha(banco.fecha_acta_notarial, 'DD [de] MMMM [de] YYYY')}},, inscrita en el Registro
+        Mercantil General de la República con el número {{letras(banco.acta_notarial)}} ({{banco.acta_notarial}}), folio
+        {{letras(banco.folio)}} ({{banco.folio}}), del libro {{letras(banco.libro)}} ({{banco.libro}}) de Auxiliares de
         Comercio; llamado en lo sucesivo <b>“EL BANCO”</b>. Los otorgantes hacemos
         constar: Que toda la documentación relacionada se tuvo a la vista,
         hallarnos en el libre ejercicio de nuestros derechos civiles y que además
@@ -3363,7 +3364,7 @@
         el presente Convenio Interinstitucional, Administrativo y Financiero, el
         cual es leído íntegramente y bien enterados de su contenido, objeto,
         validez y efectos legales, lo aceptamos, ratificamos y firmamos en
-        VARIABLE (VARIABLE) ejemplares originales impresos en ambos lados, uno
+        tres (3) ejemplares originales impresos en ambos lados, uno
         para cada una de las partes que en él intervinieron.
       </p>
       <br />
