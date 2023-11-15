@@ -44,14 +44,14 @@ export class RolesComponent {
 
   async postRol() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let rol = await this.rolService.postRol(this.rolForm.value);
     if (rol.resultado) {
       this.getRoles();
-      this.alert.alertMax('Transaccion Correcta', rol.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', rol.mensaje, 'success');
       this.rolForm.reset();
     }
     this.ngxService.stop();
@@ -59,14 +59,14 @@ export class RolesComponent {
 
   async putRol() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let rol = await this.rolService.putRol(this.rol.id, this.rolForm.value);
     if (rol.resultado) {
       this.getRoles();
-      this.alert.alertMax('Transaccion Correcta', rol.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', rol.mensaje, 'success');
       this.rolForm.reset();
       this.rol = null;
     }
@@ -75,7 +75,7 @@ export class RolesComponent {
 
   async deleteEstadoCivil(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

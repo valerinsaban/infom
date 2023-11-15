@@ -650,7 +650,7 @@ export class PrestamosComponent implements OnInit {
     let destino_prestamo = await this.destinos_prestamosService.postDestinoPrestamo(this.destinoPrestamoForm.value);
     if (destino_prestamo.resultado) {
       await this.getDestinosPrestamo();
-      this.alert.alertMax('Transaccion Correcta', destino_prestamo.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', destino_prestamo.mensaje, 'success');
       this.limpiar3();
     }
     this.ngxService.stop();
@@ -661,7 +661,7 @@ export class PrestamosComponent implements OnInit {
     let destino_prestamo = await this.destinos_prestamosService.putDestinoPrestamo(this.destino_prestamo.id, this.destinoPrestamoForm.value);
     if (destino_prestamo.resultado) {
       await this.getDestinosPrestamo();
-      this.alert.alertMax('Transaccion Correcta', destino_prestamo.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', destino_prestamo.mensaje, 'success');
       this.limpiar3();
     }
     this.ngxService.stop();
@@ -697,7 +697,7 @@ export class PrestamosComponent implements OnInit {
     let desembolso = await this.desembolsosService.postDesembolso(this.desembolsoForm.value);
     if (desembolso.resultado) {
       await this.getDesembolsos();
-      this.alert.alertMax('Transaccion Correcta', desembolso.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', desembolso.mensaje, 'success');
       this.limpiar4();
     }
     this.ngxService.stop();
@@ -708,7 +708,7 @@ export class PrestamosComponent implements OnInit {
     let desembolso = await this.desembolsosService.putDesembolso(this.desembolso.id, this.desembolsoForm.value);
     if (desembolso.resultado) {
       await this.getDesembolsos();
-      this.alert.alertMax('Transaccion Correcta', desembolso.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', desembolso.mensaje, 'success');
       this.limpiar4();
     }
     this.ngxService.stop();
@@ -784,7 +784,7 @@ export class PrestamosComponent implements OnInit {
         });
       }
       await this.getOrdenesPagos();
-      this.alert.alertMax('Transaccion Correcta', orden_pago.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', orden_pago.mensaje, 'success');
       this.limpiar5();
     }
     this.ngxService.stop();
@@ -795,7 +795,7 @@ export class PrestamosComponent implements OnInit {
     let orden_pago = await this.ordenes_pagosService.putOrdenPago(this.orden_pago.id, this.ordenPagoForm.value);
     if (orden_pago.resultado) {
       await this.getOrdenesPagos();
-      this.alert.alertMax('Transaccion Correcta', orden_pago.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', orden_pago.mensaje, 'success');
       this.limpiar5();
     }
     this.ngxService.stop();
@@ -860,7 +860,7 @@ export class PrestamosComponent implements OnInit {
 
       await this.getPrestamos();
       await this.getCountPrestamos();
-      this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
@@ -871,7 +871,7 @@ export class PrestamosComponent implements OnInit {
     if (estado == 'Cancelado') {
       let saldo_final = (this.amortizaciones.length ? parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo_final) : this.prestamo.monto).toFixed(2);
       if (parseInt(saldo_final) != 0) {
-        this.alert.alertMax('Transaccion Incorrecta', `Prestamo con Q${saldo_final} de saldo pendiente`, 'error');
+        this.alert.alertMax('Operacion Incorrecta', `Prestamo con Q${saldo_final} de saldo pendiente`, 'error');
         return;
       }
     }
@@ -897,7 +897,7 @@ export class PrestamosComponent implements OnInit {
 
       await this.getPrestamos();
       await this.getCountPrestamos();
-      this.alert.alertMax('Transaccion Correcta', prestamo.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
@@ -1651,7 +1651,7 @@ export class PrestamosComponent implements OnInit {
       let mes = moment(this.prestamoForm.controls['fecha_amortizacion'].value).format('YYYY-MM');
       let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.filtros.codigo_departamento, this.filtros.codigo_municipio, mes);
       if (!aporte) {
-        // this.alert.alertMax('Transaccion Incorrecta', `Aporte de ${mes} no encontrado`, 'error');
+        // this.alert.alertMax('Operacion Incorrecta', `Aporte de ${mes} no encontrado`, 'error');
         // this.ngxService.stop();
         // return;
         aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
@@ -1767,7 +1767,7 @@ export class PrestamosComponent implements OnInit {
       }
 
     } else {
-      this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Municipalidad no encontrada', 'error');
     }
     this.ngxService.stop();
   }

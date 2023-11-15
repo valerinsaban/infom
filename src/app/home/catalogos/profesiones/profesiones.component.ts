@@ -44,14 +44,14 @@ export class ProfesionesComponent {
 
   async postProfesion() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let profesion = await this.profesionesService.postProfesion(this.profesionForm.value);
     if (profesion.resultado) {
       await this.getProfesiones();
-      this.alert.alertMax('Transaccion Correcta', profesion.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', profesion.mensaje, 'success');
       this.profesionForm.reset();
     }
     this.ngxService.stop();
@@ -59,14 +59,14 @@ export class ProfesionesComponent {
 
   async putProfesion() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let profesion = await this.profesionesService.putProfesion(this.profesion.id, this.profesionForm.value);
     if (profesion.resultado) {
       await this.getProfesiones();
-      this.alert.alertMax('Transaccion Correcta', profesion.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', profesion.mensaje, 'success');
       this.profesionForm.reset();
       this.profesion = null;
     }
@@ -75,7 +75,7 @@ export class ProfesionesComponent {
 
   async deleteProfesion(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

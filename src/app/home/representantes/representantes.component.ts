@@ -116,14 +116,14 @@ export class RepresentantesComponent {
 
   async postRepresentante() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let representante = await this.representantesService.postRepresentante(this.representanteForm.value);
     if (representante.resultado) {
       await this.getRepresentantes();
-      this.alert.alertMax('Transaccion Correcta', representante.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', representante.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
@@ -131,14 +131,14 @@ export class RepresentantesComponent {
 
   async putRepresentante() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let representante = await this.representantesService.putRepresentante(this.representante.id, this.representanteForm.value);
     if (representante.resultado) {
       await this.getRepresentantes();
-      this.alert.alertMax('Transaccion Correcta', representante.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', representante.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
@@ -146,7 +146,7 @@ export class RepresentantesComponent {
 
   async deleteRepresentante(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

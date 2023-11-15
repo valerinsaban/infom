@@ -44,14 +44,14 @@ export class DepartamentosComponent {
 
   async postDepartamento() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let departamento = await this.departamentosService.postDepartamento(this.departamentoForm.value);
     if (departamento.resultado) {
       await this.getDepartamentos();
-      this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', departamento.mensaje, 'success');
       this.cancelarEdicion();
     }
     this.ngxService.stop();
@@ -59,14 +59,14 @@ export class DepartamentosComponent {
 
   async putDepartamento() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let departamento = await this.departamentosService.putDepartamento(this.departamento.id, this.departamentoForm.value);
     if (departamento.resultado) {
       await this.getDepartamentos();
-      this.alert.alertMax('Transaccion Correcta', departamento.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', departamento.mensaje, 'success');
       this.cancelarEdicion();
     }
     this.ngxService.stop();
@@ -74,7 +74,7 @@ export class DepartamentosComponent {
 
   async deleteDepartamento(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

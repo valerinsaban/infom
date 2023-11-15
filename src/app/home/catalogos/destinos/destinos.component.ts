@@ -43,14 +43,14 @@ export class DestinosComponent {
 
   async postDestino() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let destino = await this.destinosService.postDestino(this.destinoForm.value);
     if (destino.resultado) {
       await this.getDestinos();
-      this.alert.alertMax('Transaccion Correcta', destino.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', destino.mensaje, 'success');
       this.destinoForm.reset();
     }
     this.ngxService.stop();
@@ -58,14 +58,14 @@ export class DestinosComponent {
 
   async putDestino() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let destino = await this.destinosService.putDestino(this.destino.id, this.destinoForm.value);
     if (destino.resultado) {
       await this.getDestinos();
-      this.alert.alertMax('Transaccion Correcta', destino.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', destino.mensaje, 'success');
       this.destinoForm.reset();
       this.destino = null;
     }
@@ -74,7 +74,7 @@ export class DestinosComponent {
 
   async deleteDestino(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

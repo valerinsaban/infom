@@ -88,7 +88,7 @@ export class RecibosComponent {
         await this.recibos_detallesService.postReciboDetalle(this.recibos_detalles[d]);
         this.limpiar();
       }
-      this.alert.alertMax('Transaccion Correcta', recibo.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', recibo.mensaje, 'success');
     }
 
     this.ngxService.stop();

@@ -95,7 +95,7 @@ export class CobrosComponent {
 
   async postCobro() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
@@ -155,7 +155,7 @@ export class CobrosComponent {
 
       await this.getCobros();
       this.limpiar();
-      this.alert.alertMax('Transaccion Correcta', cobro.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', cobro.mensaje, 'success');
     }
     this.ngxService.stop();
   }
@@ -339,14 +339,14 @@ export class CobrosComponent {
 
   async putCobro() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let cobro = await this.cobrosService.putCobro(this.cobro.id, this.cobroForm.value);
     if (cobro.resultado) {
       await this.getCobros();
-      this.alert.alertMax('Transaccion Correcta', cobro.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', cobro.mensaje, 'success');
       this.cobroForm.reset();
       this.cobro = null;
     }
@@ -355,7 +355,7 @@ export class CobrosComponent {
 
   async deleteCobro(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

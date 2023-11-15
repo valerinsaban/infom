@@ -58,14 +58,14 @@ export class MunicipiosComponent {
 
   async postMunicipio() {
     if (!HomeComponent.getPermiso('Agregar')){
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let municipio = await this.municipiosService.postMunicipio(this.municipioForm.value);
     if (municipio.resultado) {
       await this.getMunicipios();
-      this.alert.alertMax('Transaccion Correcta', municipio.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', municipio.mensaje, 'success');
       this.municipioForm.reset();
     }
     this.ngxService.stop();
@@ -73,14 +73,14 @@ export class MunicipiosComponent {
 
   async putMunicipio() {
     if (!HomeComponent.getPermiso('Editar')){
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let municipio = await this.municipiosService.putMunicipio(this.municipio.id, this.municipioForm.value);
     if (municipio.resultado) {
       await this.getMunicipios();
-      this.alert.alertMax('Transaccion Correcta', municipio.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', municipio.mensaje, 'success');
       this.municipioForm.reset();
       this.municipio = null;
     }
@@ -89,7 +89,7 @@ export class MunicipiosComponent {
 
   async deleteMunicipio(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')){
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

@@ -46,14 +46,14 @@ export class ResolucionesComponent {
 
   async postResolucion() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let resolucion = await this.resolucionesService.postResolucion(this.resolucionForm.value);
     if (resolucion.resultado) {
       await this.getResoluciones();
-      this.alert.alertMax('Transaccion Correcta', resolucion.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', resolucion.mensaje, 'success');
       this.resolucionForm.reset();
     }
     this.ngxService.stop();
@@ -61,14 +61,14 @@ export class ResolucionesComponent {
 
   async putResolucion() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let resolucion = await this.resolucionesService.putResolucion(this.resolucion.id, this.resolucionForm.value);
     if (resolucion.resultado) {
       await this.getResoluciones();
-      this.alert.alertMax('Transaccion Correcta', resolucion.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', resolucion.mensaje, 'success');
       this.resolucionForm.reset();
       this.resolucion = null;
     }
@@ -77,7 +77,7 @@ export class ResolucionesComponent {
 
   async deleteResolucion(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

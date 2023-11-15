@@ -60,14 +60,14 @@ export class TiposPrestamosComponent {
 
   async postTipoPrestamo() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let tipo_prestamo = await this.tipo_prestamoService.postTipoPrestamo(this.tipo_prestamoForm.value);
     if (tipo_prestamo.resultado) {
       await this.getTiposPrestamos();
-      this.alert.alertMax('Transaccion Correcta', tipo_prestamo.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', tipo_prestamo.mensaje, 'success');
       this.tipo_prestamoForm.reset();
     }
     this.ngxService.stop();
@@ -75,14 +75,14 @@ export class TiposPrestamosComponent {
 
   async putTipoPrestamo() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let tipo_prestamo = await this.tipo_prestamoService.putTipoPrestamo(this.tipo_prestamo.id, this.tipo_prestamoForm.value);
     if (tipo_prestamo.resultado) {
       await this.getTiposPrestamos();
-      this.alert.alertMax('Transaccion Correcta', tipo_prestamo.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', tipo_prestamo.mensaje, 'success');
       this.tipo_prestamoForm.reset();
       this.tipo_prestamo = null;
     }
@@ -91,7 +91,7 @@ export class TiposPrestamosComponent {
 
   async deleteTipoPrestamo(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

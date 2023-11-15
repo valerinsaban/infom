@@ -43,14 +43,14 @@ export class PuestosComponent {
 
   async postPuesto() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let puesto = await this.puestosService.postPuesto(this.puestoForm.value);
     if (puesto.resultado) {
       await this.getPuestos();
-      this.alert.alertMax('Transaccion Correcta', puesto.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', puesto.mensaje, 'success');
       this.puestoForm.reset();
     }
     this.ngxService.stop();
@@ -58,14 +58,14 @@ export class PuestosComponent {
 
   async putPuesto() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let puesto = await this.puestosService.putPuesto(this.puesto.id, this.puestoForm.value);
     if (puesto.resultado) {
       await this.getPuestos();
-      this.alert.alertMax('Transaccion Correcta', puesto.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', puesto.mensaje, 'success');
       this.puestoForm.reset();
       this.puesto = null;
     }
@@ -74,7 +74,7 @@ export class PuestosComponent {
 
   async deletePuesto(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

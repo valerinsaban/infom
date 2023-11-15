@@ -193,14 +193,14 @@ export class MunicipalidadesComponent {
 
   async postMunicipalidad() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let municipalidad = await this.municipalidadesService.postMunicipalidad(this.municipalidadForm.value);
     if (municipalidad.resultado) {
       await this.getMunicipalidades();
-      this.alert.alertMax('Transaccion Correcta', municipalidad.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', municipalidad.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
@@ -208,14 +208,14 @@ export class MunicipalidadesComponent {
 
   async putMunicipalidad() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let municipalidad = await this.municipalidadesService.putMunicipalidad(this.municipalidad.id, this.municipalidadForm.value);
     if (municipalidad.resultado) {
       await this.getMunicipalidades();
-      this.alert.alertMax('Transaccion Correcta', municipalidad.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', municipalidad.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
@@ -223,7 +223,7 @@ export class MunicipalidadesComponent {
 
   async deleteMunicipalidad(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({
@@ -275,14 +275,14 @@ export class MunicipalidadesComponent {
 
   async postFuncionario() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let funcionario = await this.funcionariosService.postFuncionario(this.funcionarioForm.value);
     if (funcionario.resultado) {
       await this.getFuncionarios();
-      this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', funcionario.mensaje, 'success');
       this.limpiar2();
     }
     this.ngxService.stop();
@@ -290,14 +290,14 @@ export class MunicipalidadesComponent {
 
   async putFuncionario() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let funcionario = await this.funcionariosService.putFuncionario(this.funcionario.id, this.funcionarioForm.value);
     if (funcionario.resultado) {
       await this.getFuncionarios();
-      this.alert.alertMax('Transaccion Correcta', funcionario.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', funcionario.mensaje, 'success');
       this.limpiar2();
     }
     this.ngxService.stop();
@@ -305,7 +305,7 @@ export class MunicipalidadesComponent {
 
   async deleteFuncionario(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

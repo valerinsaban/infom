@@ -154,7 +154,7 @@ var numeroALetras = (function () {
         let cientos = Math.floor(num / divisor)
         let resto = num - (cientos * divisor)
 
-        let strMillones = Seccion(num, divisor, 'UN MILLON', 'MILLONES');
+        let strMillones = Seccion(num, divisor, 'UN MILLON DE', 'MILLONES DE');
         let strMiles = Miles(resto);
 
         if (strMillones == '')

@@ -47,14 +47,14 @@ export class RegionalesComponent {
 
   async postRegional() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let regional = await this.regionalesService.postRegional(this.regionalForm.value);
     if (regional.resultado) {
       await this.getRegionales();
-      this.alert.alertMax('Transaccion Correcta', regional.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', regional.mensaje, 'success');
       this.cancelarEdicion();
     }
     this.ngxService.stop();
@@ -62,14 +62,14 @@ export class RegionalesComponent {
 
   async putRegional() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let regional = await this.regionalesService.putRegional(this.regional.id, this.regionalForm.value);
     if (regional.resultado) {
       await this.getRegionales();
-      this.alert.alertMax('Transaccion Correcta', regional.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', regional.mensaje, 'success');
       this.cancelarEdicion();
     }
     this.ngxService.stop();
@@ -77,7 +77,7 @@ export class RegionalesComponent {
 
   async deleteRegional(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

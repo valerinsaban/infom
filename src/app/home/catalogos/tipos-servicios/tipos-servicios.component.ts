@@ -55,14 +55,14 @@ export class TiposServiciosComponent {
 
   async postTipoServicio() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let tipo_servicio = await this.tipo_servicioService.postTipoServicio(this.tipo_servicioForm.value);
     if (tipo_servicio.resultado) {
       await this.getTiposServicios();
-      this.alert.alertMax('Transaccion Correcta', tipo_servicio.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', tipo_servicio.mensaje, 'success');
       this.tipo_servicioForm.reset();
     }
     this.ngxService.stop();
@@ -70,14 +70,14 @@ export class TiposServiciosComponent {
 
   async putTipoServicio() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let tipo_servicio = await this.tipo_servicioService.putTipoServicio(this.tipo_servicio.id, this.tipo_servicioForm.value);
     if (tipo_servicio.resultado) {
       await this.getTiposServicios();
-      this.alert.alertMax('Transaccion Correcta', tipo_servicio.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', tipo_servicio.mensaje, 'success');
       this.tipo_servicioForm.reset();
       this.tipo_servicio = null;
     }
@@ -86,7 +86,7 @@ export class TiposServiciosComponent {
 
   async deleteTipoServicio(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

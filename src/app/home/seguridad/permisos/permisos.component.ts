@@ -69,7 +69,7 @@ export class PermisosComponent {
 
   async setPermiso(accion: string, rol: any, menu: any, submenu: any = null) {
     if (!HomeComponent.getPermiso('Agregar')){
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();

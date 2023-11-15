@@ -101,7 +101,7 @@ export class FacturasComponent {
             await this.facturas_detallesService.postFacturaDetalle(this.facturas_detalles[d]);
             this.limpiar();
           }
-          this.alert.alertMax('Transaccion Correcta', factura.mensaje, 'success');
+          this.alert.alertMax('Operacion Correcta', factura.mensaje, 'success');
         }
 
       }

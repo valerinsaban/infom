@@ -2801,7 +2801,7 @@
         <span style="text-transform: lowercase;">
           {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
           {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, NOSOTROS: Por una parte <b>{{representante.nombre}} {{representante.apellido}}</b>,
+        </span>, NOSOTROS: Por una parte <b style="text-transform: uppercase;">{{representante.nombre}} {{representante.apellido}}</b>,
         de {{getEdad(representante.fecha_nacimiento)}} años de edad, {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}}, con domicilio en el departamento de
         GUATEMALA, me identifico con el Documento Personal de Identificación con Código Único de Identificación número
@@ -2809,8 +2809,7 @@
         -RENAP- de la República de Guatemala; actúo en representación del Instituto de Fomento Municipal, en mi calidad
         de Gerente, que acredito con:
 
-        <b>A)</b> Certificación del Acuerdo Gubernativo
-        número {{letras(representante.acuerdo)}} ({{representante.acuerdo}}) de fecha
+        <b>A)</b> Acuerdo Gubernativo número {{letras(representante.acuerdo)}} ({{representante.acuerdo}}) de fecha
         {{letras(formatoFecha(representante.fecha_acuerdo, 'DD'))}} ({{formatoFecha(representante.fecha_acuerdo,
         'DD')}}) de {{formatoFecha(representante.fecha_acuerdo, 'MMMM')}} del
         año {{letras(formatoFecha(representante.fecha_acuerdo, 'YYYY'))}} ({{formatoFecha(representante.fecha_acuerdo,
@@ -2830,7 +2829,7 @@
         presente instrumento el Instituto de Fomento Municipal podrá ser
         denominado como “INFOM” o el “ACREEDOR” indistintamente; y,
 
-        <b>{{funcionario.nombre}} {{funcionario.apellido}}</b>,
+        <b style="text-transform: uppercase;">{{funcionario.nombre}} {{funcionario.apellido}}</b>,
         de {{getEdad(representante.fecha_nacimiento)}} años de edad,
         {{funcionario.estado_civil.nombre}},
         guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
@@ -2852,14 +2851,14 @@
           {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
         </span>,
         Debidamente autorizado para la celebración del presente convenio según certificación
-        del punto <b>{{prestamo.municipalidad.punto_acta}}</b> del acta número
-        {{letras(prestamo.municipalidad.no_acta)}} ({{prestamo.municipalidad.no_acta}}) de fecha
-        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}};
+        del punto <b>{{prestamo.punto}}</b> del acta número
+        {{letras(prestamo.acta)}} ({{prestamo.acta}}) de fecha
+        {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}};
         señalo como lugar para recibir notificaciones la sede de la Alcaldía Municipal de
         <span style="text-transform: uppercase; font-weight: 600;">
           {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
         </span>,
-        ubicada en <b>{{prestamo.municipalidad.direccion}}</b>,en adelante denominada
+        ubicada en <b>{{prestamo.municipalidad.direccion}}</b>, en adelante denominada
         indistintamente como la “MUNICIPALIDAD” o la “DEUDORA". Por este acto
         celebramos <b>CONVENIO DE ASISTENCIA FINANCIERA</b> de conformidad con las
         siguientes Cláusulas: <b><u>PRIMERA: BASE LEGAL:</u></b>
@@ -2867,7 +2866,7 @@
         Decreto mil ciento treinta y dos (1132) del Congreso de la República de Guatemala y
         Reglamento para la Asistencia Financiera a las Municipalidades de la
         República de Guatemala (Resolución No. {{prestamo.resolucion.numero}} de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},*
+        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
         artículos del {{prestamo.resolucion.articulos}}
         <b><u>SEGUNDA: ANTECEDENTES: </u></b> Mediante solicitud de fecha
         <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{prestamo.fecha}})</b>, suscrita
@@ -3102,7 +3101,7 @@
         En la ciudad de Guatemala, <span style="text-transform: lowercase;">
           {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
           {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, Nosotros: Por una parte ({{representante.nombre}} {{representante.apellido}}),
+        </span>, Nosotros: Por una parte <b style="text-transform: uppercase;">({{representante.nombre}} {{representante.apellido}})</b>,
         de {{getEdad(representante.fecha_nacimiento)}} años de edad,
         {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}} de este domicilio,
@@ -3135,7 +3134,7 @@
         y seis (1-66) de la zona nueve (09), de la ciudad y departamento de Guatemala, en lo
         sucesivo podrá ser denominado como <b>“EL INFOM”;</b>
 
-        Por otra parte, <b>{{funcionario.nombre}} {{funcionario.apellido}}</b> de
+        Por otra parte, <b style="text-transform: uppercase;">{{funcionario.nombre}} {{funcionario.apellido}}</b> de
         {{getEdad(representante.fecha_nacimiento)}} años de edad, {{funcionario.estado_civil.nombre}},
         guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
         {{prestamo.municipalidad.municipio.nombre}}

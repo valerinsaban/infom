@@ -44,14 +44,14 @@ export class GarantiasComponent {
 
   async postGarantia() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let garantia = await this.garantiaService.postGarantia(this.garantiaForm.value);
     if (garantia.resultado) {
       await this.getGarantias();
-      this.alert.alertMax('Transaccion Correcta', garantia.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', garantia.mensaje, 'success');
       this.garantiaForm.reset();
     }
     this.ngxService.stop();
@@ -59,14 +59,14 @@ export class GarantiasComponent {
 
   async putGarantia() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let garantia = await this.garantiaService.putGarantia(this.garantia.id, this.garantiaForm.value);
     if (garantia.resultado) {
       await this.getGarantias();
-      this.alert.alertMax('Transaccion Correcta', garantia.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', garantia.mensaje, 'success');
       this.garantiaForm.reset();
       this.garantia = null;
     }
@@ -75,7 +75,7 @@ export class GarantiasComponent {
 
   async deleteGarantia(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

@@ -43,14 +43,14 @@ export class PartidosPoliticosComponent {
 
   async postPartidoPolitico() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let partidoPolitico = await this.partidoPoliticoService.postPartidoPolitico(this.partidoPoliticoForm.value);
     if (partidoPolitico.resultado) {
       await this.getPartidosPoliticos();
-      this.alert.alertMax('Transaccion Correcta', partidoPolitico.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', partidoPolitico.mensaje, 'success');
       this.partidoPoliticoForm.reset();
     }
     this.ngxService.stop();
@@ -58,14 +58,14 @@ export class PartidosPoliticosComponent {
 
   async putPartidoPolitico() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let partidoPolitico = await this.partidoPoliticoService.putPartidoPolitico(this.partidoPolitico.id, this.partidoPoliticoForm.value);
     if (partidoPolitico.resultado) {
       await this.getPartidosPoliticos();
-      this.alert.alertMax('Transaccion Correcta', partidoPolitico.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', partidoPolitico.mensaje, 'success');
       this.partidoPoliticoForm.reset();
       this.partidoPolitico = null;
     }
@@ -74,7 +74,7 @@ export class PartidosPoliticosComponent {
 
   async deletePartidoPolitico(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

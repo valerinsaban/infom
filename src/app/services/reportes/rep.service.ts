@@ -30,7 +30,7 @@ export class RepService {
       return data;
     } catch (err: any) {
       err = JSON.parse(JSON.stringify(err));
-      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+      this.alertService.alertMax('Operacion Incorrecta', err.error.message, 'error');
     }
   }
 
@@ -46,7 +46,7 @@ export class RepService {
       return data;
     } catch (err: any) {
       err = JSON.parse(JSON.stringify(err));
-      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+      this.alertService.alertMax('Operacion Incorrecta', err.error.message, 'error');
     }
   }
 
@@ -62,7 +62,7 @@ export class RepService {
       return data;
     } catch (err: any) {
       err = JSON.parse(JSON.stringify(err));
-      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+      this.alertService.alertMax('Operacion Incorrecta', err.error.message, 'error');
     }
   }
 
@@ -78,7 +78,7 @@ export class RepService {
       return data;
     } catch (err: any) {
       err = JSON.parse(JSON.stringify(err));
-      this.alertService.alertMax('Transaccion Incorrecta', err.error.message, 'error');
+      this.alertService.alertMax('Operacion Incorrecta', err.error.message, 'error');
     }
   }
 
@@ -93,10 +93,10 @@ export class RepService {
 
   async verify(res: any) {
     // if (res.status) {
-    //   this.alertService.alertMax('Transaccion Incorrecta', res.message, 'error');
+    //   this.alertService.alertMax('Operacion Incorrecta', res.message, 'error');
     // }
     // if (res.resultado == false) {
-    //   this.alertService.alertMax('Transaccion Incorrecta', res.mensaje, 'error');
+    //   this.alertService.alertMax('Operacion Incorrecta', res.mensaje, 'error');
     // }
   }
 

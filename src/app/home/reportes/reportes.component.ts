@@ -639,7 +639,7 @@ export class ReportesComponent {
       this.catalogo(rep, slug, print)
 
     } else {
-      this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Municipalidad no encontrada', 'error');
     }
     this.ngxService.stop();
   }

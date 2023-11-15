@@ -73,14 +73,14 @@ export class UsuariosComponent {
 
   async postUsuario() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let usaurio = await this.usuariosService.postUsuario(this.usuarioForm.value);
     if (usaurio.resultado) {
       this.getUsuarios();
-      this.alert.alertMax('Transaccion Correcta', usaurio.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', usaurio.mensaje, 'success');
       this.usuarioForm.reset();
     }
     this.ngxService.stop();
@@ -88,14 +88,14 @@ export class UsuariosComponent {
 
   async putUsuario() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let usuario = await this.usuariosService.putUsuario(this.usuario.id, this.usuarioForm.value);
     if (usuario.resultado) {
       this.getUsuarios();
-      this.alert.alertMax('Transaccion Correcta', usuario.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', usuario.mensaje, 'success');
       this.usuarioForm.reset();
       this.usuario = null;
     }
@@ -104,14 +104,14 @@ export class UsuariosComponent {
 
   async putClave() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let usuario = await this.usuariosService.putClave(this.usuario.id, this.usuarioForm.value);
     if (usuario.resultado) {
       this.getUsuarios();
-      this.alert.alertMax('Transaccion Correcta', usuario.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', usuario.mensaje, 'success');
       this.usuarioForm.reset();
       this.usuario = null;
     }
@@ -120,7 +120,7 @@ export class UsuariosComponent {
 
   async deleteUsuario(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

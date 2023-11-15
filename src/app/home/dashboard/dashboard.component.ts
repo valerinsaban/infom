@@ -5,75 +5,20 @@ import { AppComponent } from 'src/app/app.component';
 import { PrestamosService } from 'src/app/services/prestamos.service';
 
 import {
-  ApexChart,
   ApexAxisChartSeries,
-  ChartComponent,
+  ApexChart,
   ApexDataLabels,
-  ApexPlotOptions,
-  ApexYAxis,
-  ApexLegend,
-  ApexStates,
-  ApexGrid,
-  ApexTitleSubtitle
+  ApexXAxis,
+  ApexPlotOptions
 } from "ng-apexcharts";
-// import { arrayData } from "./data-series";
-
-type ApexXAxis = {
-  type?: "category" | "datetime" | "numeric";
-  categories?: any;
-  labels?: {
-    style?: {
-      colors?: string | string[];
-      fontSize?: string;
-    };
-  };
-};
-
-var colors = [
-  "#008FFB",
-  "#00E396",
-  "#FEB019",
-  "#FF4560",
-  "#775DD0",
-  "#00D9E9",
-  "#FF66C3"
-];
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
   plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
   xaxis: ApexXAxis;
-  grid: ApexGrid;
-  subtitle: ApexTitleSubtitle;
-  colors: string[];
-  states: ApexStates;
-  title: ApexTitleSubtitle;
-  legend: ApexLegend;
-  tooltip: any; //ApexTooltip;
-};
-
-declare global {
-  interface Window {
-    Apex: any;
-  }
 }
-
-window.Apex = {
-  chart: {
-    toolbar: {
-      show: false
-    }
-  },
-  tooltip: {
-    shared: false
-  },
-  legend: {
-    show: false
-  }
-};
 
 @Component({
   selector: 'app-dashboard',
@@ -83,8 +28,8 @@ window.Apex = {
 export class DashboardComponent {
 
   @ViewChild("chart") chart: any;
-  public chartOptions: Partial<ChartOptions>;
-  public chartQuarterOptions: Partial<ChartOptions>;
+  @ViewChild("chart") chart2: any;
+  @ViewChild("chart") chart3: any;
 
   counts: any = {
     pendientes: null,
@@ -101,286 +46,199 @@ export class DashboardComponent {
     private ngxService: NgxUiLoaderService,
     private prestamosService: PrestamosService
   ) {
-    this.chart = {
-      series: [
-        {
-          name: "year",
-          data: this.makeData()
-        }
-      ],
-      chart: {
-        id: "barYear",
-        height: 400,
-        width: "100%",
-        type: "bar",
-        events: {
-          dataPointSelection: (e: any, chart: any, opts: any) => {
-            var quarterChartEl: any = document.querySelector("#chart-quarter");
-            var yearChartEl: any = document.querySelector("#chart-year");
 
-            if (opts.selectedDataPoints[0].length === 1) {
-              if (quarterChartEl.classList.contains("active")) {
-                this.updateQuarterChart(chart, "barQuarter");
-              } else {
-                yearChartEl.classList.add("chart-quarter-activated");
-                quarterChartEl.classList.add("active");
-                this.updateQuarterChart(chart, "barQuarter");
-              }
-            } else {
-              this.updateQuarterChart(chart, "barQuarter");
-            }
-
-            if (opts.selectedDataPoints[0].length === 0) {
-              yearChartEl.classList.remove("chart-quarter-activated");
-              quarterChartEl.classList.remove("active");
-            }
-          },
-          updated: (chart: any) => {
-            this.updateQuarterChart(chart, "barQuarter");
-          }
-        }
-      },
-      plotOptions: {
-        bar: {
-          distributed: true,
-          horizontal: true,
-          barHeight: "75%",
-          dataLabels: {
-            position: "bottom"
-          }
-        }
-      },
-      dataLabels: {
-        enabled: true,
-        textAnchor: "start",
-        style: {
-          colors: ["#fff"]
-        },
-        formatter: function (val: any, opt: any) {
-          return opt.w.globals.labels[opt.dataPointIndex];
-        },
-        offsetX: 0,
-        dropShadow: {
-          enabled: true
-        }
-      },
-
-      colors: colors,
-
-      states: {
-        normal: {
-          filter: {
-            type: "desaturate"
-          }
-        },
-        active: {
-          allowMultipleDataPointsSelection: true,
-          filter: {
-            type: "darken",
-            value: 1
-          }
-        }
-      },
-      tooltip: {
-        x: {
-          show: false
-        },
-        y: {
-          title: {
-            formatter: function (val: any, opts: any) {
-              return opts.w.globals.labels[opts.dataPointIndex];
-            }
-          }
-        }
-      },
-      title: {
-        text: "Yearly Results",
-        offsetX: 15
-      },
-      subtitle: {
-        text: "(Click on bar to see details)",
-        offsetX: 15
-      },
-      yaxis: {
-        labels: {
-          show: false
-        }
-      }
-    };
-
-    this.chartOptions = {
-      series: [
-        {
-          name: "year",
-          data: this.makeData()
-        }
-      ],
-      chart: {
-        id: "barYear",
-        height: 400,
-        width: "100%",
-        type: "bar",
-        events: {
-          dataPointSelection: (e: any, chart: any, opts: any) => {
-            var quarterChartEl: any = document.querySelector("#chart-quarter");
-            var yearChartEl: any = document.querySelector("#chart-year");
-
-            if (opts.selectedDataPoints[0].length === 1) {
-              if (quarterChartEl.classList.contains("active")) {
-                this.updateQuarterChart(chart, "barQuarter");
-              } else {
-                yearChartEl.classList.add("chart-quarter-activated");
-                quarterChartEl.classList.add("active");
-                this.updateQuarterChart(chart, "barQuarter");
-              }
-            } else {
-              this.updateQuarterChart(chart, "barQuarter");
-            }
-
-            if (opts.selectedDataPoints[0].length === 0) {
-              yearChartEl.classList.remove("chart-quarter-activated");
-              quarterChartEl.classList.remove("active");
-            }
-          },
-          updated: (chart: any) => {
-            this.updateQuarterChart(chart, "barQuarter");
-          }
-        }
-      },
-      plotOptions: {
-        bar: {
-          distributed: true,
-          horizontal: true,
-          barHeight: "75%",
-          dataLabels: {
-            position: "bottom"
-          }
-        }
-      },
-      dataLabels: {
-        enabled: true,
-        textAnchor: "start",
-        style: {
-          colors: ["#fff"]
-        },
-        formatter: function (val: any, opt: any) {
-          return opt.w.globals.labels[opt.dataPointIndex];
-        },
-        offsetX: 0,
-        dropShadow: {
-          enabled: true
-        }
-      },
-
-      colors: colors,
-
-      states: {
-        normal: {
-          filter: {
-            type: "desaturate"
-          }
-        },
-        active: {
-          allowMultipleDataPointsSelection: true,
-          filter: {
-            type: "darken",
-            value: 1
-          }
-        }
-      },
-      tooltip: {
-        x: {
-          show: false
-        },
-        y: {
-          title: {
-            formatter: function (val: any, opts: any) {
-              return opts.w.globals.labels[opts.dataPointIndex];
-            }
-          }
-        }
-      },
-      title: {
-        text: "Yearly Results",
-        offsetX: 15
-      },
-      subtitle: {
-        text: "(Click on bar to see details)",
-        offsetX: 15
-      },
-      yaxis: {
-        labels: {
-          show: false
-        }
-      }
-    };
-
-    this.chartQuarterOptions = {
-      series: [
-        {
-          name: "quarter",
-          data: []
-        }
-      ],
-      chart: {
-        id: "barQuarter",
-        height: 400,
-        width: "100%",
-        type: "bar",
-        stacked: true
-      },
-      plotOptions: {
-        bar: {
-          columnWidth: "50%",
-          horizontal: false
-        }
-      },
-      legend: {
-        show: false
-      },
-      grid: {
-        yaxis: {
-          lines: {
-            show: false
-          }
-        },
-        xaxis: {
-          lines: {
-            show: true
-          }
-        }
-      },
-      yaxis: {
-        labels: {
-          show: false
-        }
-      },
-      title: {
-        text: "Quarterly Results",
-        offsetX: 10
-      },
-      tooltip: {
-        x: {
-          formatter: function (val: any, opts: any) {
-            return opts.w.globals.seriesNames[opts.seriesIndex];
-          }
-        },
-        y: {
-          title: {
-            formatter: function (val: any, opts: any) {
-              return opts.w.globals.labels[opts.dataPointIndex];
-            }
-          }
-        }
-      }
-    };
   }
 
 
   async ngOnInit() {
-    // this.ngxService.start();
     await this.getCountPrestamos();
-    // this.ngxService.stop();
+    this.ngxService.stop();
+    this.chart = {
+      series: [
+        {
+          name: "basic",
+          data: [0, 0, 0, 1, 0, 0, 0, 0, 0]
+        }
+      ],
+      chart: {
+        type: "line",
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: [
+          "2020",
+          "2021",
+          "2022",
+          "2023",
+          "2024",
+          "2025",
+          "2026",
+          "2027",
+          "2028"
+        ]
+      }
+    };
+    this.chart2 = {
+      series: [
+        {
+          name: "basic",
+          data: [0, 0, 0, 1, 0, 0, 0, 0, 0]
+        }
+      ],
+      chart: {
+        type: "bar",
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: [
+          "2020",
+          "2021",
+          "2022",
+          "2023",
+          "2024",
+          "2025",
+          "2026",
+          "2027",
+          "2028"
+        ]
+      }
+    };
+    this.chart3 = {
+      series: [
+        {
+          name: "Prestamos",
+          type: "column",
+          data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6, 2.5, 1.5, 1]
+        },
+        {
+          name: "Montos",
+          type: "column",
+          data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5, 3, 3.1, 2]
+        },
+        {
+          name: "Intereses",
+          type: "line",
+          data: [20, 29, 37, 36, 44, 45, 50, 58, 29, 37, 30]
+        }
+      ],
+      chart: {
+        height: 350,
+        type: "line",
+        stacked: false
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        width: [1, 1, 4]
+      },
+      title: {
+        text: "XYZ - Analisis de Prestamos (2013 - 2023)",
+        align: "left",
+        offsetX: 110
+      },
+      xaxis: {
+        categories: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+      },
+      yaxis: [
+        {
+          axisTicks: {
+            show: true
+          },
+          axisBorder: {
+            show: true,
+            color: "#008FFB"
+          },
+          labels: {
+            style: {
+              color: "#008FFB"
+            }
+          },
+          title: {
+            text: "No. Prestamos",
+            style: {
+              color: "#008FFB"
+            }
+          },
+          tooltip: {
+            enabled: true
+          }
+        },
+        {
+          seriesName: "Income",
+          opposite: true,
+          axisTicks: {
+            show: true
+          },
+          axisBorder: {
+            show: true,
+            color: "#00E396"
+          },
+          labels: {
+            style: {
+              color: "#00E396"
+            }
+          },
+          title: {
+            text: "Montos de prestamos",
+            style: {
+              color: "#00E396"
+            }
+          }
+        },
+        {
+          seriesName: "Revenue",
+          opposite: true,
+          axisTicks: {
+            show: true
+          },
+          axisBorder: {
+            show: true,
+            color: "#FEB019"
+          },
+          labels: {
+            style: {
+              color: "#FEB019"
+            }
+          },
+          title: {
+            text: "Intereses",
+            style: {
+              color: "#FEB019"
+            }
+          }
+        }
+      ],
+      tooltip: {
+        fixed: {
+          enabled: true,
+          position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+          offsetY: 30,
+          offsetX: 60
+        }
+      },
+      legend: {
+        horizontalAlign: "left",
+        offsetX: 40
+      }
+    };
+    this.ngxService.stop();
   }
 
 
@@ -391,222 +249,6 @@ export class DashboardComponent {
     this.counts.acreditados = await this.prestamosService.getCountPrestamosEstado('Acreditado', this.fecha_inicio, this.fecha_fin);
     this.counts.cancelados = await this.prestamosService.getCountPrestamosEstado('Cancelado', this.fecha_inicio, this.fecha_fin);
     this.counts.anulados = await this.prestamosService.getCountPrestamosEstado('Anulado', this.fecha_inicio, this.fecha_fin);
-  }
-
-  public makeData(): any {
-    var dataSet = this.shuffleArray([
-      {
-        y: 400,
-        quarters: [
-          {
-            x: "Q1",
-            y: 120
-          },
-          {
-            x: "Q2",
-            y: 90
-          },
-          {
-            x: "Q3",
-            y: 100
-          },
-          {
-            x: "Q4",
-            y: 90
-          }
-        ]
-      },
-      {
-        y: 430,
-        quarters: [
-          {
-            x: "Q1",
-            y: 120
-          },
-          {
-            x: "Q2",
-            y: 110
-          },
-          {
-            x: "Q3",
-            y: 90
-          },
-          {
-            x: "Q4",
-            y: 110
-          }
-        ]
-      },
-      {
-        y: 448,
-        quarters: [
-          {
-            x: "Q1",
-            y: 70
-          },
-          {
-            x: "Q2",
-            y: 100
-          },
-          {
-            x: "Q3",
-            y: 140
-          },
-          {
-            x: "Q4",
-            y: 138
-          }
-        ]
-      },
-      {
-        y: 470,
-        quarters: [
-          {
-            x: "Q1",
-            y: 150
-          },
-          {
-            x: "Q2",
-            y: 60
-          },
-          {
-            x: "Q3",
-            y: 190
-          },
-          {
-            x: "Q4",
-            y: 70
-          }
-        ]
-      },
-      {
-        y: 540,
-        quarters: [
-          {
-            x: "Q1",
-            y: 120
-          },
-          {
-            x: "Q2",
-            y: 120
-          },
-          {
-            x: "Q3",
-            y: 130
-          },
-          {
-            x: "Q4",
-            y: 170
-          }
-        ]
-      },
-      {
-        y: 580,
-        quarters: [
-          {
-            x: "Q1",
-            y: 170
-          },
-          {
-            x: "Q2",
-            y: 130
-          },
-          {
-            x: "Q3",
-            y: 120
-          },
-          {
-            x: "Q4",
-            y: 160
-          }
-        ]
-      }
-    ]);
-
-    var dataYearSeries = [
-      {
-        x: "2011",
-        y: dataSet[0].y,
-        color: colors[0],
-        quarters: dataSet[0].quarters
-      },
-      {
-        x: "2012",
-        y: dataSet[1].y,
-        color: colors[1],
-        quarters: dataSet[1].quarters
-      },
-      {
-        x: "2013",
-        y: dataSet[2].y,
-        color: colors[2],
-        quarters: dataSet[2].quarters
-      },
-      {
-        x: "2014",
-        y: dataSet[3].y,
-        color: colors[3],
-        quarters: dataSet[3].quarters
-      },
-      {
-        x: "2015",
-        y: dataSet[4].y,
-        color: colors[4],
-        quarters: dataSet[4].quarters
-      },
-      {
-        x: "2016",
-        y: dataSet[5].y,
-        color: colors[5],
-        quarters: dataSet[5].quarters
-      }
-    ];
-
-    return dataYearSeries;
-  }
-
-  public shuffleArray(array: any) {
-    for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-    return array;
-  }
-
-  public updateQuarterChart(sourceChart: any, destChartIDToUpdate: any) {
-    var series = [];
-    var seriesIndex = 0;
-    var colors = [];
-
-    if (sourceChart.w.globals.selectedDataPoints[0]) {
-      var selectedPoints = sourceChart.w.globals.selectedDataPoints;
-      for (var i = 0; i < selectedPoints[seriesIndex].length; i++) {
-        var selectedIndex = selectedPoints[seriesIndex][i];
-        var yearSeries = sourceChart.w.config.series[seriesIndex];
-        series.push({
-          name: yearSeries.data[selectedIndex].x,
-          data: yearSeries.data[selectedIndex].quarters
-        });
-        colors.push(yearSeries.data[selectedIndex].color);
-      }
-
-      if (series.length === 0)
-        series = [
-          {
-            data: []
-          }
-        ];
-
-      return window.ApexCharts.exec(destChartIDToUpdate, "updateOptions", {
-        series: series,
-        colors: colors,
-        fill: {
-          colors: colors
-        }
-      });
-    }
   }
 
 }

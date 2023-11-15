@@ -59,7 +59,7 @@ export class PerfilComponent {
       usuario: this.usuarioForm.controls['usuario'].value
     });
     if (usuario.resultado) {
-      this.alert.alertMax('Transaccion Correcta', usuario.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', usuario.mensaje, 'success');
     }
     this.ngxService.stop();
   }
@@ -71,11 +71,11 @@ export class PerfilComponent {
         clave: this.usuarioForm.controls['clave'].value
       });
       if (usuario.resultado) {
-        this.alert.alertMax('Transaccion Correcta', usuario.mensaje, 'success');
+        this.alert.alertMax('Operacion Correcta', usuario.mensaje, 'success');
       }
       this.ngxService.stop(); 
     } else {
-      this.alert.alertMax('Transaccion Incorrecta', 'Las claves no coinciden', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Las claves no coinciden', 'error');
     }
   }
 

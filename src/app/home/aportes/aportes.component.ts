@@ -237,7 +237,7 @@ export class AportesComponent {
         this.porcentaje = 0;
         this.importados = 0;
         this.aportes_temp = [];
-        this.alert.alertMax('Transaccion Correcta', 'Importe completado', 'success');
+        this.alert.alertMax('Operacion Correcta', 'Importe completado', 'success');
         this.ngxService.stopBackground();
       }
     })
@@ -245,14 +245,14 @@ export class AportesComponent {
 
   async postAporte() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let aporte = await this.aportesService.postAporte(this.aporteForm.value);
     if (aporte.resultado) {
       this.getAportes();
-      this.alert.alertMax('Transaccion Correcta', aporte.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', aporte.mensaje, 'success');
       this.aporteForm.reset();
     }
     this.ngxService.stop();
@@ -260,14 +260,14 @@ export class AportesComponent {
 
   async putAporte() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let aporte = await this.aportesService.putAporte(this.aporte.id, this.aporteForm.value);
     if (aporte.resultado) {
       this.getAportes();
-      this.alert.alertMax('Transaccion Correcta', aporte.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', aporte.mensaje, 'success');
       this.aporteForm.reset();
       this.aporte = null;
     }
@@ -276,7 +276,7 @@ export class AportesComponent {
 
   async deleteAporte(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({
@@ -304,7 +304,7 @@ export class AportesComponent {
 
   async deleteImporte(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

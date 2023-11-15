@@ -50,7 +50,7 @@ export class ConfiguracionesComponent {
     this.ngxService.start();
     let configuracion = await this.configuracionesService.putConfiguracion(1, this.configuracionForm.value);
     if (configuracion.resultado) {
-      this.alert.alertMax('Transaccion Correcta', configuracion.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', configuracion.mensaje, 'success');
     }
     this.ngxService.stop();
   }

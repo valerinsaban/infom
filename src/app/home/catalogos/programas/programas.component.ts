@@ -71,14 +71,14 @@ export class ProgramasComponent {
 
   async postPrograma() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let programa = await this.programaService.postPrograma(this.programaForm.value);
     if (programa.resultado) {
       await this.getProgramas();
-      this.alert.alertMax('Transaccion Correcta', programa.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', programa.mensaje, 'success');
       this.programaForm.reset();
     }
     this.ngxService.stop();
@@ -86,14 +86,14 @@ export class ProgramasComponent {
 
   async putPrograma() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let programa = await this.programaService.putPrograma(this.programa.id, this.programaForm.value);
     if (programa.resultado) {
       await this.getProgramas();
-      this.alert.alertMax('Transaccion Correcta', programa.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', programa.mensaje, 'success');
       this.programaForm.reset();
       this.programa = null;
     }
@@ -102,7 +102,7 @@ export class ProgramasComponent {
 
   async deletePrograma(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({
@@ -130,14 +130,14 @@ export class ProgramasComponent {
 
   async postProgramaGarantia() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let programa_garantia = await this.programas_garantiasService.postProgramaGarantia(this.programa_garantiaForm.value);
     if (programa_garantia.resultado) {
       await this.getProgramasGarantias();
-      this.alert.alertMax('Transaccion Correcta', programa_garantia.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', programa_garantia.mensaje, 'success');
       this.programa_garantiaForm.controls['id_garantia'].setValue(null);
     }
     this.ngxService.stop();
@@ -146,7 +146,7 @@ export class ProgramasComponent {
 
   async deleteProgramaGarantia(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

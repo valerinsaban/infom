@@ -77,14 +77,14 @@ export class BancosComponent {
 
   async postBanco() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let banco = await this.bancoService.postBanco(this.bancoForm.value);
     if (banco.resultado) {
       await this.getBancos();
-      this.alert.alertMax('Transaccion Correcta', banco.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', banco.mensaje, 'success');
       this.bancoForm.reset();
     }
     this.ngxService.stop();
@@ -92,14 +92,14 @@ export class BancosComponent {
 
   async putBanco() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let banco = await this.bancoService.putBanco(this.banco.id, this.bancoForm.value);
     if (banco.resultado) {
       await this.getBancos();
-      this.alert.alertMax('Transaccion Correcta', banco.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', banco.mensaje, 'success');
       this.bancoForm.reset();
       this.banco = null;
     }
@@ -108,7 +108,7 @@ export class BancosComponent {
 
   async deleteBanco(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({

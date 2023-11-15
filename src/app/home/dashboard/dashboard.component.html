@@ -91,19 +91,42 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xl col-sm-6">
+        <div class="col-xl-6 col-sm-6">
           <div id="chart">
             <apx-chart
               [series]="chart.series"
               [chart]="chart.chart"
               [dataLabels]="chart.dataLabels"
               [plotOptions]="chart.plotOptions"
-              [yaxis]="chart.yaxis"
-              [xaxis]="chart.xaxis"
-              [stroke]="chart.stroke"
-              [grid]="chart.grid"
-              [fill]="chart.fill"
-              [annotations]="chart.annotations"
+              [xaxis]="chart.xaxis">
+            </apx-chart>
+          </div>
+        </div>
+        <div class="col-xl-6 col-sm-6">
+          <div id="chart">
+            <apx-chart
+              [series]="chart2.series"
+              [chart]="chart2.chart"
+              [dataLabels]="chart2.dataLabels"
+              [plotOptions]="chart2.plotOptions"
+              [xaxis]="chart2.xaxis">
+            </apx-chart>
+          </div>
+        </div>
+        <div class="col-xl-12 col-sm-12">
+          <div id="chart">
+            <apx-chart
+              [series]="chart3.series"
+              [chart]="chart3.chart"
+              [xaxis]="chart3.xaxis"
+              [markers]="chart3.markers"
+              [stroke]="chart3.stroke"
+              [yaxis]="chart3.yaxis"
+              [dataLabels]="chart3.dataLabels"
+              [title]="chart3.title"
+              [fill]="chart3.fill"
+              [tooltip]="chart3.tooltip"
+              [legend]="chart3.legend"
             ></apx-chart>
           </div>
           

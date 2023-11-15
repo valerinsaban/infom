@@ -47,15 +47,15 @@ export class LoginComponent {
       let usuario: any = decode(login.token);
       let u = await this.usuariosService.getUsuariosByUsuario(usuario.sub);           
       if (!u.acceso) {
-        this.alert.alertMax('Transaccion Incorrecta', 'Acceso Denegado', 'warning');
+        this.alert.alertMax('Operacion Incorrecta', 'Acceso Denegado', 'warning');
         this.ngxService.stop();
         return;
       } 
       sessionStorage.setItem('token', login.token);
-      this.alert.alertMax('Transaccion Exitosa', login.mensaje, 'success');
+      this.alert.alertMax('Operacion Exitosa', login.mensaje, 'success');
       this.router.navigate(['home']);
      } else {
-      this.alert.alertMax('Transaccion Incorrecta', login.message, 'error');
+      this.alert.alertMax('Operacion Incorrecta', login.message, 'error');
     }
     this.ngxService.stop();
   }

@@ -43,14 +43,14 @@ export class EstadosCivilesComponent {
 
   async postEstadoCivil() {
     if (!HomeComponent.getPermiso('Agregar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let estadoCivil = await this.estadoCivilService.postEstadoCivil(this.estadoCivilForm.value);
     if (estadoCivil.resultado) {
       await this.getEstadosCiviles();
-      this.alert.alertMax('Transaccion Correcta', estadoCivil.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', estadoCivil.mensaje, 'success');
       this.estadoCivilForm.reset();
     }
     this.ngxService.stop();
@@ -58,14 +58,14 @@ export class EstadosCivilesComponent {
 
   async putEstadoCivil() {
     if (!HomeComponent.getPermiso('Editar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     this.ngxService.start();
     let estadoCivil = await this.estadoCivilService.putEstadoCivil(this.estadoCivil.id, this.estadoCivilForm.value);
     if (estadoCivil.resultado) {
       await this.getEstadosCiviles();
-      this.alert.alertMax('Transaccion Correcta', estadoCivil.mensaje, 'success');
+      this.alert.alertMax('Operacion Correcta', estadoCivil.mensaje, 'success');
       this.estadoCivilForm.reset();
       this.estadoCivil = null;
     }
@@ -74,7 +74,7 @@ export class EstadosCivilesComponent {
 
   async deleteEstadoCivil(i: any, index: number) {
     if (!HomeComponent.getPermiso('Eliminar')) {
-      this.alert.alertMax('Transaccion Incorrecta', 'Permiso Denegado', 'error');
+      this.alert.alertMax('Operacion Incorrecta', 'Permiso Denegado', 'error');
       return;
     }
     Swal.fire({
