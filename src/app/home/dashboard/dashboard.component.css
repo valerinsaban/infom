@@ -47,3 +47,8 @@
 .anulado-text {
   color: #FF5E5E !important;
 }
+
+#chart {
+  max-width: 650px;
+  margin: 35px auto;
+}

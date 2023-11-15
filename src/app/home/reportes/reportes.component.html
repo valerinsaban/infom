@@ -106,14 +106,40 @@
               <div *ngIf="filtro('no_prestamo')">
                 <label class="form-label">No. Prestamo</label>
                 <select [(ngModel)]="filtros.id_prestamo" [ngModelOptions]="{standalone: true}" (change)="setReporte()"
-                  class="form-control" aria-label="Default select example">
+                  class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
                   <option *ngFor="let p of prestamos" [value]="p.id">{{p.no_prestamo}}</option>
+                </select>
+              </div>
+              <div *ngIf="filtro('id_tipo_prestamo')">
+                <label class="form-label">Tipo Prestamo</label>
+                <select [(ngModel)]="filtros.id_tipo_prestamo" [ngModelOptions]="{standalone: true}" (change)="setReporte()"
+                  class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let t of tipos_prestamos" [value]="t.id">{{t.nombre}}</option>
+                </select>
+              </div>
+              <div *ngIf="filtro('id_programa')">
+                <label class="form-label">Programa</label>
+                <select [(ngModel)]="filtros.id_programa" [ngModelOptions]="{standalone: true}" (change)="setReporte()"
+                  class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let p of programas" [value]="p.id">{{p.nombre}}</option>
+                </select>
+              </div>
+              <div *ngIf="filtro('id_usuario')">
+                <label class="form-label">Usuario</label>
+                <select [(ngModel)]="filtros.id_usuario" [ngModelOptions]="{standalone: true}" (change)="setReporte()"
+                  class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
+                  <option *ngFor="let u of usuarios" [value]="u.id">{{u.nombre}} {{u.apellido}}</option>
                 </select>
               </div>
               <div *ngIf="filtro('tipo_servicio')">
                 <label class="form-label">Tipo Servicio</label>
                 <select [(ngModel)]="filtros.id_tipo_servicio" [ngModelOptions]="{standalone: true}"
-                  (change)="setReporte()" class="form-control" aria-label="Default select example">
+                  (change)="setReporte()" class="form-control">
+                  <option value="null">--- Seleccione un registro ---</option>
                   <option *ngFor="let t of tipos_servicios" [value]="t.id">{{t.nombre}}</option>
                 </select>
               </div>
@@ -122,7 +148,7 @@
               <label class="form-label">Catalogos</label>
               <div class="mb-3">
                 <select [(ngModel)]="slug_reporte" [ngModelOptions]="{standalone: true}" (change)="setReporte()"
-                  class="form-control" aria-label="Default select example">
+                  class="form-control">
                   <option *ngFor="let r of reportes_catalogos" [value]="r.slug">{{r.nombre}}</option>
                 </select>
               </div>
@@ -652,44 +678,21 @@
                     <th>CODIGO</th>
                     <th>DEPARTAMENTO</th>
                     <th>MUNICIPIO</th>
+                    <th>FECHA</th>
                     <th>MONTO</th>
                     <th>DESTINO</th>
                     <th>ANALISTA</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                  <tr>
-                    <td>01</td>
-                    <td>GUATEMALA</td>
-                    <td>Municipio de Guatemala</td>
-                    <td>350,118,998.56</td>
-                    <td>MEJORAMIENTO DE CALLES </td>
-                    <td>LEONEL BARILLAS</td>
-                  </tr>
-                  <tr>
-                    <td>02</td>
-                    <td>GUATEMALA</td>
-                    <td>Santa Catarina Pinula</td>
-                    <td>350,118,998.56</td>
-                    <td>MOVIMIENTO</td>
-                    <td>LEONEL BARILLAS</td>
-                  </tr>
-                  <tr>
-                    <td>03</td>
-                    <td>GUATEMALA</td>
-                    <td>San José Pinula</td>
-                    <td>350,118,998.56</td>
-                    <td>MEJORAMIENTO DE CALLES</td>
-                    <td>LEONEL BARILLAS</td>
-                  </tr>
-                  <tr>
-                    <td>04</td>
-                    <td>GUATEMALA</td>
-                    <td>San José del Golfo</td>
-                    <td>350,118,998.56</td>
-                    <td>MEJORAMIENTO DE CALLES</td>
-                    <td>LEONEL BARILLAS</td>
+                  <tr *ngFor="let p of prestamos">
+                    <td>{{p.municipalidad.departamento.codigo}}.{{p.municipalidad.municipio.codigo}}</td>
+                    <td>{{p.municipalidad.departamento.nombre}}</td>
+                    <td>{{p.municipalidad.municipio.nombre}}</td>
+                    <td>{{p.fecha | date: 'dd/MM/YYYY'}}</td>
+                    <td>{{p.monto | number: '.2-2'}}</td>
+                    <td>{{p.destino}} </td>
+                    <td>{{p.usuario.nombre}} {{p.usuario.apellido}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -702,116 +705,33 @@
                   <tr>
                     <td style="border: 1px solid">MUNICIPALIDAD</td>
                     <td style="border: 1px solid">PRESTAMO</td>
-                    <td style="border: 1px solid">RESOLUCION/td>
+                    <td style="border: 1px solid">RESOLUCION</td>
                     <td style="border: 1px solid">CONCESION</td>
                     <td style="border: 1px solid">VENCIMIENTO</td>
-                    <td style="border: 1px solid">MONTO</td>
+                    <td style="border: 1px solid;">MONTO</td>
                     <td style="border: 1px solid">TASA ANUAL%</td>
-                    <td style="border: 1px solid">DESTINO</td>
+                    <td style="border: 1px solid;">DESTINO</td>
                     <td style="border: 1px solid">FINANCIAMIENTO</td>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>SANSARE, EL PROGRESO</td>
-                    <td>02.06.0015.007</td>
-                    <td>38-2023</td>
-                    <td>26/05/2023</td>
-                    <td>31/12/2023</td>
-                    <td>6,000,000.00</td>
-                    <td>8.00</td>
-                    <td>COMPRA DE MATERIALES DE CONTRUCCION</td>
-                    <td>FONDO PATRIMONIAL / FIM</td>
+                  <tr *ngFor="let p of prestamos">
+                    <td>{{p.municipalidad.municipio.nombre}}, {{p.municipalidad.departamento.nombre}}</td>
+                    <td>{{p.no_dictamen}}</td>
+                    <td>{{p.resolucion}}</td>
+                    <td>{{p.fecha | date: 'dd/MM/YYYY'}}</td>
+                    <td>{{p.fecha_vencimiento | date: 'dd/MM/YYYY'}}</td>
+                    <td style="text-align: right">{{p.monto | number: '.2-2'}}</td>
+                    <td>{{p.tasa}}%</td>
+                    <td>{{p.destino}} </td>
+                    <td>FONDO PATRIMONIAL / {{p.programa.nombre}}</td>
                   </tr>
                   <tr>
                     <td colspan="5" style="font-weight: 600; text-align: right">
                       Total * Departamento: El progreso
                     </td>
-                    <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 600">
-                      6,000,000.00
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Santa Maria Cahabon, Alta</td>
-                    <td>16.12.0015.001</td>
-                    <td>38-2023</td>
-                    <td>27/02/2023</td>
-                    <td>31/12/2023</td>
-                    <td>6,842,200.00</td>
-                    <td>8.00</td>
-                    <td>COMPRA DE MATERIALES DE CONTRUCCION</td>
-                    <td>FONDO PATRIMONIAL / FIM</td>
-                  </tr>
-                  <tr>
-                    <td colspan="5" style="font-weight: 600; text-align: right">
-                      Total * Departamento: Alta Verapaz
-                    </td>
-                    <td style="border-top: 1px solid; border-bottom: 1px solid;font-weight: 600">
-                      6,842,200.00
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>San Antonio Ilotenango, Quiche</td>
-                    <td>14.08.0015.030</td>
-                    <td>57-2023</td>
-                    <td>09/03/2023</td>
-                    <td>31/12/2023</td>
-                    <td>1,286.101.72</td>
-                    <td>8.00</td>
-                    <td>ESCUELAS Y/O INSTITUTOS</td>
-                    <td>FONDO PATRIMONIAL / FIP</td>
-                  </tr>
-                  <tr>
-                    <td colspan="5" style="font-weight: 600; text-align: right">
-                      Total * Departamento: El Quiche
-                    <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 600">
-                      1,286.101.72
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Santo Domingo, Xenacoj</td>
-                    <td>03.05.0015.008</td>
-                    <td>FIM-1-2023</td>
-                    <td>10/03/2023</td>
-                    <td>31/12/2023</td>
-                    <td>800,000.00</td>
-                    <td>8.00</td>
-                    <td>MANTENIMIENTO O MEJORAMIENTO DE CALLES</td>
-                    <td>FONDO PATRIMONIAL / FIM</td>
-                  </tr>
-                  <tr>
-                    <td colspan="5" style="font-weight: 600; text-align: right">
-                      Total * Departamento: Sacatepequez
-                    </td>
-                    <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 600">
-                      800,000.00
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Santo Domingo, Xenacoj</td>
-                    <td>03.05.0015.008</td>
-                    <td>FIM-1-2023</td>
-                    <td>10/03/2023</td>
-                    <td>31/12/2023</td>
-                    <td>800,000.00</td>
-                    <td>8.00</td>
-                    <td>MANTENIMIENTO O MEJORAMIENTO DE CALLES</td>
-                    <td>FONDO PATRIMONIAL / FIM</td>
-                  </tr>
-                  <tr>
-                    <td colspan="5" style="font-weight: 600; text-align: right">
-                      Total * Departamento: Sacatepequez
-                    </td>
-                    <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 600">
-                      800,000.00
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="5" style="font-weight: 400; text-align: right">
-                      Total General:
-                    </td>
-                    <td style="border-top: 2px solid; border-bottom: 3px double;">
-                      14,928,301.7
+                    <td style="border-top: 1px solid; border-bottom: 1px solid; text-align: right">
+                      <b>6,000,000.00</b>
                     </td>
                   </tr>
                 </tbody>
