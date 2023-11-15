@@ -12,8 +12,22 @@
       --color-background: #303030;
       --color-pageSheet: #cfcfcf;
       --color-paper: white;
-      --bs-body-line-height: {{interlineado}}px !important;
-      --bs-body-font-size: {{letra}}px !important;
+
+      --bs-body-line-height: {
+          {
+          interlineado
+        }
+      }
+
+      px !important;
+
+      --bs-body-font-size: {
+          {
+          letra
+        }
+      }
+
+      px !important;
       --bs-border-color: #000 !important;
     }
 
@@ -94,6 +108,12 @@
 
   {{contenido}}
 
+  <div id="buttons">
+    <button class="btn btn-dark" onclick="pdf()" style="margin-left: 5px;">
+      IMPRIMIR
+    </button>
+  </div>
+  
   <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
   <script>
     class RepeatingTableHeadersHandler extends Paged.Handler {
@@ -261,6 +281,13 @@
     }
 
     Paged.registerHandlers(RepeatingTableHeadersHandler);
+  </script>
+  <script>
+    function pdf() {
+      document.getElementById("buttons").style.display = 'none';
+      window.print();
+      document.getElementById("buttons").style.display = 'block';
+    }
   </script>
 </body>
 

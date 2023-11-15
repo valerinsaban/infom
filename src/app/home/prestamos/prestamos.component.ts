@@ -123,6 +123,10 @@ export class PrestamosComponent implements OnInit {
     interlineado: 15
   }
 
+  firmas: any = {
+    
+  }
+
   constructor(
     private alert: AlertService,
     private ngxService: NgxUiLoaderService,

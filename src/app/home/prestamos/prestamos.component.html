@@ -623,7 +623,7 @@
                   <label class="form-label">No. Oficio A.J.
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="no_oficio_aj" type="number" class="form-control"
+                  <input formControlName="no_oficio_aj" type="varchar" class="form-control"
                     placeholder="NO. Oficio A.J.">
                 </div>
                 <div class="col-xl-3 mb-3">
@@ -636,7 +636,7 @@
                   <label class="form-label">No. Oficio GER
                     <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="no_oficio_ger" type="number" class="form-control"
+                  <input formControlName="no_oficio_ger" type="varchar" class="form-control"
                     placeholder="NO. Oficio A.J.">
                 </div>
                 <div class="col-xl-3 mb-3" *ngIf="prestamoForm.controls['id_tipo_prestamo'].value == 2">
@@ -1747,7 +1747,7 @@
             <td>
               Certificación del {{formatoFecha(prestamo.certificacion, 'DD [de] MMMM [de] YYYY')}} del punto
               {{prestamo.punto}}
-              del acta de Consejo Municipal No. {{prestamo.acta}}
+              del acta de Concejo Municipal No. {{prestamo.acta}}
               de fecha {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
             </td>
             <td>--</td>
@@ -1938,6 +1938,16 @@
                     <td>AMORTIZACION AL CREDITO</td>
                     <td>PAGO A DESCONTAR</td>
                     <td>SALDO A CAPITAL</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{prestamo.monto | number: '.2-2'}}</td>
                   </tr>
                   <tr *ngFor="let p of proyecciones; let pindex = index">
                     <td>{{pindex+1}}</td>
@@ -2134,10 +2144,11 @@
             </td>
             <td style="text-align: justify">
               {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) MESES,
-              contados a partir del
-              {{formatoFecha(prestamo.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
+              contados a partir del mes de
+              {{formatoFecha(prestamo.fecha_amortizacion, 'MMMM [del año] YYYY')}}
               al mes de {{formatoFecha(prestamo.fecha_vencimiento, 'MMMM [del año] YYYY')}}
-              <span> que incluyen {{prestamo.periodo_gracia}} meses de período de gracia
+              <span *ngIf="prestamo.periodo_gracia > 0"> 
+                que incluyen {{prestamo.periodo_gracia}} meses de período de gracia
               </span>
             </td>
           </tr>
@@ -2216,8 +2227,11 @@
         <li>BASE LEGAL:</li>
         <div style="margin-left: 5%; text-align: justify">
           <br>
+          <div style="margin-left: -5%; text-align: justify; float: left">
+            1.1
+          </div>
           <p>
-            1.1 Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la
+            Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la
             República de Guatemala), artículos 4º. numeral romano II, inciso 1) y
             <span *ngIf="prestamo.id_tipo_prestamo == 1">
               23 inciso a) y b).
@@ -2226,13 +2240,19 @@
               30 inciso g) y h).
             </span>
           </p>
+          <div style="margin-left: -5%; text-align: justify; float: left">
+            1.2
+          </div>
           <p>
-            1.2 Código Municipal, Artículos del 112 al 115 del DECRETO NÚMERO
+            Código Municipal, Artículos del 112 al 115 del DECRETO NÚMERO
             12-2002 de fecha 13 de mayo del año 2002 y sus Reformas según Decreto
             Número 14-2012, de fecha 17 de Julio del año 2012.
           </p>
+          <div style="margin-left: -5%; text-align: justify; float: left">
+            1.3
+          </div>
           <p>
-            1.3 Reglamento para la Asistencia Financiera a las Municipalidades de
+            Reglamento para la Asistencia Financiera a las Municipalidades de
             la República de Guatemala
             <span *ngIf="prestamo.id_tipo_prestamo == 2">
               Articulos del {{prestamo.resolucion.articulos}}
@@ -2241,8 +2261,11 @@
             {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
             artículos del {{prestamo.resolucion.articulos}})
           </p>
+          <div style="margin-left: -5%; text-align: justify; float: left">
+            1.4
+          </div>
           <p>
-            1.4 Convenio Interinstitucional, Administrativo y Financiero número
+            Convenio Interinstitucional, Administrativo y Financiero número
             {{prestamo.no_convenio}}, de fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}},
             suscrito entre el Instituto de Fomento Municipal, la Municipalidad de
             <span style="text-transform: uppercase; font-weight: 500;">
@@ -2365,29 +2388,28 @@
       <br />
       <br />
       <div class="row">
-        <div class="col-6" style="text-align: left; font-weight: 700">
-          <p>________________________</p>
+        <div class="col-6" style="text-align: left; font-weight: 700; margin-bottom: 50px">
+          <p></p>
           <p style="margin-left: 10%">ANALISTA DE CRÉDITOS</p>
         </div>
-        <div class="col-6" style="text-align: right; font-weight: 700">
-          <p>________________________</p>
+        <div class="col-6" style="text-align: right; font-weight: 700; margin-bottom: 50px">
+          <p></p>
           <p style="margin-right: 5%">SUPERVISOR, ÁREA DE CRÉDITOS</p>
         </div>
-        <p style="text-align: center">Vo.Bo</p>
-        <div class="col-6" style="text-align: left; font-weight: 700">
-          <p>________________________</p>
+        <br><br>
+        <div class="col-6" style="text-align: left; font-weight: 700; margin-bottom: 50px">
+          <p>Vo.Bo. <span style="color: white">______________________________</span></p>
           <p style="margin-left: 10%">SUBDIRECTOR DE ASISTENCIA</p>
           <p style="margin-left: 10%">FINANCIERA MUNICIPAL</p>
         </div>
-        <div class="col-6" style="text-align: right; font-weight: 700">
-          <p>________________________</p>
+        <div class="col-6" style="text-align: right; font-weight: 700; margin-bottom: 50px">
+          <p>Vo.Bo. <span style="color: white">______________________________</span></p>
           <p style="margin-right: 5%">DIRECTOR FINANCIERO</p>
         </div>
-        <p style="text-align: center">Vo.Bo</p>
       </div>
       <div style="text-align: center; font-weight: 700">
-        <p>________________________</p>
-        <p>DIRECTOR FINANCIERO</p>
+        <p>Vo.Bo. <span style="color: white">______________________________</span></p>
+        <p>GERENTE ADMINISTRATIVO FINANCIERO</p>
       </div>
     </div>
   </div>
@@ -2423,7 +2445,7 @@
         presentó a este Instituto Memorial de fecha
         {{formatoFecha(prestamo.fecha_memorial, 'DD [de] MMMM [de] YYYY')}}
         y certificación del {{formatoFecha(prestamo.certificacion, 'DD [de] MMMM [de] YYYY' )}}, del punto
-        {{prestamo.punto}} del acta de Consejo Municipal No. {{prestamo.acta}} del
+        {{prestamo.punto}} del acta de Concejo Municipal No. {{prestamo.acta}} del
         {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
         solicitando al INFOM un préstamo de por un monto de
         {{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}}), que será utilizado para
@@ -2498,7 +2520,7 @@
         <span *ngIf="prestamo.tipoPrestamo.id == 1">Dictamen</span>
         <span *ngIf="prestamo.tipoPrestamo.id == 2">Opinion Juridica en Oficio</span>
         <span style="text-transform: uppercase; font-weight: 500;">
-          AJ guion {{letras(prestamo.no_oficio_aj)}} (AJ-{{prestamo.no_oficio_aj}}) del
+          AJ guion (AJ-{{prestamo.no_oficio_aj}}) del
           {{formatoFecha(prestamo.fecha_oficio_aj,'DD [de] MMMM [de] YYYY')}}
         </span>
         ,la Dirección de Asesoría Jurídica del Instituto dictaminó que el préstamo solicitado
@@ -2579,6 +2601,9 @@
               <span *ngIf="prestamo.tipoPrestamo.id ==2">iniciando</span>
               {{formatoFecha(prestamo.fecha_amortizacion, 'DD [del mes de] MMMM [del año] YYYY')}}
               al {{formatoFecha(prestamo.fecha_vencimiento, '[mes de] MMMM [del año] YYYY')}}
+              <span *ngIf="prestamo.periodo_gracia > 0"> 
+                que incluyen {{prestamo.periodo_gracia}} meses de período de gracia
+              </span>
             </td>
           </tr>
           <tr>
@@ -2721,9 +2746,19 @@
       </ol>
       <br />
       <br />
-      <div style="font-weight: 700">
-        <p style="margin-left: 15%">F________________________</p>
-        <p style="margin-left: 25%">GERENTE</p>
+      <br />
+      <div class="row" style="font-weight: 700; text-align: center">
+        <div *ngIf="prestamo.tipoPrestamo.id == 1" class="col-12">
+          <p>GERENTE</p>
+        </div>
+        <div *ngIf="prestamo.tipoPrestamo.id == 2"  class="col-6">
+          <p>SECRETARIA JUNTA DIRECTIVA</p>
+        </div>
+        <div *ngIf="prestamo.tipoPrestamo.id == 2" class="col-6">
+          <br><br>
+          <p>PRESIDENTE JUNTA DIRECTIVA</p>
+
+        </div>
       </div>
       <br />
 
@@ -2760,7 +2795,7 @@
   </div>
 
   <div id="pr-convenio-asistencia-fi" style="color: black">
-    <div style="margin: 0px 50px">
+    <div style="margin: 0px 50px" *ngIf="representante && funcionario">
       <p style="text-align: justify">
         En la ciudad de Guatemala, el
         <span style="text-transform: lowercase;">
@@ -2806,9 +2841,9 @@
         la República de Guatemala, actúo en mi calidad de {{funcionario.puesto.nombre}} del
         municipio de {{prestamo.municipalidad.municipio.nombre}}, departamento de
         {{prestamo.municipalidad.departamento.nombre}}, lo cual acredito con: <b>A)</b> Certificación del Acuerdo de
-        Adjudicación del cargo número VARIABLE (VARIABLE), extendido por la Junta Electoral del Tribunal Supremo
-        Electoral de VARIABLE, de fecha VARIABLE (VARIABLE) de VARIABLE de dos mil
-        VARIABLE (VARIABLE)
+        Adjudicación del cargo número ({{funcionario.acuerdo}}), extendido por la Junta Electoral del Tribunal Supremo
+        Electoral, de fecha {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
+        ({{formatoFecha(representante.fecha_acta_toma_posecion, 'DD/MM/YYYY')}})
         <b>B)</b>Certificación del Acta de Toma de Posesión del
         cargo número ({{funcionario.acta_toma_posecion}})
         de fecha {{formatoFecha(funcionario.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
@@ -2875,11 +2910,25 @@
           b) DESTINO: {{prestamo.destino}}; c) PLAZO: {{letras(prestamo.plazo_meses)}}
           ({{prestamo.plazo_meses}}) MESES,
         </b>
-        empezando a contarse a partir del mes de {{prestamo.fecha_amortizacion}} al mes
-        de VARIABLE ---------------- ; <b>d)</b> PERÍODO DE GRACIA: {{letras(prestamo.periodo_gracia)}}
+        empezando a contarse a partir del mes de {{formatoFecha(prestamo.fecha_amortizacion, 'MMMM [del año] YYYY')}} al
+        mes
+        de {{formatoFecha(prestamo.fecha_vencimiento, 'MMMM [del año] YYYY')}}; <b>d)</b> PERÍODO DE GRACIA:
+        {{letras(prestamo.periodo_gracia)}}
         ({{prestamo.periodo_gracia}}) meses;
         <b>e) AMORTIZACIONES: {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) MESES</b>
-        pago(s) mensuales de la siguiente forma: VARIABLE (Q. VARIABLE), más intereses y el Impuesto al Valor
+        pago(s) mensuales de la siguiente forma:
+        {{prestamo.plazo_meses}} pagos de
+        <span *ngIf="getAmortizacionIguales()">
+          {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
+          (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}),
+          cada uno,
+        </span>
+        <span *ngIf="!getAmortizacionIguales()">
+          <span *ngFor="let p of proyecciones">
+            {{letrasMoneda(p.capital)}} (Q.{{(p.capital) | number: '.2-2'}}),
+          </span>
+          respectivamente,
+        </span>, más intereses y el Impuesto al Valor
         Agregado -IVA-, sobre intereses, comprometiendo los recursos del
         <span *ngIf="prestamo.programa.id == 1" style="font-weight: 600">
           APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
@@ -2986,7 +3035,8 @@
         municipalidad, de conformidad con el reglamento de tarifas por servicios
         prestados por el Instituto de Fomento Municipal. …”.
         <b><u>CUARTA: RECONOCIMIENTO DE LA DEUDA:</u></b>
-        Yo, VARIABLE en representación de la MUNICIPALIDAD y en la calidad con que actúo,
+        Yo, {{funcionario.nombre}} {{funcionario.apellido}} en representación de la MUNICIPALIDAD y en la calidad con
+        que actúo,
         declaro que mi representada se reconoce DEUDORA del INSTITUTO DE FOMENTO MUNICIPAL para el efecto
         comparezco ante el Gerente del Instituto de Fomento Municipal como
         autoridad competente de dicho Instituto, a reconocer la obligación que mi
@@ -3019,7 +3069,7 @@
         en la calidad con que actuamos aceptamos expresamente el contenido del
         presente convenio y previa lectura del mismo y enterados de su contenido,
         objeto, validez y demás efectos legales, lo aceptamos, ratificamos y
-        firmamos, el cual queda contenido en VARIABLE (VARIABLE) hojas de papel
+        firmamos, el cual queda contenido en {{letras(2)}} (2) hojas de papel
         membretado del Instituto de Fomento Municipal -INFOM-, impresas únicamente
         en su anverso.
       </p>
@@ -3038,7 +3088,7 @@
   </div>
 
   <div id="pr-convenio-interistitucional" style="color: black">
-    <div style="margin: 0px 50px">
+    <div style="margin: 0px 50px" *ngIf="representante && funcionario && banco">
       <h6 style="text-align: justify">
         CONVENIO INTERINSTITUCIONAL, ADMINISTRATIVO Y FINANCIERO No. {{prestamo.municipalidad.no_convenio}}.
         CELEBRADO ENTRE EL INSTITUTO DE FOMENTO MUNICIPAL -INFOM-, LA MUNICIPALIDAD DE
@@ -3085,43 +3135,46 @@
         y seis (1-66) de la zona nueve (09), de la ciudad y departamento de Guatemala, en lo
         sucesivo podrá ser denominado como <b>“EL INFOM”;</b>
 
-        Por otra parte, VARIABLE de VARIABLE años de edad, (VARIABLE-ESTADO CIVIL),
-        (VARIABLE-PROFESIÓN), (VARIABLE-NACIONALIDAD), con domicilio en el municipio de VARIABLE
-        Departamento de VARIABLE me identifico con Documento Personal de
-        Identificación, con Código Único de identificación número VARIABLE
-        (VARIABLE) extendido por el Registro Nacional de las Personas de la
+        Por otra parte, <b>{{funcionario.nombre}} {{funcionario.apellido}}</b> de
+        {{getEdad(representante.fecha_nacimiento)}} años de edad, {{funcionario.estado_civil.nombre}},
+        guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
+        {{prestamo.municipalidad.municipio.nombre}}
+        Departamento de {{prestamo.municipalidad.departamento.nombre}}, me identifico con Documento Personal de
+        Identificación, con Código Único de identificación número {{letras(funcionario.dpi)}} ({{funcionario.dpi}}),
+        extendido por el Registro Nacional de las Personas de la
         República de Guatemala; actúo en mi calidad de
         <span style="text-transform: uppercase; font-weight: 600;">
-          ALCALDE MUNICIPAL Y EN REPRESENTACION LEGAL DE LA MUNICIPALIDAD DE
+          {{funcionario.puesto.nombre}} Y EN REPRESENTACION LEGAL DE LA MUNICIPALIDAD DE
           {{prestamo.municipalidad.municipio.nombre}},
           Departamento de {{prestamo.municipalidad.departamento.nombre}}
         </span>
         calidad que acredito con:
 
         <b>a)</b> Certificación del Acuerdo de Adjudicación del cargo número
-        VARIABLE dos mil VARIABLE (VARIABLE) de fecha VARIABLE de VARIABLE de
-        dos mil VARIABLE extendido por la Junta Electoral Departamental del Tribunal
+        ({{funcionario.acuerdo}}) {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
+        extendido por la Junta Electoral Departamental del Tribunal
         Supremo Electoral, en el cual se hace la adjudicación del cargo;
 
         <b>b)</b> Certificación del Acta de Toma de Posesión
-        del cargo número {{letras(prestamo.municipalidad.no_acta)}}** ({{prestamo.municipalidad.no_acta}}),
-        de fecha {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**
-        , en la cual en el punto {{prestamo.municipalidad.punto_acta}}*, se da posesión al cargo como
+        del cargo número ({{funcionario.acta_toma_posecion}}) de fecha
+        {{formatoFecha(funcionario.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}},
+        en la cual en el punto {{prestamo.municipalidad.punto_acta}}**, se da posesión al cargo como
         Alcalde Municipal; extendida por el Secretario Municipal, de conformidad con el Artículo 84,
         literal b del Decreto Número doce guion dos mil dos (12-2002) del Congreso de la
         República de Guatemala; y,
 
         <b>c)</b> Certificación del punto {{prestamo.municipalidad.punto_acta}}* del Acta
-        número {{letras(prestamo.municipalidad.no_acta)}}** ({{prestamo.municipalidad.no_acta}}) de fecha
-        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}**,
+        número ({{prestamo.municipalidad.no_acta}}) de fecha
+        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
         donde el Concejo Municipal me autoriza para la suscripción del presente convenio;
         señalo como lugar para recibir notificaciones y citaciones el Edificio Municipal, ubicado en
         {{prestamo.municipalidad.direccion}}
         <span style="text-transform: uppercase; font-weight: 600;">
           {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
         </span>
-        en lo sucesivo podrá ser denominada como <b>“LA MUNICIPALIDAD”</b>, y
-        VARIABLE de VARIABLE años de edad, VARIABLE ESTADO CIVIL, guatemalteco, VARIABLE PROFESIÓN,
+        en lo sucesivo podrá ser denominada como <b>“LA MUNICIPALIDAD”</b>,
+
+        y {{banco.r_nombre}} {{banco.r_apellido}} de {{getEdad(banco.fecha_nacimiento)}} años de edad, VARIABLE ESTADO CIVIL, guatemalteco, VARIABLE PROFESIÓN,
         con domicilio en el departamento de VARIABLE, me identifico con Documento Personal de
         Identificación (DPI), con Código Único de Identificación (CUI) VARIABLE
         (VARIABLE) extendido por el Registro Nacional de las Personas de la

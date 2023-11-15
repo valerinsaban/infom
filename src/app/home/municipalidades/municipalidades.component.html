@@ -136,6 +136,17 @@
                     </label>
                     <input formControlName="telefono" class="form-control" placeholder="Telefono">
                   </div>
+                  <div class="col-xl-12 mb-3">
+                    <label class="form-label">Partido Politico
+                      <span class="text-danger">*</span>
+                    </label>
+                    <select formControlName="id_partido_politico" class="form-control">
+                      <option value="null">--- Seleccione un registro ---</option>
+                      <option *ngFor="let p of partidos_politicos" [value]="p.id">{{p.nombre}}</option>
+                    </select>
+                  </div>
+                  <hr>
+                  <h6>Datos Bancarios Municipales</h6>
                   <div class="col-xl-6 mb-3">
                     <label class="form-label">No. Cuenta
                       <span class="text-danger">*</span>
@@ -180,15 +191,6 @@
                       <span class="text-danger">*</span>
                     </label>
                     <input formControlName="fecha_convenio" type="date" class="form-control">
-                  </div>
-                  <div class="col-xl-12 mb-3">
-                    <label class="form-label">Partido Politico
-                      <span class="text-danger">*</span>
-                    </label>
-                    <select formControlName="id_partido_politico" class="form-control">
-                      <option value="null">--- Seleccione un registro ---</option>
-                      <option *ngFor="let p of partidos_politicos" [value]="p.id">{{p.nombre}}</option>
-                    </select>
                   </div>
                 </div>
                 <div>
@@ -316,6 +318,18 @@
                   <span class="text-danger">*</span>
                 </label>
                 <input formControlName="fecha_carnet" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Acuerdo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="acuerdo" class="form-control" placeholder="Acuerdo">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Acuerdo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_acuerdo" type="date" class="form-control">
               </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Acta Toma Posecion
@@ -511,6 +525,18 @@
                   <span class="text-danger">*</span>
                 </label>
                 <input formControlName="fecha_carnet" type="date" class="form-control">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Acuerdo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="acuerdo" class="form-control" placeholder="Acuerdo">
+              </div>
+              <div class="col-xl-6 mb-3">
+                <label class="form-label">Fecha Acuerdo
+                  <span class="text-danger">*</span>
+                </label>
+                <input formControlName="fecha_acuerdo" type="date" class="form-control">
               </div>
               <div class="col-xl-6 mb-3">
                 <label class="form-label">Acta Toma Posecion

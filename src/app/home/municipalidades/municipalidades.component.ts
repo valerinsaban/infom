@@ -83,6 +83,8 @@ export class MunicipalidadesComponent {
       dpi: new FormControl(null, [Validators.required]),
       carnet: new FormControl(null, [Validators.required]),
       fecha_carnet: new FormControl(null, [Validators.required]),
+      acuerdo: new FormControl(null, [Validators.required]),
+      fecha_acuerdo: new FormControl(null, [Validators.required]),
       acta_toma_posecion: new FormControl(null, [Validators.required]),
       fecha_acta_toma_posecion: new FormControl(null, [Validators.required]),
       estado: new FormControl(null, [Validators.required]),
@@ -338,6 +340,8 @@ export class MunicipalidadesComponent {
     this.funcionarioForm.controls['dpi'].setValue(i.dpi);
     this.funcionarioForm.controls['carnet'].setValue(i.carnet);
     this.funcionarioForm.controls['fecha_carnet'].setValue(moment.utc(i.fecha_carnet).format('YYYY-MM-DD'));
+    this.funcionarioForm.controls['acuerdo'].setValue(i.acuerdo);
+    this.funcionarioForm.controls['fecha_acuerdo'].setValue(moment.utc(i.fecha_acuerdo).format('YYYY-MM-DD'));
     this.funcionarioForm.controls['acta_toma_posecion'].setValue(i.acta_toma_posecion);
     this.funcionarioForm.controls['fecha_acta_toma_posecion'].setValue(moment.utc(i.fecha_acta_toma_posecion).format('YYYY-MM-DD'));
     this.funcionarioForm.controls['estado'].setValue(i.estado);
