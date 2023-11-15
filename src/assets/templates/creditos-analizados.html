@@ -17,7 +17,8 @@
 
     @page {
       margin: 25mm 5mm 10mm 5mm;
-
+      size: 13in 8.5in;
+      
       @top-left {
         content: element(header);
         padding-top: 15mm;
@@ -70,7 +71,7 @@
           CREDITOS ANALIZADOS
         </span>
         <br>
-        <span style="font-size: 11px;">DEL MES DE JUNIO DEL 2023 AL MES DE ENERO DEL 2024</span>
+        <span style="font-size: 11px;">DEL {{fecha_inicio}} AL {{fecha_fin}}</span>
       </div>
       <div class="col-3" style="text-align: right;">
         Generado: <b>{{generado}}</b> <br>

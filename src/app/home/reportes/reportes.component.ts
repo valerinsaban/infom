@@ -25,6 +25,8 @@ import { DestinosService } from 'src/app/services/catalogos/destinos.service';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { TiposServiciosService } from 'src/app/services/catalogos/tipos-servicios.service';
+import { RepService } from 'src/app/services/reportes/rep.service';
+import { UsuariosService } from 'src/app/services/seguridad/usuarios.service';
 
 @Component({
   selector: 'app-reportes',
@@ -81,6 +83,8 @@ export class ReportesComponent {
   prestamos: any = [];
   movimientos: any = [];
   tipos_servicios: any = [];
+  tipos_prestamos: any = [];
+  usuarios: any = [];
 
   cobro: any;
 
@@ -118,7 +122,9 @@ export class ReportesComponent {
     private bancosService: BancosService,
     private destinosService: DestinosService,
     private movimientosService: MovimientosService,
-    private tiposServiciosService: TiposServiciosService
+    private tiposServiciosService: TiposServiciosService,
+    private usuariosService: UsuariosService,
+    private repService: RepService
   ) {
     this.getReportes();
   }
@@ -127,6 +133,21 @@ export class ReportesComponent {
     let prestamos = await this.prestamosService.getPrestamosEstado('Acreditado')
     if (prestamos) {
       this.prestamos = prestamos;
+    }
+
+    let tipos_prestamos = await this.tiposPrestamosService.getTiposPrestamos();
+    if (tipos_prestamos) {
+      this.tipos_prestamos = tipos_prestamos;
+    }
+
+    let programas = await this.programasService.getProgramas();
+    if (programas) {
+      this.programas = programas;
+    }
+
+    let usuarios = await this.usuariosService.getUsuarios();
+    if (usuarios) {
+      this.usuarios = usuarios;
     }
 
     let tipos_servicios = await this.tiposServiciosService.getTiposServicios();
@@ -161,8 +182,9 @@ export class ReportesComponent {
       { slug: 'disponibilidad-general', nombre: 'Reporte Disponibilidad General', filtros: ['plazo_meses'] },
       { slug: 'situado-constitucional', nombre: 'Reporte Situado Constitucional', filtros: ['mes_inicio', 'mes_fin'] },
       { slug: 'datos-bancarios', nombre: 'Reporte Datos Bancarios', filtros: ['codigo_departamento', 'codigo_municipio'] },
-      { slug: 'creditos-analizados', nombre: 'Reporte Creditos Analizados', filtros: [] },
-      { slug: 'creditos-otorgados', nombre: 'Creditos Otorgados', filtros: ['fecha_inicio', 'fecha_fin']},
+      { slug: 'creditos-analizados', nombre: 'Reporte Creditos Analizados', filtros: ['fecha_inicio', 'fecha_fin', 'codigo_departamento', 'codigo_municipio', 'id_tipo_prestamo', 'id_programa', 'id_usuario'] },
+      { slug: 'creditos-otorgados', nombre: 'Creditos Otorgados', filtros: ['fecha_inicio', 'fecha_fin', 'codigo_departamento', 'codigo_municipio', 'id_tipo_prestamo', 'id_programa', 'id_usuario'] },
+      { slug: 'amortizaciones-prestamos-detalles', nombre: 'Amortizaciones a Prestamos Detalles', filtros: ['mes', 'fecha'] },
       { slug: 'intereses-dev-no-percibidos', nombre: 'Reporte Intereses Devengados no Percibidos', filtros: ['mes'] },
       { slug: 'prestamos-otorgados', nombre: 'Prestamos Otorgados', filtros: [] },
       { slug: 'prestamos-otorgados-anuales', nombre: 'Prestamos Otorgados Anuales', filtros: ['ano_inicio', 'ano_fin'] },
@@ -179,7 +201,6 @@ export class ReportesComponent {
       { slug: 'cur', nombre: 'Auxiliar para generacion de CUR de Ingresos', filtros: [] },
       { slug: 'estados-de-cuenta', nombre: 'Estados de Cuenta', filtros: ['fecha', 'no_prestamo'] },
       { slug: 'balance-general', nombre: 'Balance General', filtros: ['fecha'] },
-      { slug: 'amortizaciones-prestamos-detalles', nombre: 'Amortizaciones a Prestamos Detalles', filtros: ['mes', 'fecha'] },
       { slug: 'balance-general-mora', nombre: 'Balance General de Prestamos en Mora', filtros: ['fecha'] },
       { slug: 'asignaciones-municipalidad', nombre: 'Reporte de Asignaciones por Municipalidad', filtros: ['codigo_departamento', 'codigo_municipio', 'ano'] },
       { slug: 'intermediaciones-financieras', nombre: 'Intermediaciones Financieras', filtros: ['fecha_inicio', 'fecha_fin'] },
@@ -647,7 +668,25 @@ export class ReportesComponent {
   public async reporteCreditosAnalizados(slug: any, print: boolean = true) {
     this.ngxService.start();
 
+    if (this.filtros.codigo_departamento || this.filtros.codigo_municipio) {
+      this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);      
+      if (!this.municipalidad) {
+        this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
+        this.ngxService.stop();
+        return;
+      }
+      this.filtros.id_municipalidad = this.municipalidad.id;
+    } else {
+      this.filtros.id_municipalidad = 0;
+    }
+    let prestamos = await this.repService.get(`/prestamos/analizados/${this.filtros.fecha_inicio}/${this.filtros.fecha_fin}/${this.filtros.id_tipo_prestamo}/${this.filtros.id_programa}/${this.filtros.id_municipalidad}/${this.filtros.id_usuario}`);
+    if (prestamos) {
+      this.prestamos = prestamos;
+    }
+
     let rep: any = await this.reporteService.get(slug);
+    rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD [de] MMMM [de] YYYY'));
+    rep = rep.replaceAll("{{fecha_fin}}", moment(this.filtros.fecha_fin).format('DD [de] MMMM [de] YYYY'));
     this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
@@ -656,6 +695,22 @@ export class ReportesComponent {
 
   public async reporteCreditosOtorgados(slug: any, print: boolean = true) {
     this.ngxService.start();
+
+    if (this.filtros.codigo_departamento || this.filtros.codigo_municipio) {
+      this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);      
+      if (!this.municipalidad) {
+        this.alert.alertMax('Transaccion Incorrecta', 'Municipalidad no encontrada', 'error');
+        this.ngxService.stop();
+        return;
+      }
+      this.filtros.id_municipalidad = this.municipalidad.id;
+    } else {
+      this.filtros.id_municipalidad = 0;
+    }
+    let prestamos = await this.repService.get(`/prestamos/otorgados/${this.filtros.fecha_inicio}/${this.filtros.fecha_fin}/${this.filtros.id_tipo_prestamo}/${this.filtros.id_programa}/${this.filtros.id_municipalidad}/${this.filtros.id_usuario}`);
+    if (prestamos) {
+      this.prestamos = prestamos;
+    }
 
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD [de] MMMM [de] YYYY'));
@@ -956,7 +1011,7 @@ export class ReportesComponent {
 
     this.ngxService.stop();
   }
-  
+
   public async reporteBalanceGeneralMora(slug: any, print: boolean = true) {
     this.ngxService.start();
 
@@ -973,7 +1028,7 @@ export class ReportesComponent {
     this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
 
     let rep: any = await this.reporteService.get(slug);
-    rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);    
+    rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
     this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
@@ -1126,18 +1181,20 @@ export class ReportesComponent {
   getTotalDevengados(campo: string) {
     let total = 0;
     for (let p = 0; p < this.programas.length; p++) {
-      for (let i = 0; i < this.programas[p].amortizaciones.length; i++) {
-        for (let a = 0; a < this.programas[p].amortizaciones[i].amortizaciones_detalles.length; a++) {
-          if (campo == 'dias') {
-            total += parseInt(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].dias);
+      if (this.programas[p].amortizaciones) {
+        for (let i = 0; i < this.programas[p].amortizaciones.length; i++) {
+          for (let a = 0; a < this.programas[p].amortizaciones[i].amortizaciones_detalles.length; a++) {
+            if (campo == 'dias') {
+              total += parseInt(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].dias);
+            }
+            if (campo == 'capital') {
+              total += parseFloat(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].capital);
+            }
+            if (campo == 'interes') {
+              total += parseFloat(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].interes);
+            }
           }
-          if (campo == 'capital') {
-            total += parseFloat(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].capital);
-          }
-          if (campo == 'interes') {
-            total += parseFloat(this.programas[p].amortizaciones[i].amortizaciones_detalles[a].interes);
-          }
-        }
+        } 
       }
     }
     return total;
