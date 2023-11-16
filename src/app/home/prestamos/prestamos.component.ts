@@ -34,6 +34,7 @@ import { RepresentantesService } from 'src/app/services/representantes.service';
 
 declare function numeroALetras(number: any): any;
 declare function numeroALetrasMoneda(number: any): any;
+declare function numeroALetrasDPI(number: any): any;
 
 @Component({
   selector: 'app-prestamos',
@@ -226,6 +227,7 @@ export class PrestamosComponent implements OnInit {
 
     AppComponent.loadScript('assets/js/letras.js');
     AppComponent.loadScript('assets/js/letras-moneda.js');
+    AppComponent.loadScript('assets/js/letras-dpi.js');
   }
 
   async ngOnInit() {
@@ -233,15 +235,15 @@ export class PrestamosComponent implements OnInit {
     AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
     AppComponent.loadScript('assets/js/range.js');
     this.ngxService.start();
-    await this.getDepartamentos();
+    this.getDepartamentos();
     await this.getUsuarios();
-    await this.getResoluciones();
-    await this.getFuncionarios();
-    await this.getRegionales();
-    await this.getTiposPrestamos();
-    await this.getProgramas();
-    await this.getGarantias();
-    await this.getDestinos();
+    this.getResoluciones();
+    this.getFuncionarios();
+    this.getRegionales();
+    this.getTiposPrestamos();
+    this.getProgramas();
+    this.getGarantias();
+    this.getDestinos();
     await this.getPrestamos();
     await this.getCountPrestamos();
   }
@@ -1025,7 +1027,7 @@ export class PrestamosComponent implements OnInit {
     this.ordenPagoForm.controls['fecha_acta'].setValue(i.fecha_acta);
     this.ordenPagoForm.controls['id_prestamo'].setValue(i.id_prestamo);
 
-    this.orden_pago.fecha = moment(this.orden_pago.fecha).format('d [de] MMMM [de] YYYY')
+    this.orden_pago.fecha = moment(this.orden_pago.fecha).format('DD [de] MMMM [de] YYYY')
   }
 
   async getAmortizaciones(i: any, index: number) {
@@ -1618,6 +1620,12 @@ export class PrestamosComponent implements OnInit {
 
   letrasMoneda(number: any) {
     return numeroALetrasMoneda(number);
+  }
+
+  letrasDPI(d: string) {
+    let f = `${d[0]}${d[1]}${d[2]}${d[3]} ${d[4]}${d[5]}${d[6]}${d[7]}${d[8]} ${d[9]}${d[10]}${d[11]}${d[12]}`;
+    let g = f.split(' ');
+    return `${numeroALetrasDPI(g[0])}, ${numeroALetrasDPI(g[1])}, ${g[2][0] == '0' ? 'CERO' : ''} ${numeroALetrasDPI(g[2])}`;
   }
 
   formatoFecha(date: any, format: string) {

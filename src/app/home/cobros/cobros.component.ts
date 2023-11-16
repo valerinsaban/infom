@@ -114,42 +114,72 @@ export class CobrosComponent {
 
         let proyeccion = await this.proyeccionesService.getProyeccionesPrestamoMes(prestamos[p].id, this.cobro.mes);
 
-        let fecha = this.cobro_anterior.fecha;
-        let cuotas: any = [
-          {
-            fecha_inicio: moment(fecha).startOf('month').format('YYYY-MM-DD'),
-            fecha_fin: moment(fecha).format('YYYY-MM-DD')
-          },
-          {
-            fecha_inicio: moment(fecha).add(1, 'day').format('YYYY-MM-DD'),
-            fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
-          }
-        ];
+        if (proyeccion) {
+         
+          let fecha = this.cobro_anterior.fecha;
+          let cuotas: any = [
+            {
+              fecha_inicio: moment(fecha).startOf('month').format('YYYY-MM-DD'),
+              fecha_fin: moment(fecha).format('YYYY-MM-DD')
+            },
+            {
+              fecha_inicio: moment(fecha).add(1, 'day').format('YYYY-MM-DD'),
+              fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
+            }
+          ];
+  
+          for (let c = 0; c < cuotas.length; c++) {
+            let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamoFecha(prestamos[p].id, cuotas[c].fecha_inicio, cuotas[c].fecha_fin);
+            if (ordenes_pagos.length) {
+              for (let o = 0; o < ordenes_pagos.length; o++) {
+                if (ordenes_pagos[o].no_desembolso == 1) {
+                  if (moment(ordenes_pagos[o].fecha) < moment(fecha)) {
+                    cuotas[0] = {
+                      fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
+                      fecha_fin: moment(fecha).format('YYYY-MM-DD')
+                    }
+                  } else {                    
+                    if (c == 1) {
+                      cuotas.splice(1, 1);
+                    }
+                    cuotas[0] = {
+                      fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
+                      fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
+                    }
+                  }
+                } else {
+                  // if (moment(ordenes_pagos[o].fecha) < moment(fecha)) {
+                  //   cuotas[0] = {
+                  //     fecha_inicio: moment(cuotas[c].fecha_inicio).startOf('month').format('YYYY-MM-DD'),
+                  //     fecha_fin: moment(ordenes_pagos[o].fecha).subtract(1, 'day').format('YYYY-MM-DD')
+                  //   }
+                  //   cuotas[1] = {
+                  //     fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
+                  //     fecha_fin: moment(cuotas[c].fecha_fin).format('YYYY-MM-DD')
+                  //   }
+                  //   cuotas[2] = {
+                  //     fecha_inicio: moment(cuotas[c].fecha_fin).format('YYYY-MM-DD'),
+                  //     fecha_fin: moment(cuotas[c].fecha_fin).format('YYYY-MM-DD')
+                  //   }
+                  // } else {
+                  //   cuotas[0] = {
+                  //     fecha_inicio: moment(cuotas[c].fecha_inicio).startOf('month').format('YYYY-MM-DD'),
+                  //     fecha_fin: moment(ordenes_pagos[o].fecha).subtract(1, 'day').format('YYYY-MM-DD')
+                  //   }
+                  //   cuotas[1] = {
+                  //     fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
+                  //     fecha_fin: moment(cuotas[c].fecha_fin).format('YYYY-MM-DD')
+                  //   }
+                  // }
 
-        for (let c = 0; c < cuotas.length; c++) {
-          let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamoFecha(prestamos[p].id, cuotas[c].fecha_inicio, cuotas[c].fecha_fin);
-          if (ordenes_pagos.length) {
-            for (let o = 0; o < ordenes_pagos.length; o++) {
-              if (ordenes_pagos[o].no_desembolso == 1) {
-                cuotas[0] = {
-                  fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
-                  fecha_fin: moment(fecha).format('YYYY-MM-DD')
                 }
-              } else {
-                cuotas.push({
-                  fecha_inicio: moment(cuotas[c].fecha_inicio).startOf('month').format('YYYY-MM-DD'),
-                  fecha_fin: moment(ordenes_pagos[o].fecha).subtract(1, 'day').format('YYYY-MM-DD')
-                });
-                cuotas.push({
-                  fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
-                  fecha_fin: moment(cuotas[c].fecha_fin).format('YYYY-MM-DD')
-                });
               }
             }
           }
-        }
+  
+          await this.calcAmortizacion(prestamos[p], cuotas, proyeccion);
 
-        await this.calcAmortizacion(prestamos[p], cuotas, proyeccion);
+        }
 
       }
 
@@ -328,6 +358,10 @@ export class CobrosComponent {
             id_orden_pago: null,
             id_recibo: recibo.data.id
           });
+
+          this.limpiar();
+          this.alert.alertMax('Operacion Correcta', 'Documentos Generados', 'success');
+
         }
 
       }
@@ -388,6 +422,32 @@ export class CobrosComponent {
     this.cobroForm.controls['codigo'].setValue(i.codigo);
     this.cobroForm.controls['fecha'].setValue(i.fecha);
     this.cobroForm.controls['mes'].setValue(i.mes);
+  }
+
+  regenerarCobro(i: any, index: number) {
+    Swal.fire({
+      title: '¿Estas seguro?',
+      text: "Esta accion no se puede revertir!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Regenerar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.ngxService.start();
+        let cobro = await this.cobrosService.deleteCobro(i.id);
+        if (cobro.resultado) {
+          this.cobros.splice(index, 1);
+          this.setCobro(i, index);
+          await this.postCobro();
+          this.alert.alertMax('Correcto', 'Regenerar Cobro', 'success');
+          this.cobro = null;
+        }
+        this.ngxService.stop();
+      }
+    })
   }
 
   async getAmortizaciones() {

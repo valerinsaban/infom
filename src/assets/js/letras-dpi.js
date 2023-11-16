@@ -1,11 +1,11 @@
-var numeroALetras = (function () {
+var numeroALetrasDPI = (function () {
     // Código basado en el comentario de @sapienman
     // Código basado en https://gist.github.com/alfchee/e563340276f89b22042a
     function Unidades(num) {
 
         switch (num) {
             case 1:
-                return 'UN';
+                return 'UNO';
             case 2:
                 return 'DOS';
             case 3:

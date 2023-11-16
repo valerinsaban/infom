@@ -14,6 +14,7 @@ import { PuestosService } from 'src/app/services/catalogos/puestos.service';
 import { ProfesionesService } from 'src/app/services/catalogos/profesiones.service';
 import { EstadosCivilesService } from 'src/app/services/catalogos/estados-civiles.service';
 import { PartidosPoliticosService } from 'src/app/services/catalogos/partidos-politicos.service';
+import { AppComponent } from 'src/app/app.component';
 
 @Component({
   selector: 'app-municipalidades',
@@ -98,6 +99,8 @@ export class MunicipalidadesComponent {
       id_profesion: new FormControl(null, [Validators.required]),
       id_estado_civil: new FormControl(null)
     });
+    AppComponent.loadScript('https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js');
+    AppComponent.loadScript('assets/js/mask.js');
   }
 
   async ngOnInit() {

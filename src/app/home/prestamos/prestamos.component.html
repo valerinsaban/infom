@@ -166,17 +166,18 @@
                               data-bs-target="#estado">
                               Cambiar Estado
                             </a>
-                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDestinosPrestamo()"
-                              data-bs-toggle="offcanvas" data-bs-target="#destinos_prestamos">
-                              Destinos
-                            </a>
-                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDesembolsos()"
+                            <a *ngIf="p.estado == 'Pendiente'" class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDesembolsos()"
                               data-bs-toggle="offcanvas" data-bs-target="#desembolsos">
                               Desembolsos
                             </a>
-                            <a class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDestinosPrestamo()"
-                              (click)="getDesembolsos()" (click)="getOrdenesPagos()" data-bs-toggle="offcanvas"
-                              data-bs-target="#ordenes_pagos">
+                            <a *ngIf="p.estado != 'Pendiente'" class="dropdown-item" (click)="setPrestamo(p, mindex)"
+                              (click)="getDestinosPrestamo()" data-bs-toggle="offcanvas"
+                              data-bs-target="#destinos_prestamos">
+                              Destinos
+                            </a>
+                            <a *ngIf="p.estado != 'Pendiente'" class="dropdown-item" (click)="setPrestamo(p, mindex)"
+                              (click)="getDestinosPrestamo()" (click)="getDesembolsos()" (click)="getOrdenesPagos()"
+                              data-bs-toggle="offcanvas" data-bs-target="#ordenes_pagos">
                               Ordenes de Pago
                             </a>
                             <a *ngIf="p.estado == 'Acreditado'" class="dropdown-item"
@@ -2801,11 +2802,12 @@
         <span style="text-transform: lowercase;">
           {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
           {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, NOSOTROS: Por una parte <b style="text-transform: uppercase;">{{representante.nombre}} {{representante.apellido}}</b>,
+        </span>, NOSOTROS: Por una parte <b style="text-transform: uppercase;">{{representante.nombre}}
+          {{representante.apellido}}</b>,
         de {{getEdad(representante.fecha_nacimiento)}} años de edad, {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}}, con domicilio en el departamento de
         GUATEMALA, me identifico con el Documento Personal de Identificación con Código Único de Identificación número
-        {{letras(representante.dpi)}} ({{representante.dpi}}), extendido por el Registro Nacional de las Personas
+        {{letrasDPI(representante.dpi)}} ({{representante.dpi}}), extendido por el Registro Nacional de las Personas
         -RENAP- de la República de Guatemala; actúo en representación del Instituto de Fomento Municipal, en mi calidad
         de Gerente, que acredito con:
 
@@ -2835,11 +2837,11 @@
         guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
         {{prestamo.municipalidad.municipio.nombre}}, departamento de {{prestamo.municipalidad.departamento.nombre}},
         me identifico con el Documento Personal de Identificación con Código Único de Identificación número
-        {{letras(funcionario.dpi)}} ({{funcionario.dpi}}),
+        {{letrasDPI(funcionario.dpi)}} ({{funcionario.dpi}}),
         extendido por el Registro Nacional de las Personas -RENAP- de
         la República de Guatemala, actúo en mi calidad de {{funcionario.puesto.nombre}} del
         municipio de {{prestamo.municipalidad.municipio.nombre}}, departamento de
-        {{prestamo.municipalidad.departamento.nombre}}, lo cual acredito con: <b>A)</b> Certificación del Acuerdo de
+        {{prestamo.municipalidad.departamento.nombre}}, lo cual acredito con: <b> A)</b> Certificación del Acuerdo de
         Adjudicación del cargo número ({{funcionario.acuerdo}}), extendido por la Junta Electoral del Tribunal Supremo
         Electoral, de fecha {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
         ({{formatoFecha(representante.fecha_acta_toma_posecion, 'DD/MM/YYYY')}})
@@ -2869,11 +2871,13 @@
         {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
         artículos del {{prestamo.resolucion.articulos}}
         <b><u>SEGUNDA: ANTECEDENTES: </u></b> Mediante solicitud de fecha
-        <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha, 'DD/MM/YYYY')}})</b>, suscrita
+        <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha,
+          'DD/MM/YYYY')}})</b>, suscrita
         por el señor Alcalde Municipal, la Municipalidad solicitó préstamo por la
         cantidad de <b>{{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}})</b>,
         autorizado según punto <b>{{prestamo.punto}}</b> del acta de Concejo Municipal número {{prestamo.acta}}
-        de fecha <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha, 'DD/MM/YYYY')}})</b>,
+        de fecha <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha,
+          'DD/MM/YYYY')}})</b>,
         del Concejo Municipal, que será utilizado para la {{prestamo.destino}}.
 
         <b><u>TERCERA: DE LA ASISTENCIA FINANCIERA:</u></b> El INFOM por este acto
@@ -3101,12 +3105,13 @@
         En la ciudad de Guatemala, <span style="text-transform: lowercase;">
           {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
           {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, Nosotros: Por una parte <b style="text-transform: uppercase;">({{representante.nombre}} {{representante.apellido}})</b>,
+        </span>, Nosotros: Por una parte <b style="text-transform: uppercase;">({{representante.nombre}}
+          {{representante.apellido}})</b>,
         de {{getEdad(representante.fecha_nacimiento)}} años de edad,
         {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}} de este domicilio,
         me identifico con Documento Personal de Identificación, con Código
-        Único de Identificación (CUI) {{letras(representante.dpi)}} ({{representante.dpi}}) extendido por el
+        Único de Identificación (CUI) {{letrasDPI(representante.dpi)}} ({{representante.dpi}}) extendido por el
         Registro Nacional de las Personas (RENAP) de la República de Guatemala;
         actúo en mi calidad de
         <b>GERENTE Y REPRESENTANTE LEGAL DEL INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b>,
@@ -3139,7 +3144,7 @@
         guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
         {{prestamo.municipalidad.municipio.nombre}}
         Departamento de {{prestamo.municipalidad.departamento.nombre}}, me identifico con Documento Personal de
-        Identificación, con Código Único de identificación número {{letras(funcionario.dpi)}} ({{funcionario.dpi}}),
+        Identificación, con Código Único de identificación número {{letrasDPI(funcionario.dpi)}} ({{funcionario.dpi}}),
         extendido por el Registro Nacional de las Personas de la
         República de Guatemala; actúo en mi calidad de
         <span style="text-transform: uppercase; font-weight: 600;">
@@ -3176,7 +3181,8 @@
         y {{banco.r_nombre}} {{banco.r_apellido}} de {{getEdad(banco.fecha_nacimiento)}} años de edad,
         {{banco.estado_civil.nombre}}, guatemalteco, {{banco.profesion.nombre}},
         con domicilio en el departamento de Guatemala, me identifico con Documento Personal de
-        Identificación (DPI), con Código Único de Identificación (CUI) ({{banco.dpi}}) extendido por el Registro
+        Identificación (DPI), con Código Único de Identificación (CUI) {{letrasDPI(banco.dpi)}} ({{banco.dpi}})
+        extendido por el Registro
         Nacional de las Personas de la
         República de Guatemala, actúo en mi calidad de
         <b style="text-transform: uppercase;">REPRESENTANTE DEL {{prestamo.municipalidad.banco.nombre}}</b>

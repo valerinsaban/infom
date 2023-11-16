@@ -77,6 +77,9 @@
                   <td>{{d.fecha | date: 'dd/MM/YYYY':'UTC'}}</td>
                   <td>
                     <div class="dropdown">
+                      <button (click)="regenerarCobro(d, dindex)" type="button" class="btn btn-primary light" style="margin-right: 10px">
+                        <i class="fa-solid fa-rotate-right"></i>
+                      </button>
                       <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
                         <i class="fa-solid fa-list"></i>
                       </button>

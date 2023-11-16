@@ -67,6 +67,8 @@ export class RepresentantesComponent {
       id_profesion: new FormControl(null, [Validators.required]),
       id_estado_civil: new FormControl(null, [Validators.required])
     });
+    AppComponent.loadScript('https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js');
+    AppComponent.loadScript('assets/js/mask.js');
   }
 
   async ngOnInit() {
