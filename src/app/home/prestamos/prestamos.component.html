@@ -2869,11 +2869,11 @@
         {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
         artículos del {{prestamo.resolucion.articulos}}
         <b><u>SEGUNDA: ANTECEDENTES: </u></b> Mediante solicitud de fecha
-        <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{prestamo.fecha}})</b>, suscrita
+        <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha, 'DD/MM/YYYY')}})</b>, suscrita
         por el señor Alcalde Municipal, la Municipalidad solicitó préstamo por la
         cantidad de <b>{{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}})</b>,
         autorizado según punto <b>{{prestamo.punto}}</b> del acta de Concejo Municipal número {{prestamo.acta}}
-        de fecha <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{prestamo.fecha}})</b>,
+        de fecha <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha, 'DD/MM/YYYY')}})</b>,
         del Concejo Municipal, que será utilizado para la {{prestamo.destino}}.
 
         <b><u>TERCERA: DE LA ASISTENCIA FINANCIERA:</u></b> El INFOM por este acto
@@ -2884,8 +2884,8 @@
         Resolución {{prestamo.resolucion.numero}} de fecha
         {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
         emitida por la
-        <span *ngIf="prestamos.id_tipo_prestamo == 2"><b>Gerencia</b></span>
-        <span *ngIf="prestamos.id_tipo_prestamo == 1"><b>Junta Directiva</b></span>
+        <span *ngIf="prestamo.id_tipo_prestamo == 1">Gerencia</span>
+        <span *ngIf="prestamo.id_tipo_prestamo == 2">Junta Directiva</span>
         del Instituto de Fomento Municipal, misma que
         en su parte conducente literalmente cita lo siguiente: <b>“…RESUELVE¨: I.</b>
 
@@ -2953,7 +2953,7 @@
         <b>{{letras(prestamo.tasa)}} POR CIENTO ({{prestamo.tasa | number: '.2-2'}}%)</b>
         anual sobre saldos deudores. Los intereses y el Impuesto al Valor Agregado -IVA- sobre los
         intereses correspondientes serán pagados por la deudora con los recursos
-        provenientes del Aporte Constitucional y el Impuesto al Valor Agregado
+        provenientes del Aporte Constitucional y subsidiariamente el Impuesto al Valor Agregado
         -IVAPAZ-, conjuntamente con las amortizaciones de capital de este
         préstamo;
         <b>h) FORMA DE ENTREGA: </b>El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ?
