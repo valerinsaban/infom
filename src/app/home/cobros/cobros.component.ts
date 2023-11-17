@@ -17,6 +17,7 @@ import { ProyeccionesService } from 'src/app/services/proyecciones.service';
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import { AmortizacionesDetallesService } from 'src/app/services/amortizaciones_detalles.service';
+import { MegaPrintService } from 'src/app/services/megaprint.service';
 
 @Component({
   selector: 'app-cobros',
@@ -50,7 +51,8 @@ export class CobrosComponent {
     private factuas_detallesService: FacturasDetallesService,
     private recibosService: RecibosService,
     private recibos_detallesService: RecibosDetallesService,
-    private configuracionesService: ConfiguracionesService
+    private configuracionesService: ConfiguracionesService,
+    private megaprintService: MegaPrintService,
   ) {
     this.cobroForm = new FormGroup({
       codigo: new FormControl('SEP-A', [Validators.required]),
@@ -283,89 +285,120 @@ export class CobrosComponent {
 
     this.ngxService.start();
 
-    for (let a = 0; a < this.amortizaciones.length; a++) {
+    let data = await this.megaprintService.solicitarToken();
+    if (data.resultado) {
+      let token = data.res.token._text;
 
-      let amortizacion = this.amortizaciones[a];
-      let interes_iva = parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva);
-      interes_iva = Math.round((interes_iva + Number.EPSILON) * 100) / 100;
-      let impuestos = Math.round(((interes_iva / 1.12 * 0.12) + Number.EPSILON) * 100) / 100;
+      for (let a = 0; a < this.amortizaciones.length; a++) {
 
-      let factura = await this.facturasService.postFactura({
-        numero: 0,
-        fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
-        nit: amortizacion.prestamo.municipalidad.nit,
-        nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
-        autorizacion: null,
-        serie_fel: null,
-        numero_fel: null,
-        monto: parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva),
-        estado: 'Vigente',
-      });
-
-      if (factura.resultado) {
-
-        await this.factuas_detallesService.postFacturaDetalle({
-          cantidad: 1,
-          tipo: 'S',
-          descripcion: `Cobro de intereses e IVA correspondiente al mes de ${moment(amortizacion.mes).format('MMMM YYYY')}. 
-          Prestamo ${amortizacion.prestamo.no_prestamo}.
-          Resolucion ${amortizacion.prestamo.resolucion.numero}.`,
-          precio_unitario: interes_iva,
-          descuentos: 0,
-          impuestos: impuestos,
-          subtotal: interes_iva,
-          id_factura: factura.data.id
-        });
-
-        let recibo = await this.recibosService.postRecibo({
-          numero: 0,
-          fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
-          nit: amortizacion.prestamo.municipalidad.nit,
-          nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
-          monto: interes_iva,
-          estado: 'Vigente',
-          id_factura: factura.data.id
-        });
-
-        if (recibo.resultado) {
-
-          await this.recibos_detallesService.postReciboDetalle({
+        let amortizacion = this.amortizaciones[a];
+        let interes_iva = parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva);
+        interes_iva = Math.round((interes_iva + Number.EPSILON) * 100) / 100;
+        let impuestos = Math.round(((interes_iva / 1.12 * 0.12) + Number.EPSILON) * 100) / 100;
+        let monto_gravable = interes_iva - impuestos;
+        monto_gravable = Math.round(((monto_gravable) + Number.EPSILON) * 100) / 100;
+        
+        
+        let info: any = {
+          factura: {
+            numero: 0,
+            fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+            nit: amortizacion.prestamo.municipalidad.nit,
+            nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
+            autorizacion: null,
+            serie_fel: null,
+            numero_fel: null,
+            monto: parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva),
+            estado: 'Vigente',
+          },
+          detalles: [{
             cantidad: 1,
             tipo: 'S',
-            descripcion: `Cobro de intereses e IVA correspondiente al mes de ${moment(amortizacion.mes).format('MMMM YYYY')}.
-            Capital: ${amortizacion.capital}.
-            Interes: ${amortizacion.interes}. IVA ${amortizacion.iva}.
+            descripcion: `Cobro de intereses e IVA correspondiente al mes de ${moment(amortizacion.mes).format('MMMM YYYY')}. 
             Prestamo ${amortizacion.prestamo.no_prestamo}.
             Resolucion ${amortizacion.prestamo.resolucion.numero}.`,
+            precio: interes_iva,
             precio_unitario: interes_iva,
             descuentos: 0,
             impuestos: impuestos,
+            monto_gravable: monto_gravable,
             subtotal: interes_iva,
-            id_recibo: recibo.data.id
-          });
-
-          await this.movimientosService.postMovimiento({
-            fecha: moment(this.cobro.fecha).format('YYYY-MM-DD'),
-            saldo_inicial: amortizacion.saldo_inicial,
-            cargo: 0,
-            abono: amortizacion.capital,
-            saldo_final: amortizacion.saldo_final,
-            descripcion: `V/Amortizacion Capital. ${amortizacion.capital} Interes ${amortizacion.interes}. IVA ${amortizacion.iva}.`,
-            capital: amortizacion.capital,
-            interes: amortizacion.interes,
-            iva: amortizacion.iva,
-            id_prestamo: amortizacion.prestamo.id,
-            id_orden_pago: null,
-            id_recibo: recibo.data.id
-          });
-
-          this.limpiar();
-          this.alert.alertMax('Operacion Correcta', 'Documentos Generados', 'success');
-
+            // id_factura: factura.data.id
+          }]
         }
+        
+        data = await this.megaprintService.certificar(token, info);
+        if (data.resultado) {
+          
+          info.factura.uuid = data.res.uuid._text;
+          let factura = await this.facturasService.postFactura(info.factura);
+  
+          if (factura.resultado) {
+    
+            info.detalles[0].id_factura = factura.data.id;
+            await this.factuas_detallesService.postFacturaDetalle(info.detalles[0]);
+    
+            let recibo = await this.recibosService.postRecibo({
+              numero: 0,
+              fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+              nit: amortizacion.prestamo.municipalidad.nit,
+              nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
+              monto: interes_iva,
+              estado: 'Vigente',
+              id_factura: factura.data.id
+            });
+    
+            if (recibo.resultado) {
+    
+              let desc = `AMORTIZACIÓN CORRESPONDIENTE AL
+              PERIODO DE ${moment(amortizacion.mes).format('MMMM YYYY')}, CAPITAL Q. ${amortizacion.capital}
+              INTERÉS Q. ${amortizacion.interes} IVA Q. ${amortizacion.iva} RECUPERADOS
+              CON EL APORTE CONSTITUCIONAL, PRÉSTAMO
+              ${amortizacion.prestamo.no_prestamo} RESOLUCIÓN ${amortizacion.prestamo.resolucion.numero}
+              DE ${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre} SEGÚN
+              FACTURA No. #${factura.data.id}`;
+
+              await this.recibos_detallesService.postReciboDetalle({
+                cantidad: 1,
+                tipo: 'S',
+                descripcion: desc,
+                precio_unitario: interes_iva,
+                descuentos: 0,
+                impuestos: impuestos,
+                subtotal: interes_iva,
+                id_recibo: recibo.data.id
+              });
+    
+              await this.movimientosService.postMovimiento({
+                fecha: moment(this.cobro.fecha).format('YYYY-MM-DD'),
+                saldo_inicial: amortizacion.saldo_inicial,
+                cargo: 0,
+                abono: amortizacion.capital,
+                saldo_final: amortizacion.saldo_final,
+                descripcion: `V/Amortizacion Capital. ${amortizacion.capital} Interes ${amortizacion.interes}. IVA ${amortizacion.iva}.`,
+                capital: amortizacion.capital,
+                interes: amortizacion.interes,
+                iva: amortizacion.iva,
+                id_prestamo: amortizacion.prestamo.id,
+                id_orden_pago: null,
+                id_recibo: recibo.data.id
+              });
+    
+            }
+    
+          }
+        } else {
+          this.alert.alertMax('Operacion Incorrecta', 'Error al certificar Factura MegaPrint', 'error');
+        }
+        
 
       }
 
+      this.limpiar();
+      this.alert.alertMax('Operacion Correcta', 'Documentos Generados', 'success');
+
+    } else {
+      this.alert.alertMax('Operacion Incorrecta', 'Error al generar TOKEN MegaPrint', 'error');
     }
 
     this.ngxService.stop();

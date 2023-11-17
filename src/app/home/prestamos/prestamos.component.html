@@ -166,8 +166,8 @@
                               data-bs-target="#estado">
                               Cambiar Estado
                             </a>
-                            <a *ngIf="p.estado == 'Pendiente'" class="dropdown-item" (click)="setPrestamo(p, mindex)" (click)="getDesembolsos()"
-                              data-bs-toggle="offcanvas" data-bs-target="#desembolsos">
+                            <a *ngIf="p.estado == 'Pendiente'" class="dropdown-item" (click)="setPrestamo(p, mindex)"
+                              (click)="getDesembolsos()" data-bs-toggle="offcanvas" data-bs-target="#desembolsos">
                               Desembolsos
                             </a>
                             <a *ngIf="p.estado != 'Pendiente'" class="dropdown-item" (click)="setPrestamo(p, mindex)"
@@ -895,7 +895,7 @@
                 <div class="form-group mb-3">
                   <label class="text-secondary"> Monto <span class="text-danger">*</span>
                   </label>
-                  <input formControlName="monto" type="number" class="form-control" placeholder="Monto">
+                  <input formControlName="monto" type="text" class="form-control" placeholder="Monto">
                 </div>
                 <div class="form-group mb-3">
                   <label class="text-secondary"> Descripcion <span class="text-danger">*</span>
@@ -1709,7 +1709,7 @@
                 </li>
                 <li>
                   Código Municipal. Artículos del 112 al 115 del DECRETO NÚMERO 12-2002 de fecha 13 de mayo del año
-                  2002, y sus Reformas según Decreto Número 14--2012, de fecha 17 de Julio del año 2012.
+                  2002, y sus Reformas según Decreto Número 14-2012, de fecha 17 de Julio del año 2012.
                 </li>
                 <li>
                   Convenio Interinstitucional, Administrativo y Financiero
@@ -1786,17 +1786,17 @@
                   {{letrasMoneda(p.capital)}} (Q.{{(p.capital) | number: '.2-2'}}),
                 </span>
                 respectivamente,
-              </span> más intereses e IVA sobre los intereses, comprometiendo los recursos
+              </span> más intereses e IVA sobre los intereses, comprometiendo los recursos del
               <span *ngIf="prestamo.programa.id == 1">
-                del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+                Aporte Constitucional y subsidiariamente El Impuesto al Valor Agregado -IVAPAZ-
               </span>
               <span *ngIf="prestamo.programa.id == 2">
-                del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+                El Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
               <span *ngIf="prestamo.programa.id == 3">
-                del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+                Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ-
               </span>
-              - para Inversión, de acuerdo a las entregas de los Aportes Constitucionales
+              para Inversión, de acuerdo a las entregas de los Aportes Constitucionales
               por parte del Gobierno Central, según cuadro adjunto.
             </td>
             <td></td>
@@ -1805,15 +1805,15 @@
             <td>GARANTÍA </td>
             <td>Los ingresos que le corresponden a la municipalidad provenientes del
               <span *ngIf="prestamo.programa.id == 1">
-                del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+                Aporte Constitucional y subsidiariamente el Impuesto al Valor Agregado -IVAPAZ-
               </span>
               <span *ngIf="prestamo.programa.id == 2">
-                del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+                El Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente el Aporte Constitucional
               </span>
               <span *ngIf="prestamo.programa.id == 3">
-                del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+                Aporte Constitucional y el Impuesto al Valor Agregado -IVAPAZ-
               </span>
-              - para inversión
+              para inversión
             </td>
             <td></td>
           </tr>
@@ -1829,10 +1829,10 @@
                 del Aporte Constitucional
               </span>
               <span *ngIf="prestamo.programa.id == 2">
-                del El Impuesto de Valor Agregado -IVAPAZ-
+                del El Impuesto al Valor Agregado -IVAPAZ-
               </span>
               <span *ngIf="prestamo.programa.id == 3">
-                del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+                del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ-
               </span>
               para inversión, es aceptable.
             </td>
@@ -1989,13 +1989,13 @@
               por un monto de {{letrasMoneda(prestamo.monto)}}, (Q. {{prestamo.monto | number: '.2-2'}})
               tomando como referencia la capacidad de pago en el renglón de Inversión con recursos del
               <span *ngIf="prestamo.programa.id == 1">
-                del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+                Aporte Constitucional y subsidiariamente el Impuesto al Valor Agregado -IVAPAZ-
               </span>
               <span *ngIf="prestamo.programa.id == 2">
-                del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+                Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente el Aporte Constitucional
               </span>
               <span *ngIf="prestamo.programa.id == 3">
-                del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+                Aporte Constitucional y subsidiariamente el Impuesto al Valor Agregado -IVAPAZ-
               </span>
               para Inversión, la cual es suficiente para cubrir adecuadamente el servicio de deuda del
               préstamo que solicita, por lo que se recomienda a la Gerencia
@@ -2030,7 +2030,7 @@
   </div>
 
   <div id="pr-dictamen" style="color: black">
-    <div style="margin: 0px 50px">
+    <div style="margin: 0px 50px" *ngIf="prestamo.resolucion">
       <table class="table table-borderless">
         <tbody>
           <tr>
@@ -2189,15 +2189,15 @@
               </p>
             </td>
             <td style="text-align: justify;">
-              Los ingresos que le corresponden a la municipalidad provenientes
+              Los ingresos que le corresponden a la municipalidad provenientes del
               <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
-                del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+                Aporte Constitucional y subsidiariamente El Impuesto al Valor Agregado -IVAPAZ-
               </span>
               <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
-                del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+                Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
               <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
-                del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+                del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ-
               </span>
             </td>
           </tr>
@@ -2272,7 +2272,7 @@
             <span style="text-transform: uppercase; font-weight: 500;">
               {{prestamo.municipalidad.municipio.nombre}},
               Departamento de {{prestamo.municipalidad.departamento.nombre}},
-              y el Banco de {{prestamo.municipalidad.banco.nombre}}.
+              y el {{prestamo.municipalidad.banco.nombre}}.
             </span>
           </p>
         </div>
@@ -2286,7 +2286,7 @@
             <span style="text-transform: uppercase; font-weight: 500;">
               {{prestamo.municipalidad.municipio.nombre}},
               Departamento de {{prestamo.municipalidad.departamento.nombre}},
-              y el Banco de {{prestamo.municipalidad.banco.nombre}}.
+              y el {{prestamo.municipalidad.banco.nombre}}.
             </span>
             a la fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}}
             refleja los siguientes préstamos vigentes:
@@ -2371,13 +2371,13 @@
           Financiera a las Municipalidades de la República de Guatemala y tomando como
           referencia la capacidad financiera de la Municipalidad con los recursos
           <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
-            del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+            del Aporte Constitucional y subsidiariamente El Impuesto al Valor Agregado -IVAPAZ-
           </span>
           <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
-            del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+            del El Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
           </span>
           <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
-            del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+            del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ-
           </span>
           la cual se determina que suficiente para cubrir adecuadamente
           el servicio de deuda del préstamo que solicita, se recomienda a la
@@ -2416,7 +2416,7 @@
   </div>
 
   <div id="pr-resolucion" style="color: black">
-    <div style="margin: 0px 50px">
+    <div style="margin: 0px 50px" *ngIf="prestamo.resolucion">
 
       <p style="text-align: justify">
         LA
@@ -2448,19 +2448,19 @@
         y certificación del {{formatoFecha(prestamo.certificacion, 'DD [de] MMMM [de] YYYY' )}}, del punto
         {{prestamo.punto}} del acta de Concejo Municipal No. {{prestamo.acta}} del
         {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
-        solicitando al INFOM un préstamo de por un monto de
+        solicitando al INFOM un préstamo por un monto de
         {{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}}), que será utilizado para
         la ejecución del proyecto(s) {{prestamo.destino}} ofreciendo como garantía los recursos
         provenientes del
         <span *ngIf="prestamo.programa.id == 1">
-          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         <span *ngIf="prestamo.programa.id == 2">
-          IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
+          IMPUESTO AL VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
           CONSTITUCIONAL
         </span>
         <span *ngIf="prestamo.programa.id == 3">
-          APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ
+          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ
         </span>
       </p>
       <p style="text-align: center; font-weight: 700">CONSIDERANDO:</p>
@@ -2478,14 +2478,14 @@
         República de Guatemala y cuenta con capacidad de pago en el renglón de
         Inversión con recursos provenientes del
         <span *ngIf="prestamo.programa.id == 1">
-          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         <span *ngIf="prestamo.programa.id == 2">
-          IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
+          IMPUESTO AL VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
           CONSTITUCIONAL
         </span>
         <span *ngIf="prestamo.programa.id == 3">
-          APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ
+          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ
         </span>
         para cubrir adecuadamente el servicio de deuda el préstamo
         solicitado.
@@ -2504,14 +2504,14 @@
           ({{prestamo.plazo_meses}}) MESES ofreciendo como garantía los recursos de
 
           <span *ngIf="prestamo.programa.id == 1">
-            APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+            APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
           </span>
           <span *ngIf="prestamo.programa.id == 2">
-            IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
+            IMPUESTO AL VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE
             CONSTITUCIONAL
           </span>
           <span *ngIf="prestamo.programa.id == 3">
-            APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ
+            APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ
           </span>
         </p>
       </div>
@@ -2536,7 +2536,7 @@
         <span *ngIf="prestamo.tipoPrestamo.id ==2">Junta Directiva</span>
 
         del Instituto de Fomento Municipal, en ejercicio de las atribuciones que le confiere el
-        artículo 4º. ((numeral romano II, inciso 1) y articulos
+        artículo 4º. (numeral romano II, inciso 1) y articulos
         <span *ngIf="prestamo.tipoPrestamo.id ==1">(30 inciso g) y h)</span>,
         <span *ngIf="prestamo.tipoPrestamo.id ==2">(23 inciso a) y b)</span>
 
@@ -2556,13 +2556,13 @@
           </span>,
           un préstamo con Garantía del
           <span *ngIf="prestamo.programa.id == 1">
-            APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+            APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
           </span>
           <span *ngIf="prestamo.programa.id == 2">
-            IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
+            IMPUESTO AL VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
           </span>
           <span *ngIf="prestamo.programa.id == 3">
-            APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+            APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
           </span>
           para Inversión, con recursos propios del Fondo Patrimonial,
           bajo las siguientes condiciones:
@@ -2627,8 +2627,7 @@
               {{letras(prestamo.plazo_meses)}} ({{prestamo.plazo_meses}}) pagos mensuales de la siguiente forma:
               {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
               (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}), más intereses y el Impuesto al Valor
-              Agregado -IVA-,
-              sobre intereses.
+              Agregado -IVA-, sobre intereses. <br>
             </td>
           </tr>
           <tr>
@@ -2639,7 +2638,7 @@
             </td>
             <td style="width: 40%; text-align: justify">
               La tasa de interés es del {{letras(prestamo.tasa)}}
-              POR CIENTO ({{prestamo.tasa}}%) anual sobre saldos deudores.
+              POR CIENTO ({{prestamo.tasa}}%) anual sobre saldos deudores. <br>
             </td>
           </tr>
           <tr>
@@ -2651,14 +2650,15 @@
             <td style="width: 40%; text-align: justify">
               Los ingresos que le corresponden a la municipalidad provenientes
               <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
-                del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+                del Aporte Constitucional y subsidiariamente El Impuesto al Valor Agregado -IVAPAZ-
               </span>
               <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
-                del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+                del El Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
               <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
-                del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+                del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ- 
               </span>
+              <br><br>
             </td>
           </tr>
           <tr>
@@ -2691,21 +2691,21 @@
             del APORTE CONSTITUCIONAL
           </span>
           <span *ngIf="prestamo.programa.id == 2">
-            del EL IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+            del EL IMPUESTO AL VALOR AGREGADO -IVAPAZ-
           </span>
           <span *ngIf="prestamo.programa.id == 3">
-            del APORTE CONSTITUCIONAL y EL IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+            del APORTE CONSTITUCIONAL y EL IMPUESTO AL VALOR AGREGADO -IVAPAZ-
           </span>
           ; B) Para el otorgamiento de este préstamo, la municipalidad se compromete a:
           B1) Efectuar el pago correspondiente con los recursos provenientes del
           <span *ngIf="prestamo.programa.id == 1" style="font-weight: 500;">
-            del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+            del Aporte Constitucional y subsidiariamente El Impuesto al Valor Agregado -IVAPAZ-
           </span>
           <span *ngIf="prestamo.programa.id == 2" style="font-weight: 500;">
-            del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+            del El Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
           </span>
           <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
-            del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+            del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ-
           </span>
           para inversión. Si el Ministerio de Finanzas Públicas traslada directamente a
           la Municipalidad dichos fondos, la municipalidad autoriza al Director Financiero Municipal
@@ -2798,32 +2798,31 @@
   <div id="pr-convenio-asistencia-fi" style="color: black">
     <div style="margin: 0px 50px" *ngIf="representante && funcionario">
       <p style="text-align: justify">
-        En la ciudad de Guatemala, el
-        <span style="text-transform: lowercase;">
-          {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
-          {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, NOSOTROS: Por una parte <b style="text-transform: uppercase;">{{representante.nombre}}
+        En la ciudad de Guatemala, el {{letrasFecha(null)}},
+        NOSOTROS: Por una parte <b style="text-transform: uppercase;">{{representante.nombre}}
           {{representante.apellido}}</b>,
-        de {{getEdad(representante.fecha_nacimiento)}} años de edad, {{representante.estado_civil.nombre}},
+        de {{letrasEdad(representante.fecha_nacimiento)}} ({{getEdad(representante.fecha_nacimiento)}}) años de edad,
+        {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}}, con domicilio en el departamento de
         GUATEMALA, me identifico con el Documento Personal de Identificación con Código Único de Identificación número
         {{letrasDPI(representante.dpi)}} ({{representante.dpi}}), extendido por el Registro Nacional de las Personas
         -RENAP- de la República de Guatemala; actúo en representación del Instituto de Fomento Municipal, en mi calidad
         de Gerente, que acredito con:
 
-        <b>A)</b> Acuerdo Gubernativo número {{letras(representante.acuerdo)}} ({{representante.acuerdo}}) de fecha
-        {{letras(formatoFecha(representante.fecha_acuerdo, 'DD'))}} ({{formatoFecha(representante.fecha_acuerdo,
-        'DD')}}) de {{formatoFecha(representante.fecha_acuerdo, 'MMMM')}} del
-        año {{letras(formatoFecha(representante.fecha_acuerdo, 'YYYY'))}} ({{formatoFecha(representante.fecha_acuerdo,
-        'YYYY')}}) del Presidente de la República de Guatemala, acuerdo donde consta mi nombramiento;
+        <b>A)</b> Acuerdo Gubernativo número {{letrasDoc(representante.acuerdo)}} ({{representante.acuerdo}}) de fecha
+        {{letrasFecha(representante.fecha_acuerdo)}} del Presidente de la República de Guatemala, acuerdo donde consta
+        mi
+        nombramiento;
 
-        <b>B)</b> Certificación de la resolución No. {{representante.resolucion}}
-        de fecha {{formatoFecha(representante.fecha_resolucion, 'DD [de] MMMM [de] YYYY')}}
+        <b>B)</b> Certificación de la resolución No. {{letrasDoc(representante.resolucion)}}
+        {{representante.resolucion}}
+        de fecha {{letrasFecha(representante.fecha_resolucion)}}
         emitida por la Junta Directiva del Instituto de Fomento Municipal, a través de la
         cual se me nombra como Gerente del Instituto de Fomento Municipal y
 
-        <b>C)</b> Certificación del acta número ({{representante.acta_toma_posecion}})
-        de fecha {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}},
+        <b>C)</b> Certificación del acta número {{letrasDoc(representante.acta_toma_posecion)}}
+        ({{representante.acta_toma_posecion}})
+        de fecha {{letrasFecha(representante.fecha_acta_toma_posecion)}},
         en la que consta la toma de posesión del cargo, emitida por
         la Secretaría General del Instituto de Fomento Municipal –INFOM; señalo como lugar
         para recibir notificaciones la octava calle (8ª) uno guion sesenta y seis (1-66) zona
@@ -2835,30 +2834,35 @@
         de {{getEdad(representante.fecha_nacimiento)}} años de edad,
         {{funcionario.estado_civil.nombre}},
         guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
-        {{prestamo.municipalidad.municipio.nombre}}, departamento de {{prestamo.municipalidad.departamento.nombre}},
+        <b>{{prestamo.municipalidad.municipio.nombre}}, departamento de
+          {{prestamo.municipalidad.departamento.nombre}}</b>,
         me identifico con el Documento Personal de Identificación con Código Único de Identificación número
         {{letrasDPI(funcionario.dpi)}} ({{funcionario.dpi}}),
         extendido por el Registro Nacional de las Personas -RENAP- de
         la República de Guatemala, actúo en mi calidad de {{funcionario.puesto.nombre}} del
-        municipio de {{prestamo.municipalidad.municipio.nombre}}, departamento de
-        {{prestamo.municipalidad.departamento.nombre}}, lo cual acredito con: <b> A)</b> Certificación del Acuerdo de
-        Adjudicación del cargo número ({{funcionario.acuerdo}}), extendido por la Junta Electoral del Tribunal Supremo
-        Electoral, de fecha {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
-        ({{formatoFecha(representante.fecha_acta_toma_posecion, 'DD/MM/YYYY')}})
+        municipio de <b>{{prestamo.municipalidad.municipio.nombre}}, departamento de
+          {{prestamo.municipalidad.departamento.nombre}}</b>, lo cual acredito con: <b> A)</b> Certificación del Acuerdo
+        de
+        Adjudicación del cargo número {{letrasDoc(funcionario.acuerdo)}} ({{funcionario.acuerdo}}), extendido por la
+        Junta
+        Electoral del Tribunal Supremo
+        Electoral, de fecha {{letrasFecha(representante.fecha_acta_toma_posecion)}}
+        ({{letrasFecha(representante.fecha_acta_toma_posecion)}})
         <b>B)</b>Certificación del Acta de Toma de Posesión del
-        cargo número ({{funcionario.acta_toma_posecion}})
-        de fecha {{formatoFecha(funcionario.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
+        cargo número {{letrasDoc(funcionario.acta_toma_posecion)}} ({{funcionario.acta_toma_posecion}})
+        de fecha {{letrasFecha(funcionario.fecha_acta_toma_posecion)}}
         extendida por la Secretaría Municipal de
         <span style="text-transform: uppercase; font-weight: 600;">
           {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
         </span>,
         Debidamente autorizado para la celebración del presente convenio según certificación
         del punto <b>{{prestamo.punto}}</b> del acta número
-        {{letras(prestamo.acta)}} ({{prestamo.acta}}) de fecha
-        {{formatoFecha(prestamo.fecha_acta, 'DD [de] MMMM [de] YYYY')}};
+        {{letrasDoc(prestamo.acta)}} ({{prestamo.acta}}) de fecha
+        {{letrasFecha(prestamo.fecha_acta)}};
         señalo como lugar para recibir notificaciones la sede de la Alcaldía Municipal de
         <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+          {{prestamo.municipalidad.departamento.nombre}}
         </span>,
         ubicada en <b>{{prestamo.municipalidad.direccion}}</b>, en adelante denominada
         indistintamente como la “MUNICIPALIDAD” o la “DEUDORA". Por este acto
@@ -2867,17 +2871,17 @@
         Artículo cuatro (4) numeral dos (II) de la Ley Orgánica del Instituto de Fomento Municipal,
         Decreto mil ciento treinta y dos (1132) del Congreso de la República de Guatemala y
         Reglamento para la Asistencia Financiera a las Municipalidades de la
-        República de Guatemala (Resolución No. {{prestamo.resolucion.numero}} de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
+        República de Guatemala Resolución No. {{letrasDoc(prestamo.resolucion.numero)}} {{prestamo.resolucion.numero}}
+        de
+        fecha
+        {{letrasFecha(prestamo.resolucion.fecha)}},
         artículos del {{prestamo.resolucion.articulos}}
         <b><u>SEGUNDA: ANTECEDENTES: </u></b> Mediante solicitud de fecha
-        <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha,
-          'DD/MM/YYYY')}})</b>, suscrita
+        <b>{{letrasFecha(prestamo.fecha)}}</b>, suscrita
         por el señor Alcalde Municipal, la Municipalidad solicitó préstamo por la
         cantidad de <b>{{letrasMoneda(prestamo.monto)}} (Q. {{prestamo.monto | number: '.2-2'}})</b>,
         autorizado según punto <b>{{prestamo.punto}}</b> del acta de Concejo Municipal número {{prestamo.acta}}
-        de fecha <b>{{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{formatoFecha(prestamo.fecha,
-          'DD/MM/YYYY')}})</b>,
+        de fecha <b>{{letrasFecha(prestamo.fecha)}}</b>,
         del Concejo Municipal, que será utilizado para la {{prestamo.destino}}.
 
         <b><u>TERCERA: DE LA ASISTENCIA FINANCIERA:</u></b> El INFOM por este acto
@@ -2886,7 +2890,7 @@
         con recursos del Fondo Patrimonial del Instituto de Fomento
         Municipal, de acuerdo a los términos y condiciones estipuladas en la
         Resolución {{prestamo.resolucion.numero}} de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}},
+        {{letrasFecha(prestamo.resolucion.fecha)}},
         emitida por la
         <span *ngIf="prestamo.id_tipo_prestamo == 1">Gerencia</span>
         <span *ngIf="prestamo.id_tipo_prestamo == 2">Junta Directiva</span>
@@ -2895,17 +2899,18 @@
 
         CONCEDER A LA MUNICIPALIDAD DEL MUNICIPIO DE
         <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+          {{prestamo.municipalidad.departamento.nombre}}
         </span>,
         un préstamo con garantía del
         <span *ngIf="prestamo.programa.id == 1" style="font-weight: 600">
-          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         <span *ngIf="prestamo.programa.id == 2" style="font-weight: 600">
-          IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
+          IMPUESTO AL VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
         </span>
         <span *ngIf="prestamo.programa.id == 3" style="font-weight: 600">
-          APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL E IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         para Inversión, con recursos propios del Fondo Patrimonial, bajo las siguientes condiciones:
         <b>
@@ -2934,24 +2939,24 @@
         </span>, más intereses y el Impuesto al Valor
         Agregado -IVA-, sobre intereses, comprometiendo los recursos del
         <span *ngIf="prestamo.programa.id == 1" style="font-weight: 600">
-          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         <span *ngIf="prestamo.programa.id == 2" style="font-weight: 600">
-          IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
+          IMPUESTO AL VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
         </span>
         <span *ngIf="prestamo.programa.id == 3" style="font-weight: 600">
-          APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL E IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         para Inversión, de acuerdo a las entregas de los Aportes Constitucionales por parte del Gobierno Central;
         <b>f) GARANTÍA:</b>Los ingresos que le corresponden a la municipalidad provenientes
         <span *ngIf="prestamo.programa.id == 1">
-          del Aporte Constitucional y subsidiariamente El Impuesto de Valor Agregado -IVAPAZ-
+          del Aporte Constitucional y subsidiariamente El Impuesto al Valor Agregado -IVAPAZ-
         </span>
         <span *ngIf="prestamo.programa.id == 2">
-          del El Impuesto de Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
+          del El Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
         </span>
         <span *ngIf="prestamo.programa.id == 3">
-          del Aporte Constitucional y El Impuesto de Valor Agregado -IVAPAZ-
+          del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ-
         </span>
         <b>g) TASA DE INTERÉS:</b> La tasa de interés es del
         <b>{{letras(prestamo.tasa)}} POR CIENTO ({{prestamo.tasa | number: '.2-2'}}%)</b>
@@ -2964,8 +2969,8 @@
         's' : ''}} con acreditamiento a la cuenta Única del Tesoro Municipal, de la
         Municipalidad de
         <span style="text-transform: uppercase; font-weight: 500;">
-          {{prestamo.municipalidad.municipio.nombre}},
-          Departamento de {{prestamo.municipalidad.departamento.nombre}},
+          <b>{{prestamo.municipalidad.municipio.nombre}},
+            Departamento de {{prestamo.municipalidad.departamento.nombre}}</b>,
         </span>
         número {{letras(prestamo.municipalidad.no_cuenta)}} ({{prestamo.municipalidad.no_cuenta}}),
         de la entidad bancaria {{prestamo.municipalidad.banco.nombre}}, por un monto de
@@ -2975,9 +2980,9 @@
         cubrir otras obligaciones adquiridas por la Municipalidad con el Instituto
         de Fomento Municipal, la Municipalidad del municipio de
         <span style="text-transform: uppercase; font-weight: 500;">
-          {{prestamo.municipalidad.municipio.nombre}},
-          Departamento de {{prestamo.municipalidad.departamento.nombre}}, el
-          {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}} ({{prestamo.fecha}})
+          <b>{{prestamo.municipalidad.municipio.nombre}},
+            Departamento de {{prestamo.municipalidad.departamento.nombre}}</b>, el
+          {{letrasFecha(prestamo.fecha)}}
         </span>
         suscribió el Convenio Interinstitucional, Administrativo y Financiero
         No. {{prestamo.no_convenio}} conjuntamente con el
@@ -2998,13 +3003,13 @@
         Para el otorgamiento de este préstamo, la municipalidad se compromete a:
         <b>C1)</b> Efectuar el pago correspondiente, con los recursos provenientes
         <span *ngIf="prestamo.programa.id == 1" style="font-weight: 600">
-          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL y subsidiariamente el IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         <span *ngIf="prestamo.programa.id == 2" style="font-weight: 600">
-          IMPUESTO DE VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
+          IMPUESTO AL VALOR AGREGADO -IVAPAZ y subsidiariamente el APORTE CONSTITUCIONAL
         </span>
         <span *ngIf="prestamo.programa.id == 3" style="font-weight: 600">
-          APORTE CONSTITUCIONAL E IMPUESTO DE VALOR AGREGADO -IVAPAZ-
+          APORTE CONSTITUCIONAL E IMPUESTO AL VALOR AGREGADO -IVAPAZ-
         </span>
         para inversión. Si el Ministerio de Finanzas Públicas traslada
         directamente a la Municipalidad dichos fondos, la municipalidad autoriza
@@ -3031,7 +3036,7 @@
         <b>E)</b> La utilización y manejo de los recursos financieros concedidos en préstamos
         por el Instituto a las Municipalidades del país queda bajo la estricta responsabilidad del
         Concejo Municipal;.
-        <b>III. SUPERVISIÓN:</b>La Supervisión de los proyectos
+        <b>III. SUPERVISIÓN:</b> La Supervisión de los proyectos
         financiados con préstamos otorgados por el Instituto, es responsabilidad
         exclusiva de la municipalidad solicitante. Sin embargo, el INFOM podrá
         prestar el servicio de supervisión de las obras a requerimiento de la
@@ -3050,7 +3055,7 @@
         condiciones expuestas en el presente convenio.
         <b><u>QUINTA: INCUMPLIMIENTO DE PAGO:</u></b> Si la MUNICIPALIDAD
         no paga según el plan de amortización de la resolución del préstamo autorizado,
-        se le informará vía telefónica al tesorero municipal y se enviará requerimiento
+        se le informará vía telefónica al director financiero municipal y se enviará requerimiento
         por escrito al alcalde de la municipalidad que incumpla con el plan de pagos firmado,
         para que realice el pago en las cuentas de INFOM. Agotado lo indicado anteriormente y si el
         incumplimiento de pago persiste, se procederá al requerimiento formal de
@@ -3078,14 +3083,27 @@
       </p>
       <br />
       <br />
-      <div style="text-align: left; font-weight: 700">
-        <p>f________________________</p>
-        <p style="margin-left: 10%">AlCALDE</p>
-      </div>
       <br />
-      <div style="text-align: right; font-weight: 700">
-        <p>f________________________</p>
-        <p style="margin-right: 10%">GERENTE</p>
+      <br />
+      <br />
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-6" style="text-align: center; font-weight: 700">
+          <p style="margin-right: 10%">
+            {{funcionario.nombre}} {{funcionario.apellido}}
+            <br>
+            Alcalde Municipal de {{prestamo.municipalidad.municipio.nombre}}, <br>
+            Departamento de {{prestamo.municipalidad.departamento.nombre}}
+          </p>
+        </div>
+        <div class="col-6" style="text-align: center; font-weight: 700">
+          <p style="margin-left: 10%; text-transform: uppercase;">
+            {{representante.nombre}} {{representante.apellido}}
+            <br>
+            Gerente de INFOM
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -3102,12 +3120,10 @@
         </span>
       </h6>
       <p style="text-align: justify">
-        En la ciudad de Guatemala, <span style="text-transform: lowercase;">
-          {{letras(formatoFecha(null, 'DD'))}} ({{formatoFecha(null, 'DD')}}) de
-          {{formatoFecha(null, 'MMMM')}} de {{letras(formatoFecha(null, 'YYYY'))}}
-        </span>, Nosotros: Por una parte <b style="text-transform: uppercase;">({{representante.nombre}}
-          {{representante.apellido}})</b>,
-        de {{getEdad(representante.fecha_nacimiento)}} años de edad,
+        En la ciudad de Guatemala, {{letrasFecha(null)}},
+        Nosotros: Por una parte <b style="text-transform: uppercase;">{{representante.nombre}}
+          {{representante.apellido}}</b>,
+        de {{letrasEdad(representante.fecha_nacimiento)}} ({{getEdad(representante.fecha_nacimiento)}}) años de edad,
         {{representante.estado_civil.nombre}},
         guatemalteco, {{representante.profesion.nombre}} de este domicilio,
         me identifico con Documento Personal de Identificación, con Código
@@ -3116,69 +3132,72 @@
         actúo en mi calidad de
         <b>GERENTE Y REPRESENTANTE LEGAL DEL INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b>,
         lo que acredito con:
-        <b>a)</b> Nombramiento contenido en Acuerdo Gubernativo número {{letras(representante.acuerdo)}}
-        ({{representante.acuerdo}}) de fecha {{formatoFecha(representante.fecha_acuerdo, 'DD [de] MMMM [de] YYYY')}}
-        ({{formatoFecha(representante.fecha_acuerdo, 'DD/MM/YYYY')}}) del Presidente de la República de Guatemala;
+        <b>a)</b> Nombramiento contenido en Acuerdo Gubernativo número {{letrasDoc(representante.acuerdo)}}
+        ({{representante.acuerdo}}) de fecha {{letrasFecha(representante.fecha_acuerdo)}}
+        del Presidente de la República de Guatemala;
 
-        <b>b)</b> Certificación de la resolución número {{representante.resolucion}}
-        de fecha {{formatoFecha(representante.fecha_resolucion, 'DD [de] MMMM [de] YYYY')}},
+        <b>b)</b> Certificación de la resolución número {{letrasDoc(representante.resolucion)}}
+        ({{representante.resolucion}})
+        de fecha {{letrasFecha(representante.fecha_resolucion)}},
         emitida por la Junta Directiva del Instituto de Fomento Municipal, a través de la cual
         se me nombra como Gerente del Instituto de Fomento Municipal;
 
-        <b>c)</b> Certificación del acta número {{representante.acta_toma_posecion}}
+        <b>c)</b> Certificación del acta número {{letrasDoc(representante.acta_toma_posecion)}}
+        ({{representante.acta_toma_posecion}})
         del libro de actas de la Secretaría
-        General, de fecha {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
-        ({{formatoFecha(representante.fecha_acta_toma_posecion, 'DD/MM/YYYY')}}),
+        General, de fecha {{letrasFecha(representante.fecha_acta_toma_posecion)}},
         en la que consta la toma de posesión del cargo; y
 
         <b>d)</b> Me encuentro debidamente facultado para suscribir el presente convenio con
         base a la autorización de la Junta Directiva del Instituto contenida en la
-        resolución {{prestamo.resolucion.numero}} de fecha
-        {{formatoFecha(prestamo.resolucion.fecha, 'DD [de] MMMM [de] YYYY')}};
+        resolución {{letrasDoc(prestamo.resolucion.numero)}} ({{prestamo.resolucion.numero}}) de fecha
+        {{letrasFecha(prestamo.resolucion.fecha)}}
         señalo como lugar para notificaciones la octava (8va.) calle uno guion sesenta
         y seis (1-66) de la zona nueve (09), de la ciudad y departamento de Guatemala, en lo
         sucesivo podrá ser denominado como <b>“EL INFOM”;</b>
 
         Por otra parte, <b style="text-transform: uppercase;">{{funcionario.nombre}} {{funcionario.apellido}}</b> de
-        {{getEdad(representante.fecha_nacimiento)}} años de edad, {{funcionario.estado_civil.nombre}},
+        {{letrasEdad(representante.fecha_nacimiento)}} ({{getEdad(representante.fecha_nacimiento)}}) años de edad,
+        {{funcionario.estado_civil.nombre}},
         guatemalteco, {{funcionario.profesion.nombre}}, con domicilio en el municipio de
-        {{prestamo.municipalidad.municipio.nombre}}
-        Departamento de {{prestamo.municipalidad.departamento.nombre}}, me identifico con Documento Personal de
+        <b>{{prestamo.municipalidad.municipio.nombre}}
+          Departamento de {{prestamo.municipalidad.departamento.nombre}}</b>, me identifico con Documento Personal de
         Identificación, con Código Único de identificación número {{letrasDPI(funcionario.dpi)}} ({{funcionario.dpi}}),
         extendido por el Registro Nacional de las Personas de la
         República de Guatemala; actúo en mi calidad de
-        <span style="text-transform: uppercase; font-weight: 600;">
+        <span style="text-transform: uppercase;">
           {{funcionario.puesto.nombre}} Y EN REPRESENTACION LEGAL DE LA MUNICIPALIDAD DE
-          {{prestamo.municipalidad.municipio.nombre}},
-          Departamento de {{prestamo.municipalidad.departamento.nombre}}
+          <b>{{prestamo.municipalidad.municipio.nombre}},
+            Departamento de {{prestamo.municipalidad.departamento.nombre}}</b>
         </span>
         calidad que acredito con:
 
-        <b>a)</b> Certificación del Acuerdo de Adjudicación del cargo número
-        ({{funcionario.acuerdo}}) {{formatoFecha(representante.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}}
+        <b>a)</b> Certificación del Acuerdo de Adjudicación del cargo número {{letrasDoc(funcionario.acuerdo)}}
+        ({{funcionario.acuerdo}}) de fecha {{letrasFecha(representante.fecha_acta_toma_posecion)}}
         extendido por la Junta Electoral Departamental del Tribunal
         Supremo Electoral, en el cual se hace la adjudicación del cargo;
 
         <b>b)</b> Certificación del Acta de Toma de Posesión
-        del cargo número ({{funcionario.acta_toma_posecion}}) de fecha
-        {{formatoFecha(funcionario.fecha_acta_toma_posecion, 'DD [de] MMMM [de] YYYY')}},
-        en la cual en el punto {{prestamo.municipalidad.punto_acta}}**, se da posesión al cargo como
+        del cargo número {{letrasDoc(funcionario.acta_toma_posecion)}} ({{funcionario.acta_toma_posecion}}) de fecha
+        {{letrasFecha(funcionario.fecha_acta_toma_posecion)}},
+        en la cual en el punto {{prestamo.municipalidad.punto_acta}}, se da posesión al cargo como
         Alcalde Municipal; extendida por el Secretario Municipal, de conformidad con el Artículo 84,
         literal b del Decreto Número doce guion dos mil dos (12-2002) del Congreso de la
         República de Guatemala; y,
 
         <b>c)</b> Certificación del punto {{prestamo.municipalidad.punto_acta}}* del Acta
-        número ({{prestamo.municipalidad.no_acta}}) de fecha
-        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
+        número {{letrasDoc(prestamo.municipalidad.no_acta)}} ({{prestamo.municipalidad.no_acta}}) de fecha
+        {{letrasFecha(prestamo.municipalidad.fecha_acta)}},
         donde el Concejo Municipal me autoriza para la suscripción del presente convenio;
         señalo como lugar para recibir notificaciones y citaciones el Edificio Municipal, ubicado en
         {{prestamo.municipalidad.direccion}}
-        <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+        <span>
+          <b>{{prestamo.municipalidad.municipio.nombre}}, departamento de
+            {{prestamo.municipalidad.departamento.nombre}}</b>
         </span>
         en lo sucesivo podrá ser denominada como <b>“LA MUNICIPALIDAD”</b>,
-
-        y {{banco.r_nombre}} {{banco.r_apellido}} de {{getEdad(banco.fecha_nacimiento)}} años de edad,
+        y {{banco.r_nombre}} {{banco.r_apellido}} de {{letrasEdad(banco.fecha_nacimiento)}}
+        ({{getEdad(banco.fecha_nacimiento)}}) años de edad,
         {{banco.estado_civil.nombre}}, guatemalteco, {{banco.profesion.nombre}},
         con domicilio en el departamento de Guatemala, me identifico con Documento Personal de
         Identificación (DPI), con Código Único de Identificación (CUI) {{letrasDPI(banco.dpi)}} ({{banco.dpi}})
@@ -3188,7 +3207,7 @@
         <b style="text-transform: uppercase;">REPRESENTANTE DEL {{prestamo.municipalidad.banco.nombre}}</b>
         personería que acredito con mi nombramiento contenido en acta
         notarial autorizada en esta ciudad por el Notario {{banco.notario_autoriza}}, con fecha
-        {{formatoFecha(banco.fecha_acta_notarial, 'DD [de] MMMM [de] YYYY')}},, inscrita en el Registro
+        {{letrasFecha(banco.fecha_acta_notarial)}}, inscrita en el Registro
         Mercantil General de la República con el número {{letras(banco.acta_notarial)}} ({{banco.acta_notarial}}), folio
         {{letras(banco.folio)}} ({{banco.folio}}), del libro {{letras(banco.libro)}} ({{banco.libro}}) de Auxiliares de
         Comercio; llamado en lo sucesivo <b>“EL BANCO”</b>. Los otorgantes hacemos
@@ -3201,11 +3220,12 @@
         establece en las cláusulas siguientes:
 
         <b><u>PRIMERA: A) ANTECEDENTES: I)</u></b> El día
-        {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}}
+        {{letrasFecha(prestamo.municipalidad.fecha_acta)}}
         EL MINISTERIO DE FINANZAS PÚBLICAS, EL INSTITUTO DE FOMENTO MUNICIPAL
         -INFOM-, LA MUNICIPALIDAD DE
-        <span style="text-transform: uppercase; font-weight: 600;">
-          {{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE {{prestamo.municipalidad.departamento.nombre}}
+        <span style="text-transform: uppercase;">
+          <b>{{prestamo.municipalidad.municipio.nombre}}, DEPARTAMENTO DE
+            {{prestamo.municipalidad.departamento.nombre}}</b>
           {{prestamo.municipalidad.banco.nombre}}
         </span>
         SUSCRIBIERON EL CONVENIO INTERINSTITUCIONAL No. {{prestamo.municipalidad.no_convenio}},
@@ -3265,7 +3285,7 @@
         adquirido por <b>“LA MUNICIPALIDAD”</b> con entidades bancarias nacionales en la
         que haya intermediación financiera de <b>“EL INFOM”; d)</b> establecer el
         procedimiento para realizar el débito a la Municipalidad para pagar las
-        cuotas al Plan de Prestaciones del Empleado Municipal; y <b> e)</b>establecer el
+        cuotas al Plan de Prestaciones del Empleado Municipal; y <b> e)</b> establecer el
         procedimiento para el pago por los servicios técnicos que presta
         <b>“EL INFOM” a “LA MUNICIPALIDAD”</b>, amparados en Convenios de pago que forman
         parte de la Cartera de <b>“INFOM”</b> vigentes a la fecha.
@@ -3298,9 +3318,11 @@
         Intermediación Financiera, Plan de Prestaciones del Empleado Municipal,
         Convenios de Pago u otros que hubiere emitido legalmente
         <b> “LA MUNICIPALIDAD”. V) “LA MUNICIPALIDAD”</b> se compromete, de conformidad con lo
-        estipulado en el punto {{prestamo.municipalidad.punto_acta}}* del acta número
-        {{prestamo.municipalidad.no_acta}}* del Libro de Actas del Concejo Municipal donde se
-        encuentra dicha acta, de fecha {{formatoFecha(prestamo.municipalidad.fecha_acta, 'DD [de] MMMM [de] YYYY')}},
+        estipulado en el punto {{prestamo.municipalidad.punto_acta}} del acta número
+        {{letrasDoc(prestamo.municipalidad.no_acta)}} ({{prestamo.municipalidad.no_acta}}) del Libro de Actas del
+        Concejo
+        Municipal donde se
+        encuentra dicha acta, de fecha {{letrasFecha(prestamo.municipalidad.fecha_acta)}},
         a no cancelar la cuenta monetaria aperturada en <b> “EL BANCO”</b>; así como
         mantener los fondos suficientes referentes al aporte constitucional y
         demás aportes provenientes de disposiciones legales, durante la vigencia
@@ -3374,21 +3396,40 @@
       </p>
       <br />
       <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <div class="row">
-        <div class="col-6" style="text-align: left; font-weight: 700">
-          <p style="margin-left: 10%">VARIABLE</p>
-          <p>Gerente de INFOM</p>
+        <div class="col-6" style="text-align: center; font-weight: 700">
+          <p style="margin-left: 10%; text-transform: uppercase;">
+            {{representante.nombre}} {{representante.apellido}}
+            <br>
+            Gerente de INFOM
+          </p>
         </div>
-        <div class="col-6" style="text-align: right; font-weight: 700">
-          <p style="margin-right: 10%">VARIABLE</p>
-          <p>Alcalde Municipal de VARIABLE, <br>
-            Departamento de VARIABLE</p>
+        <div class="col-6" style="text-align: center; font-weight: 700">
+          <p style="margin-right: 10%">
+            {{funcionario.nombre}} {{funcionario.apellido}}
+            <br>
+            Alcalde Municipal de {{prestamo.municipalidad.municipio.nombre}}, <br>
+            Departamento de {{prestamo.municipalidad.departamento.nombre}}
+          </p>
         </div>
       </div>
       <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <div style="text-align: center; font-weight: 700">
-        <p style="margin-right: 5%">VARIABLE</p>
-        <p>VARIABLE (BANCO)</p>
+        <p style="margin-right: 5%">
+          {{banco.r_nombre}} {{banco.r_apellido}}
+          <br>
+          {{banco.nombre}}
+        </p>
       </div>
     </div>
   </div>

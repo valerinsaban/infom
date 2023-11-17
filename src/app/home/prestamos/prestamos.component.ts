@@ -234,6 +234,11 @@ export class PrestamosComponent implements OnInit {
     AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
     AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
     AppComponent.loadScript('assets/js/range.js');
+
+    // AppComponent.loadScript('https://code.jquery.com/jquery-1.11.0.js');
+    // AppComponent.loadScript('https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js');
+    // AppComponent.loadScript('assets/js/mask-money.js');
+    
     this.ngxService.start();
     this.getDepartamentos();
     await this.getUsuarios();
@@ -1623,9 +1628,55 @@ export class PrestamosComponent implements OnInit {
   }
 
   letrasDPI(d: string) {
-    let f = `${d[0]}${d[1]}${d[2]}${d[3]} ${d[4]}${d[5]}${d[6]}${d[7]}${d[8]} ${d[9]}${d[10]}${d[11]}${d[12]}`;
-    let g = f.split(' ');
+    // let f = `${d[0]}${d[1]}${d[2]}${d[3]} ${d[4]}${d[5]}${d[6]}${d[7]}${d[8]} ${d[9]}${d[10]}${d[11]}${d[12]}`;
+    let g = d.split(' ');
     return `${numeroALetrasDPI(g[0])}, ${numeroALetrasDPI(g[1])}, ${g[2][0] == '0' ? 'CERO' : ''} ${numeroALetrasDPI(g[2])}`;
+  }
+
+  letrasDoc(d: string) {
+    let texto = '';
+    let g: any = d.split('-');
+    for (let i = 0; i < g.length; i++) {
+      if(isNaN(g[i])) {
+        texto += `${g[i]}`;
+      } else {
+        if (g[i][0] == '0') {
+          texto += 'CERO ';
+        }
+        // if (g[i][1] == '0') {
+        //   texto += 'CERO ';
+        // }
+        texto += `${numeroALetrasDPI(g[i])}`;
+      }
+      if(i < g.length - 1) {
+        texto += ' GUION '
+      }
+    }
+    return texto;
+  }
+
+  letrasFecha(date: any) {
+    let dia = moment().format('DD');
+    let mes = moment().format('MMMM');
+    let anio = moment().format('YYYY');
+    if (date) {
+      dia = moment(date).format('DD');
+      mes = moment(date).format('MMMM');
+      anio = moment(date).format('YYYY');
+    }
+    return `${numeroALetras(dia)} (${dia}) de ${mes} del ${numeroALetras(anio)} (${anio})`.toLowerCase();
+  }
+
+  letrasEdad(date: any) {
+    return this.letras(this.getEdad(date)).toLowerCase();
+  }
+
+  fecha(date: any) {
+    let fecha = moment().format('DD/MM/YYYY');
+    if (date) {
+      fecha = moment(date).format('DD/MM/YYYY');
+    }
+    return fecha;
   }
 
   formatoFecha(date: any, format: string) {

@@ -47,30 +47,30 @@
                 </tr>
               </thead>
               <tbody id="orders">
-                <tr *ngFor="let f of recibos; let findex = index" class="btn-reveal-trigger">
+                <tr *ngFor="let r of recibos; let findex = index" class="btn-reveal-trigger">
                   <td>
-                    <span class="text-primary">{{f.nombre}}</span> <br>
-                    <b>{{f.nit}}</b>
+                    <span class="text-primary">{{r.nombre}}</span> <br>
+                    <b>{{r.nit}}</b>
                   </td>
-                  <td class="py-2">{{f.fecha | date: 'dd/MM/YYYY HH:mm'}}</td>
+                  <td class="py-2">{{r.fecha | date: 'dd/MM/YYYY HH:mm'}}</td>
                   <td class="py-2">
                     <span class="badge"
-                      [ngClass]="{'badge-success': f.estado == 'Vigente', 'badge-warning': f.estado == 'Pendiente', 'badge-danger': f.estado == 'Anulada'}">
-                      {{f.estado}}<span class="ms-1 fa fa-check"></span>
+                      [ngClass]="{'badge-success': r.estado == 'Vigente', 'badge-warning': r.estado == 'Pendiente', 'badge-danger': r.estado == 'Anulada'}">
+                      {{r.estado}}<span class="ms-1 fa fa-check"></span>
                     </span>
                   </td>
-                  <td class="py-2 text-end font-w600">{{f.monto | number: '.2-2'}}</td>
+                  <td class="py-2 text-end font-w600">{{r.monto | number: '.2-2'}}</td>
                   <td>
                     <div class="dropdown">
-                      <button (click)="imprimirRecibo(f.uuid)" type="button" class="btn btn-primary light">
+                      <button (click)="imprimirRecibo(r)" type="button" class="btn btn-primary light">
                         <i class="fa-solid fa-print"></i>
                       </button>
                       <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown" style="margin-left: 10px;">
                         <i class="fa-solid fa-list"></i>
                       </button>
                       <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item" (click)="anularRecibo(f, findex)">Anular</a>
-                        <a class="dropdown-item" (click)="deleteRecibo(f, findex)">Eliminar</a>
+                        <a class="dropdown-item" (click)="anularRecibo(r, findex)">Anular</a>
+                        <a class="dropdown-item" (click)="deleteRecibo(r, findex)">Eliminar</a>
                       </div>
                     </div>
                   </td>
@@ -196,6 +196,69 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-xl-12">
+  <div class="card h-auto">
+    <div class="card-body p-0">
+
+      <div hidden>
+        <div id="recibo" style="color: black; font-size: 8px;">
+          <table class="table table-borderless" style="width: 100%">
+            <tbody *ngIf="recibo">
+              <tr>
+                <td rowspan="8" style="
+                  writing-mode: vertical-rl;
+                  transform: rotate(180deg);
+                  font-size: 8px;
+                  border-right: 2px solid; 
+                  height: 500px; 
+                  width: 28px;
+                  padding: 0px;">
+                  IMPRESO POR EL INSTITUTO DE FOMENTO MUNICIPAL -INFOM- NIT: 97425-0,
+                  100,000 SEGÚN ENVIO MUNICIPAL No. 31054 DE FECHA 05/06/2014
+                  CORRELATIVO No. 01/2014 DE FECHA 05/08/2014, CUENTA 11-20, LIBRO 12,
+                  FOLIO 38
+                </td>
+              </tr>
+              <tr>
+                <td style="border-top: 2px solid; border-right: 2px solid;" colspan="2">
+                  <b>RECIBÍ DE:</b> {{recibo.nombre}}
+                  <br><br>
+                  <b>LA SUMA DE:</b> {{letrasMoneda(recibo.monto)}} ({{recibo.monto | number: '.2-2'}})
+                  <br><br>
+                  <b>POR:</b>
+                  <span style="text-transform: uppercase;">
+                      {{recibos_detalles.length ? recibos_detalles[0].descripcion : ''}}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td style="border-right: 2px solid; border-top: 2px solid;" colspan="2">
+                  <b>ABONO A CUENTA:</b>
+                  <br><br>
+                  <b>EXPEDIDO:</b>
+                </td>
+              </tr>
+              <tr style="border-right: 2px solid;">
+                <td style="border-bottom: 2px solid; text-align: left;">
+                  <b>GUATEMALA, {{recibo.fecha}}:</b>
+                </td>
+                <td style="border-bottom: 2px solid; text-align: right;">
+                  <b>FIRMA ELECTRONICA:</b> dVljNxNXWlandnaVjaDJAKdaskJDJksk
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="text-align: center;">
+            AUTORIZACIÓN POR LA CONTRALORÍA GENEREAL DE CUENTAS SEGÚN RESOLUCIÓN
+            No. DM./001275 Gestión: 61796 de Fecha 09/05/2014
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

@@ -15,6 +15,10 @@ export class RecibosDetallesService {
     return this.rootService.get(this.route);
   }
 
+  getRecibosDetallesRecibo(id_recibo: number): Promise<any> {
+    return this.rootService.get(this.route + '/recibo/' + id_recibo);
+  }
+
   getReciboDetalle(id: number): Promise<any> {
     return this.rootService.get(this.route + '/' + id);
   }

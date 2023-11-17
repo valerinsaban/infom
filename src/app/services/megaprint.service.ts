@@ -151,32 +151,36 @@ export class MegaPrintService {
         </xml_dte>
     </FirmaDocumentoRequest>`;
 
-    let res: any = await this.httpClient.post('/solicitaFirma', body, { headers, responseType: 'text' }).toPromise();
-    var xml = convert.xml2json(res, { compact: true, spaces: 4 });
-    let firma = JSON.parse(xml);
-    if (firma.FirmaDocumentoResponse.tipo_respuesta._text == '0') {
-      let dte = firma.FirmaDocumentoResponse.xml_dte._text;
-      let uuid = firma.FirmaDocumentoResponse.uuid._text;
-
-      body = `<?xml version="1.0" encoding="UTF-8"?>
-      <RegistraDocumentoXMLRequest id="${uuid}">
-          <xml_dte>
-              <![CDATA[${dte}]]>
-          </xml_dte>
-      </RegistraDocumentoXMLRequest>`;
-
-      res = await this.httpClient.post('/registrarDocumentoXML', body, { headers, responseType: 'text' }).toPromise();
-      xml = convert.xml2json(res, { compact: true, spaces: 4 });
-      let certificado = JSON.parse(xml);
-
-      if (certificado.RegistraDocumentoXMLResponse.tipo_respuesta._text == '0') {
-        return { resultado: true, res: certificado.RegistraDocumentoXMLResponse };
+    try {
+      let res: any = await this.httpClient.post('/solicitaFirma', body, { headers, responseType: 'text' }).toPromise();
+      var xml = convert.xml2json(res, { compact: true, spaces: 4 });
+      let firma = JSON.parse(xml);
+      if (firma.FirmaDocumentoResponse.tipo_respuesta._text == '0') {
+        let dte = firma.FirmaDocumentoResponse.xml_dte._text;
+        let uuid = firma.FirmaDocumentoResponse.uuid._text;
+  
+        body = `<?xml version="1.0" encoding="UTF-8"?>
+        <RegistraDocumentoXMLRequest id="${uuid}">
+            <xml_dte>
+                <![CDATA[${dte}]]>
+            </xml_dte>
+        </RegistraDocumentoXMLRequest>`;
+  
+        res = await this.httpClient.post('/registrarDocumentoXML', body, { headers, responseType: 'text' }).toPromise();
+        xml = convert.xml2json(res, { compact: true, spaces: 4 });
+        let certificado = JSON.parse(xml);
+  
+        if (certificado.RegistraDocumentoXMLResponse.tipo_respuesta._text == '0') {
+          return { resultado: true, res: certificado.RegistraDocumentoXMLResponse };
+        } else {
+          return { resultado: false, res: certificado.RegistraDocumentoXMLResponse };
+        }
+  
       } else {
-        return { resultado: false, res: certificado.RegistraDocumentoXMLResponse };
-      }
-
-    } else {
-      return { resultado: false, res: firma.FirmaDocumentoResponse };
+        return { resultado: false, res: firma.FirmaDocumentoResponse };
+      } 
+    } catch (error) {
+      return { resultado: false, res: error };
     }
   }
 

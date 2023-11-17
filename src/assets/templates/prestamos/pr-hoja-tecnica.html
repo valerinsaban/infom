@@ -13,21 +13,8 @@
       --color-pageSheet: #cfcfcf;
       --color-paper: white;
 
-      --bs-body-line-height: {
-          {
-          interlineado
-        }
-      }
-
-      px !important;
-
-      --bs-body-font-size: {
-          {
-          letra
-        }
-      }
-
-      px !important;
+      --bs-body-line-height: {{interlineado}}px !important;
+      --bs-body-font-size: {{letra}}px !important;
       --bs-border-color: #000 !important;
     }
 
@@ -41,7 +28,7 @@
       }
 
       @bottom-right {
-        content: 'Pagina ' counter(page) ' de ' counter(pages)
+        content: 'Pagina ' counter(page)
       }
 
     }

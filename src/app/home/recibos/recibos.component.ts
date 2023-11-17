@@ -8,6 +8,10 @@ import { MegaPrintService } from 'src/app/services/megaprint.service';
 import Swal from 'sweetalert2';
 import { RecibosDetallesService } from 'src/app/services/documentos/recibos_detalles.service';
 import { AppComponent } from 'src/app/app.component';
+import { ReporteService } from 'src/app/services/reportes.service';
+import * as moment from 'moment';
+
+declare function numeroALetrasMoneda(number: any): any;
 
 @Component({
   selector: 'app-recibos',
@@ -31,7 +35,8 @@ export class RecibosComponent {
     private ngxService: NgxUiLoaderService,
     private megaprintService: MegaPrintService,
     private recibosService: RecibosService,
-    private recibos_detallesService: RecibosDetallesService
+    private recibos_detallesService: RecibosDetallesService,
+    private reporteService: ReporteService
   ) {
     this.reciboForm = new FormGroup({
       numero: new FormControl(null),
@@ -48,6 +53,7 @@ export class RecibosComponent {
   }
 
   async ngOnInit() {
+    AppComponent.loadScript('assets/js/letras-moneda.js');
     AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
     AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
     AppComponent.loadScript('assets/js/range.js');
@@ -143,21 +149,24 @@ export class RecibosComponent {
     })
   }
 
-  async imprimirRecibo(uuid: any) {
+  async imprimirRecibo(r: any) {
     this.ngxService.start();
 
-    let data = await this.megaprintService.solicitarToken();
-    if (data.resultado) {
-      let token = data.res.token._text;
+    let recibo = await this.recibosService.getRecibo(r.id);
+    if (recibo) {
+      this.recibo = recibo;
+      this.recibo.fecha = moment(this.recibo.fecha).format('DD [de] MMMM [de] YYYY')
 
-      data = await this.megaprintService.imprimir(token, uuid);
-      if (data.resultado) {
-        let blob = this.b64toBlob(data.res.pdf._text);
-        let blobUrl: any = URL.createObjectURL(blob);
-        window.open(blobUrl);
+      let recibos_detalles = await this.recibos_detallesService.getRecibosDetallesRecibo(this.recibo.id);
+      if (recibos_detalles) {
+        this.recibos_detalles = recibos_detalles;
       }
-      this.ngxService.stop();
     }
+
+    let rep: any = await this.reporteService.get('recibo');
+    this.catalogo(rep, 'recibo', print)
+
+    this.ngxService.stop();
   }
 
   calc(d: any) {
@@ -192,29 +201,33 @@ export class RecibosComponent {
     this.recibos_detalles.splice(u, 1)
   }
 
+  letrasMoneda(number: any) {
+    return numeroALetrasMoneda(number);
+  }
+
   limpiar() {
     this.recibo = null;
     this.reciboForm.reset();
   }
 
-  b64toBlob(b64Data: any, sliceSize = 512) {
-    const byteCharacters = atob(b64Data);
-    const byteArrays = [];
+  print(rep: any) {
+    let popupWin: any = window.open("", "_blank");
+    popupWin.document.open();
+    popupWin.document.write(rep);
+    popupWin.document.close();
+  }
 
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      const slice = byteCharacters.slice(offset, offset + sliceSize);
+  async catalogo(rep: any, slug: any, print: any) {
+    let contenido: any = document.getElementById(slug);
+    contenido = contenido.innerHTML.toString();
 
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
+    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
+    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
+    rep = rep.replaceAll("{{contenido}}", contenido);
 
-      const byteArray = new Uint8Array(byteNumbers);
-      byteArrays.push(byteArray);
+    if (print) {
+      this.print(rep)
     }
-
-    const blob = new Blob(byteArrays, { type: 'application/pdf' });
-    return blob;
   }
 
 }

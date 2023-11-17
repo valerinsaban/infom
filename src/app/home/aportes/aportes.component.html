@@ -45,7 +45,9 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let a of importes; let aindex = index">
-                      <td><span class="text-primary">{{a.mes}}</span></td>
+                      <td>
+                        <span class="text-primary">{{a.mes | date: 'MMMM YYYY'}}</span>
+                      </td>
                       <td>{{a.constitucional | number: '.2-2'}}</td>
                       <td>{{a.iva_paz | number: '.2-2'}}</td>
                       <td>{{a.vehiculos | number: '.2-2'}}</td>
