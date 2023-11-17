@@ -17,7 +17,7 @@ import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
-import { ProgramasGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
+import { ProgramasGarantiasService } from 'src/app/services/catalogos/programas-garantias.service';
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
 import { DestinosService } from 'src/app/services/catalogos/destinos.service';
 import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-prestamos.service';

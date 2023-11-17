@@ -5,7 +5,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import Swal from 'sweetalert2';
 import { HomeComponent } from '../../home.component';
-import { ProgramasGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
+import { ProgramasGarantiasService } from 'src/app/services/catalogos/programas-garantias.service';
 import { GarantiasService } from 'src/app/services/catalogos/garantias.service';
 
 @Component({

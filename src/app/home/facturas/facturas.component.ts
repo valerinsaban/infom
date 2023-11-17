@@ -44,6 +44,7 @@ export class FacturasComponent {
       uuid: new FormControl(null),
       monto: new FormControl(null),
       estado: new FormControl(null),
+      id_amortizacion: new FormControl(null)
     });
   }
 

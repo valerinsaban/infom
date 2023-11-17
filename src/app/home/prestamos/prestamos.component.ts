@@ -17,7 +17,7 @@ import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
-import { ProgramasGarantiasService } from 'src/app/services/catalogos/clases-prestamos-garantias.service';
+import { ProgramasGarantiasService } from 'src/app/services/catalogos/programas-garantias.service';
 import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
 import { DestinosService } from 'src/app/services/catalogos/destinos.service';
 import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-prestamos.service';
@@ -767,9 +767,9 @@ export class PrestamosComponent implements OnInit {
           abono: 0,
           saldo_final: parseFloat(saldo_inicial) + parseFloat(orden_pago.data.monto),
           descripcion: `Retito de Desembolso No. ${orden_pago.data.no_desembolso} del prestamo ${this.prestamo.no_prestamo} S/Resol #${this.prestamo.resolucion.numero}.`,
-          capital: null,
-          interes: null,
-          iva: null,
+          capital: 0,
+          interes: 0,
+          iva: 0,
           id_prestamo: this.prestamo.id,
           id_orden_pago: orden_pago.data.id,
           id_recibo: null
@@ -782,9 +782,9 @@ export class PrestamosComponent implements OnInit {
           abono: 0,
           saldo_final: orden_pago.data.monto,
           descripcion: `Retito de Desembolso No. ${orden_pago.data.no_desembolso} del prestamo ${this.prestamo.no_prestamo} S/Resol #${this.prestamo.resolucion.numero}.`,
-          capital: null,
-          interes: null,
-          iva: null,
+          capital: 0,
+          interes: 0,
+          iva: 0,
           id_prestamo: this.prestamo.id,
           id_orden_pago: orden_pago.data.id,
           id_recibo: null

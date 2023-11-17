@@ -310,6 +310,7 @@ export class CobrosComponent {
             numero_fel: null,
             monto: parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva),
             estado: 'Vigente',
+            id_amortizacion: amortizacion.id
           },
           detalles: [{
             cantidad: 1,
@@ -351,8 +352,8 @@ export class CobrosComponent {
             if (recibo.resultado) {
     
               let desc = `AMORTIZACIÓN CORRESPONDIENTE AL
-              PERIODO DE ${moment(amortizacion.mes).format('MMMM YYYY')}, CAPITAL Q. ${amortizacion.capital}
-              INTERÉS Q. ${amortizacion.interes} IVA Q. ${amortizacion.iva} RECUPERADOS
+              PERIODO DE ${moment(amortizacion.mes).format('MMMM YYYY')}, CAPITAL Q. ${this.moneda(amortizacion.capital)}
+              INTERÉS Q. ${this.moneda(amortizacion.interes)} IVA Q. ${this.moneda(amortizacion.iva)} RECUPERADOS
               CON EL APORTE CONSTITUCIONAL, PRÉSTAMO
               ${amortizacion.prestamo.no_prestamo} RESOLUCIÓN ${amortizacion.prestamo.resolucion.numero}
               DE ${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre} SEGÚN
@@ -375,7 +376,7 @@ export class CobrosComponent {
                 cargo: 0,
                 abono: amortizacion.capital,
                 saldo_final: amortizacion.saldo_final,
-                descripcion: `V/Amortizacion Capital. ${amortizacion.capital} Interes ${amortizacion.interes}. IVA ${amortizacion.iva}.`,
+                descripcion: `V/Amortizacion Capital. ${this.moneda(amortizacion.capital)} Interes ${this.moneda(amortizacion.interes)}. IVA ${this.moneda(amortizacion.iva)}.`,
                 capital: amortizacion.capital,
                 interes: amortizacion.interes,
                 iva: amortizacion.iva,
@@ -394,7 +395,6 @@ export class CobrosComponent {
 
       }
 
-      this.limpiar();
       this.alert.alertMax('Operacion Correcta', 'Documentos Generados', 'success');
 
     } else {
@@ -501,6 +501,9 @@ export class CobrosComponent {
     this.cobro = null;
   }
 
-
+  moneda(total: any) {
+    let currency = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return currency.format(total);
+  }
 
 }
