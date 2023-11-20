@@ -35,6 +35,14 @@
       position: running(header);
     }
 
+    #footer {
+      position: fixed;
+      left: 20px;
+      bottom: 0px;
+      height: 30px;
+      width: 100%;
+    }
+
     .pagedjs_page {
       background-color: white;
       box-shadow: 0 0 0 1px #cfcfcf;
@@ -71,14 +79,23 @@
         </span>
       </div>
       <div class="col-3" style="text-align: right;">
-        Generado: <b>{{generado}}</b> <br>
-        Usuario: <b>{{usuario}}</b>
       </div>
     </div>
     <hr>
   </div>
 
   {{contenido}}
+
+  <div id="footer">
+    <div class="row">
+      <div class="col-5">
+        Generado: <b>{{generado}}</b>
+      </div>
+      <div class="col-4">
+        Usuario: <b>{{usuario}}</b>
+      </div>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
   <script>
