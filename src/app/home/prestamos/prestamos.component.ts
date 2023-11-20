@@ -90,7 +90,7 @@ export class PrestamosComponent implements OnInit {
   reporte_view: any;
   aporte: any;
 
-  estado: string = 'Pendiente';
+  estado: string = 'Aprobado';
 
   counts: any = {
     pendientes: null,
@@ -1032,7 +1032,7 @@ export class PrestamosComponent implements OnInit {
     this.ordenPagoForm.controls['fecha_acta'].setValue(i.fecha_acta);
     this.ordenPagoForm.controls['id_prestamo'].setValue(i.id_prestamo);
 
-    this.orden_pago.fecha = moment(this.orden_pago.fecha).format('DD [de] MMMM [de] YYYY')
+    this.orden_pago.fecha = moment(i.fecha).format('DD [de] MMMM [de] YYYY')
   }
 
   async getAmortizaciones(i: any, index: number) {

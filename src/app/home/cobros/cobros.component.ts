@@ -117,7 +117,7 @@ export class CobrosComponent {
         let proyeccion = await this.proyeccionesService.getProyeccionesPrestamoMes(prestamos[p].id, this.cobro.mes);
 
         if (proyeccion) {
-         
+
           let fecha = this.cobro_anterior.fecha;
           let cuotas: any = [
             {
@@ -129,7 +129,7 @@ export class CobrosComponent {
               fecha_fin: moment(fecha).endOf('month').format('YYYY-MM-DD')
             }
           ];
-  
+
           for (let c = 0; c < cuotas.length; c++) {
             let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamoFecha(prestamos[p].id, cuotas[c].fecha_inicio, cuotas[c].fecha_fin);
             if (ordenes_pagos.length) {
@@ -140,7 +140,7 @@ export class CobrosComponent {
                       fecha_inicio: moment(ordenes_pagos[o].fecha).format('YYYY-MM-DD'),
                       fecha_fin: moment(fecha).format('YYYY-MM-DD')
                     }
-                  } else {                    
+                  } else {
                     if (c == 1) {
                       cuotas.splice(1, 1);
                     }
@@ -178,7 +178,7 @@ export class CobrosComponent {
               }
             }
           }
-  
+
           await this.calcAmortizacion(prestamos[p], cuotas, proyeccion);
 
         }
@@ -297,8 +297,8 @@ export class CobrosComponent {
         let impuestos = Math.round(((interes_iva / 1.12 * 0.12) + Number.EPSILON) * 100) / 100;
         let monto_gravable = interes_iva - impuestos;
         monto_gravable = Math.round(((monto_gravable) + Number.EPSILON) * 100) / 100;
-        
-        
+
+
         let info: any = {
           factura: {
             numero: 0,
@@ -327,18 +327,23 @@ export class CobrosComponent {
             // id_factura: factura.data.id
           }]
         }
-        
+
         data = await this.megaprintService.certificar(token, info);
         if (data.resultado) {
-          
+
           info.factura.uuid = data.res.uuid._text;
           let factura = await this.facturasService.postFactura(info.factura);
-  
+
           if (factura.resultado) {
-    
+
             info.detalles[0].id_factura = factura.data.id;
             await this.factuas_detallesService.postFacturaDetalle(info.detalles[0]);
-    
+
+            let desc = `AMORTIZACIÓN CORRESPONDIENTE AL
+            PERIODO DE ${moment(amortizacion.mes).format('MMMM YYYY')}, RECUPERADOS
+            CON EL APORTE CONSTITUCIONAL, PRÉSTAMO ${amortizacion.prestamo.no_prestamo} RESOLUCIÓN ${amortizacion.prestamo.resolucion.numero} 
+            SEGÚN FACTURA No. #${factura.data.id}`;
+
             let recibo = await this.recibosService.postRecibo({
               numero: 0,
               fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -346,30 +351,43 @@ export class CobrosComponent {
               nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
               monto: interes_iva,
               estado: 'Vigente',
+              descripcion: desc,
               id_factura: factura.data.id
             });
-    
+
             if (recibo.resultado) {
-    
-              let desc = `AMORTIZACIÓN CORRESPONDIENTE AL
-              PERIODO DE ${moment(amortizacion.mes).format('MMMM YYYY')}, CAPITAL Q. ${this.moneda(amortizacion.capital)}
-              INTERÉS Q. ${this.moneda(amortizacion.interes)} IVA Q. ${this.moneda(amortizacion.iva)} RECUPERADOS
-              CON EL APORTE CONSTITUCIONAL, PRÉSTAMO
-              ${amortizacion.prestamo.no_prestamo} RESOLUCIÓN ${amortizacion.prestamo.resolucion.numero}
-              DE ${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre} SEGÚN
-              FACTURA No. #${factura.data.id}`;
 
               await this.recibos_detallesService.postReciboDetalle({
                 cantidad: 1,
                 tipo: 'S',
-                descripcion: desc,
-                precio_unitario: interes_iva,
+                descripcion: `CAPITAL`,
+                precio_unitario: amortizacion.capital,
                 descuentos: 0,
-                impuestos: impuestos,
-                subtotal: interes_iva,
+                impuestos: 0,
+                subtotal: amortizacion.capital,
                 id_recibo: recibo.data.id
               });
-    
+              await this.recibos_detallesService.postReciboDetalle({
+                cantidad: 1,
+                tipo: 'S',
+                descripcion: `INTERÉS`,
+                precio_unitario: amortizacion.interes,
+                descuentos: 0,
+                impuestos: 0,
+                subtotal: amortizacion.interes,
+                id_recibo: recibo.data.id
+              });
+              await this.recibos_detallesService.postReciboDetalle({
+                cantidad: 1,
+                tipo: 'S',
+                descripcion: `IVA`,
+                precio_unitario: amortizacion.iva,
+                descuentos: 0,
+                impuestos: 0,
+                subtotal: amortizacion.iva,
+                id_recibo: recibo.data.id
+              });
+
               await this.movimientosService.postMovimiento({
                 fecha: moment(this.cobro.fecha).format('YYYY-MM-DD'),
                 saldo_inicial: amortizacion.saldo_inicial,
@@ -384,14 +402,14 @@ export class CobrosComponent {
                 id_orden_pago: null,
                 id_recibo: recibo.data.id
               });
-    
+
             }
-    
+
           }
         } else {
           this.alert.alertMax('Operacion Incorrecta', 'Error al certificar Factura MegaPrint', 'error');
         }
-        
+
 
       }
 

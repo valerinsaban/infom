@@ -3438,7 +3438,7 @@
     <div style="margin: 0px 50px" *ngIf="orden_pago">
       <p style="text-align: right">ORDEN DE PAGO No. <b>{{orden_pago.numero}}</b></p>
       <br />
-      <p>Señor Supervisor de Técnico de Tesorería I:</p>
+      <b><h6>Señor Supervisor Técnico de Tesorería I:</h6></b>
       <br>
       <p>
         Sírvase entregar a: <b style="text-transform: uppercase;">TESORERIA MUNICIPAL DE
@@ -3465,7 +3465,7 @@
       <p>
         No. Acta: <b>{{orden_pago.no_acta}}</b><br>
         Punto. Acta: <b>{{orden_pago.punto_acta}}</b><br>
-        Fecha. Acta: <b>{{orden_pago.fecha_acta}}</b><br>
+        Fecha. Acta: <b>{{orden_pago.fecha_acta | date: 'dd/MM/YYYY'}}</b><br>
         Recibo No: <b>{{orden_pago.no_recibo}}</b><br>
         Destino: <b>{{destinos_prestamos[0].destino.nombre}}</b>
       </p>

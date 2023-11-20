@@ -229,17 +229,40 @@
                   <br><br>
                   <b>LA SUMA DE:</b> {{letrasMoneda(recibo.monto)}} ({{recibo.monto | number: '.2-2'}})
                   <br><br>
-                  <b>POR:</b>
+                  <b>CONCEPTO:</b>
                   <span style="text-transform: uppercase;">
-                      {{recibos_detalles.length ? recibos_detalles[0].descripcion : ''}}
+                      {{recibo.descripcion}}
                   </span>
+                  <br><br>
+                  <br>
+                  <div style="margin: 0 150px;">
+                    
+                    <table style="width: 100%;">
+                      <thead style="border-bottom: solid 1px;">
+                        <td><b>DESCRIPCION</b></td>
+                        <td style="text-align: right;"><b>MONTO</b></td>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let r of recibos_detalles">
+                          <td>{{r.descripcion}}</td>
+                          <td style="text-align: right;">{{r.subtotal | number: '.2-2'}}</td>
+                        </tr>
+                      </tbody>
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td style="text-align: right;">{{recibo.monto | number: '.2-2'}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </td>
               </tr>
               <tr>
                 <td style="border-right: 2px solid; border-top: 2px solid;" colspan="2">
                   <b>ABONO A CUENTA:</b>
                   <br><br>
-                  <b>EXPEDIDO:</b>
+                  <b>EXPEDIDO: {{getUsuario()}}</b>
                 </td>
               </tr>
               <tr style="border-right: 2px solid;">

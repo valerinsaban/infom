@@ -13,7 +13,7 @@
       --color-pageSheet: #cfcfcf;
       --color-paper: white;
       --bs-body-line-height: 1.6;
-      --bs-body-font-size: 9px !important;
+      --bs-body-font-size: 11px !important;
     }
 
     @page {
@@ -59,20 +59,22 @@
   <div id="header">
     <div class="row">
       <div class="col-3">
-        <img src="http://45.79.218.175/assets/images/logo/logo.png" width="100">
+        <img src="http://localhost:4200/assets/images/recibo.jpg" width="150">
       </div>
       <div class="col-6" style="text-align: center;">
         <span style="font-size: 12px;">
-          <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b>
-        </span>
-        <br>
-        <span style="font-size: 11px; text-transform: uppercase">
-          RECIBO
+          <!-- <b>INSTITUTO DE FOMENTO MUNICIPAL -INFOM-</b> -->
+          No. <br>
+          <span style="color: red;">{{no_recibo}}</span>
         </span>
       </div>
-      <div class="col-3" style="text-align: right;">
-        Generado: <b>{{generado}}</b> <br>
-        Usuario: <b>{{usuario}}</b>
+      <div class="col-3" style="text-align: left;">
+        <!-- Generado: <b>{{generado}}</b> <br>
+        Usuario: <b>{{usuario}}</b> -->
+        <span style="margin-left: 20px;">Forma: 7-B</span> <br>
+        <div style="border: 1px solid; border-radius: 4px; height: 30px; text-align: left; padding: 7px;">
+          <span>Por: <b>{{monto}}</b></span>
+        </div>
       </div>
     </div>
     <hr>

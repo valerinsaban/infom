@@ -164,6 +164,9 @@ export class RecibosComponent {
     }
 
     let rep: any = await this.reporteService.get('recibo');
+    rep = rep.replaceAll("{{no_recibo}}", recibo.id);
+    rep = rep.replaceAll("{{monto}}", this.moneda(recibo.monto));
+    rep = rep.replaceAll("{{usuario}}", `${this.usuario}`);
     this.catalogo(rep, 'recibo', print)
 
     this.ngxService.stop();
@@ -228,6 +231,15 @@ export class RecibosComponent {
     if (print) {
       this.print(rep)
     }
+  }
+
+  getUsuario() {
+    return HomeComponent.usuario.nombre;
+  }
+
+  moneda(total: any) {
+    let currency = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return currency.format(total);
   }
 
 }

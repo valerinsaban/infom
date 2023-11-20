@@ -824,12 +824,117 @@
                 <thead>
                   <tr style="border: solid 1px">
                     <td style="width: 30%; border-top-left-radius: 10px">MUNICIPALIDAD</td>
-                    <td style="text-align: center;"><b>PRESTAMO</b> <br> Fecha Inicial</td>
+                    <td style="text-align: center;"><b>PRESTAMO</b> 
+                      <!-- <br> Fecha Inicial -->
+                    </td>
+                    <!-- <td style="text-align: center;">Fecha Final</td> -->
+                    <td style="text-align: right;">Dias Cálculo</td>
+                    <!-- <td style="text-align: center;">Saldo Capital</td> -->
+                    <!-- <td style="text-align: center;">Amortización</td> -->
+                    <td style="text-align: right;">Intereses</td>
+                    <td style="width: 15%; text-align: right;">(%)Tasa Interés</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-weight: 500; font-size: 18px;">
+                      <u>FONDOS PROPIOS</u> <br>
+                    </td>
+                    <td></td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="programas.length > 0">
+                  <ng-container *ngFor="let p of programas">
+                    <tr style="font-weight: 500; font-size: 12px;">
+                      <td>{{p.codigo}} - FONDO PATRIMONIAL/{{p.nombre}}</td>
+                    </tr>
+                    <ng-container *ngFor="let m of p.municipalidades">
+                      <ng-container *ngFor="let a of m.amortizaciones">
+                        <tr>
+                          <td>{{a.prestamo.municipalidad.departamento.nombre}},
+                            {{a.prestamo.municipalidad.municipio.nombre}}</td>
+                          <td style="text-align: center;"><b>{{a.prestamo.no_prestamo}}</b></td>
+                        </tr>
+                        <!-- <tr *ngFor="let d of a.amortizaciones_detalles" style="background-color:#E4E4E4">
+                          <td style="background-color:white"></td>
+                          <td>{{d.fecha_inicio | date: 'dd/MM/YYYY'}}</td>
+                          <td>{{d.fecha_fin | date: 'dd/MM/YYYY'}}</td>
+                          <td style="text-align: right;">{{d.dias}}</td>
+                          <td style="text-align: right;">{{d.saldo_inicial | number: '.2-2'}} </td>
+                          <td style="text-align: right;">{{d.capital | number: '.2-2'}}</td>
+                          <td style="text-align: right;">{{d.interes | number: '.2-2'}}</td>
+                          <td style="text-align: right;">{{a.prestamo.tasa}}%</td>
+                        </tr> -->
+                        <tr>
+                          <td></td>
+                          <td style="text-align: right;">TOTAL * PRÉSTAMO</td>
+                          <td style="text-align: right;">{{a.dias}}</td>
+                          <td style="text-align: right;">{{a.interes | number: '.2-2'}}</td>
+                          <td style="text-align: right;">{{a.prestamo.tasa}}%</td>
+                        </tr>
+                      </ng-container>
+                      <tr style="border: solid 1px;">
+                        <td></td>
+                        <td>TOTAL * MUNICIPALIDAD </td>
+                        <td style="text-align: right;">{{m.dias}}</td>
+                        <td style="text-align: right;">{{m.interes | number:
+                          '.2-2'}}</td>
+                        <td style="text-align: right;"></td>
+                      </tr>
+                    </ng-container>
+                    <tr style="background-color:#E4E4E4">
+                      <td colspan="3"><span style="margin-left: 20px;">TOTAL * PROGRAMA</span></td>
+                      <td style="text-align: right;">{{p.interes | number: '.2-2'}}</td>
+                      <td style="text-align: right;"></td>
+                    </tr>
+                    <tr style="background-color:white; color: white !important;">
+                      <td colspan="3"><span style="margin-left: 20px;">...</span></td>
+                      <td style="text-align: right;"></td>
+                      <td style="text-align: right;"></td>
+                      <td style="text-align: right;"></td>
+                    </tr>
+                  </ng-container>
+                  <tr>
+                    <td style="color: white;">...</td>
+                  </tr>
+                  <tr style="border: solid 1px">
+                    <td colspan="3" style="font-weight: 500; font-size: 18px;">
+                      TOTAL FONDOS PROPIOS
+                    </td>
+                    <td style="text-align: right;">{{getTotalDevengados('interes') | number: '.2-2'}}</td>
+                    <td style="text-align: right;"></td>
+                  </tr>
+                  <tr>
+                    <td style="color: white;">....</td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><span style="margin-left: 20px;">TOTAL GENERAL:</span></td>
+                    <!-- <td style="text-align: right; border-top: solid 2px; border-bottom: solid 2px">
+                      {{getTotalDevengados('capital') | number: '.2-2'}}
+                    </td> -->
+                    <td style="text-align: right; border-top: solid 2px; border-bottom: solid 2px">
+                      {{getTotalDevengados('interes') | number: '.2-2'}}
+                    </td>
+                    <td style="color: white;">...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="intereses-devengados" style="color: black; font-size: 8px;">
+              <table class="rad" style="width: 100%">
+                <thead>
+                  <tr style="border: solid 1px">
+                    <td style="width: 30%; border-top-left-radius: 10px">MUNICIPALIDAD</td>
+                    <td style="text-align: center;"><b>PRESTAMO</b> 
+                      <br> Fecha Inicial
+                    </td>
                     <td style="text-align: center;">Fecha Final</td>
                     <td style="text-align: center;">Dias Cálculo</td>
-                    <td style="text-align: center;">Saldo Capital</td>
+                    <td style="text-align: center;">Saldo Inicial</td>
                     <td style="text-align: center;">Amortización</td>
                     <td style="text-align: center;">Intereses</td>
+                    <td style="text-align: center;">Saldo Final</td>
                     <td style="width: 5%; text-align: right;">(%)Tasa Interés</td>
                   </tr>
                 </thead>
@@ -855,13 +960,14 @@
                         </tr>
                         <tr *ngFor="let d of a.amortizaciones_detalles" style="background-color:#E4E4E4">
                           <td style="background-color:white"></td>
-                          <td>{{d.fecha_inicio}}</td>
-                          <td>{{d.fecha_fin}}</td>
+                          <td>{{d.fecha_inicio | date: 'dd/MM/YYYY'}}</td>
+                          <td>{{d.fecha_fin | date: 'dd/MM/YYYY'}}</td>
                           <td style="text-align: right;">{{d.dias}}</td>
                           <td style="text-align: right;">{{d.saldo_inicial | number: '.2-2'}} </td>
                           <td style="text-align: right;">{{d.capital | number: '.2-2'}}</td>
                           <td style="text-align: right;">{{d.interes | number: '.2-2'}}</td>
-                          <td style="text-align: right;">10%</td>
+                          <td style="text-align: right;">{{d.saldo_final | number: '.2-2'}} </td>
+                          <td style="text-align: right;">{{a.prestamo.tasa}}%</td>
                         </tr>
                         <tr>
                           <td></td>
@@ -871,6 +977,7 @@
                           <td style="text-align: right;">{{a.capital | number: '.2-2'}}</td>
                           <td style="text-align: right;">{{a.interes | number: '.2-2'}}</td>
                           <td style="text-align: right;"></td>
+                          <td style="text-align: right;"></td>
                         </tr>
                       </ng-container>
                       <tr style="border: solid 1px;">
@@ -878,10 +985,12 @@
                         <td colspan="2">TOTAL * MUNICIPALIDAD </td>
                         <td style="text-align: right;">{{m.dias}}</td>
                         <td style="text-align: right;"></td>
-                        <td style="text-align: right;">{{m.capital | number:
-                          '.2-2'}}</td>
+                        <td style="text-align: right;">
+                          {{m.capital | number: '.2-2'}}
+                        </td>
                         <td style="text-align: right;">{{m.interes | number:
                           '.2-2'}}</td>
+                        <td style="text-align: right;"></td>
                         <td style="text-align: right;"></td>
                       </tr>
                     </ng-container>
@@ -890,9 +999,11 @@
                       <td style="text-align: right;">{{p.capital | number: '.2-2'}}</td>
                       <td style="text-align: right;">{{p.interes | number: '.2-2'}}</td>
                       <td style="text-align: right;"></td>
+                      <td style="text-align: right;"></td>
                     </tr>
                     <tr style="background-color:white; color: white !important;">
                       <td colspan="5"><span style="margin-left: 20px;">...</span></td>
+                      <td style="text-align: right;"></td>
                       <td style="text-align: right;"></td>
                       <td style="text-align: right;"></td>
                       <td style="text-align: right;"></td>
@@ -908,6 +1019,7 @@
                     <td style="text-align: right;">{{getTotalDevengados('capital') | number: '.2-2'}}</td>
                     <td style="text-align: right;">{{getTotalDevengados('interes') | number: '.2-2'}}</td>
                     <td style="text-align: right;"></td>
+                    <td style="text-align: right;"></td>
                   </tr>
                   <tr>
                     <td style="color: white;">.</td>
@@ -920,6 +1032,7 @@
                     <td style="text-align: right; border-top: solid 2px; border-bottom: solid 2px">
                       {{getTotalDevengados('interes') | number: '.2-2'}}
                     </td>
+                    <td style="text-align: right;"></td>
                     <td style="text-align: right;"></td>
                   </tr>
                 </tbody>
@@ -1570,10 +1683,10 @@
                   <tr>
                     <th style="border-bottom: 1px solid">Codigo</th>
                     <th style="border-bottom: 1px solid">Programa</th>
-                    <th style="border-bottom: 1px solid">Capital</th>
-                    <th style="border-bottom: 1px solid">Intereses</th>
-                    <th style="border-bottom: 1px solid">IVA</th>
-                    <th style="border-bottom: 1px solid">Total</th>
+                    <th style="border-bottom: 1px solid; text-align: right">Capital</th>
+                    <th style="border-bottom: 1px solid; text-align: right">Intereses</th>
+                    <th style="border-bottom: 1px solid; text-align: right">IVA</th>
+                    <th style="border-bottom: 1px solid; text-align: right">Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1633,10 +1746,10 @@
                     <th style="border-bottom: 1px solid">Resolucion</th>
                     <th style="border-bottom: 1px solid">Prestamo</th>
                     <th style="border-bottom: 1px solid">Municipalidad</th>
-                    <th style="border-bottom: 1px solid">Capital</th>
-                    <th style="border-bottom: 1px solid">Intereses</th>
-                    <th style="border-bottom: 1px solid">IVA</th>
-                    <th style="border-bottom: 1px solid">Gran Total</th>
+                    <th style="border-bottom: 1px solid; text-align: right">Capital</th>
+                    <th style="border-bottom: 1px solid; text-align: right">Intereses</th>
+                    <th style="border-bottom: 1px solid; text-align: right">IVA</th>
+                    <th style="border-bottom: 1px solid; text-align: right">Gran Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2102,15 +2215,13 @@
                     <h4>AUMENTOS</h4>
                     <div class="row">
                       <div class="col-6" style="font-weight: 500">
-                        <p>PRESTAMOS (LINEAS DE CREDITO) LARGO PLAZO <br>
-                          DEPOSITO PARA PAGO DE INTERESES E IVA (LINEA DE CREDITO) <br>
+                        <p><br>
                           INTERMEDIACION FINANCIERA <br>
-                          PLAN DE PRESTACIONES , ANAM, AUXILIO POSTUMO <br>
+                          PLAN DE PRESTACIONES <br>
                           CUENTA AJENA <br>
                           MANCOSUR <br>
                           MASUR <br>
                           MANPACIFIC <br>
-                          MANSOHUE <br>
                           MANALTOS </p>
                         <p style="text-align: right">SUB-TOTAL</p>
                       </div>
@@ -2179,7 +2290,7 @@
                 <tbody>
                   <ng-container *ngFor="let m of movimientos">
                     <tr>
-                      <td>{{m.fecha}}</td>
+                      <td>{{m.fecha | date: 'dd/MM/YYYY'}}</td>
                       <td>
                         <span *ngIf="m.id_recibo">Recibo No.</span>
                         <span *ngIf="m.id_orden_pago">Orden Pago No.</span>
@@ -2210,7 +2321,7 @@
                   </ng-container>
                   <tr>
                     <td colspan="4"></td>
-                    <td><b>Total de Intereses + IVA</b></td>
+                    <td><b>Total de Intereses (Devengados)</b></td>
                     <td style="border-top: 1px solid; text-align: right;">{{getTotalInteresIva() | number: '.2-2'}}</td>
                   </tr>
                 </tbody>
@@ -2219,11 +2330,9 @@
 
             <div id="balance-general" style="color: black; font-size: 8px;">
               <h3>Corto / Mediano y Largo Plazo</h3>
+              <h4>Fecha Cuota Cobrada: {{ultimoMesAnterior(filtros.mes)}}</h4>
               <table class="table table-borderless" style="font-size: 80%; text-align: center; width: 100%">
                 <thead>
-                  <tr>
-                    <td colspan="9" style="text-align: left; font-size: 13px;"> MUNICIPALIDAD</td>
-                  </tr>
                   <tr>
                     <td style="border: 1px solid">No. DE PRESTAMO</td>
                     <td style="border: 1px solid">FECHA DE CONCESION</td>
@@ -2231,7 +2340,7 @@
                     <td style="border: 1px solid">MONTO</td>
                     <td style="border: 1px solid">ENTREGADO</td>
                     <td style="border: 1px solid">MARGEN POR GIRAR</td>
-                    <td style="border: 1px solid">FECHA DE ULTIMO MOVIMIENTO</td>
+                    <!-- <td style="border: 1px solid">FECHA DE ULTIMO MOVIMIENTO</td> -->
                     <td style="border: 1px solid">RECUPERADO</td>
                     <td style="border: 1px solid">SALDO CAPITAL</td>
                   </tr>
@@ -2253,7 +2362,7 @@
                     <ng-container *ngFor="let d of p.departamentos">
                       <tr>
                         <td colspan="9" style="font-weight: 700; text-align: left; font-size: 14px;">
-                          Depto. {{d.nombre}}
+                          DEPARTAMENTO DE {{d.nombre}}
                         </td>
                       </tr>
                       <ng-container *ngFor="let m of d.municipalidades">
@@ -2270,7 +2379,7 @@
                             <td style="text-align: right;">{{i.monto | number: '.2-2'}}</td>
                             <td style="text-align: right;">{{i.entregado | number: '.2-2'}}</td>
                             <td style="text-align: right;">{{i.margen | number: '.2-2'}}</td>
-                            <td style="text-align: right;">{{i.fecha_ultimo_movimiento | date: 'dd/MM/YYYY'}}</td>
+                            <!-- <td style="text-align: right;">{{i.fecha_ultimo_movimiento | date: 'dd/MM/YYYY'}}</td> -->
                             <td style="text-align: right;">{{i.recuperado | number: '.2-2'}}</td>
                             <td style="text-align: right;">{{i.saldo | number: '.2-2'}}</td>
                           </tr>
@@ -2282,7 +2391,6 @@
                           <td style="text-align: right;">{{m.monto | number: '.2-2'}}</td>
                           <td style="text-align: right;">{{m.entregado | number: '.2-2'}}</td>
                           <td style="text-align: right;">{{m.margen | number: '.2-2'}}</td>
-                          <td style="text-align: right;"></td>
                           <td style="text-align: right;">{{m.recuperado | number: '.2-2'}}</td>
                           <td style="text-align: right;">{{m.saldo | number: '.2-2'}}</td>
                         </tr>
@@ -2291,24 +2399,32 @@
                         <td style="background-color: #E1DDDC; font-weight: 500;">Total Departamento</td>
                         <td style="background-color: #E1DDDC; font-weight: 500;"></td>
                         <td style="background-color: #E1DDDC; font-weight: 500;"></td>
-                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.monto | number: '.2-2'}}</td>
-                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.entregado | number: '.2-2'}}</td>
-                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.margen | number: '.2-2'}}</td>
-                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;"></td>
-                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.recuperado | number: '.2-2'}}</td>
-                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.saldo | number: '.2-2'}}</td>
+                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.monto | number:
+                          '.2-2'}}</td>
+                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.entregado |
+                          number: '.2-2'}}</td>
+                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.margen | number:
+                          '.2-2'}}</td>
+                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.recuperado |
+                          number: '.2-2'}}</td>
+                        <td style="background-color: #E1DDDC; font-weight: 500; text-align: right;">{{d.saldo | number:
+                          '.2-2'}}</td>
                       </tr>
                     </ng-container>
                     <tr>
                       <td> TOTAL FINANCIAMIENTO </td>
                       <td></td>
                       <td></td>
-                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">{{p.monto | number: '.2-2'}}</td>
-                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">{{p.entregado | number: '.2-2'}}</td>
-                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">{{p.margen | number: '.2-2'}}</td>
-                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;"></td>
-                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">{{p.recuperado | number: '.2-2'}}</td>
-                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">{{p.saldo | number: '.2-2'}}</td>
+                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">
+                        {{p.monto | number: '.2-2'}}</td>
+                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">
+                        {{p.entregado | number: '.2-2'}}</td>
+                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">
+                        {{p.margen | number: '.2-2'}}</td>
+                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">
+                        {{p.recuperado | number: '.2-2'}}</td>
+                      <td style="border-top: 1px solid; border-bottom: 1px solid; font-weight: 500; text-align: right;">
+                        {{p.saldo | number: '.2-2'}}</td>
                     </tr>
                   </ng-container>
                 </tbody>
