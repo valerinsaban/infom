@@ -72,6 +72,22 @@
               </select>
             </div>
 
+            <div>
+              <label class="text-secondary">Codigo Departamento</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control">
+              </div>
+            </div>
+            <div>
+              <label class="text-secondary">Codigo Municipio</label>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control">
+                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#municipalidades">
+                  <i class="fad fa-search"></i>
+                </button>
+              </div>
+            </div>
+
             <div *ngIf="!usuario">
               <button (click)="postUsuario()" type="button" class="btn btn-primary mb-3"
                 [ngClass]="{'disabled': usuarioForm.invalid}">
@@ -122,8 +138,8 @@
                   </td>
                   <td>
                     <div class="dropdown">
-                      <button (click)="setUsuario(u, uindex)" type="button" class="btn btn-primary light" data-bs-toggle="modal"
-                        data-bs-target="#editar-clave" style="margin-right: 10px;">
+                      <button (click)="setUsuario(u, uindex)" type="button" class="btn btn-primary light"
+                        data-bs-toggle="modal" data-bs-target="#editar-clave" style="margin-right: 10px;">
                         <i class="fa-solid fa-lock"></i>
                       </button>
                       <button type="button" class="btn btn-primary light" data-bs-toggle="dropdown">
@@ -167,8 +183,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn light" data-bs-dismiss="modal" (click)="cancelarEdicion()">Cancelar</button>
-        <button [ngClass]="{'disabled': !usuarioForm.controls['clave'].value}" class="btn btn-primary me-1" (click)="putClave()"
-          data-bs-dismiss="modal" type="button">
+        <button [ngClass]="{'disabled': !usuarioForm.controls['clave'].value}" class="btn btn-primary me-1"
+          (click)="putClave()" data-bs-dismiss="modal" type="button">
           <i class="fa-duotone fa-floppy-disk"></i> Guardar
         </button>
       </div>

@@ -16,7 +16,7 @@ export class RepService {
 
   dataUser: any;
 
-  url = environment.reportes;
+  url = environment.reportes + '/reportes';
 
   async get(path: string) {
     try {

@@ -18,6 +18,7 @@ import { MovimientosService } from 'src/app/services/movimientos.service';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
 import { AmortizacionesDetallesService } from 'src/app/services/amortizaciones_detalles.service';
 import { MegaPrintService } from 'src/app/services/megaprint.service';
+import { md5 } from 'js-md5';
 
 @Component({
   selector: 'app-cobros',
@@ -292,12 +293,14 @@ export class CobrosComponent {
       for (let a = 0; a < this.amortizaciones.length; a++) {
 
         let amortizacion = this.amortizaciones[a];
+        let cuota = parseFloat(amortizacion.capital) + parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva);
+        cuota = Math.round((cuota + Number.EPSILON) * 100) / 100;
+
         let interes_iva = parseFloat(amortizacion.interes) + parseFloat(amortizacion.iva);
         interes_iva = Math.round((interes_iva + Number.EPSILON) * 100) / 100;
         let impuestos = Math.round(((interes_iva / 1.12 * 0.12) + Number.EPSILON) * 100) / 100;
         let monto_gravable = interes_iva - impuestos;
         monto_gravable = Math.round(((monto_gravable) + Number.EPSILON) * 100) / 100;
-
 
         let info: any = {
           factura: {
@@ -340,8 +343,7 @@ export class CobrosComponent {
             await this.factuas_detallesService.postFacturaDetalle(info.detalles[0]);
 
             let desc = `AMORTIZACIÓN CORRESPONDIENTE AL
-            PERIODO DE ${moment(amortizacion.mes).format('MMMM YYYY')}, RECUPERADOS
-            CON EL APORTE CONSTITUCIONAL, PRÉSTAMO ${amortizacion.prestamo.no_prestamo} RESOLUCIÓN ${amortizacion.prestamo.resolucion.numero} 
+            MES DE ${moment(amortizacion.mes).format('MMMM YYYY')}, RECUPERADOS CON EL APORTE CONSTITUCIONAL, PRÉSTAMO ${amortizacion.prestamo.no_prestamo} RESOLUCIÓN ${amortizacion.prestamo.resolucion.numero} 
             SEGÚN FACTURA No. #${factura.data.id}`;
 
             let recibo = await this.recibosService.postRecibo({
@@ -349,9 +351,10 @@ export class CobrosComponent {
               fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
               nit: amortizacion.prestamo.municipalidad.nit,
               nombre: `${amortizacion.prestamo.municipalidad.municipio.nombre}, ${amortizacion.prestamo.municipalidad.departamento.nombre}`,
-              monto: interes_iva,
+              monto: cuota,
               estado: 'Vigente',
               descripcion: desc,
+              firma: this.getFirma(moment().format('YYYY-MM-DD HH:mm:ss'), HomeComponent.usuario.nombre),
               id_factura: factura.data.id
             });
 
@@ -512,6 +515,11 @@ export class CobrosComponent {
       }
     }
     this.ngxService.stop();
+  }
+
+  getFirma(fecha: any, usuario: any) {
+    // let no_recibo = this.reciboForm.controls['estado'].value;
+    return md5(`${fecha}${usuario}`);
   }
 
   limpiar() {

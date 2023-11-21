@@ -89,6 +89,8 @@ export class ReportesComponent {
   tipos_prestamos: any = [];
   usuarios: any = [];
   balance: any = [];
+  recibos: any = [];
+  facturas: any = [];
 
   cobro: any;
 
@@ -195,24 +197,23 @@ export class ReportesComponent {
       { slug: 'prestamos-otorgados', nombre: 'Prestamos Otorgados', filtros: [] },
       { slug: 'prestamos-otorgados-anuales', nombre: 'Prestamos Otorgados Anuales', filtros: ['ano_inicio', 'ano_fin'] },
       { slug: 'prestamos-cancelados', nombre: 'Prestamos Cancelados', filtros: [] },
-      // { slug: 'recibo', nombre: 'Recibo', filtros: [] },
-      // { slug: 'recibos-emitidos', nombre: 'Recibos Emitidos', filtros: ['fecha_inicio', 'fecha_fin'] },
-      // { slug: 'libro-ventas', nombre: 'Libro de Ventas', filtros: ['fecha_inicio', 'fecha_fin'] },
+      { slug: 'recibos-emitidos', nombre: 'Recibos Emitidos', filtros: ['fecha_inicio', 'fecha_fin'] },
+      { slug: 'libro-ventas', nombre: 'Libro de Ventas', filtros: ['fecha_inicio', 'fecha_fin'] },
       { slug: 'intereses-devengados', nombre: 'Reporte Intereses Devengados', filtros: ['mes'] },
-      { slug: 'intereses-dev-no-percibidos', nombre: 'Reporte Intereses Percibidos', filtros: ['mes'] },
+      { slug: 'intereses-percibidos', nombre: 'Reporte Intereses Percibidos', filtros: ['mes'] },
       { slug: 'amortizaciones-prestamos', nombre: 'Amortizaciones a Prestamos', filtros: ['mes'] },
       { slug: 'amortizaciones-prestamos-resumen', nombre: 'Amortizaciones a Prestamos Resumen', filtros: ['mes'] },
       { slug: 'amortizaciones-prestamos-mensuales', nombre: 'Amortizaciones a Prestamos Mensuales', filtros: ['mes'] },
       { slug: 'amortizaciones-servicios', nombre: 'Amortizaciones a Servicios', filtros: ['mes', 'tipo_servicio'] },
-      // { slug: 'confirmacion-saldos', nombre: 'Confirmacion de Saldos', filtros: [] },
-      // { slug: 'asignaciones', nombre: 'Reporte de asignaciones, cobros y disponibilidad', filtros: [] },
+      { slug: 'confirmacion-saldos', nombre: 'Confirmacion de Saldos', filtros: [] },
+      { slug: 'asignaciones', nombre: 'Reporte de asignaciones, cobros y disponibilidad', filtros: [] },
       { slug: 'cur', nombre: 'Auxiliar para generacion de CUR de Ingresos', filtros: [] },
       { slug: 'estados-de-cuenta', nombre: 'Estados de Cuenta', filtros: ['fecha', 'no_prestamo'] },
       { slug: 'balance-general', nombre: 'Balance General', filtros: ['mes'] },
       { slug: 'balance-general-mora', nombre: 'Balance General de Prestamos en Mora', filtros: ['fecha'] },
       { slug: 'asignaciones-municipalidad', nombre: 'Reporte de Asignaciones por Municipalidad', filtros: ['codigo_departamento', 'codigo_municipio', 'ano'] },
       { slug: 'intermediaciones-financieras', nombre: 'Intermediaciones Financieras', filtros: ['fecha_inicio', 'fecha_fin'] },
-      // { slug: 'cambio-tasas', nombre: 'Cambio de Tasas' }
+      { slug: 'cambio-tasas', nombre: 'Cambio de Tasas' }
     ];
   }
 
@@ -344,7 +345,7 @@ export class ReportesComponent {
       await this.reporteInteresesDevengados(this.slug_reporte, print);
     }
 
-    if (this.slug_reporte == 'intereses-dev-no-percibidos') {
+    if (this.slug_reporte == 'intereses-percibidos') {
       await this.reporteInteresesPercibidos(this.slug_reporte, print);
     }
 
@@ -358,10 +359,6 @@ export class ReportesComponent {
 
     if (this.slug_reporte == 'prestamos-cancelados') {
       await this.reportePrestamosCancelados(this.slug_reporte, print);
-    }
-
-    if (this.slug_reporte == 'recibo') {
-      await this.reporteRecibo(this.slug_reporte, print);
     }
 
     if (this.slug_reporte == 'recibos-emitidos') {
@@ -953,17 +950,11 @@ export class ReportesComponent {
     this.ngxService.stop();
   }
 
-  public async reporteRecibo(slug: any, print: boolean = true) {
-    this.ngxService.start();
-
-    let rep: any = await this.reporteService.get(slug);
-    this.catalogo(rep, slug, print)
-
-    this.ngxService.stop();
-  }
-
   public async reporteRecibosEmitidos(slug: any, print: boolean = true) {
     this.ngxService.start();
+
+    let recibos = await this.repService.get(`/recibos/${this.filtros.fecha_inicio}/${this.filtros.fecha_fin}`);
+    this.recibos = recibos;
 
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD/MM/YYYY'));
@@ -975,6 +966,9 @@ export class ReportesComponent {
 
   public async reporteLibroVentas(slug: any, print: boolean = true) {
     this.ngxService.start();
+
+    let facturas = await this.repService.get(`/recibos/${this.filtros.fecha_inicio}/${this.filtros.fecha_fin}`);
+    this.facturas = facturas;
 
     let rep: any = await this.reporteService.get(slug);
     rep = rep.replaceAll("{{fecha_inicio}}", moment(this.filtros.fecha_inicio).format('DD/MM/YYYY'));
@@ -1161,7 +1155,7 @@ export class ReportesComponent {
     this.programas = programas;
 
     let rep: any = await this.reporteService.get(slug);
-    rep = rep.replaceAll("{{mes}}", moment(this.filtros.mes).endOf('month').format('DD [de] MMMM [de] YYYY'));
+    rep = rep.replaceAll("{{mes}}", moment(this.filtros.mes).endOf('month').format('MMMM [de] YYYY'));
     this.catalogo(rep, slug, print)
 
     this.ngxService.stop();
@@ -1419,6 +1413,10 @@ export class ReportesComponent {
       codigo_municipio: null,
       plazo_meses: null
     }
+  }
+
+  getUsuario() {
+    return HomeComponent.usuario.usuario;
   }
 
   moneda(total: any) {

@@ -57,7 +57,7 @@ export class DashboardComponent {
       series: [
         {
           name: "basic",
-          data: [0, 0, 0, 1, 0, 0, 0, 0, 0]
+          data: [0, 0, 0, 2, 0, 0, 0, 0, 0]
         }
       ],
       chart: {
@@ -90,7 +90,7 @@ export class DashboardComponent {
       series: [
         {
           name: "basic",
-          data: [0, 0, 0, 1, 0, 0, 0, 0, 0]
+          data: [0, 0, 0, 2, 0, 0, 0, 0, 0]
         }
       ],
       chart: {

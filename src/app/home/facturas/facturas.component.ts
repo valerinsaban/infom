@@ -8,6 +8,7 @@ import { MegaPrintService } from 'src/app/services/megaprint.service';
 import Swal from 'sweetalert2';
 import { FacturasDetallesService } from 'src/app/services/documentos/facturas_detalles.service';
 import { AppComponent } from 'src/app/app.component';
+import * as convert from 'xml-js';
 
 @Component({
   selector: 'app-facturas',
@@ -43,7 +44,10 @@ export class FacturasComponent {
       numero_fel: new FormControl(null),
       uuid: new FormControl(null),
       monto: new FormControl(null),
+      subtotal: new FormControl(null),
+      impuestos: new FormControl(null),
       estado: new FormControl(null),
+      descripcion: new FormControl(null),
       id_amortizacion: new FormControl(null)
     });
   }
@@ -90,10 +94,19 @@ export class FacturasComponent {
 
       data = await this.megaprintService.certificar(token, info);
       if (data.resultado) {
-
+        
+        let datos: any = convert.xml2json(data.res.xml_dte._text, { compact: true, spaces: 4 });
+        datos = JSON.parse(datos);
+        // console.log(datos.dte:GTDocumento.dte:SAT.dte:DTE.dte:Certificacion.dte:NumeroAutorizacion._attributes);
+                
         this.facturaForm.controls['uuid'].setValue(data.res.uuid._text);
+        // this.facturaForm.controls['autorizacion'].setValue(data.res.uuid._text);
+        // this.facturaForm.controls['serie_fel'].setValue(data.res.uuid._text);
+        // this.facturaForm.controls['numero_fel'].setValue(data.res.uuid._text);
         this.facturaForm.controls['estado'].setValue('Vigente');
         this.facturaForm.controls['monto'].setValue(this.getMonto());
+        this.facturaForm.controls['subtotal'].setValue(this.getSubtotal());
+        this.facturaForm.controls['impuestos'].setValue(this.getImpuestos());
         let factura = await this.facturasService.postFactura(this.facturaForm.value);
         if (factura.resultado) {
           for (let d = 0; d < this.facturas_detalles.length; d++) {
@@ -183,12 +196,29 @@ export class FacturasComponent {
     d.impuestos = d.subtotal / 1.12 * 0.12;
     d.impuestos = Math.round((d.impuestos + Number.EPSILON) * 100) / 100;
     d.monto_gravable = d.subtotal - d.impuestos;
+    d.monto_gravable = Math.round((d.monto_gravable + Number.EPSILON) * 100) / 100;
   }
 
   getMonto() {
     let total = 0;
     for (let i = 0; i < this.facturas_detalles.length; i++) {
       total += this.facturas_detalles[i].subtotal;
+    }
+    return total;
+  }
+
+  getImpuestos() {
+    let total = 0;
+    for (let i = 0; i < this.facturas_detalles.length; i++) {
+      total += this.facturas_detalles[i].impuestos;
+    }
+    return total;
+  }
+
+  getSubtotal() {
+    let total = 0;
+    for (let i = 0; i < this.facturas_detalles.length; i++) {
+      total += this.facturas_detalles[i].monto_gravable;
     }
     return total;
   }

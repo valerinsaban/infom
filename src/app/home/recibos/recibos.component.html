@@ -114,6 +114,10 @@
                         <label class="form-label">Nombre</label>
                         <input formControlName="nombre" type="text" class="form-control" placeholder="Nombre">
                       </div>
+                      <div class="col-md-12 mb-3">
+                        <label class="form-label">Descripcion</label>
+                        <textarea formControlName="descripcion" cols="30" rows="10" class="form-control"></textarea>
+                      </div>
                     </div>
 
                     <hr class="mb-4">
@@ -225,12 +229,15 @@
               </tr>
               <tr>
                 <td style="border-top: 2px solid; border-right: 2px solid;" colspan="2">
-                  <b>RECIBÍ DE:</b> {{recibo.nombre}}
+                  <b>RECIBÍ DE:</b> 
+                  <span style="text-transform: uppercase; margin-left: 10px;">
+                    {{recibo.nombre}}
+                  </span>
                   <br><br>
-                  <b>LA SUMA DE:</b> {{letrasMoneda(recibo.monto)}} ({{recibo.monto | number: '.2-2'}})
+                  <b>LA SUMA DE:</b> <span style="margin-left: 10px;">{{letrasMoneda(recibo.monto)}}</span>
                   <br><br>
                   <b>CONCEPTO:</b>
-                  <span style="text-transform: uppercase;">
+                  <span style="text-transform: uppercase; margin-left: 10px">
                       {{recibo.descripcion}}
                   </span>
                   <br><br>
@@ -245,13 +252,15 @@
                       <tbody>
                         <tr *ngFor="let r of recibos_detalles">
                           <td>{{r.descripcion}}</td>
-                          <td style="text-align: right;">{{r.subtotal | number: '.2-2'}}</td>
+                          <td style="text-align: right;">Q. {{r.subtotal | number: '.2-2'}}</td>
                         </tr>
                       </tbody>
-                      <tbody>
+                      <tbody style="border-top: solid 1px; border-bottom: double 2px;">
                         <tr>
                           <td></td>
-                          <td style="text-align: right;">{{recibo.monto | number: '.2-2'}}</td>
+                          <td style="text-align: right;">
+                            <b>Q. {{recibo.monto | number: '.2-2'}}</b>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -270,7 +279,7 @@
                   <b>GUATEMALA, {{recibo.fecha}}:</b>
                 </td>
                 <td style="border-bottom: 2px solid; text-align: right;">
-                  <b>FIRMA ELECTRONICA:</b> dVljNxNXWlandnaVjaDJAKdaskJDJksk
+                  <b>FIRMA ELECTRONICA:</b> {{recibo.firma}}
                 </td>
               </tr>
             </tbody>

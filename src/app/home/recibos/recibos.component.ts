@@ -10,6 +10,7 @@ import { RecibosDetallesService } from 'src/app/services/documentos/recibos_deta
 import { AppComponent } from 'src/app/app.component';
 import { ReporteService } from 'src/app/services/reportes.service';
 import * as moment from 'moment';
+import { md5 } from 'js-md5';
 
 declare function numeroALetrasMoneda(number: any): any;
 
@@ -43,12 +44,11 @@ export class RecibosComponent {
       fecha: new FormControl(null, [Validators.required]),
       nit: new FormControl(null, [Validators.required]),
       nombre: new FormControl(null, [Validators.required]),
-      autorizacion: new FormControl(null),
-      serie_fel: new FormControl(null),
-      numero_fel: new FormControl(null),
-      uuid: new FormControl(null),
       monto: new FormControl(null),
       estado: new FormControl(null),
+      descripcion: new FormControl(null),
+      firma: new FormControl(null),
+      id_factura: new FormControl(null),
     });
   }
 
@@ -86,6 +86,7 @@ export class RecibosComponent {
 
     this.reciboForm.controls['estado'].setValue('Vigente');
     this.reciboForm.controls['monto'].setValue(this.getMonto());
+    this.reciboForm.controls['firma'].setValue(this.getFirma());
     let recibo = await this.recibosService.postRecibo(this.reciboForm.value);
     if (recibo.resultado) {
       for (let d = 0; d < this.recibos_detalles.length; d++) {
@@ -186,6 +187,13 @@ export class RecibosComponent {
       total += this.recibos_detalles[i].subtotal;
     }
     return total;
+  }
+
+  getFirma() {
+    // let no_recibo = this.reciboForm.controls['estado'].value;
+    let fecha = this.reciboForm.controls['fecha'].value;
+    let usuario = HomeComponent.usuario.nombre;
+    return md5(`${fecha}${usuario}`);
   }
 
   nuevoDetalle() {
