@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { AlertService } from 'src/app/services/alert.service';
 import { RegionalesService } from 'src/app/services/catalogos/regionales.service';
 import { FuncionariosService } from 'src/app/services/funcionarios.service';
-import { PrestamosService } from 'src/app/services/prestamos.service';
+import { ServiciosService } from 'src/app/services/servicios.service';
 import { MunicipalidadesService } from 'src/app/services/municipalidades.service';
 import Swal from 'sweetalert2';
 import { GarantiasService } from 'src/app/services/catalogos/garantias.service';
@@ -13,14 +13,12 @@ import { HomeComponent } from '../home.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AppComponent } from 'src/app/app.component';
 import { AmortizacionesDetallesService } from 'src/app/services/amortizaciones_detalles.service';
-import { PrestamosGarantiasService } from 'src/app/services/prestamos_garantias.service';
 import { ProgramasService } from 'src/app/services/catalogos/programas.service';
 import { MunicipiosService } from 'src/app/services/catalogos/municipios.service';
 import { DepartamentosService } from 'src/app/services/catalogos/departamentos.service';
 import { ProgramasGarantiasService } from 'src/app/services/catalogos/programas-garantias.service';
-import { TiposPrestamosService } from 'src/app/services/catalogos/tipos-prestamos.service';
+import { TiposServiciosService } from 'src/app/services/catalogos/tipos-servicios.service';
 import { DestinosService } from 'src/app/services/catalogos/destinos.service';
-import { DestinoPrestamosService } from 'src/app/services/catalogos/destinos-prestamos.service';
 import { DesembolsosService } from 'src/app/services/desembolsos.service';
 import { ResolucionesService } from 'src/app/services/catalogos/resoluciones.service';
 import { ReporteService } from 'src/app/services/reportes.service';
@@ -29,8 +27,6 @@ import { ProyeccionesService } from 'src/app/services/proyecciones.service';
 import { AportesService } from 'src/app/services/aportes.service';
 import { MovimientosService } from 'src/app/services/movimientos.service';
 import { AmortizacionesService } from 'src/app/services/amortizaciones.service';
-import { TiposServiciosService } from 'src/app/services/catalogos/tipos-servicios.service';
-import { ServiciosService } from 'src/app/services/servicios.service';
 
 declare function numeroALetras(number: any): any;
 declare function numeroALetrasMoneda(number: any): any;
@@ -44,19 +40,18 @@ export class ServiciosComponent {
 
   servicioForm: FormGroup;
   amortizacionForm: FormGroup;
-  destinoPrestamoForm: FormGroup;
+  destinoServicioForm: FormGroup;
   desembolsoForm: FormGroup;
   ordenPagoForm: FormGroup;
 
   servicios: any = [];
   servicio: any;
   municipalidad: any;
-  prestamos_garantias: any = [];
+  servicios_garantias: any = [];
 
   file: any;
 
   programas: any = [];
-  tipos_prestamos: any = [];
   tipos_servicios: any = [];
   programas_garantias: any = [];
   garantias: any = [];
@@ -76,8 +71,8 @@ export class ServiciosComponent {
   destino: any = {
     codigo: null
   };
-  destinos_prestamos: any = [];
-  destino_prestamo: any;
+  destinos_servicios: any = [];
+  destino_servicio: any;
   desembolsos: any = [];
   desembolso: any;
   ordenes_pagos: any = [];
@@ -121,7 +116,6 @@ export class ServiciosComponent {
     private departamentosService: DepartamentosService,
     private municipiosService: MunicipiosService,
     private serviciosService: ServiciosService,
-    private tipos_prestamosService: TiposPrestamosService,
     private tipos_serviciosService: TiposServiciosService,
     private programasService: ProgramasService,
     private programas_garantiasService: ProgramasGarantiasService,
@@ -133,9 +127,7 @@ export class ServiciosComponent {
     private amortizacionesService: AmortizacionesService,
     private amortizaciones_detallesService: AmortizacionesDetallesService,
     private proyeccionesService: ProyeccionesService,
-    private prestamos_garantiasService: PrestamosGarantiasService,
     private destinosService: DestinosService,
-    private destinos_prestamosService: DestinoPrestamosService,
     private desembolsosService: DesembolsosService,
     private ordenes_pagosService: OrdenesPagosService,
     private resolucionesService: ResolucionesService,
@@ -146,7 +138,7 @@ export class ServiciosComponent {
     this.servicioForm = new FormGroup({
       no_dictamen: new FormControl(null),
       no_convenio: new FormControl(null),
-      no_prestamo: new FormControl(null),
+      no_servicio: new FormControl(null),
       fecha: new FormControl(moment.utc().format('YYYY-MM-DD'), [Validators.required]),
       fecha_amortizacion: new FormControl(null, [Validators.required]),
       fecha_vencimiento: new FormControl(null, [Validators.required]),
@@ -168,6 +160,7 @@ export class ServiciosComponent {
       motivo_anulacion: new FormControl(null, [Validators.required]),
       estado: new FormControl(null, [Validators.required]),
       id_tipo_prestamo: new FormControl(null, [Validators.required]),
+      id_tipo_servicio: new FormControl(null, [Validators.required]),
       id_programa: new FormControl(null, [Validators.required]),
       id_municipalidad: new FormControl(null, [Validators.required]),
       id_resolucion: new FormControl(null, [Validators.required]),
@@ -187,7 +180,7 @@ export class ServiciosComponent {
       saldo_final: new FormControl(null, [Validators.required]),
       id_prestamo: new FormControl(null, [Validators.required])
     });
-    this.destinoPrestamoForm = new FormGroup({
+    this.destinoServicioForm = new FormGroup({
       descripcion: new FormControl(null),
       monto: new FormControl(null, [Validators.required]),
       id_destino: new FormControl(null, [Validators.required]),
@@ -219,19 +212,24 @@ export class ServiciosComponent {
     AppComponent.loadScript('https://cdn.jsdelivr.net/momentjs/latest/moment.min.js');
     AppComponent.loadScript('https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js');
     AppComponent.loadScript('assets/js/range.js');
+
+    // AppComponent.loadScript('https://code.jquery.com/jquery-1.11.0.js');
+    // AppComponent.loadScript('https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js');
+    // AppComponent.loadScript('assets/js/mask-money.js');
+    
     this.ngxService.start();
-    await this.getDepartamentos();
+    this.getDepartamentos();
     await this.getUsuarios();
-    await this.getResoluciones();
-    await this.getFuncionarios();
-    await this.getRegionales();
-    await this.getTiposPrestamos();
-    await this.getTiposServicios();
-    await this.getProgramas();
-    await this.getGarantias();
-    await this.getDestinos();
-    await this.getPrestamos();
-    await this.getCountPrestamos();
+    this.getResoluciones();
+    this.getFuncionarios();
+    this.getRegionales();
+    this.getTiposServicios();
+    this.getTiposServicios();
+    this.getProgramas();
+    this.getGarantias();
+    this.getDestinos();
+    await this.getServicios();
+    await this.getCountServicios();
   }
 
   get configuracion() {
@@ -250,7 +248,7 @@ export class ServiciosComponent {
   async setCorrelativo() {
     let no_dictamen: string = '';
     let no_convenio: string = '';
-    let no_prestamo: string = '';
+    let no_servicio: string = '';
 
     let fecha_inicio = moment().startOf('year').format('YYYY-MM-DD');
     let fecha_fin = moment().endOf('year').format('YYYY-MM-DD');
@@ -266,27 +264,27 @@ export class ServiciosComponent {
 
     if (id_tipo_prestamo && id_programa && this.municipalidad) {
 
-      no_prestamo += this.municipalidad.departamento.codigo;
-      no_prestamo += '.'
-      no_prestamo += this.municipalidad.municipio.codigo;
-      no_prestamo += '.'
-      no_prestamo += prestamo_muni + 1;
-      no_prestamo += '.'
+      no_servicio += this.municipalidad.departamento.codigo;
+      no_servicio += '.'
+      no_servicio += this.municipalidad.municipio.codigo;
+      no_servicio += '.'
+      no_servicio += prestamo_muni + 1;
+      no_servicio += '.'
 
-      for (let t = 0; t < this.tipos_prestamos.length; t++) {
-        if (this.tipos_prestamos[t].id == id_tipo_prestamo) {
-          no_prestamo += this.tipos_prestamos[t].siglas;
-          no_prestamo += '.FP.'
-          no_dictamen += this.tipos_prestamos[t].siglas;
+      for (let t = 0; t < this.tipos_servicios.length; t++) {
+        if (this.tipos_servicios[t].id == id_tipo_prestamo) {
+          no_servicio += this.tipos_servicios[t].siglas;
+          no_servicio += '.FP.'
+          no_dictamen += this.tipos_servicios[t].siglas;
           no_dictamen += '.FP.'
-          no_convenio += this.tipos_prestamos[t].siglas;
+          no_convenio += this.tipos_servicios[t].siglas;
           no_convenio += '-'
         }
       }
 
       for (let t = 0; t < this.programas.length; t++) {
         if (this.programas[t].id == id_programa) {
-          no_prestamo += this.programas[t].siglas;
+          no_servicio += this.programas[t].siglas;
 
           no_dictamen += this.programas[t].siglas;
           no_dictamen += '.'
@@ -312,7 +310,7 @@ export class ServiciosComponent {
       no_dictamen += moment().format('YYYY');
       no_convenio += moment().format('YYYY');
 
-      this.servicioForm.controls['no_prestamo'].setValue(no_prestamo);
+      this.servicioForm.controls['no_servicio'].setValue(no_servicio);
       this.servicioForm.controls['no_dictamen'].setValue(no_dictamen);
       this.servicioForm.controls['no_convenio'].setValue(no_convenio);
 
@@ -363,36 +361,36 @@ export class ServiciosComponent {
     for (let d = 0; d < this.destinos.length; d++) {
       if (event.target.value == this.destinos[d].id) {
         this.destino = this.destinos[d];
-        this.destinoPrestamoForm.controls['id_destino'].setValue(this.destino.id);
+        this.destinoServicioForm.controls['id_destino'].setValue(this.destino.id);
       }
     }
   }
 
-  async getPrestamos() {
+  async getServicios() {
     this.ngxService.start();
-    let prestamos = await this.serviciosService.getServiciosEstadoFecha(this.estado, this.fecha_inicio, this.fecha_fin);
-    if (prestamos) {
-      this.servicios = prestamos;
+    let servicios = await this.serviciosService.getServiciosEstadoFecha(this.estado, this.fecha_inicio, this.fecha_fin);
+    if (servicios) {
+      this.servicios = servicios;
     }
     this.ngxService.stop();
   }
 
-  async getPrestamosFiltros() {
-    let prestamos = await this.serviciosService.getServiciosFiltros(this.filtros);
-    if (prestamos) {
-      this.servicios = prestamos;
+  async getServiciosFiltros() {
+    let servicios = await this.serviciosService.getServiciosFiltros(this.filtros);
+    if (servicios) {
+      this.servicios = servicios;
     }
   }
 
-  getTipoPrestamo() {
-    for (let t = 0; t < this.tipos_prestamos.length; t++) {
-      if (this.servicioForm.controls['id_tipo_prestamo'].value == this.tipos_prestamos[t].id) {
-        return this.tipos_prestamos[t];
+  getTipoServicio() {
+    for (let t = 0; t < this.tipos_servicios.length; t++) {
+      if (this.servicioForm.controls['id_tipo_prestamo'].value == this.tipos_servicios[t].id) {
+        return this.tipos_servicios[t];
       }
     }
   }
 
-  async getCountPrestamos() {
+  async getCountServicios() {
     this.counts = {};
     this.counts.pendientes = await this.serviciosService.getCountServiciosEstado('Pendiente', this.fecha_inicio, this.fecha_fin);
     this.counts.aprobados = await this.serviciosService.getCountServiciosEstado('Aprobado', this.fecha_inicio, this.fecha_fin);
@@ -419,15 +417,6 @@ export class ServiciosComponent {
     this.ngxService.stop();
   }
 
-  async getTiposPrestamos() {
-    this.ngxService.start();
-    let tipos_prestamos = await this.tipos_prestamosService.getTiposPrestamos();
-    if (tipos_prestamos) {
-      this.tipos_prestamos = tipos_prestamos;
-    }
-    this.ngxService.stop();
-  }
-
   async getTiposServicios() {
     this.ngxService.start();
     let tipos_servicios = await this.tipos_serviciosService.getTiposServicios();
@@ -435,32 +424,6 @@ export class ServiciosComponent {
       this.tipos_servicios = tipos_servicios;
     }
     this.ngxService.stop();
-  }
-
-  async getDestinosPrestamo() {
-    this.destinos_prestamos = [];
-    let destinos_prestamos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.servicio.id);
-    if (destinos_prestamos) {
-      this.destinos_prestamos = destinos_prestamos;
-      this.destinos_prestamos.sort((a: any, b: any) => b.monto - a.monto);
-    }
-  }
-
-  async getDesembolsos() {
-    this.desembolsos = [];
-    let desembolsos = await this.desembolsosService.getDesembolsosPrestamo(this.servicio.id);
-    if (desembolsos) {
-      this.desembolsos = desembolsos;
-    }
-  }
-
-  async getOrdenesPagos() {
-    this.ordenes_pagos = [];
-    let ordenes_pagos = await this.ordenes_pagosService.getOrdenesPagosPrestamo(this.servicio.id);
-    if (ordenes_pagos) {
-      this.ordenes_pagos = ordenes_pagos;
-      this.limpiar5()
-    }
   }
 
   async getProgramas() {
@@ -581,16 +544,16 @@ export class ServiciosComponent {
   setMontoTotal() {
     let total = parseFloat(this.servicioForm.controls['monto'].value);
 
-    for (let c = 0; c < this.tipos_prestamos.length; c++) {
-      let monto_min = parseFloat(this.tipos_prestamos[c].monto_min);
-      let monto_max = parseFloat(this.tipos_prestamos[c].monto_max);
+    for (let c = 0; c < this.tipos_servicios.length; c++) {
+      let monto_min = parseFloat(this.tipos_servicios[c].monto_min);
+      let monto_max = parseFloat(this.tipos_servicios[c].monto_max);
       if (monto_max) {
         if (total >= monto_min && total <= monto_max) {
-          this.servicioForm.controls['id_tipo_prestamo'].setValue(this.tipos_prestamos[c].id);
+          this.servicioForm.controls['id_tipo_prestamo'].setValue(this.tipos_servicios[c].id);
         }
       } else {
         if (total >= monto_min) {
-          this.servicioForm.controls['id_tipo_prestamo'].setValue(this.tipos_prestamos[c].id);
+          this.servicioForm.controls['id_tipo_prestamo'].setValue(this.tipos_servicios[c].id);
         }
       }
     }
@@ -605,8 +568,8 @@ export class ServiciosComponent {
     }
 
     if (edit) {
-      for (let g = 0; g < this.prestamos_garantias.length; g++) {
-        this.prestamos_garantias[g].monto = total * this.prestamos_garantias[g].porcentaje / 100;
+      for (let g = 0; g < this.servicios_garantias.length; g++) {
+        this.servicios_garantias[g].monto = total * this.servicios_garantias[g].porcentaje / 100;
       }
     }
 
@@ -620,8 +583,8 @@ export class ServiciosComponent {
     }
     if (edit) {
       total = 0;
-      for (let g = 0; g < this.prestamos_garantias.length; g++) {
-        total += parseFloat(this.prestamos_garantias[g].monto)
+      for (let g = 0; g < this.servicios_garantias.length; g++) {
+        total += parseFloat(this.servicios_garantias[g].monto)
       }
     }
     return total;
@@ -634,195 +597,14 @@ export class ServiciosComponent {
     }
     if (edit) {
       porcentaje = 0;
-      for (let g = 0; g < this.prestamos_garantias.length; g++) {
-        porcentaje += parseFloat(this.prestamos_garantias[g].porcentaje)
+      for (let g = 0; g < this.servicios_garantias.length; g++) {
+        porcentaje += parseFloat(this.servicios_garantias[g].porcentaje)
       }
     }
     return porcentaje;
   }
 
-  async postDestinoPrestamo() {
-    this.ngxService.start();
-
-    let destino_prestamo = await this.destinos_prestamosService.postDestinoPrestamo(this.destinoPrestamoForm.value);
-    if (destino_prestamo.resultado) {
-      await this.getDestinosPrestamo();
-      this.alert.alertMax('Operacion Correcta', destino_prestamo.mensaje, 'success');
-      this.limpiar3();
-    }
-    this.ngxService.stop();
-  }
-
-  async putDestinoPrestamo() {
-    this.ngxService.start();
-    let destino_prestamo = await this.destinos_prestamosService.putDestinoPrestamo(this.destino_prestamo.id, this.destinoPrestamoForm.value);
-    if (destino_prestamo.resultado) {
-      await this.getDestinosPrestamo();
-      this.alert.alertMax('Operacion Correcta', destino_prestamo.mensaje, 'success');
-      this.limpiar3();
-    }
-    this.ngxService.stop();
-  }
-
-  async deleteDestinoPrestamo(i: any, index: number) {
-    Swal.fire({
-      title: '¿Estas seguro?',
-      text: "Esta accion no se puede revertir!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar!',
-      cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        this.ngxService.start();
-        let destino_prestamo = await this.destinos_prestamosService.deleteDestinoPrestamo(i.id);
-        if (destino_prestamo.resultado) {
-          this.destinos_prestamos.splice(index, 1);
-          this.alert.alertMax('Correcto', destino_prestamo.mensaje, 'success');
-          this.limpiar3();
-        }
-        this.ngxService.stop();
-      }
-    })
-  }
-
-  async postDesembolso() {
-    this.ngxService.start();
-
-    let desembolso = await this.desembolsosService.postDesembolso(this.desembolsoForm.value);
-    if (desembolso.resultado) {
-      await this.getDesembolsos();
-      this.alert.alertMax('Operacion Correcta', desembolso.mensaje, 'success');
-      this.limpiar4();
-    }
-    this.ngxService.stop();
-  }
-
-  async putDesembolso() {
-    this.ngxService.start();
-    let desembolso = await this.desembolsosService.putDesembolso(this.desembolso.id, this.desembolsoForm.value);
-    if (desembolso.resultado) {
-      await this.getDesembolsos();
-      this.alert.alertMax('Operacion Correcta', desembolso.mensaje, 'success');
-      this.limpiar4();
-    }
-    this.ngxService.stop();
-  }
-
-  async deleteDesembolso(i: any, index: number) {
-    Swal.fire({
-      title: '¿Estas seguro?',
-      text: "Esta accion no se puede revertir!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar!',
-      cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        this.ngxService.start();
-        let desembolso = await this.desembolsosService.deleteDesembolso(i.id);
-        if (desembolso.resultado) {
-          this.desembolsos.splice(index, 1);
-          this.alert.alertMax('Correcto', desembolso.mensaje, 'success');
-          this.limpiar4();
-        }
-        this.ngxService.stop();
-      }
-    })
-  }
-
-  async postOrdenPago() {
-    this.ngxService.start();
-
-    let fecha_inicio = moment().startOf('year').format('YYYY-MM-DD');
-    let fecha_fin = moment().endOf('year').format('YYYY-MM-DD');
-    let numero = await this.ordenes_pagosService.getCountOrdenesPagosFecha(fecha_inicio, fecha_fin);
-    numero = (parseInt(numero) + 1) + '-' + moment().format('YYYY') + '-' + this.getTipoPrestamo().siglas;
-    this.ordenPagoForm.controls['numero'].setValue(numero);
-
-    let orden_pago = await this.ordenes_pagosService.postOrdenPago(this.ordenPagoForm.value);
-    if (orden_pago.resultado) {
-      let ultimo_mivimiento = await this.movimientosService.getMovimientosUltimo(this.servicio.id);
-
-      if (ultimo_mivimiento) {
-        let saldo_inicial = ultimo_mivimiento.saldo_final;
-        await this.movimientosService.postMovimiento({
-          fecha: moment(this.ordenPagoForm.controls['fecha'].value).format('YYYY-MM-DD'),
-          saldo_inicial: saldo_inicial,
-          cargo: orden_pago.data.monto,
-          abono: 0,
-          saldo_final: parseFloat(saldo_inicial) + parseFloat(orden_pago.data.monto),
-          descripcion: `Retito de Desembolso No. ${orden_pago.data.no_desembolso} del prestamo ${this.servicio.no_prestamo} S/Resol #${this.servicio.resolucion.numero}.`,
-          capital: null,
-          interes: null,
-          iva: null,
-          id_prestamo: this.servicio.id,
-          id_orden_pago: orden_pago.data.id,
-          id_recibo: null
-        });
-      } else {
-        await this.movimientosService.postMovimiento({
-          fecha: moment(this.ordenPagoForm.controls['fecha'].value).format('YYYY-MM-DD'),
-          saldo_inicial: 0,
-          cargo: orden_pago.data.monto,
-          abono: 0,
-          saldo_final: orden_pago.data.monto,
-          descripcion: `Retito de Desembolso No. ${orden_pago.data.no_desembolso} del prestamo ${this.servicio.no_prestamo} S/Resol #${this.servicio.resolucion.numero}.`,
-          capital: null,
-          interes: null,
-          iva: null,
-          id_prestamo: this.servicio.id,
-          id_orden_pago: orden_pago.data.id,
-          id_recibo: null
-        });
-      }
-      await this.getOrdenesPagos();
-      this.alert.alertMax('Operacion Correcta', orden_pago.mensaje, 'success');
-      this.limpiar5();
-    }
-    this.ngxService.stop();
-  }
-
-  async putOrdenPago() {
-    this.ngxService.start();
-    let orden_pago = await this.ordenes_pagosService.putOrdenPago(this.orden_pago.id, this.ordenPagoForm.value);
-    if (orden_pago.resultado) {
-      await this.getOrdenesPagos();
-      this.alert.alertMax('Operacion Correcta', orden_pago.mensaje, 'success');
-      this.limpiar5();
-    }
-    this.ngxService.stop();
-  }
-
-  async deleteOrdenPago(i: any, index: number) {
-    Swal.fire({
-      title: '¿Estas seguro?',
-      text: "Esta accion no se puede revertir!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Eliminar!',
-      cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        this.ngxService.start();
-        let orden_pago = await this.ordenes_pagosService.deleteOrdenPago(i.id);
-        if (orden_pago.resultado) {
-          this.ordenes_pagos.splice(index, 1);
-          this.alert.alertMax('Correcto', orden_pago.mensaje, 'success');
-          this.limpiar5();
-        }
-        this.ngxService.stop();
-      }
-    })
-  }
-
-  async postPrestamo() {
+  async postServicio() {
     this.ngxService.start();
     await this.setCorrelativo();
 
@@ -831,44 +613,25 @@ export class ServiciosComponent {
 
       let monto_total = parseFloat(this.servicioForm.controls['monto'].value);
 
-      for (let g = 0; g < this.programas_garantias.length; g++) {
-        if (this.programas_garantias[g].monto && this.programas_garantias[g].monto > 0) {
-
-          let monto = parseFloat(this.programas_garantias[g].monto);
-
-          let porcentaje = monto / monto_total * 100;
-
-          if (this.programas_garantias[g].monto) {
-            await this.prestamos_garantiasService.postPrestamoGarantia({
-              monto: parseFloat(this.programas_garantias[g].monto),
-              porcentaje: porcentaje,
-              id_garantia: this.programas_garantias[g].garantia.id,
-              id_prestamo: prestamo.data.id
-            });
-          }
-
-        }
-      }
-
       for (let p = 0; p < this.proyecciones.length; p++) {
         this.proyecciones[p].id_prestamo = prestamo.data.id;
         await this.proyeccionesService.postProyeccion(this.proyecciones[p])
       }
 
-      await this.getPrestamos();
-      await this.getCountPrestamos();
+      await this.getServicios();
+      await this.getCountServicios();
       this.alert.alertMax('Operacion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
   }
 
-  async putPrestamo() {
+  async putServicio() {
     let estado = this.servicioForm.controls['estado'].value;
     if (estado == 'Cancelado') {
       let saldo_final = (this.amortizaciones.length ? parseFloat(this.amortizaciones[this.amortizaciones.length - 1].saldo_final) : this.servicio.monto).toFixed(2);
       if (parseInt(saldo_final) != 0) {
-        this.alert.alertMax('Operacion Incorrecta', `Prestamo con Q${saldo_final} de saldo pendiente`, 'error');
+        this.alert.alertMax('Operacion Incorrecta', `Servicio con Q${saldo_final} de saldo pendiente`, 'error');
         return;
       }
     }
@@ -876,31 +639,22 @@ export class ServiciosComponent {
     let prestamo = await this.serviciosService.putServicio(this.servicio.id, this.servicioForm.value);
     if (prestamo.resultado) {
 
-      for (let p = 0; p < this.prestamos_garantias.length; p++) {
-        await this.prestamos_garantiasService.putPrestamoGarantia(this.prestamos_garantias[p].id, {
-          monto: this.prestamos_garantias[p].monto,
-          porcentaje: this.prestamos_garantias[p].porcentaje,
-          id_garantia: this.prestamos_garantias[p].id_garantia,
-          id_prestamo: this.prestamos_garantias[p].id_prestamo,
-        })
-      }
-
-      // await this.proyeccionesService.deleteProyeccionesPrestamo(this.prestamo.id)
+      // await this.proyeccionesService.deleteProyeccionesServicio(this.prestamo.id)
 
       // for (let p = 0; p < this.proyecciones.length; p++) {
       //   this.proyecciones[p].id_prestamo = prestamo.data.id;
       //   await this.proyeccionesService.postProyeccion(this.proyecciones[p])
       // }
 
-      await this.getPrestamos();
-      await this.getCountPrestamos();
+      await this.getServicios();
+      await this.getCountServicios();
       this.alert.alertMax('Operacion Correcta', prestamo.mensaje, 'success');
       this.limpiar();
     }
     this.ngxService.stop();
   }
 
-  async deletePrestamo(i: any, index: number) {
+  async deleteServicio(i: any, index: number) {
     Swal.fire({
       title: '¿Estas seguro?',
       text: "Esta accion no se puede revertir!",
@@ -916,7 +670,7 @@ export class ServiciosComponent {
         let prestamo = await this.serviciosService.deleteServicio(i.id);
         if (prestamo.resultado) {
           this.servicios.splice(index, 1);
-          await this.getCountPrestamos();
+          await this.getCountServicios();
           this.alert.alertMax('Correcto', prestamo.mensaje, 'success');
           this.limpiar();
         }
@@ -936,12 +690,12 @@ export class ServiciosComponent {
 
 
   // Metodos para obtener data y id de registro seleccionado
-  async setPrestamo(i: any, index: number) {
+  async setServicio(i: any, index: number) {
     i.index = index;
     this.servicio = i;
     this.servicioForm.controls['no_dictamen'].setValue(i.no_dictamen);
     this.servicioForm.controls['no_convenio'].setValue(i.no_convenio);
-    this.servicioForm.controls['no_prestamo'].setValue(i.no_prestamo);
+    this.servicioForm.controls['no_servicio'].setValue(i.no_servicio);
     this.servicioForm.controls['fecha'].setValue(i.fecha ? moment.utc(i.fecha).format('YYYY-MM-DD') : i.fecha);
     this.servicioForm.controls['fecha_amortizacion'].setValue(i.fecha_amortizacion ? moment.utc(i.fecha_amortizacion).format('YYYY-MM-DD') : i.fecha_amortizacion);
     this.servicioForm.controls['fecha_vencimiento'].setValue(i.fecha_vencimiento ? moment.utc(i.fecha_vencimiento).format('YYYY-MM-DD') : i.fecha_vencimiento);
@@ -971,12 +725,11 @@ export class ServiciosComponent {
     this.servicioForm.controls['id_usuario'].setValue(i.id_usuario);
 
     this.amortizacionForm.controls['id_prestamo'].setValue(i.id);
-    this.destinoPrestamoForm.controls['id_prestamo'].setValue(i.id);
+    this.destinoServicioForm.controls['id_prestamo'].setValue(i.id);
     this.desembolsoForm.controls['id_prestamo'].setValue(i.id);
     this.ordenPagoForm.controls['id_prestamo'].setValue(i.id);
 
-    this.prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(i.id);
-    this.proyecciones = await this.proyeccionesService.getProyeccionesPrestamo(i.id);
+    this.proyecciones = await this.proyeccionesService.getProyeccionesServicio(i.id);
 
     this.municipalidad = i.municipalidad;
     this.filtros.codigo_departamento = i.municipalidad.departamento.codigo;
@@ -985,15 +738,15 @@ export class ServiciosComponent {
     this.calcAmortizacion();
   }
 
-  async setDestinoPrestamo(i: any, index: number) {
+  async setDestinoServicio(i: any, index: number) {
     i.index = index;
-    this.destino_prestamo = i;
+    this.destino_servicio = i;
     this.destino = i.destino;
 
-    this.destinoPrestamoForm.controls['descripcion'].setValue(i.descripcion);
-    this.destinoPrestamoForm.controls['monto'].setValue(i.monto);
-    this.destinoPrestamoForm.controls['id_destino'].setValue(i.id_destino);
-    this.destinoPrestamoForm.controls['id_prestamo'].setValue(i.id_prestamo);
+    this.destinoServicioForm.controls['descripcion'].setValue(i.descripcion);
+    this.destinoServicioForm.controls['monto'].setValue(i.monto);
+    this.destinoServicioForm.controls['id_destino'].setValue(i.id_destino);
+    this.destinoServicioForm.controls['id_prestamo'].setValue(i.id_prestamo);
   }
 
   async setDesembolso(i: any, index: number) {
@@ -1029,7 +782,7 @@ export class ServiciosComponent {
 
     this.ngxService.start();
     this.amortizaciones = [];
-    let amortizaciones = await this.amortizacionesService.getAmortizacionesPrestamo(this.servicio.id);
+    let amortizaciones = await this.amortizacionesService.getAmortizacionesServicio(this.servicio.id);
     if (amortizaciones) {
       this.amortizaciones = amortizaciones;
 
@@ -1179,10 +932,10 @@ export class ServiciosComponent {
     return total;
   }
 
-  getTotalDestinosPrestamos() {
+  getTotalDestinosServicios() {
     let total = 0;
-    for (let a = 0; a < this.destinos_prestamos.length; a++) {
-      total += parseFloat(this.destinos_prestamos[a].monto);
+    for (let a = 0; a < this.destinos_servicios.length; a++) {
+      total += parseFloat(this.destinos_servicios[a].monto);
       total = Math.round((total + Number.EPSILON) * 100) / 100
     }
     return total;
@@ -1230,8 +983,8 @@ export class ServiciosComponent {
   }
 
   destinosCompletos() {
-    if (this.destinos_prestamos.length == parseInt(this.servicio.no_destinos)) {
-      if (parseFloat(this.servicio.monto) == this.getTotalDestinosPrestamos()) {
+    if (this.destinos_servicios.length == parseInt(this.servicio.no_destinos)) {
+      if (parseFloat(this.servicio.monto) == this.getTotalDestinosServicios()) {
         return true
       }
     }
@@ -1256,7 +1009,7 @@ export class ServiciosComponent {
     this.servicioForm.reset();
     // this.prestamoForm.controls['no_dictamen'].setValue(1);
     // this.prestamoForm.controls['no_convenio'].setValue(1);
-    // this.prestamoForm.controls['no_prestamo'].setValue(1);
+    // this.prestamoForm.controls['no_servicio'].setValue(1);
 
     this.servicioForm.controls['fecha'].setValue(moment.utc().format('YYYY-MM-DD'));
     this.servicioForm.controls['monto'].setValue(0);
@@ -1288,9 +1041,9 @@ export class ServiciosComponent {
   }
 
   limpiar3() {
-    this.destinoPrestamoForm.reset();
-    this.destinoPrestamoForm.controls['id_prestamo'].setValue(this.servicio.id);
-    this.destino_prestamo = null;
+    this.destinoServicioForm.reset();
+    this.destinoServicioForm.controls['id_prestamo'].setValue(this.servicio.id);
+    this.destino_servicio = null;
     this.destino = {
       codigo: null
     };
@@ -1347,230 +1100,6 @@ export class ServiciosComponent {
 
   }
 
-  public async reporteHojaTecnica() {
-    this.ngxService.start();
-
-    let vigentes = await this.serviciosService.getServiciosEstadoMunicipalidad('Acreditado', this.servicio.id_municipalidad);
-    if (vigentes) {
-      this.vigentes = vigentes;
-      for (let v = 0; v < this.vigentes.length; v++) {
-        let destinos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.vigentes[v].id);
-        if (destinos) {
-          this.vigentes[v].destinos = destinos;
-        }
-
-        let movimiento = await this.movimientosService.getMovimientosUltimo(this.servicio.id);
-        if (movimiento) {
-          this.vigentes[v].saldo = movimiento.saldo_final;
-        }
-      }
-    }
-
-    let rep: any = await this.reportesService.get('prestamos/pr-hoja-tecnica');
-    let contenido: any = document.getElementById('pr-hoja-tecnica');
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{departamento}}", this.servicio.municipalidad.departamento.nombre);
-    rep = rep.replaceAll("{{municipio}}", this.servicio.municipalidad.municipio.nombre);
-    rep = rep.replaceAll("{{no_resolucion}}", `${this.servicio.resolucion.numero}`);
-    rep = rep.replaceAll("{{no_dictamen}}", `${this.servicio.no_dictamen}`);
-    rep = rep.replaceAll("{{no_convenio}}", `${this.servicio.no_convenio}`);
-    rep = rep.replaceAll("{{no_convenio_i}}", `${this.servicio.municipalidad.no_convenio}`);
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    let popupWin: any = window.open("", "_blank");
-    popupWin.document.open();
-    popupWin.document.write(rep);
-    popupWin.document.close();
-
-    this.ngxService.stop();
-  }
-
-  public async reporteDictamen() {
-    this.ngxService.start();
-
-    let desembolsos = await this.desembolsosService.getDesembolsosPrestamo(this.servicio.id);
-    if (desembolsos) {
-
-    }
-    this.desembolsos = desembolsos;
-
-    let vigentes = await this.serviciosService.getServiciosEstadoMunicipalidad('Acreditado', this.servicio.id_municipalidad);
-    if (vigentes) {
-      this.vigentes = vigentes;
-      for (let v = 0; v < this.vigentes.length; v++) {
-        let destinos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.vigentes[v].id);
-        if (destinos) {
-          this.vigentes[v].destinos = destinos;
-        }
-
-        let movimiento = await this.movimientosService.getMovimientosUltimo(this.servicio.id);
-        if (movimiento) {
-          this.vigentes[v].saldo = movimiento.saldo_final;
-        }
-      }
-    }
-
-    let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.servicio.municipalidad.departamento.codigo, this.servicio.municipalidad.municipio.codigo, moment(this.servicio.fecha_amortizacion).format('YYYY-MM'))
-    if (aporte) {
-      this.aporte = aporte;
-    }
-    let rep: any = await this.reportesService.get('prestamos/pr-dictamen');
-    let contenido: any = document.getElementById('pr-dictamen');
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{departamento}}", this.servicio.municipalidad.departamento.nombre);
-    rep = rep.replaceAll("{{municipio}}", this.servicio.municipalidad.municipio.nombre);
-    rep = rep.replaceAll("{{no_resolucion}}", `${this.servicio.resolucion.numero}`);
-    rep = rep.replaceAll("{{no_dictamen}}", `${this.servicio.no_dictamen}`);
-    rep = rep.replaceAll("{{no_convenio}}", `${this.servicio.no_convenio}`);
-    rep = rep.replaceAll("{{no_convenio_i}}", `${this.servicio.municipalidad.no_convenio}`);
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    let popupWin: any = window.open("", "_blank");
-    popupWin.document.open();
-    popupWin.document.write(rep);
-    popupWin.document.close();
-
-    this.ngxService.stop();
-  }
-
-  public async reporteResolucion() {
-    this.ngxService.start();
-
-    let desembolsos = await this.desembolsosService.getDesembolsosPrestamo(this.servicio.id);
-    if (desembolsos) {
-
-    }
-    this.desembolsos = desembolsos;
-
-    let vigentes = await this.serviciosService.getServiciosEstadoMunicipalidad('Acreditado', this.servicio.id_municipalidad);
-    if (vigentes) {
-      this.vigentes = vigentes;
-      for (let v = 0; v < this.vigentes.length; v++) {
-        let destinos = await this.destinos_prestamosService.getDestinosPrestamosPrestamo(this.vigentes[v].id);
-        if (destinos) {
-          this.vigentes[v].destinos = destinos;
-        }
-
-        let movimiento = await this.movimientosService.getMovimientosUltimo(this.servicio.id);
-        if (movimiento) {
-          this.vigentes[v].saldo = movimiento.saldo_final;
-        }
-      }
-    }
-
-    let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.servicio.municipalidad.departamento.codigo, this.servicio.municipalidad.municipio.codigo, moment(this.servicio.fecha_amortizacion).format('YYYY-MM'))
-    if (aporte) {
-      this.aporte = aporte;
-    }
-    let rep: any = await this.reportesService.get('prestamos/pr-resolucion');
-    let contenido: any = document.getElementById('pr-resolucion');
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{departamento}}", this.servicio.municipalidad.departamento.nombre);
-    rep = rep.replaceAll("{{municipio}}", this.servicio.municipalidad.municipio.nombre);
-    rep = rep.replaceAll("{{no_resolucion}}", `${this.servicio.resolucion.numero}`);
-    rep = rep.replaceAll("{{no_dictamen}}", `${this.servicio.no_dictamen}`);
-    rep = rep.replaceAll("{{no_convenio}}", `${this.servicio.no_convenio}`);
-    rep = rep.replaceAll("{{no_convenio_i}}", `${this.servicio.municipalidad.no_convenio}`);
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    let popupWin: any = window.open("", "_blank");
-    popupWin.document.open();
-    popupWin.document.write(rep);
-    popupWin.document.close();
-
-    this.ngxService.stop();
-  }
-
-  public async reporteConvenioAsistencia() {
-    this.ngxService.start();
-
-    let rep: any = await this.reportesService.get('prestamos/pr-convenio-asistencia-fi');
-    let contenido: any = document.getElementById('pr-convenio-asistencia-fi');
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{departamento}}", this.servicio.municipalidad.departamento.nombre);
-    rep = rep.replaceAll("{{municipio}}", this.servicio.municipalidad.municipio.nombre);
-    rep = rep.replaceAll("{{no_resolucion}}", `${this.servicio.resolucion.numero}`);
-    rep = rep.replaceAll("{{no_dictamen}}", `${this.servicio.no_dictamen}`);
-    rep = rep.replaceAll("{{no_convenio}}", `${this.servicio.no_convenio}`);
-    rep = rep.replaceAll("{{no_convenio_i}}", `${this.servicio.municipalidad.no_convenio}`);
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    let popupWin: any = window.open("", "_blank");
-    popupWin.document.open();
-    popupWin.document.write(rep);
-    popupWin.document.close();
-
-    this.ngxService.stop();
-  }
-
-  public async reporteConvenioInter() {
-    this.ngxService.start();
-
-    let rep: any = await this.reportesService.get('prestamos/pr-convenio-interistitucional');
-    let contenido: any = document.getElementById('pr-convenio-interistitucional');
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{departamento}}", this.servicio.municipalidad.departamento.nombre);
-    rep = rep.replaceAll("{{municipio}}", this.servicio.municipalidad.municipio.nombre);
-    rep = rep.replaceAll("{{no_resolucion}}", `${this.servicio.resolucion.numero}`);
-    rep = rep.replaceAll("{{no_dictamen}}", `${this.servicio.no_dictamen}`);
-    rep = rep.replaceAll("{{no_convenio}}", `${this.servicio.no_convenio}`);
-    rep = rep.replaceAll("{{no_convenio_i}}", `${this.servicio.municipalidad.no_convenio}`);
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    let popupWin: any = window.open("", "_blank");
-    popupWin.document.open();
-    popupWin.document.write(rep);
-    popupWin.document.close();
-
-    this.ngxService.stop();
-  }
-
-  public async reporteOrdenPago() {
-    this.ngxService.start();
-
-    let rep: any = await this.reportesService.get('prestamos/pr-orden-pago');
-    let contenido: any = document.getElementById('pr-orden-pago');
-    contenido = contenido.innerHTML.toString();
-
-    rep = rep.replaceAll("{{departamento}}", this.servicio.municipalidad.departamento.nombre);
-    rep = rep.replaceAll("{{municipio}}", this.servicio.municipalidad.municipio.nombre);
-    rep = rep.replaceAll("{{no_resolucion}}", `${this.servicio.resolucion.numero}`);
-    rep = rep.replaceAll("{{no_dictamen}}", `${this.servicio.no_dictamen}`);
-    rep = rep.replaceAll("{{no_convenio}}", `${this.servicio.no_convenio}`);
-    rep = rep.replaceAll("{{no_convenio_i}}", `${this.servicio.municipalidad.no_convenio}`);
-
-    rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-    rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-    rep = rep.replaceAll("{{contenido}}", contenido);
-
-    let popupWin: any = window.open("", "_blank");
-    popupWin.document.open();
-    popupWin.document.write(rep);
-    popupWin.document.close();
-
-    this.ngxService.stop();
-  }
-
   letras(number: number) {
     return numeroALetras(number);
   }
@@ -1588,139 +1117,6 @@ export class ServiciosComponent {
     popupWin.document.open();
     popupWin.document.write(rep);
     popupWin.document.close();
-  }
-
-  // Disponibilidad
-
-  public async getDisponibilidad(print: boolean = true) {
-    this.ngxService.start();
-
-    this.totales_disp = {
-      constitucional: 0,
-      iva_paz: 0,
-      total: 0
-    }
-
-    this.municipalidad = await this.municipalidadesService.getMunicipalidadDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
-    if (this.municipalidad) {
-      let mes = moment(this.servicioForm.controls['fecha_amortizacion'].value).format('YYYY-MM')
-      let aporte = await this.aportesService.getAportesDepartamentoMunicipioMes(this.filtros.codigo_departamento, this.filtros.codigo_municipio, mes)
-      if (!aporte) {
-        aporte = await this.aportesService.getAportesDepartamentoMunicipio(this.filtros.codigo_departamento, this.filtros.codigo_municipio);
-      }
-      this.garantias = await this.garantiasService.getGarantias();
-      let prestamos = await this.serviciosService.getServiciosEstadoMunicipalidad('Acreditado', this.municipalidad.id);
-      for (let i = 0; i < prestamos.length; i++) {
-        let prestamos_garantias = await this.prestamos_garantiasService.getPrestamoGarantiaPrestamo(prestamos[i].id);
-        prestamos[i].prestamos_garantias = prestamos_garantias
-      }
-
-      this.disponibilidad = [];
-      for (let i = 0; i < this.filtros.plazo_meses; i++) {
-        this.disponibilidad.push({
-          mes: moment(aporte.mes).add(i, 'month').format('YYYY-MM'),
-        });
-      }
-
-      for (let g = 0; g < this.garantias.length; g++) {
-        this.garantias[g].prestamos = [];
-        if (this.garantias[g].id == 1) {
-          this.garantias[g].aporte_total = aporte.constitucional;
-          this.garantias[g].aporte = aporte.constitucional * this.garantias[g].porcentaje / 100;
-        }
-        if (this.garantias[g].id == 2) {
-          this.garantias[g].aporte_total = aporte.iva_paz
-          this.garantias[g].aporte = aporte.iva_paz * this.garantias[g].porcentaje / 100;
-        }
-        this.garantias[g].aporte = Math.round((this.garantias[g].aporte + Number.EPSILON) * 100) / 100;
-
-        for (let p = 0; p < prestamos.length; p++) {
-          for (let pg = 0; pg < prestamos[p].prestamos_garantias.length; pg++) {
-            if (prestamos[p].prestamos_garantias[pg].id_garantia == this.garantias[g].id) {
-
-              let porcentaje_iva = parseFloat(this.configuracion.porcentaje_iva);
-              let monto_total = parseFloat(prestamos[p].prestamos_garantias[pg].monto);
-              let plazo_meses = parseFloat(prestamos[p].plazo_meses);
-              let tasa = parseFloat(prestamos[p].tasa);
-              let fecha = prestamos[p].fecha_amortizacion;
-
-              let proyecciones = await this.serviciosService.getProyeccion(monto_total, plazo_meses, tasa, fecha, porcentaje_iva);
-
-              this.garantias[g].prestamos.push({
-                no_prestamo: prestamos[p].no_prestamo,
-                monto: prestamos[p].prestamos_garantias[pg].monto,
-                proyecciones: proyecciones
-              })
-            }
-          }
-        }
-
-        for (let i = 0; i < this.disponibilidad.length; i++) {
-
-          let monto = this.getMontoDispTotal(this.disponibilidad[i].mes, this.garantias[g].prestamos, this.garantias[g].aporte);
-          if (this.servicioForm.controls['id_programa'].value == 1 && this.garantias[g].id == 1) {
-            for (let p = 0; p < this.proyecciones.length; p++) {
-              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {
-                this.proyecciones[p].disponible = monto;
-              }
-            }
-          }
-          if (this.servicioForm.controls['id_programa'].value == 2 && this.garantias[g].id == 2) {
-            for (let p = 0; p < this.proyecciones.length; p++) {
-              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {
-                this.proyecciones[p].disponible = monto;
-              }
-            }
-          }
-          if (this.servicioForm.controls['id_programa'].value == '3') {
-            for (let p = 0; p < this.proyecciones.length; p++) {
-              if (this.disponibilidad[i].mes == moment(this.proyecciones[p].fecha_fin).format('YYYY-MM')) {
-                this.proyecciones[p].disponible = this.getMontoDispTotalDisponible(this.disponibilidad[i].mes);
-              }
-            }
-          }
-
-          this.disp = true;
-          for (let p = 0; p < this.proyecciones.length; p++) {
-            if (this.proyecciones[p].disponibilidad < this.proyecciones[p].cuota) {
-              this.disp = false;
-            }
-          }
-
-        }
-
-        let tot = this.getTotalMontoDispTotal(this.garantias[g].prestamos, this.garantias[g].aporte);
-        if (this.garantias[g].id == 1) {
-          this.totales_disp.constitucional = tot
-        }
-        if (this.garantias[g].id == 2) {
-          this.totales_disp.iva_paz = tot
-        }
-        this.totales_disp.total = this.getTotalMontoDispTotalDisponible();
-
-      }
-
-      let rep: any = await this.reportesService.get('disponibilidad');
-      rep = rep.replaceAll("{{codigo_municipalidad}}", `${this.municipalidad.departamento.codigo}.${this.municipalidad.municipio.codigo}`);
-      rep = rep.replaceAll("{{constitucional}}", parseFloat(aporte.constitucional).toLocaleString('en-US'));
-      rep = rep.replaceAll("{{iva_paz}}", parseFloat(aporte.iva_paz).toLocaleString('en-US'));
-      rep = rep.replaceAll("{{municipalidad}}", `${this.municipalidad.municipio.nombre}, ${this.municipalidad.departamento.nombre}`);
-
-      let contenido: any = document.getElementById('disponibilidad');
-      contenido = contenido.innerHTML.toString();
-
-      rep = rep.replaceAll("{{generado}}", moment().format('DD/MM/YYYY HH:mm'));
-      rep = rep.replaceAll("{{usuario}}", HomeComponent.usuario.nombre);
-      rep = rep.replaceAll("{{contenido}}", contenido);
-
-      if (print) {
-        this.print(rep)
-      }
-
-    } else {
-      this.alert.alertMax('Operacion Incorrecta', 'Municipalidad no encontrada', 'error');
-    }
-    this.ngxService.stop();
   }
 
   getMontoDisp(mes: string, proyecciones: any, type: string) {
@@ -1742,16 +1138,16 @@ export class ServiciosComponent {
     return 0;
   }
 
-  getMontoDispTotal(mes: string, prestamos: any, aporte: number) {
+  getMontoDispTotal(mes: string, servicios: any, aporte: number) {
     let total = aporte;
 
-    if (prestamos) {
-      for (let p = 0; p < prestamos.length; p++) {
-        for (let a = 0; a < prestamos[p].proyecciones.length; a++) {
-          let mes_inicio = moment(prestamos[p].proyecciones[a].fecha_inicio).format('YYYY-MM');
-          let mes_fin = moment(prestamos[p].proyecciones[a].fecha_fin).format('YYYY-MM');
+    if (servicios) {
+      for (let p = 0; p < servicios.length; p++) {
+        for (let a = 0; a < servicios[p].proyecciones.length; a++) {
+          let mes_inicio = moment(servicios[p].proyecciones[a].fecha_inicio).format('YYYY-MM');
+          let mes_fin = moment(servicios[p].proyecciones[a].fecha_fin).format('YYYY-MM');
           if (mes_fin == mes) {
-            total -= prestamos[p].proyecciones[a].cuota;
+            total -= servicios[p].proyecciones[a].cuota;
           }
         }
       }
@@ -1770,7 +1166,7 @@ export class ServiciosComponent {
   getMontoDispTotalDisponible(mes: string) {
     let total = 0;
     for (let g = 0; g < this.garantias.length; g++) {
-      total += this.getMontoDispTotal(mes, this.garantias[g].prestamos, this.garantias[g].aporte)
+      total += this.getMontoDispTotal(mes, this.garantias[g].servicios, this.garantias[g].aporte)
     }
     return total;
   }
@@ -1793,10 +1189,10 @@ export class ServiciosComponent {
     return total;
   }
 
-  getTotalMontoDispTotal(prestamos: any, aporte: number) {
+  getTotalMontoDispTotal(servicios: any, aporte: number) {
     let total = 0;
     for (let d = 0; d < this.disponibilidad.length; d++) {
-      let tot = this.getMontoDispTotal(this.disponibilidad[d].mes, prestamos, aporte);
+      let tot = this.getMontoDispTotal(this.disponibilidad[d].mes, servicios, aporte);
       total += Math.round((tot + Number.EPSILON) * 100) / 100;
     }
     return total;

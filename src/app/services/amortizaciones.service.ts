@@ -31,6 +31,10 @@ export class AmortizacionesService {
     return this.rootService.get(this.route + '/prestamo/' + id_prestamo);
   }
 
+  getAmortizacionesServicio(id_prestamo: number): Promise<any> {
+    return this.rootService.get(this.route + '/servicio/' + id_prestamo);
+  }
+
   getAmortizacionesPrestamoMes(id_prestamo: number, mes: string): Promise<any> {
     return this.rootService.get(this.route + '/prestamo/mes/' + id_prestamo + '/' + mes);
   }

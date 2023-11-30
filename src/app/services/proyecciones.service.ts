@@ -27,6 +27,10 @@ export class ProyeccionesService {
     return this.rootService.get(this.route + '/prestamo/' + id);
   }
 
+  getProyeccionesServicio(id: number): Promise<any> {
+    return this.rootService.get(this.route + '/servicio/' + id);
+  }
+
   getProyeccionesPrestamoMes(id: number, mes: string): Promise<any> {
     return this.rootService.get(this.route + '/prestamo/' + id + '/' + mes);
   }
