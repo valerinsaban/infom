@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  api: 'http://45.79.218.175:8089',
-  reportes: 'http://45.79.218.175:8090'
+  api: 'http://192.168.1.31:8089',
+  reportes: 'http://192.168.1.31:8090'
 };
