@@ -1618,6 +1618,18 @@
               <input [(ngModel)]="conf.interlineado" type="number" class="form-control" placeholder="Interlineado">
             </div>
           </div>
+          <div class="col-6">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Ancho de Hoja </label>
+              <input [(ngModel)]="conf.ancho" type="number" class="form-control" placeholder="Tamaño de Letra">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group mb-3">
+              <label class="text-secondary"> Alto de Hoja </label>
+              <input [(ngModel)]="conf.alto" type="number" class="form-control" placeholder="Interlineado">
+            </div>
+          </div>
           <div class="col-12">
             <ul class="setting-list" style="font-size: 16px;">
               <li class="mb-2">
@@ -1696,8 +1708,8 @@
                 <li>
                   Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la República de Guatemala, (artículos 4º,
                   numeral romano II, inciso 1) y articulos
-                  <span *ngIf="prestamo.id_tipo_prestamo == 1"> 23 inciso a) y b). </span>
-                  <span *ngIf="prestamo.id_tipo_prestamo == 2"> 30 inciso g) y h). </span>
+                  <span *ngIf="prestamo.id_tipo_prestamo == 1"> 30 inciso g) y h). </span>
+                  <span *ngIf="prestamo.id_tipo_prestamo == 2"> 23 inciso a) y b). </span>
                 </li>
                 <li>
                   Reglamento para la Asistencia Financiera a las Municipalidades de la República de Guatemala
@@ -2012,18 +2024,25 @@
       </table>
       <br>
       <br>
-      <div style="text-align: center; font-weight: 700">
-        <p>VARIABLE</p>
-        <p>Analista de Creditos</p>
+      <div style="text-align: center;">
+        <p>
+          {{prestamo.usuario.nombre}} {{prestamo.usuario.apellido}} <br>
+          <b>ANALISTA DE CREDITOS</b>
+        </p>
       </div>
-      <div class="row" style="font-weight: 700">
-        <div class="col-5">
-          <p style="margin-left: 20%">VARIABLE</p>
-          <p>SUPERVISOR ÁREA DE CRÉDITOS</p>
+      <br><br>
+      <div class="row">
+        <div class="col-6" style="text-align: center;">
+          <p>
+            Esthela Aguilar Ibáñez <br>
+            <b>SUPERVISOR ÁREA DE CRÉDITOS</b>
+          </p>
         </div>
-        <div class="col-7" style="text-align: right">
-          <p style="margin-right: 20%">VARIABLE</p>
-          <p>SUBDIRECTOR DE ASISTENCIA FINANCIERA MUNICIPAL</p>
+        <div class="col-6" style="text-align: center;">
+          <p>
+            Lic. José Francisco Prado Chávez <br>
+            <b>SUBDIRECTOR DE ASISTENCIA FINANCIERA MUNICIPAL</b>
+          </p>
         </div>
       </div>
     </div>
@@ -2167,8 +2186,18 @@
             </td>
             <td style="text-align: justify">
               {{letras(prestamo.plazo_meses)}},({{prestamo.plazo_meses}}) pagos mensuales de
+              <span *ngIf="getAmortizacionIguales()">
+                {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
+                (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}),
+                cada uno,
+              </span>
+              <span *ngIf="!getAmortizacionIguales()">
+                <span *ngFor="let p of proyecciones">
+                  {{letrasMoneda(p.capital)}} (Q.{{(p.capital) | number: '.2-2'}}),
+                </span>
+                espectivamente,
+              </span>
               {{letrasMoneda(prestamo.monto / prestamo.plazo_meses)}}
-              (Q.{{(prestamo.monto / prestamo.plazo_meses) | number: '.2-2'}}) cada uno, más intereses e IVA.
             </td>
           </tr>
           <tr>
@@ -2208,7 +2237,7 @@
               </p>
             </td>
             <td style="text-align: justify">
-              El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length ? 's' : ''}} con
+              El desembolso se realizará en {{desembolsos.length}} entrega{{desembolsos.length > 1 ? 's' : ''}} con
               acreditamiento a la cuenta única del Tesoro a nombre de la Municipalidad de
               <span style="text-transform: uppercase; font-weight: 500;">
                 {{prestamo.municipalidad.municipio.nombre}},
@@ -2235,10 +2264,10 @@
             Ley Orgánica del INFOM (DECRETO NÚMERO 1132 del Congreso de la
             República de Guatemala), artículos 4º. numeral romano II, inciso 1) y
             <span *ngIf="prestamo.id_tipo_prestamo == 1">
-              23 inciso a) y b).
+              30 inciso g) y h).
             </span>
             <span *ngIf="prestamo.id_tipo_prestamo == 2">
-              30 inciso g) y h).
+              23 inciso a) y b).
             </span>
           </p>
           <div style="margin-left: -5%; text-align: justify; float: left">
@@ -2267,7 +2296,7 @@
           </div>
           <p>
             Convenio Interinstitucional, Administrativo y Financiero número
-            {{prestamo.no_convenio}}, de fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}},
+            {{prestamo.municipalidad.no_convenio}}, de fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}},
             suscrito entre el Instituto de Fomento Municipal, la Municipalidad de
             <span style="text-transform: uppercase; font-weight: 500;">
               {{prestamo.municipalidad.municipio.nombre}},
@@ -2285,13 +2314,18 @@
             Municipalidad de
             <span style="text-transform: uppercase; font-weight: 500;">
               {{prestamo.municipalidad.municipio.nombre}},
-              Departamento de {{prestamo.municipalidad.departamento.nombre}},
-              y el {{prestamo.municipalidad.banco.nombre}}.
+              Departamento de {{prestamo.municipalidad.departamento.nombre}}
+              <!-- y el {{prestamo.municipalidad.banco.nombre}}. -->
             </span>
             a la fecha {{formatoFecha(prestamo.fecha, 'DD [de] MMMM [de] YYYY')}}
-            refleja los siguientes préstamos vigentes:
+            <span *ngIf="false">
+              refleja los siguientes préstamos vigentes:
+            </span>
+            <span *ngIf="true">
+              no refleja préstamos vigentes.
+            </span>
           </p>
-          <table class="table table-bordered" style="text-align: center; width:  100%;">
+          <table *ngIf="false" class="table table-bordered" style="text-align: center; width:  100%;">
             <thead>
               <tr>
                 <th>No. Prestamo</th>
@@ -2389,28 +2423,45 @@
       <br />
       <br />
       <div class="row">
-        <div class="col-6" style="text-align: left; font-weight: 700; margin-bottom: 50px">
-          <p></p>
-          <p style="margin-left: 10%">ANALISTA DE CRÉDITOS</p>
+        <div class="col-6" style="text-align: center; font-weight: 700; margin-bottom: 75px">
+          <p>
+            {{prestamo.usuario.nombre}} {{prestamo.usuario.apellido}} <br>
+            <b>ANALISTA DE CRÉDITOS</b>
+          </p>
         </div>
-        <div class="col-6" style="text-align: right; font-weight: 700; margin-bottom: 50px">
-          <p></p>
-          <p style="margin-right: 5%">SUPERVISOR, ÁREA DE CRÉDITOS</p>
+        <div class="col-6" style="text-align: center; font-weight: 700; margin-bottom: 75px">
+          <p>
+            Esthela Aguilar Ibañez  <br>
+            <b>SUPERVISOR, ÁREA DE CRÉDITOS</b>
+          </p>
         </div>
         <br><br>
-        <div class="col-6" style="text-align: left; font-weight: 700; margin-bottom: 50px">
-          <p>Vo.Bo. <span style="color: white">______________________________</span></p>
-          <p style="margin-left: 10%">SUBDIRECTOR DE ASISTENCIA</p>
-          <p style="margin-left: 10%">FINANCIERA MUNICIPAL</p>
+        <div class="col-6" style="text-align: center; font-weight: 700; margin-bottom: 75px">
+          <p>
+            Lic. José Francisco Prado Chávez<br>
+            <b>SUBDIRECTOR DE ASISTENCIA FINANCIERA MUNICIPAL</b>
+          </p>
         </div>
-        <div class="col-6" style="text-align: right; font-weight: 700; margin-bottom: 50px">
-          <p>Vo.Bo. <span style="color: white">______________________________</span></p>
-          <p style="margin-right: 5%">DIRECTOR FINANCIERO</p>
+        <div class="col-6" style="text-align: center; font-weight: 700; margin-bottom: 75px">
+          <p style="text-align: left;">Vo.Bo.</p>
+          <p>
+            Lic. Herbert Francisco Toledo Vides <br>
+            <b>DIRECTOR FINANCIERO</b>
+          </p>
         </div>
-      </div>
-      <div style="text-align: center; font-weight: 700">
-        <p>Vo.Bo. <span style="color: white">______________________________</span></p>
-        <p>GERENTE ADMINISTRATIVO FINANCIERO</p>
+        <div class="col-3">
+
+        </div>
+        <div class="col-6" style="text-align: center; font-weight: 700; margin-bottom: 0px">
+          <p style="text-align: left;">Vo.Bo. <span style="color: white"></span></p>
+          <p>
+            Lic. Otto Danilo Villatoro Shack <br>
+            <b>GERENTE ADMINISTRATIVO FINANCIERO</b>
+          </p>
+        </div>
+        <div class="col-3">
+
+        </div>
       </div>
     </div>
   </div>
@@ -2656,7 +2707,7 @@
                 del El Impuesto al Valor Agregado -IVAPAZ- y subsidiariamente Aporte Constitucional
               </span>
               <span *ngIf="prestamo.programa.id == 3" style="font-weight: 500;">
-                del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ- 
+                del Aporte Constitucional y El Impuesto al Valor Agregado -IVAPAZ-
               </span>
               <br><br>
             </td>
@@ -3438,7 +3489,9 @@
     <div style="margin: 0px 50px" *ngIf="orden_pago">
       <p style="text-align: right">ORDEN DE PAGO No. <b>{{orden_pago.numero}}</b></p>
       <br />
-      <b><h6>Señor Supervisor Técnico de Tesorería I:</h6></b>
+      <b>
+        <h6>Señor Supervisor Técnico de Tesorería I:</h6>
+      </b>
       <br>
       <p>
         Sírvase entregar a: <b style="text-transform: uppercase;">TESORERIA MUNICIPAL DE

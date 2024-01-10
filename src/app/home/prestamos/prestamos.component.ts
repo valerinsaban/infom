@@ -121,7 +121,9 @@ export class PrestamosComponent implements OnInit {
 
   conf: any = {
     letra: 12,
-    interlineado: 15
+    interlineado: 15,
+    ancho: 8.5,
+    alto: 11
   }
 
   firmas: any = {
@@ -255,6 +257,10 @@ export class PrestamosComponent implements OnInit {
 
   get configuracion() {
     return HomeComponent.configuracion;
+  }
+
+  get usuario() {
+    return HomeComponent.usuario;
   }
 
   async getDepartamentos() {
@@ -1370,6 +1376,8 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{contenido}}", contenido);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    rep = rep.replaceAll("{{ancho}}", this.conf.ancho);
+    rep = rep.replaceAll("{{alto}}", this.conf.alto);
 
     let popupWin: any = window.open('', '_blank');
     popupWin.document.open();
@@ -1426,6 +1434,8 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{contenido}}", contenido);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    rep = rep.replaceAll("{{ancho}}", this.conf.ancho);
+    rep = rep.replaceAll("{{alto}}", this.conf.alto);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -1480,6 +1490,8 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{contenido}}", contenido);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    rep = rep.replaceAll("{{ancho}}", this.conf.ancho);
+    rep = rep.replaceAll("{{alto}}", this.conf.alto);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -1521,6 +1533,8 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{contenido}}", contenido);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    rep = rep.replaceAll("{{ancho}}", this.conf.ancho);
+    rep = rep.replaceAll("{{alto}}", this.conf.alto);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -1561,6 +1575,8 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{contenido}}", contenido);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    rep = rep.replaceAll("{{ancho}}", this.conf.ancho);
+    rep = rep.replaceAll("{{alto}}", this.conf.alto);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
@@ -1591,6 +1607,8 @@ export class PrestamosComponent implements OnInit {
     rep = rep.replaceAll("{{interlineadoD}}", this.conf.interlineado + 1);
     rep = rep.replaceAll("{{letra}}", this.conf.letra);
     rep = rep.replaceAll("{{interlineado}}", this.conf.interlineado);
+    rep = rep.replaceAll("{{ancho}}", this.conf.ancho);
+    rep = rep.replaceAll("{{alto}}", this.conf.alto);
 
     let popupWin: any = window.open("", "_blank");
     popupWin.document.open();
